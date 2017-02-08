@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>blockly test</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="blockly/blockly_compressed.js"></script>
+  <script src="blockly/javascript_compressed.js"></script>
+  <script src="blockly/blocks_compressed.js"></script>
+  <script src="blockly/msg/js/en.js"></script>
+  <script src="blockly/demos/prettify.js"></script>
+  <link rel="stylesheet" href="blockly/demos/prettify.css">
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+    #textarea {
+      background:#000000;
+      color:white;
+      border:1px solid gray;
+      margin:50px 0 0 10vw;
+      overflow:scroll;
+      border-radius:10px;
+      font-family:Consolas, monospace;
+      padding:10px;
+      font-size:12px;
+    }
+    #run {
+      background:white;
+      padding:10px;
+      font-family:Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+<br><br>
+  <div style="text-align:center;">
+    <h1>wao blockly</h1>
+    much block very ly
+  </div>
+
+  <div id="blocklyDiv" style="margin:50px 0 0 10vw; height: 60vh; width: 80vw;"></div>
+
+  <xml id="toolbox" style="display: none">
+    <block type="controls_if"></block>
+    <block type="logic_compare"></block>
+    <block type="controls_repeat_ext"></block>
+    <block type="math_number"></block>
+    <block type="math_arithmetic"></block>
+    <block type="text"></block>
+    <block type="text_print"></block>
+  </xml>
+
+  <textarea size="100" cols="100" rows="10" id="textarea"></textarea><br/>
+  <button type="submit" id="download">download</button>
+
+  <script>
+
+    //blockly config
+    var workspace = Blockly.inject('blocklyDiv',
+    {
+      toolbox: document.getElementById('toolbox'),
+      grid: {
+        spacing:20,
+        length:3,
+        colour: '#ccc',
+        snap: true
+      },
+      trashcan: true,
+      scroll: true
+    });
+
+    /* realtime code generation */
+    function myUpdateFunction(event) {
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      document.getElementById('textarea').value = code;
+    }
+    workspace.addChangeListener(myUpdateFunction);
+
+    /* downloading code */
+    $("#download").click(function(event) {
+      event.preventDefault();
+      window.open("data:application/txt," + encodeURIComponent($("#textarea").value), Blockly.JavaScript.workspaceToCode(workspace));
+      //TODO: make download work
+      console.log("bob");
+    });
+  </script>
+
+</body>
+</html>
