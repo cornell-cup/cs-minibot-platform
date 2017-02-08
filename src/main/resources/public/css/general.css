@@ -54,3 +54,20 @@ button:hover { background:#DBDBDB; }
 #view:after {
 	content:"";
 }
+
+#textarea {
+      background:#000000;
+      color:white;
+      border:1px solid gray;
+      margin:50px 0 0 10vw;
+      overflow:scroll;
+      border-radius:10px;
+      font-family:Consolas, monospace;
+      padding:10px;
+      font-size:12px;
+    }
+    #run {
+      background:white;
+      padding:10px;
+      font-family:Consolas, monospace;
+    }
