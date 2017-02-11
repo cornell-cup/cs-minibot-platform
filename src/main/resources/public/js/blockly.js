@@ -15,7 +15,7 @@ var workspace = Blockly.inject('blocklyDiv',
 /* realtime code generation */
 function myUpdateFunction(event) {
   //var code = Blockly.JavaScript.workspaceToCode(workspace);
-  var code = Blockly.Python.workspaceToCode(workspace);
+  var code = getBlocklyScript();
   document.getElementById('textarea').value = code;
 }
 workspace.addChangeListener(myUpdateFunction);
@@ -33,7 +33,7 @@ $("#download").click(function(event) {
 */
 var pythonConverter = new Blockly.Generator("Python");
 
-$("send").click(sendBlockly);
+$("#send").click(sendBlockly);
 function sendBlockly(event){
   console.log("sendBlockly called");
   $.ajax({
@@ -48,12 +48,10 @@ function sendBlockly(event){
     }),
     contentType: 'application/json'
   });
+  console.log(getBlocklyScript());
 }
 
 /* Returns a string of the entire blockly script. */
 function getBlocklyScript() {
-  var script = $("#textarea").val();
-  var pythonScript = pythonConverter.workspaceToCode(workspace);
-  console.log(pythonScript);
-  return pythonScript;
+  return Blockly.Python.workspaceToCode(workspace);
 }
