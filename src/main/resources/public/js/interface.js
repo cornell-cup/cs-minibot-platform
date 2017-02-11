@@ -127,6 +127,7 @@ $('#addBot').click(function() {
     });
 });
 
+
 /*
 	For any update to the list of active bots, the dropdown menu
 	of active bots will update accordingly (depending on the addition

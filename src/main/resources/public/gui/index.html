@@ -108,43 +108,13 @@
   </xml>
 
   <textarea size="100" cols="100" rows="10" id="textarea"></textarea><br/>
-  <button type="submit" id="download">download</button>
-
-  <script>
-
-    //blockly config
-    var workspace = Blockly.inject('blocklyDiv',
-    {
-      toolbox: document.getElementById('toolbox'),
-      grid: {
-        spacing:20,
-        length:3,
-        colour: '#ccc',
-        snap: true
-      },
-      trashcan: true,
-      scroll: true
-    });
-
-    /* realtime code generation */
-    function myUpdateFunction(event) {
-      var code = Blockly.JavaScript.workspaceToCode(workspace);
-      document.getElementById('textarea').value = code;
-    }
-    workspace.addChangeListener(myUpdateFunction);
-
-    /* downloading code */
-    $("#download").click(function(event) {
-      event.preventDefault();
-      window.open("data:application/txt," + encodeURIComponent($("#textarea").value), Blockly.JavaScript.workspaceToCode(workspace));
-      //TODO: make download work
-      console.log("bob");
-    });
-  </script>
+  <button id="download">download</button>
+  <button id="send">run</button>
 
 
 </div>
-
+	
+	<script src="../js/blockly.js"></script>
 	<script src="../js/response.js"></script>
 	<script src="../js/interface.js"></script>
 	<script src="../js/view.js"></script>
