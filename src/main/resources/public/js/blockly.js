@@ -30,8 +30,11 @@ $("#download").click(function(event) {
 /*
   Clicking "run" will send this to the base station.
 */
+var pythonConverter = new Blockly.Generator("Python");
+
 $("send").click(sendBlockly);
 function sendBlockly(event){
+  console.log("sendBlockly called");
   $.ajax({
     method: "POST",
     url: '/uploadScript',
@@ -49,4 +52,7 @@ function sendBlockly(event){
 /* Returns a string of the entire blockly script. */
 function getBlocklyScript() {
   var script = $("#textarea").val();
+  var pythonScript = pythonConverter.workspaceToCode(workspace);
+  console.log(pythonScript);
+  return pythonScript;
 }
