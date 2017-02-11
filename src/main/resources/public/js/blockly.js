@@ -14,7 +14,8 @@ var workspace = Blockly.inject('blocklyDiv',
 
 /* realtime code generation */
 function myUpdateFunction(event) {
-  var code = Blockly.JavaScript.workspaceToCode(workspace);
+  //var code = Blockly.JavaScript.workspaceToCode(workspace);
+  var code = Blockly.Python.workspaceToCode(workspace);
   document.getElementById('textarea').value = code;
 }
 workspace.addChangeListener(myUpdateFunction);
