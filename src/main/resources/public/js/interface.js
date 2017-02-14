@@ -179,3 +179,58 @@ function manageBots(option, ip, port){
 function listBots(){
 	// lists all the bots
 }
+
+/*
+ * Event listener for key inputs. Sends to selected bot.
+ */
+var lastKeyPressed;
+window.onkeydown = function (e) {
+    let keyboardEnable = document.getElementById('keyboard-controls').checked;
+    if (!keyboardEnable) return;
+
+    let pow = getPower();
+    let code = e.keyCode ? e.keyCode : e.which;
+
+    if (code === lastKeyPressed) return;
+
+    if (code === 87) {
+       // w=forward
+       sendMotors(pow, pow, pow, pow);
+
+    } else if (code === 83) {
+       // s=backward
+       sendMotors(-pow, -pow, -pow, -pow);
+
+    } else if (code == 65) {
+    	// a=ccw
+        sendMotors(-pow, pow, -pow, pow);
+
+    } else if (code == 68) {
+    	// d=cw
+        sendMotors(pow, -pow, pow, -pow);
+
+    } else if (code == 81) {
+    	// q=left
+        sendMotors(-pow, pow, pow, -pow);
+
+    } else if (code == 69) {
+    	// e=right
+        sendMotors(pow, -pow, -pow, pow);
+    } else {
+        return;
+    }
+    lastKeyPressed = code;
+};
+
+window.onkeyup = function (e) {
+    let keyboardEnable = document.getElementById('keyboard-controls').checked;
+    if (!keyboardEnable) return;
+
+    let code = e.keyCode ? e.keyCode : e.which;
+
+    if (code === lastKeyPressed) {
+        // Stop
+       sendMotors(0,0,0,0);
+       lastKeyPressed = -1;
+    }
+};
