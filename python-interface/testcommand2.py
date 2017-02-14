@@ -1,0 +1,5 @@
+move_forward(500)
+move_backward(500)
+turn_left(120)
+turn_right(90)
+wait(1)
