@@ -6,7 +6,9 @@ package minibot;
 
 import basestation.BaseStation;
 import basestation.bot.connection.IceConnection;
+import basestation.bot.connection.TCPConnection;
 import basestation.bot.robot.Bot;
+import basestation.bot.robot.minibot.MiniBot;
 import basestation.bot.robot.modbot.ModBot;
 import basestation.bot.robot.modbot.ModbotCommandCenter;
 import basestation.vision.OverheadVisionSystem;
@@ -55,12 +57,18 @@ public class BaseHTTPInterface {
             String ip = addInfo.get("ip").getAsString();
             int port = addInfo.get("port").getAsInt();
             String name = addInfo.get("name").getAsString();
-
-            /* setting up ice connection */
-            IceConnection ice = new IceConnection(ip, port);
+            String type = addInfo.get("type").getAsString(); //differentiate between modbot and minibot
 
             /* new modbot is created to add */
-            ModBot newBot = new ModBot(new BaseStation(), ice);
+            Bot newBot;
+            if(type.equals("modbot")) {
+                IceConnection ice = new IceConnection(ip, port);
+                newBot = new ModBot(station, ice);
+            } else {
+                TCPConnection c = new TCPConnection(ip, port);
+                newBot = new MiniBot(station, c);
+            }
+
             int ret = station.getBotManager().addBot(newBot); // returns the id used to get the bot info from BotManager
 
             botList.put(name, ret);
@@ -96,6 +104,17 @@ public class BaseHTTPInterface {
             ((ModbotCommandCenter)station.getBotManager().getBotById(botID).getCommandCenter()).setWheelPower(fl,fr,bl,br);
 
             return true;
+        });
+
+        post("/sendScript", (req,res) -> {
+            String body = req.body();
+            JsonObject commandInfo = jp.parse(body).getAsJsonObject(); // gets (botID, fl, fr, bl, br) from js
+
+            /* storing json objects into actual variables */
+            int botID = commandInfo.get("botID").getAsInt();
+            String script = commandInfo.get("script").getAsString();
+
+            return station.getBotManager().getBotById(botID).getCommandCenter().sendKV("SCRIPT",script);
         });
 
         /*

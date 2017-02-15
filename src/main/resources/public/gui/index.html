@@ -91,6 +91,11 @@
 		IP: <input type="text" name="ip" id="ip"><br/>
 		Port: <input type="text" name="port" id="port" value="10000"><br/>
 		Name: <input type="text" name="id" id="id"><br/>
+		Type:
+		<select id="bot-type" name="type">
+			<option value="minibot">minibot</option>
+			<option value="modbot">modbot</option>
+		</select>
 		<button id="addBot">add bot</button>
 	</div>
 
@@ -108,7 +113,7 @@
     <block type="text_print"></block>
   </xml>
 
-  <textarea disabled size="100" cols="100" rows="10" id="textarea"></textarea><br/>
+  <textarea size="100" cols="100" rows="10" id="textarea"></textarea><br/>
   <button id="download">download</button>
   <button id="send">run</button>
 

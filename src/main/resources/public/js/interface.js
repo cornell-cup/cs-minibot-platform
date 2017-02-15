@@ -50,6 +50,9 @@ function sendMotors(fl, fr, bl, br) {
 	});
 }
 
+function sendScript() {
+}
+
 /* When .dir is clicked, send motors to act based on button clicked. */
 $(".dir").click(function(event) {
 	var pow = getPower();
@@ -118,7 +121,9 @@ $('#addBot').click(function() {
     		data: JSON.stringify({
     			ip: getIP(),
     			port: (getPort() || 10000),
-    			name: $("#id").val()
+    			name: $("#id").val(),
+    			type: $('#bot-type').val()
+    			}
     		}),
     		contentType: 'application/json',
     		success: function addSuccess(data) {
@@ -127,6 +132,8 @@ $('#addBot').click(function() {
     });
 });
 
+$('#send').click(function() {
+    $.ajax()})
 
 /*
 	For any update to the list of active bots, the dropdown menu
