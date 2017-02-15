@@ -4,18 +4,7 @@
 	<title>ModBot GUI</title>
 	<!-- IMPORTS -->
 	<link rel="stylesheet" href="../css/general.css"/>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="http://pixijs.download/release/pixi.min.js"></script>
-
-
-	<script src="../../../../../blockly/blockly_compressed.js"></script>
-	<script src="../../../../../blockly/javascript_compressed.js"></script>
-	<script src="../../../../../blockly/python_compressed.js"></script>
-	<script src="../../../../../blockly/blocks_compressed.js"></script>
-	<script src="../../../../../blockly/msg/js/en.js"></script>
-	<script src="../../../../../blockly/demos/prettify.js"></script>
-	<link rel="stylesheet" href="../../../../../blockly/demos/prettify.css">
+	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
 	<!-- END IMPORTS -->
 </head>
 
@@ -83,6 +72,13 @@
 				<td><button class="dir" id="bck">backward</button></td>
 				<td></td>
 			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<input type="checkbox" id="keyboard-controls"> Enable Keyboard Controls
+				</td>
+				<td></td>
+			</tr>
 		</table>
 	</div>
 
@@ -119,9 +115,16 @@
 
 
 </div>
-	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="http://pixijs.download/release/pixi.min.js"></script>
+	<script src="../js/vendor/blockly/blockly_compressed.js"></script>
+	<script src="../js/vendor/blockly/javascript_compressed.js"></script>
+	<script src="../js/vendor/blockly/python_compressed.js"></script>
+	<script src="../js/vendor/blockly/blocks_compressed.js"></script>
+	<script src="../js/vendor/blockly/en.js"></script>
+	<script src="../js/vendor/prettify/prettify.js"></script>
 	<script src="../js/blockly.js"></script>
-	<script src="../js/response.js"></script>
+	<!--<script src="../js/response.js"></script>-->
 	<script src="../js/interface.js"></script>
 	<script src="../js/view.js"></script>
 </body>
