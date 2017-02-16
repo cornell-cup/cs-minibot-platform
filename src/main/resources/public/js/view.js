@@ -47,7 +47,7 @@ function main() {
     displayBots(bots);
     grid.render(stage);
 
-    setInterval(getNewVisionData, TIME_PER_UPDATE);
+    // TODO MAKE FAULT TOLERANT setInterval(getNewVisionData, TIME_PER_UPDATE);
 }
 
 /* pseudo-constructor for a bot object */
