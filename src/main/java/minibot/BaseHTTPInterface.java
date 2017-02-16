@@ -18,9 +18,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import spark.route.RouteOverview;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+
 
 
 import static spark.Spark.*;
@@ -41,6 +44,7 @@ public class BaseHTTPInterface {
         staticFiles.location("/public");
         JsonParser jp = new JsonParser();
         BaseStation station = new BaseStation();
+        botList = new HashMap<>();
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
@@ -68,11 +72,8 @@ public class BaseHTTPInterface {
                 TCPConnection c = new TCPConnection(ip, port);
                 newBot = new MiniBot(station, c);
             }
-
             int ret = station.getBotManager().addBot(newBot); // returns the id used to get the bot info from BotManager
-
             botList.put(name, ret);
-
             return ret;
         });
 

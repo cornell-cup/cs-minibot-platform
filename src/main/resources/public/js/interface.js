@@ -34,6 +34,10 @@ function getBotID() {
     return $("#botlist").val();
 }
 
+function getScript() {
+    return $("#textarea").val();
+}
+
 function sendMotors(fl, fr, bl, br) {
 	$.ajax({
 		method: "POST",
@@ -51,7 +55,21 @@ function sendMotors(fl, fr, bl, br) {
 }
 
 function sendScript() {
+    $.ajax({
+    		method: "POST",
+    		url: "/sendScript",
+    		data: JSON.stringify({
+    			botID: getBotID(),
+    			script: getScript()
+    		}),
+    		processData: false,
+    		contentType: 'application/json'
+    	});
 }
+
+$("#send").click(function(event) {
+    sendScript();
+});
 
 /* When .dir is clicked, send motors to act based on button clicked. */
 $(".dir").click(function(event) {
@@ -115,25 +133,21 @@ $('#removeBot').click(function() {
 // when adding a bot
 $('#addBot').click(function() {
     $.ajax({
-    		method: "POST",
-    		url: '/addBot',
-    		dataType: 'json',
-    		data: JSON.stringify({
-    			ip: getIP(),
-    			port: (getPort() || 10000),
-    			name: $("#id").val(),
-    			type: $('#bot-type').val()
-    			}
-    		}),
-    		contentType: 'application/json',
-    		success: function addSuccess(data) {
-                updateDropdown(true, data, data);
-    		}
+        method: "POST",
+        url: '/addBot',
+        dataType: 'json',
+        data: JSON.stringify({
+                ip: getIP(),
+                port: (getPort() || 10000),
+                name: $("#id").val(),
+                type: $('#bot-type').val()
+            }),
+        contentType: 'application/json',
+        success: function addSuccess(data) {
+            updateDropdown(true, data, data);
+        }
     });
 });
-
-$('#send').click(function() {
-    $.ajax()})
 
 /*
 	For any update to the list of active bots, the dropdown menu
