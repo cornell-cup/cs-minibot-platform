@@ -5,6 +5,8 @@
 	<!-- IMPORTS -->
 	<link rel="stylesheet" href="../css/general.css"/>
 	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
+	<script type="text/javascript" src="../js/vendor/downloadify/js/swfobject.js"></script>
+	<script type="text/javascript" src="../js/vendor/downloadify/js/downloadify.min.js"></script>
 	<!-- END IMPORTS -->
 </head>
 
@@ -110,7 +112,20 @@
   </xml>
 
   <textarea size="100" cols="100" rows="10" id="textarea"></textarea><br/>
-  <button id="download" onclick="downloadScript()">download</button>
+  <button id="downloadify">download</button>
+  <script>function load(){
+  Downloadify.create('downloadify',{
+    filename: function(){ return "my_blockly_script"; },
+    data: function(){ return getBlocklyScript(); },
+    onComplete: function(){ alert('Your File Has Been Saved!'); },
+	swf: '../js/vendor/downloadify/media/downloadify.swf',
+	downloadImage: '../js/vendor/downloadify/images/download.png',
+	width: 100,
+	height: 30,
+	transparent: true,
+	append: false
+  });
+}</script>
   <button id="send">run</button>
 
 
