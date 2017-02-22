@@ -27,6 +27,24 @@ $("#download").click(function(event) {
   //TODO: make download work
 });
 
+function downloadScript(){
+  var script = getBlocklyScript();
+  var scriptBlob = new Blob([script], {type:"text/plain"});
+  var url = window.URL.createObjectURL(scriptBlob);
+
+  var downloadLink = document.createElement("a");
+  downloadLink.download = "my_blockly_script";
+  downloadLink.innerHTML = "Download File";
+  downloadLink.href = url;
+  downloadLink.onclick = destroyClickedElement;
+  downloadLink.style.display = "none";
+  document.body.appendChild(downloadLink);
+
+  downloadLink.click();
+}
+
+function destroyClickedElement(event) { document.body.removeChild(event.target); }
+
 /*
   Clicking "run" will send this to the base station.
 */
