@@ -40,6 +40,8 @@ public class BaseHTTPInterface {
         // Show exceptions
         exception(Exception.class, (exception,request,response) -> {
             exception.printStackTrace();
+            response.status(500);
+            response.body("oops");
         });
 
         // Global objects

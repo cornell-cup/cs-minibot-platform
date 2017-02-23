@@ -139,7 +139,7 @@ $('#addBot').click(function() {
         data: JSON.stringify({
                 ip: getIP(),
                 port: (getPort() || 10000),
-                name: $("#id").val(),
+                name: $("#name").val(),
                 type: $('#bot-type').val()
             }),
         contentType: 'application/json',
