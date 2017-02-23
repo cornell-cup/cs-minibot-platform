@@ -48,6 +48,7 @@ function main() {
     grid.render(stage);
 
     // TODO MAKE FAULT TOLERANT setInterval(getNewVisionData, TIME_PER_UPDATE);
+    pollBotNames();
 }
 
 /* pseudo-constructor for a bot object */
@@ -195,6 +196,24 @@ function scaleToFit() {
     setupGridLines();
     displayBots(zoombots);
     grid.render(stage);
+}
+
+function pollBotNames() {
+    $.ajax({
+        url: '/trackedBots',
+        type: 'GET',
+        dataType: 'json',
+        success: function visionDataGot(data) {
+            listBots = [];
+            for (var b in data) {
+                var bot = data[b];
+                listBots.push({name: bot.name});
+            }
+
+            redoDropdown(listBots);
+            setTimeout(pollBotNames,2000); // Try again in 2 sec
+        }
+    });
 }
 
 main();

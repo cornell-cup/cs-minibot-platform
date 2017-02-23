@@ -83,7 +83,7 @@ public class BaseHTTPInterface {
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
 
             // gets (botID, fl, fr, bl, br) from json
-            String botName = commandInfo.get("botName").getAsString();
+            String botName = commandInfo.get("name").getAsString();
             int fl = commandInfo.get("fl").getAsInt();
             int fr = commandInfo.get("fr").getAsInt();
             int bl = commandInfo.get("bl").getAsInt();
