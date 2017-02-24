@@ -2,6 +2,8 @@ import cozmo
 import time
 from cozmo.util import distance_mm, speed_mmps, degrees
 
+#TODO: Refactor this to subclass the baseminibot abstract class
+
 
 def move_forward(dist, robot: cozmo.robot.Robot):
   robot.drive_straight(distance=distance_mm(dist), speed=speed_mmps(100)).wait_for_completed()
