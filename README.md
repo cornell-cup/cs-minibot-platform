@@ -1,9 +1,25 @@
 # cs-minibot-platform
 
-# Cloning
+The shared software for the MiniBot platform. Includes a web server running over the base station and python scripts to run on the minibot.
+
+# Setup
+
+## Base Station Web Server
+
+Clone this repository with its submodules:
+
 ```
 git clone --recursive  https://github.com/cornell-cup/cs-minibot-platform.git
 ```
+
+If you have already cloned the repository, then you can use the following command to initialize the dependencies:
+```
+git submodule update --init
+```
+
+- Open the project in IntelliJ Idea. 
+- Go to src/main/java/minibot/BaseHTTPInterface.java and run it.
+- Open your web browser and navigate to localhost:8080/gui
 
 # How to run python interface:
 
