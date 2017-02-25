@@ -6,8 +6,7 @@
 	<!-- IMPORTS -->
 	<link rel="stylesheet" href="../css/general.css"/>
 	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
-	<script type="text/javascript" src="../js/vendor/downloadify/js/swfobject.js"></script>
-	<script type="text/javascript" src="../js/vendor/downloadify/js/downloadify.min.js"></script>
+	<script type="text/javascript" src="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/FileSaver.min.js"></script>
 	<!-- END IMPORTS -->
 
 </head>
@@ -33,7 +32,11 @@
   </xml>
 
   <textarea size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
-  <button id="downloadify" onclick="downloadScript()">download</button>
+  <form id="text-options">
+            <label>Filename: <input type="text" class="filename" id="text-filename" placeholder="a plain document"/>.txt</label>
+            <input type="submit" value="Save"/>
+        </form>
+  <button id="download" onclick="download()">download</button>
   <button id="send">run</button>
 
 

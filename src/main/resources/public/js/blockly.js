@@ -20,12 +20,16 @@ function myUpdateFunction(event) {
 }
 workspace.addChangeListener(myUpdateFunction);
 
-/* downloading code */
+/* DOWNLOAD ATTEMPT V1
 $("#download").click(function(event) {
   event.preventDefault();
   window.open("data:application/txt," + encodeURIComponent($("#data").value), Blockly.JavaScript.workspaceToCode(workspace));
   //TODO: make download work
 });
+
+*/
+
+/* DOWNLOAD ATTEMPT V2
 
 function downloadScript1(){
   var script = getBlocklyScript();
@@ -58,6 +62,32 @@ function downloadScript(){
 
 function destroyClickedElement(event) { document.body.removeChild(event.target); }
 
+*/
+
+/* DOWNLOAD ATTEMPT V3 */
+
+function download() {
+  downloadScript(getb)
+}
+
+function downloadScript(data, filename, type) {
+    var a = document.createElement("a"),
+        file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
+
 
 /*
   Clicking "run" will send this to the base station.
@@ -83,20 +113,3 @@ function getBlocklyScript() {
   return Blockly.Python.workspaceToCode(workspace);
 }
 
-/* THIS IS USELESS
-function loadWrapper(){
-  console.log("LOAD HAS BEEN CALLED");
-  load();
-}
-function load(){
-  Downloadify.create('downloadify',{
-    filename: function(){ return "my_blockly_script"; },
-    data: function(){ return getBlocklyScript(); },
-    onComplete: function(){ alert('Your File Has Been Saved!'); },
-  swf: '../js/downloadify.swf',
-  width: 175,
-  height: 55,
-  transparent: true,
-  append: false
-  });
-} */
