@@ -16,18 +16,18 @@ var workspace = Blockly.inject('blocklyDiv',
 function myUpdateFunction(event) {
   //var code = Blockly.JavaScript.workspaceToCode(workspace);
   var code = getBlocklyScript();
-  document.getElementById('textarea').value = code;
+  document.getElementById('data').value = code;
 }
 workspace.addChangeListener(myUpdateFunction);
 
 /* downloading code */
 $("#download").click(function(event) {
   event.preventDefault();
-  window.open("data:application/txt," + encodeURIComponent($("#textarea").value), Blockly.JavaScript.workspaceToCode(workspace));
+  window.open("data:application/txt," + encodeURIComponent($("#data").value), Blockly.JavaScript.workspaceToCode(workspace));
   //TODO: make download work
 });
 
-function downloadScript(){
+function downloadScript1(){
   var script = getBlocklyScript();
   var scriptBlob = new Blob([script], {type:"text/plain"});
   var url = window.URL.createObjectURL(scriptBlob);
@@ -41,6 +41,19 @@ function downloadScript(){
   document.body.appendChild(downloadLink);
 
   downloadLink.click();
+}
+
+function downloadScript(){
+  $("#data").dialog({
+    autoOpen: false,
+    modal: true,
+    width:400,
+    height:300,
+    buttons{
+      Save: function() {},
+      Cancel: function() {$(this).dialog("close"); }
+    }
+  });
 }
 
 function destroyClickedElement(event) { document.body.removeChild(event.target); }
@@ -69,3 +82,21 @@ function sendBlockly(event){
 function getBlocklyScript() {
   return Blockly.Python.workspaceToCode(workspace);
 }
+
+/* THIS IS USELESS
+function loadWrapper(){
+  console.log("LOAD HAS BEEN CALLED");
+  load();
+}
+function load(){
+  Downloadify.create('downloadify',{
+    filename: function(){ return "my_blockly_script"; },
+    data: function(){ return getBlocklyScript(); },
+    onComplete: function(){ alert('Your File Has Been Saved!'); },
+  swf: '../js/downloadify.swf',
+  width: 175,
+  height: 55,
+  transparent: true,
+  append: false
+  });
+} */

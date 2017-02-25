@@ -111,21 +111,8 @@
     <block type="text_print"></block>
   </xml>
 
-  <textarea size="100" cols="100" rows="10" id="textarea"></textarea><br/>
-  <button id="downloadify">download</button>
-  <script>function load(){
-  Downloadify.create('downloadify',{
-    filename: function(){ return "my_blockly_script"; },
-    data: function(){ return getBlocklyScript(); },
-    onComplete: function(){ alert('Your File Has Been Saved!'); },
-	swf: '../js/vendor/downloadify/media/downloadify.swf',
-	downloadImage: '../js/vendor/downloadify/images/download.png',
-	width: 100,
-	height: 30,
-	transparent: true,
-	append: false
-  });
-}</script>
+  <textarea size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
+  <p id="downloadify">download</p>
   <button id="send">run</button>
 
 

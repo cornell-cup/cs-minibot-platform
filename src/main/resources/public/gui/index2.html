@@ -1,24 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>gui v2</title>
+	<title>ModBot GUI</title>
 
 	<!-- IMPORTS -->
-	<link rel="stylesheet" href="../css/general1.css"/>
+	<link rel="stylesheet" href="../css/general.css"/>
+	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
+	<script type="text/javascript" src="../js/vendor/downloadify/js/swfobject.js"></script>
+	<script type="text/javascript" src="../js/vendor/downloadify/js/downloadify.min.js"></script>
+	<!-- END IMPORTS -->
+
+</head>
+
+<body>
+	<header>
+		<h1>modbot gui v2.0</h1><br>
+		A GUI to control Cornell Cup's modbot.
+	</header>
+
+	<div class="box">
+
+	<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+
+  <xml id="toolbox" style="display: none">
+    <block type="controls_if"></block>
+    <block type="logic_compare"></block>
+    <block type="controls_repeat_ext"></block>
+    <block type="math_number"></block>
+    <block type="math_arithmetic"></block>
+    <block type="text"></block>
+    <block type="text_print"></block>
+  </xml>
+
+  <textarea size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
+  <button id="downloadify" onclick="downloadScript()">download</button>
+  <button id="send">run</button>
+
+
+</div>
+	
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="http://pixijs.download/release/pixi.min.js"></script>
-	<!-- END IMPORTS -->
-</head>
-<body>
-
-
+	<script src="../js/vendor/blockly/blockly_compressed.js"></script>
+	<script src="../js/vendor/blockly/javascript_compressed.js"></script>
+	<script src="../js/vendor/blockly/python_compressed.js"></script>
+	<script src="../js/vendor/blockly/blocks_compressed.js"></script>
+	<script src="../js/vendor/blockly/en.js"></script>
+	<script src="../js/vendor/prettify/prettify.js"></script>
+	<script src="../js/blockly.js"></script>
+	<!--<script src="../js/response.js"></script>-->
+	<script src="../js/interface.js"></script>
+	<script src="../js/view.js"></script>
 
 </body>
-
-<!-- MORE SCRIPT IMPORTS -->
-<script src="../js/response.js"></script>
-<script src="../js/interface.js"></script>
-<script src="../js/view.js"></script>
-<!-- END OF MORE SCRIPT IMPORTS -->
 </html>
