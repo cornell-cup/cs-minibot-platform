@@ -43,7 +43,7 @@ function sendMotors(fl, fr, bl, br) {
 		method: "POST",
 		url: "/commandBot",
 		data: JSON.stringify({
-			botID: getBotID(),
+			name: getBotID(),
 			fl: fl,
 			fr: fr,
 			bl: bl,
@@ -59,7 +59,7 @@ function sendScript() {
     		method: "POST",
     		url: "/sendScript",
     		data: JSON.stringify({
-    			botID: getBotID(),
+    			name: getBotID(),
     			script: getScript()
     		}),
     		processData: false,
@@ -102,15 +102,6 @@ $(".dir").click(function(event) {
 	}
 });
 
-/* Eventlistener for mouseclick on controls (adding, removing, etc.) */
-$(".controls").click(function(event) {
-	event.preventDefault();
-
-	if($(event.target).is("#removeBot")){
-		manageBots("/removeBot", $("#id").val(), $("#port").val());
-	}
-});
-
 // when removing a bot
 $('#removeBot').click(function() {
 	// ajax post to backend to remove a bot from list.
@@ -119,13 +110,11 @@ $('#removeBot').click(function() {
 		url: '/removeBot',
 		dataType: 'json',
 		data: JSON.stringify({
-			ip: getIP(),
-			port: (getPort() || 10000),
-			name: $("#id").val()
+			name: getBotID()
 		}),
 		contentType: 'application/json',
 		success: function properlyRemoved(data) {
-			updateDropdown(false, data, data);
+		    console.log("TODO");
 		}
 	});
 });
@@ -139,7 +128,7 @@ $('#addBot').click(function() {
         data: JSON.stringify({
                 ip: getIP(),
                 port: (getPort() || 10000),
-                name: $("#id").val(),
+                name: $("#name").val(),
                 type: $('#bot-type').val()
             }),
         contentType: 'application/json',
@@ -179,22 +168,30 @@ function updateDropdown(toAdd, text, val) {
     }
 }
 
+function redoDropdown(data) {
+    $('#botlist').empty();
+    for (let i = 0; i < data.length; i++) {
+		var opt = document.createElement('option');
+	    opt.text = data[i].name;
+	    opt.value = data[i].name;
+	    opt.className = "blist";
+	    var botlist = document.getElementById("botlist");
+		botlist.appendChild(opt);
+    }
+}
+
 /* Helper function called from the eventlistener
 */
-function manageBots(option, ip, port){
+function manageBots(option, name){
 	$.ajax({
 		method: "POST",
 		url: getIP() + option,
 		data: JSON.stringify({
-			ip: ip,
-			port: port
+			name: name
 		}),
 		processData: false,
 		contentType: 'application/json'
 	});
-	//update(false);
-
-	//TODO: do something that adds or removes the robot.
 }
 
 function listBots(){
