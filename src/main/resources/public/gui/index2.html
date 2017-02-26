@@ -31,12 +31,12 @@
     <block type="text_print"></block>
   </xml>
 
+  <form onsubmit="download(this['name'].value, this['text'].value)">
+  <input type="text" name="name" value="test.txt">
   <textarea size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
-  <form id="text-options">
-            <label>Filename: <input type="text" class="filename" id="text-filename" placeholder="a plain document"/>.txt</label>
-            <input type="submit" value="Save"/>
-        </form>
-  <button id="download" onclick="download()">download</button>
+  <input type="submit" value="Download">
+</form>
+  <!-- <button id="download" onclick="download()">download</button> -->
   <button id="send">run</button>
 
 
