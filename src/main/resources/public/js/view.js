@@ -204,13 +204,25 @@ function pollBotNames() {
         type: 'GET',
         dataType: 'json',
         success: function visionDataGot(data) {
+            listBotsPrev = listBots;
             listBots = [];
             for (var b in data) {
                 var bot = data[b];
                 listBots.push({name: bot.name});
             }
 
-            redoDropdown(listBots);
+            if (listBots.length !== listBotsPrev.length) {
+                redoDropdown(listBots);
+            } else {
+                for(let i = 0; i < listBots.length; i=i+1) {
+                    if (listBots[i].name !== listBotsPrev[i].name) {
+                        redoDropdown(listBots);
+                        break;            
+                    }
+                }
+            }
+
+
             setTimeout(pollBotNames,2000); // Try again in 2 sec
         }
     });
