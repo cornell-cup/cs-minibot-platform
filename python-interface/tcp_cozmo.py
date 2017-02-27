@@ -9,7 +9,7 @@ while True:
 	connectionSocket, addr = serverSocket.accept()
 	message = connectionSocket.recv(1024).decode()
 	received=open("received.py",'w')
-	cozmo_module=open("cozmocontrol.py","r")
+	cozmo_module=open("bot/cozmo_minibot.py","r")
 	for line in cozmo_module:
 		received.write(line)
 	newline=''
