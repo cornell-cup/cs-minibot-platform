@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from socket import *
 import multiprocessing, time, signal, os, sys
 from multiprocessing import Process
@@ -6,18 +8,32 @@ from multiprocessing import Process
 def run_script():
     from received import received
 
+# https://docs.python.org/3/library/multiprocessing.html#multiprocessing-programming
 def spawn_script_process(p):
     if (p.is_alive()):
         p.terminate()
     time.sleep(0.1)
     p = Process(target=run_script)
     p.start()
+    # Return control to main after .1 seconds
     p.join(0.1)
     return p
 
+# Prints and flushes so we see it right away
+def print_flush(msg):
+    print(msg)
+    sys.stdout.flush()
+
 def main(p):
+    # Process Arguments
+    cozmo=False
+    if (len(sys.argv) > 0):
+        # are we a cozmo? TODO: Make cleaner.
+        if (str(sys.argv).find("cozmo") != -1):
+            print_flush("Becoming a cozmo")
+            cozmo=True
     serverPort = 10000
-    serverSocket= socket(AF_INET, SOCK_STREAM)
+    serverSocket = socket(AF_INET, SOCK_STREAM)
     ip = "127.0.0.1"
     serverSocket.bind( (ip, serverPort) )
     serverSocket.listen(1)
@@ -60,13 +76,24 @@ def main(p):
         except:
             pass
         received = open("received/received.py",'w')
+        if (cozmo):
+            prepend_module=open("../bot/cozmo_minibot.py","r") 
+        else:
+            prepend_module=open("../bot/cup_minibot.py","r") 
+        for line in prepend_module:
+            received.write(line)
+            newline=''
+        if (cozmo):
+            received.write("bot=CozmoMiniBot()\n")
+        else:
+            received.write("bot=CupMiniBot()\n")
+        prepend_module.close()
         received.write(script)
         received.close()
         p = spawn_script_process(p)
         #connectionSocket.close()
-# Name the process spawned.
-print(__name__)
-sys.stdout.flush()
-if (__name__ == "__main__"):
+
+# Since we are using multiple processes, need to check for main.
+if (__name__ == "__main__"): 
     p = multiprocessing.Process(target=time.sleep, args=(1000,))
     main(p)
