@@ -14,8 +14,10 @@ import basestation.vision.VisionObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import spark.Spark;
 import spark.route.RouteOverview;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,12 +35,27 @@ public class BaseHTTPInterface {
     // Temp config settings
     public static final boolean OVERHEAD_VISION = true;
     private static Map<String, Integer> botList;
+    public static final boolean LEARNING = true;
 
     public static void main(String[] args) {
         port(4567);
         staticFiles.location("/public");
         JsonParser jp = new JsonParser();
         BaseStation station = new BaseStation();
+        DataLogger dl = new DataLogger(station);
+        botList = new HashMap<>();
+        final NeuralNetDriver nnd = new NeuralNetDriver(station);
+        if (LEARNING) {
+            // Automation Data Logging
+            dl.start();
+        } else {
+            nnd.start();
+            try {
+                nnd.learnstuff();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
@@ -120,5 +137,30 @@ public class BaseHTTPInterface {
             return respData;
         });
 
+        get("/startLogging", (req, res) -> {
+            if (LEARNING && dl !=null) {
+                dl.setLogging(true);
+                return true;
+            } else {
+                nnd.autonomous = true;
+            }
+            return true;
+        });
+
+        get("/stopLogging", (req, res) -> {
+            if (LEARNING && dl !=null) {
+                dl.setLogging(false);
+
+            } else {
+                nnd.autonomous = false;
+
+            }
+            return true;
+        });
+
+        // Show exceptions so we can debug.
+        exception(Exception.class, (exception, request, response) -> {
+            exception.printStackTrace();
+        });
     }
 }

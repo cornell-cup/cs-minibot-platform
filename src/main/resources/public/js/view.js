@@ -11,7 +11,7 @@ the current vision).
 Bots have four fields: x coordinate, y coordinate, angle, and id.
 */
 
-const TIME_PER_UPDATE = 120; // modbot update interval in ms
+const TIME_PER_UPDATE = 500; // modbot update interval in ms
 var bots = [            // hard-coded bots for testing
     newBot(1,1,0,"bob"), 
     newBot(3,3,0,"bobette")
