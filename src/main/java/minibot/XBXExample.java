@@ -212,53 +212,35 @@ public class XBXExample {
     }
 
     /** convert dpadVal, leftThumb and rightThumb directions to moveDirection
-     * values --- priority to directions from dpad, then leftThumb, then
-     * rightThumb --- if different directions are given to both thumbs, the
-     * leftThumb direction is considered
+     * values --- priority to directions from dpad, then leftThumb and
+     * rightThumb --- if different directions are given to both thumbs, no
+     * movement
      * @return Thumb directions converted to moveDirection values in 0..7
      */
     private int moveDir() {
-        if (leftDir <= 30.0 || leftDir >= 330.0 &&
-                rightDir <= 30.0 || rightDir >= 330.0) {
+        if (dpadVal == 0 || dpadVal == 1 || dpadVal == 7 ||
+                (leftDir <= 60.0 || leftDir >= 300.0 &&
+                rightDir <= 60.0 || rightDir >= 300.0)) {
             // forward direction
             return 0;
         }
-        if (leftDir <= 90.0 || leftDir >= 300.0 &&
-                rightDir <= 60.0 || rightDir >= 300.0) {
+        if (dpadVal == 2 ||
+                (leftDir <= 90.0 && rightDir <= 90.0)) {
             // right - forward
-            return 1;
+            return 2;
         }
-        if (leftDir <= 90.0 || leftDir >= 270.0 &&
-                rightDir <= 90.0 || rightDir >= 270.0) {
-            // d
-            return 1;
+        if (dpadVal == 6 ||
+                (leftDir >= 270.0 && rightDir >= 270.0)) {
+            // left - forward
+            return 6;
         }
-        if (leftDir <= 60.0 || leftDir >= 300.0 &&
-                rightDir <= 60.0 || rightDir >= 300.0) {
+        if (dpadVal == 2 ||
+                (leftDir <= 90.0 || leftDir >= 270.0 &&
+                        rightDir <= 60.0 || rightDir >= 270.0)) {
             // right - forward
-            return 1;
+            return 2;
         }
-        if (leftDir <= 60.0 || leftDir >= 300.0 ||
-                rightDir <= 60.0 || rightDir >= 300.0) {
-            // right - forward
-            return 1;
-        }
-        if (leftDir <= 60.0 || leftDir >= 300.0 ||
-                rightDir <= 60.0 || rightDir >= 300.0) {
-            // right - forward
-            return 1;
-        }
-        if (leftDir <= 60.0 || leftDir >= 300.0 ||
-                rightDir <= 60.0 || rightDir >= 300.0) {
-            // right - forward
-            return 1;
-        }
-        if (leftDir <= 60.0 || leftDir >= 300.0 ||
-                rightDir <= 60.0 || rightDir >= 300.0) {
-            // right - forward
-            return 1;
-        }
-        return;
+
     }
 
     public synchronized void move() {
