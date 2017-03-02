@@ -1,5 +1,3 @@
-move_forward(500)
-move_backward(500)
-turn_left(120)
-turn_right(90)
+move_forward(100)
+move_backward(100)
 wait(1)

@@ -35,11 +35,3 @@ def wait(t, robot: cozmo.robot.Robot):
     time.sleep(t)
 
 def cozmo_program(robot: cozmo.robot.Robot):
-    move_forward(100,robot )
-    time.sleep(2)
-    move_backward(100,robot )
-    time.sleep(2)
-    wait(1,robot )
-    time.sleep(2)
-
-cozmo.run_program(cozmo_program)
