@@ -37,10 +37,10 @@ package minibot;
  * =============================================================================
  * How to Use the Xbox Controller:
  * ONLY DPAD AND LEFTTHUMB MOVE THE BOT
- *      - Forward: dpad N OR leftThumb N
- *      - Backward: dpad S OR leftThumb S
- *      - Right - forward or CW: dpad E or leftThumb E
- *      - Left - forward or CCW: dpad W or leftThumb W
+ *      - Forward: dpad N OR leftThumb N (0 in code)
+ *      - Backward: dpad S OR leftThumb S (3 in code)
+ *      - Right - forward or CW: dpad E or leftThumb E (1 in code)
+ *      - Left - forward or CCW: dpad W or leftThumb W (2 in code)
  * =============================================================================
  */
 
@@ -233,90 +233,62 @@ public class XBXExample {
      * values --- priority to directions from dpad, then leftThumb and
      * rightThumb --- if different directions are given to both thumbs, no
      * movement
-     * @return Thumb directions converted to moveDirection values in -1..7
+     * @return Thumb directions converted to moveDirection values in -1..3
      * (-1 for no movement)
      */
     private int moveDir() {
-        if ((dpadVal == 0 || dpadVal == 1 || dpadVal == 7) ||
-                (leftDir < 67.5 || leftDir > 292.5)) {
-            // forward
-            return 0;
-        } else if ((dpadVal == 2) ||
-                (leftDir < 112.5)) {
-            // right - forward or CW
-            return 1;
-        } else if ((dpadVal == 3 || dpadVal == 4 || dpadVal == 5) ||
-                (leftDir < 247.5)) {
-            // backward
-            return 3;
-        } else if ((dpadVal == 6) ||
-                (leftDir <= 292.5)) {
-            // left - forward or CCW
-            return 2;
-        }
-
-        /*if (rightDir > 0.0 || dpadVal != -1) {
-            if ((dpadVal <= 1 || dpadVal >= 7) ||
-                    (rightDir <= 90.0 || rightDir >= 270.0)) {
-                // all forward related motions
-                if (dpadVal == 1 || (leftDir >= 30.0 && leftDir <= 150.0)) {
-                    // right - forward
-                    return 1;
-                }
-                if (dpadVal == 7 || (leftDir >= 210.0 && leftDir <= 330.0)) {
-                    // left - forward
-                    return 7;
-                }
-                return 0;   // just forward
-
-            } else if ((dpadVal >= 3 && dpadVal <= 5) ||
-                    (rightDir > 90.0 || rightDir < 270.0)) {
-                // all backward related motions
-                if (dpadVal == 3 || (leftDir >= 30.0 && leftDir <= 150.0)) {
-                    // right - backward
-                    return 3;
-                }
-                if (dpadVal == 5 || (leftDir >= 210.0 && leftDir <= 330.0)) {
-                    // left - backward
-                    return 5;
-                }
-                return 4;   // just backward
-            }
-            if (dpadVal == 2 || (leftDir >= 30.0 && leftDir <= 150.0)) {
-                // turn wheels right
+        if (dpadVal == -1 || leftMag == 0.0) {
+            if ((dpadVal == 0 || dpadVal == 1 || dpadVal == 7) ||
+                    (leftDir < 67.5 || leftDir > 292.5)) {
+                // forward
+                return 0;
+            } else if ((dpadVal == 2) ||
+                    (leftDir < 112.5)) {
+                // right - forward or CW
+                return 1;
+            } else if ((dpadVal == 3 || dpadVal == 4 || dpadVal == 5) ||
+                    (leftDir < 247.5)) {
+                // backward
+                return 3;
+            } else if ((dpadVal == 6) ||
+                    (leftDir <= 292.5)) {
+                // left - forward or CCW
                 return 2;
             }
-            if (dpadVal == 6 || (leftDir >= 210.0 && leftDir <= 330.0)) {
-                // turn wheels left
-                return 6;
-            }
         }
-        defaultAllFields();
-        return -1;*/
+        return -1;
     }
 
+    /** moves the bot forward, CW, CCW or backward depending on the input
+     * from dpad or the leftThumb
+     */
     public synchronized void move() {
+        double pow = leftMag * 100;
         switch (moveDir()) {
             case 0:
                 // move forward
+                // Handler.sendMotors(pow, pow, pow, pow)
                 System.out.println("forward");
                 break;
             case 1:
                 // move right - forward or CW
+                // Handler.sendMotors(pow, -pow, pow, -pow)
                 System.out.println("right - forward");
                 break;
             case 2:
                 // move left - forward or CCW
+                // Handler.sendMotors(-pow, pow, -pow, pow)
                 System.out.println("left - forward");
                 break;
             case 3:
                 // move backward
+                // Handler.sendMotors(-pow, -pow, -pow, -pow)
                 System.out.println("backward");
                 break;
             case -1:
                 System.out.println("no movement");
         }
-        // defaultAllFields();
+        defaultAllFields();
     }
 
 
