@@ -30,7 +30,9 @@ package minibot;
  *          use synchronized with move
  *      - Call setLeftThumbDeadZone, setRightThumbDeadZone, because the thumbs
  *          on the controller are super-sensitive
- *      - moveFunctions: --- (fl, fr, bl, br) ---
+ *      - motorPower order: --- (fl, fr, bl, br) ---
+ *      = moveDirection: 0=forward; 1=right-forward or CW; 2=left-forward or
+ *      CCW; 3=backward
  *      - print is to vibrate as IDE debug is to debugging the controller
  *      - [OPTIONAL] Call setLeftTriggerDeadZone, setRightTriggerDeadZone: if
  *          you need the triggers, call these
@@ -90,6 +92,7 @@ public class XBXExample {
         // clockwise
     private int dpadVal = -1;       // in -1..7 -- 0 is North, 8 directions
         // increase clockwise (N, NE, E, ... , NW). -1 is default
+    private static final double MAX_MOTOR_POW = 100.0;
 
     /** Constructor: runs all xbox functions
      */
@@ -109,8 +112,8 @@ public class XBXExample {
 
         // 0.0 <= thumbs' output value <= 1.0
         // values <= 0.5 are ignored (reduced to 0)
-        xc.setLeftThumbDeadZone(0.5);
-        xc.setRightThumbDeadZone(0.5);
+        xc.setLeftThumbDeadZone(0.2);
+        xc.setRightThumbDeadZone(1.0);  // NOT USING RIGHTTHUMB
 
         // 0.0 <= triggers' output value <= 1.0
         // values <= 0.2 are ignored (reduced to 0)
@@ -123,17 +126,17 @@ public class XBXExample {
         // implementing methods of the XboxControllerListener Interface
         xc.addXboxControllerListener(new XboxControllerAdapter() {
 
-            // implement all functions
+            // implement all required functions
             public void leftTrigger(double value) {
                 leftVibrate = (int)(65535 * value * value);
                 xc.vibrate(leftVibrate, rightVibrate);
-                System.out.println("LeftTrigger: " + value);
+                // System.out.println("LeftTrigger: " + value);
             }
 
             public void rightTrigger(double value) {
                 rightVibrate = (int)(65535 * value * value);
                 xc.vibrate(leftVibrate, rightVibrate);
-                System.out.println("RightTrigger: " + value);
+                // System.out.println("RightTrigger: " + value);
             }
 
             public void buttonA(boolean pressed) {
@@ -162,35 +165,33 @@ public class XBXExample {
 
             public void leftThumbMagnitude(double magnitude) {
                 leftMag = magnitude;
-                System.out.println("LeftMag " + magnitude);
+                // System.out.println("LeftMag " + magnitude);
 
                 move();
             }
 
             public void rightThumbMagnitude(double magnitude) {
                 rightMag = magnitude;
-                System.out.println("RightMag: " + magnitude);
+                // System.out.println("RightMag: " + magnitude);
 
                 // move(); -- removed moving functionality from rightThumb
             }
 
             public void leftThumbDirection(double direction) {
                 leftDir = direction;
-                System.out.println("LeftDir: " + direction);
-
-                move();
+                // System.out.println("LeftDir: " + direction);
             }
 
             public void rightThumbDirection(double direction) {
                 rightDir = direction;
-                System.out.println("RightDir: " + direction);
+                // System.out.println("RightDir: " + direction);
 
                 // move(); -- removed moving functionality from rightThumb
             }
 
             public void dpad(int direction, boolean pressed) {
                 dpadVal = direction;
-                System.out.println("DpadDir: " + direction);
+                // System.out.println("DpadDir: " + direction);
 
                 move();
             }
@@ -209,7 +210,6 @@ public class XBXExample {
     }
 
     /** assigns default values to all fields
-     *
      */
     private void defaultAllFields() {
         dpadVal = -1;
@@ -217,8 +217,8 @@ public class XBXExample {
         rightDir = 0.0;
         leftMag = 0.0;
         rightMag = 0.0;
-
     }
+
     /** convert degrees to radians
      * Precondition: degree >= 0
      * @param degree angle measure in degrees
@@ -229,65 +229,116 @@ public class XBXExample {
         return ((int)(degree) % 360) * Math.PI / 180.0;
     }
 
-    /** convert dpadVal, leftThumb and rightThumb directions to moveDirection
-     * values --- priority to directions from dpad, then leftThumb and
-     * rightThumb --- if different directions are given to both thumbs, no
-     * movement
-     * @return Thumb directions converted to moveDirection values in -1..3
-     * (-1 for no movement)
+    /** convert leftThumb's directions (in angles) to forward, CW, CCW or
+     * backward
+     * @return Thumb directions converted to moveDirection values in
      */
-    private int moveDir() {
-        if (dpadVal == -1 || leftMag == 0.0) {
-            if ((dpadVal == 0 || dpadVal == 1 || dpadVal == 7) ||
-                    (leftDir < 67.5 || leftDir > 292.5)) {
-                // forward
-                return 0;
-            } else if ((dpadVal == 2) ||
-                    (leftDir < 112.5)) {
-                // right - forward or CW
-                return 1;
-            } else if ((dpadVal == 3 || dpadVal == 4 || dpadVal == 5) ||
-                    (leftDir < 247.5)) {
-                // backward
-                return 3;
-            } else if ((dpadVal == 6) ||
-                    (leftDir <= 292.5)) {
-                // left - forward or CCW
-                return 2;
-            }
+    private int moveDirLeftThumb() {
+        if (leftDir < 67.5 || leftDir > 292.5) {
+            // forward
+            return 0;
+        } else if (leftDir < 112.5) {
+            // right - forward or CW
+            return 1;
+        } else if (leftDir < 247.5) {
+            // backward
+            return 3;
+        } else if (leftDir <= 292.5) {
+            // left - forward or CCW
+            return 2;
         }
         return -1;
     }
 
+    /**
+     * convert dpad's directions to forward, CW, CCW or
+     * backward
+     * @return Thumb directions converted to moveDirection values
+     */
+    private int moveDirDpad() {
+        switch(dpadVal) {
+            case 0:
+            case 1:
+            case 7:
+                // forward
+                return 0;
+            case 3:
+            case 4:
+            case 5:
+                // backward
+                return 3;
+            case 2:
+                // right - forward or CW
+                return 1;
+            case 6:
+                // left - forward or CCW
+                return 2;
+            default:
+                // no movement
+                return -1;
+        }
+    }
+
     /** moves the bot forward, CW, CCW or backward depending on the input
-     * from dpad or the leftThumb
+     * from dpad (priority) or the leftThumb
      */
     public synchronized void move() {
-        double pow = leftMag * 100;
-        switch (moveDir()) {
-            case 0:
-                // move forward
-                // Handler.sendMotors(pow, pow, pow, pow)
-                System.out.println("forward");
-                break;
-            case 1:
-                // move right - forward or CW
-                // Handler.sendMotors(pow, -pow, pow, -pow)
-                System.out.println("right - forward");
-                break;
-            case 2:
-                // move left - forward or CCW
-                // Handler.sendMotors(-pow, pow, -pow, pow)
-                System.out.println("left - forward");
-                break;
-            case 3:
-                // move backward
-                // Handler.sendMotors(-pow, -pow, -pow, -pow)
-                System.out.println("backward");
-                break;
-            case -1:
-                System.out.println("no movement");
+        // move based on input from either dpadVal or leftThumb
+        if (dpadVal != -1) {
+            // dpad is pressed
+            switch (moveDirDpad()) {
+                case 0:
+                    // move forward
+                    // Handler.sendMotors(MAX_MOTOR_POW, MAX_MOTOR_POW, MAX_MOTOR_POW, MAX_MOTOR_POW)
+                    System.out.println("forward");
+                    break;
+                case 1:
+                    // move right - forward or CW
+                    // Handler.sendMotors(MAX_MOTOR_POW, -MAX_MOTOR_POW, MAX_MOTOR_POW, -MAX_MOTOR_POW)
+                    System.out.println("right - forward");
+                    break;
+                case 2:
+                    // move left - forward or CCW
+                    // Handler.sendMotors(-MAX_MOTOR_POW, MAX_MOTOR_POW, -MAX_MOTOR_POW, MAX_MOTOR_POW)
+                    System.out.println("left - forward");
+                    break;
+                case 3:
+                    // move backward
+                    // Handler.sendMotors(-MAX_MOTOR_POW, -MAX_MOTOR_POW, -MAX_MOTOR_POW, -MAX_MOTOR_POW)
+                    System.out.println("backward");
+                    break;
+                case -1:
+                    System.out.println("no movement");
+            }
+        } else if (leftMag > 0.0) {
+            // leftThumb is moved
+            double pow = leftMag * MAX_MOTOR_POW;
+            switch (moveDirLeftThumb()) {
+                case 0:
+                    // move forward
+                    // Handler.sendMotors(pow, pow, pow, pow)
+                    System.out.println("forward");
+                    break;
+                case 1:
+                    // move right - forward or CW
+                    // Handler.sendMotors(pow, -pow, pow, -pow)
+                    System.out.println("right - forward");
+                    break;
+                case 2:
+                    // move left - forward or CCW
+                    // Handler.sendMotors(-pow, pow, -pow, pow)
+                    System.out.println("left - forward");
+                    break;
+                case 3:
+                    // move backward
+                    // Handler.sendMotors(-pow, -pow, -pow, -pow)
+                    System.out.println("backward");
+                    break;
+                case -1:
+                    System.out.println("no movement");
+            }
         }
+        // System.out.println("DEFAULTEDDDDDD");
         defaultAllFields();
     }
 
