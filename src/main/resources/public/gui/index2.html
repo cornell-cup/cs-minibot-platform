@@ -12,37 +12,50 @@
 </head>
 
 <body>
+	<!-- HEADER -->
 	<header>
 		<h1>modbot gui v2.0</h1><br>
 		A GUI to control Cornell Cup's modbot.
 	</header>
 
+	<!-- BEGINNING OF BLOCKLY CODE -->
 	<div class="box">
+		<!-- BLOCKLY TOOLBOX -->
+		<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+		<xml id="toolbox" style="display: none">
+			<block type="controls_if"></block>
+			<block type="logic_compare"></block>
+			<block type="controls_repeat_ext"></block>
+			<block type="math_number"></block>
+			<block type="math_arithmetic"></block>
+			<block type="text"></block>
+			<block type="text_print"></block>
+		</xml>
 
-	<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+		<!-- SUBMIT/DOWNLOAD/UPLOAD FUNCTIONALITIES -->
+			<!-- download script-->
+		<form onsubmit="download(this['name'].value, this['text'].value)">
+			<input type="text" name="name" value="test.txt">
+			<textarea name="text" size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
+			<input type="submit" value="Download">
+		</form>
 
-  <xml id="toolbox" style="display: none">
-    <block type="controls_if"></block>
-    <block type="logic_compare"></block>
-    <block type="controls_repeat_ext"></block>
-    <block type="math_number"></block>
-    <block type="math_arithmetic"></block>
-    <block type="text"></block>
-    <block type="text_print"></block>
-  </xml>
-
-  <form onsubmit="download(this['name'].value, this['text'].value)">
-  <input type="text" name="name" value="test.txt">
-  <textarea size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
-  <input type="submit" value="Download">
-</form>
-  <!-- <button id="download" onclick="download()">download</button> -->
-  <button id="send">run</button>
-
-
-</div>
+			<!-- send script -->
+		<button id="send">run</button>
+		
+			<!-- upload script -->
+		<form type=POST>
+			<input 
+				type="file" 
+				id="upload" 
+				multipleSize="1" 
+				accept=".py" 
+				onchange="uploadText()"
+			/>
+		</form>
+	</div>
 	
-
+	<!-- MORE IMPORTS -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="http://pixijs.download/release/pixi.min.js"></script>
 	<script src="../js/vendor/blockly/blockly_compressed.js"></script>

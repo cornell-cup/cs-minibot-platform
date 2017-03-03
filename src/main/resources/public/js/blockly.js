@@ -1,4 +1,16 @@
-//blockly config
+/*
+*   BLOCKLY.JS
+*   
+*   Lauren Hsu, Celine Choo, and MiniBot team
+*
+*   Provides scripts for visual coding using Google Blockly API. Users can
+*   drag and drop to write code that can be downloaded as a file or sent 
+*   directly to the Base Station to be run on a MiniBot. Default language is
+*   Python.
+*/
+
+/* ======================= BASIC SETUP ======================== */
+/* Blockly Configurations */
 var workspace = Blockly.inject('blocklyDiv',
 {
   toolbox: document.getElementById('toolbox'),
@@ -12,60 +24,21 @@ var workspace = Blockly.inject('blocklyDiv',
   scroll: true
 });
 
-/* Realtime code generation */
-function myUpdateFunction(event) {
-  //var code = Blockly.JavaScript.workspaceToCode(workspace);
-  var code = getBlocklyScript();
-  document.getElementById('data').value = code;
-}
-workspace.addChangeListener(myUpdateFunction);
+/* Realtime code generation
 
-/* DOWNLOAD ATTEMPT V1
-$("#download").click(function(event) {
-  event.preventDefault();
-  window.open("data:application/txt," + encodeURIComponent($("#data").value), Blockly.JavaScript.workspaceToCode(workspace));
-  //TODO: make download work
+  (Every drag/drop or change in visual code will be
+  reflected in actual code view) */
+workspace.addChangeListener(function(event){
+  setCode(getBlocklyScript());
 });
 
-*/
 
-/* DOWNLOAD ATTEMPT V2
+/* ======================= USER FUNCTIONALITY ======================== */
 
-function downloadScript1(){
-  var script = getBlocklyScript();
-  var scriptBlob = new Blob([script], {type:"text/plain"});
-  var url = window.URL.createObjectURL(scriptBlob);
+/* DOWNLOAD FUNCTION 
 
-  var downloadLink = document.createElement("a");
-  downloadLink.download = "my_blockly_script";
-  downloadLink.innerHTML = "Download File";
-  downloadLink.href = url;
-  downloadLink.onclick = destroyClickedElement;
-  downloadLink.style.display = "none";
-  document.body.appendChild(downloadLink);
-
-  downloadLink.click();
-}
-
-function downloadScript(){
-  $("#data").dialog({
-    autoOpen: false,
-    modal: true,
-    width:400,
-    height:300,
-    buttons{
-      Save: function() {},
-      Cancel: function() {$(this).dialog("close"); }
-    }
-  });
-}
-
-function destroyClickedElement(event) { document.body.removeChild(event.target); }
-
-*/
-
-/* DOWNLOAD ATTEMPT V3 */
-
+  Allows users to download raw code as a file. Users must
+  manually input file name and file type. */
 function download(filename, text) {
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -79,9 +52,36 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
+/* UPLOAD FUNCTION 
+
+    Allows users to upload previously written code as a file
+    so that they may run Python scripts that have been written
+    externally without Blockly.
+
+    TODO: possibly make it so that uploaded scripts can be also
+    represented as blocks in the blockly view???
+
+    */
+setUF("upload file");
+function setUF(text) {
+  $("#uploadedFileName").innerHTML = text;
+  return true;
+}
+var fileReader = new FileReader();
+function uploadText() {
+  fileReader.onload = function(event) {
+    console.log("filereader.onload!")
+    console.log(event.target.result);
+    setCode(event.target.result);
+  }
+  reader.readAsText(filePath.files[0]);
+}
 
 /*
-  Clicking "run" will send this to the base station.
+  RUN/SEND FUNCTION
+
+  Clicking "run" will send Blockly scripts to the base station for
+  the actual MiniBot.
 */
 var pythonConverter = new Blockly.Generator("Python");
 
@@ -99,8 +99,8 @@ function sendBlockly(event){
   });
 }
 
+/* ======================= HELPER FUNCTIONS ======================== */
 /* Returns a string of the entire blockly script. */
-function getBlocklyScript() {
-  return Blockly.Python.workspaceToCode(workspace);
-}
+function getBlocklyScript() { return Blockly.Python.workspaceToCode(workspace); }
+function setCode(code) { $("#data").val(code); }
 
