@@ -39,10 +39,8 @@ package minibot;
  * ONLY DPAD AND LEFTTHUMB MOVE THE BOT
  *      - Forward: dpad N OR leftThumb N
  *      - Backward: dpad S OR leftThumb S
- *      - Right - forward: dpad NE/E or leftThumb NE
- *      - Right - backward: dpad SE or leftThumb SE
- *      - Left - forward: dpad NW/W or leftThumb NW
- *      - Left - backward: dpad SW or leftThumb SW
+ *      - Right - forward or CW: dpad E or leftThumb E
+ *      - Left - forward or CCW: dpad W or leftThumb W
  * =============================================================================
  */
 
@@ -304,32 +302,16 @@ public class XBXExample {
                 System.out.println("forward");
                 break;
             case 1:
-                // move right - forward
+                // move right - forward or CW
                 System.out.println("right - forward");
                 break;
             case 2:
-                // turn wheels right
-                System.out.println("right");
+                // move left - forward or CCW
+                System.out.println("left - forward");
                 break;
             case 3:
-                // move right - backward
-                System.out.println("right - backward");
-                break;
-            case 4:
                 // move backward
                 System.out.println("backward");
-                break;
-            case 5:
-                // move left - backward
-                System.out.println("left - backward");
-                break;
-            case 6:
-                // turn wheels left
-                System.out.println("left");
-                break;
-            case 7:
-                // move left - forward
-                System.out.println("left - forward");
                 break;
             case -1:
                 System.out.println("no movement");
