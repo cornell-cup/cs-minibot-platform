@@ -30,32 +30,19 @@ package minibot;
  *          use synchronized with move
  *      - Call setLeftThumbDeadZone, setRightThumbDeadZone, because the thumbs
  *          on the controller are super-sensitive
- *      - moveDirections:
- *          - 0 --- forward
- *          - 1 --- right - forward
- *          - 2 --- right
- *          - 3 --- right - backward
- *          - 4 --- backward
- *          - 5 --- left - backward
- *          - 6 --- left
- *          - 7 --- left - forward
+ *      - moveFunctions: --- (fl, fr, bl, br) ---
  *      - print is to vibrate as IDE debug is to debugging the controller
  *      - [OPTIONAL] Call setLeftTriggerDeadZone, setRightTriggerDeadZone: if
  *          you need the triggers, call these
  * =============================================================================
  * How to Use the Xbox Controller:
- *      - Forward: dpad up OR rightThumb in upper circle
- *      - Backward: dpad down OR rightThumb in lower circle
- *      - TURN wheels right: dpad right OR leftThumb in right circle
- *      - TURN wheels left: dpad left OR leftThumb in left circle
- *      - MOVE bot right forward: (dpad up & right) OR (rightThumb in upper
- *          circle AND leftThumb in right circle)
- *      - MOVE bot left forward: (dpad up & left) OR (rightThumb in upper
- *          circle AND leftThumb in left circle)
- *      - MOVE bot right backward: (dpad down & right) OR (rightThumb in lower
- *          circle AND leftThumb in right circle)
- *      - MOVE bot left forward: (dpad down & left) OR (rightThumb in lower
- *          circle AND leftThumb in left circle)
+ * ONLY DPAD AND LEFTTHUMB MOVE THE BOT
+ *      - Forward: dpad N OR leftThumb N
+ *      - Backward: dpad S OR leftThumb S
+ *      - Right - forward: dpad NE/E or leftThumb NE
+ *      - Right - backward: dpad SE or leftThumb SE
+ *      - Left - forward: dpad NW/W or leftThumb NW
+ *      - Left - backward: dpad SW or leftThumb SW
  * =============================================================================
  */
 
@@ -186,7 +173,7 @@ public class XBXExample {
                 rightMag = magnitude;
                 System.out.println("RightMag: " + magnitude);
 
-                move();
+                // move(); -- removed moving functionality from rightThumb
             }
 
             public void leftThumbDirection(double direction) {
@@ -200,7 +187,7 @@ public class XBXExample {
                 rightDir = direction;
                 System.out.println("RightDir: " + direction);
 
-                move();
+                // move(); -- removed moving functionality from rightThumb
             }
 
             public void dpad(int direction, boolean pressed) {
@@ -252,7 +239,25 @@ public class XBXExample {
      * (-1 for no movement)
      */
     private int moveDir() {
-        if (rightDir > 0.0 || dpadVal != -1) {
+        if ((dpadVal == 0 || dpadVal == 1 || dpadVal == 7) ||
+                (leftDir < 67.5 || leftDir > 292.5)) {
+            // forward
+            return 0;
+        } else if ((dpadVal == 2) ||
+                (leftDir < 112.5)) {
+            // right - forward or CW
+            return 1;
+        } else if ((dpadVal == 3 || dpadVal == 4 || dpadVal == 5) ||
+                (leftDir < 247.5)) {
+            // backward
+            return 3;
+        } else if ((dpadVal == 6) ||
+                (leftDir <= 292.5)) {
+            // left - forward or CCW
+            return 2;
+        }
+
+        /*if (rightDir > 0.0 || dpadVal != -1) {
             if ((dpadVal <= 1 || dpadVal >= 7) ||
                     (rightDir <= 90.0 || rightDir >= 270.0)) {
                 // all forward related motions
@@ -289,7 +294,7 @@ public class XBXExample {
             }
         }
         defaultAllFields();
-        return -1;
+        return -1;*/
     }
 
     public synchronized void move() {
