@@ -2,7 +2,7 @@ package minibot;
 
 /**
  * =============================================================================
- * InputEventHandler.java
+ * XboxInputEventHandler.java
  * =============================================================================
  * Created by Anmol Kabra
  * Cornell Cup Robotics Team 2016-2017
@@ -10,10 +10,11 @@ package minibot;
  */
 
 /**
- * The interface InputEventHandler specifies basic functions for implementing
+ * The interface XboxInputEventHandler specifies basic functions for
+ * implementing
  * MiniBot movements
  */
-/*package*/ interface InputEventHandler {
+/*package*/ interface XboxInputEventHandler {
 
     void dpadMove(int dpadVal);
 

@@ -9,6 +9,7 @@ import basestation.bot.robot.minibot.MiniBot;
 import basestation.bot.robot.modbot.ModBot;
 import basestation.vision.OverheadVisionSystem;
 import basestation.vision.VisionObject;
+import ch.aplu.xboxcontroller.XboxController;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -47,6 +48,19 @@ public class BaseHTTPInterface {
         // Global objects
         JsonParser jp = new JsonParser();
         Gson gson = new Gson();
+        try {
+            if (!(new XboxController().isConnected())) {
+                // if xbox controller is not connected
+                throw new
+                        UnsupportedOperationException("Xbox Controller not " +
+                        "Connected");
+            }
+
+            // xbox controller is connected
+            XboxControllerDriver xcd;
+            xcd = new XboxControllerDriver("anmol");
+            xcd.start();
+        } catch (UnsupportedOperationException e) {}
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();

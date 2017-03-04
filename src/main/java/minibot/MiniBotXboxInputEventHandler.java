@@ -32,18 +32,29 @@ package minibot;
  * =============================================================================
  */
 
+import basestation.BaseStation;
+import basestation.bot.commands.FourWheelMovement;
+import basestation.bot.robot.Bot;
+
+import java.util.Optional;
+
 /**
- * An instance of the MiniBotInputEventHandler class is capable of sending
+ * An instance of the MiniBotXboxInputEventHandler class is capable of sending
  * commands to the basestation to maneuver the MiniBot
  */
-/*package*/ class MiniBotInputEventHandler implements InputEventHandler {
+/*package*/ class MiniBotXboxInputEventHandler implements
+        XboxInputEventHandler {
 
     private static final double MAX_MOTOR_POW = 100.0;
+    private String botName;
 
     /**
-     * Constructor: initializes the instance
+     * Constructor: initializes the instance and the bot
      */
-    /*package*/ MiniBotInputEventHandler () {}
+    /*package*/ MiniBotXboxInputEventHandler (String _botName) {
+        // get the bot with the name
+        botName = _botName;
+    }
 
     /**
      * Convert degrees to radians
@@ -54,6 +65,30 @@ package minibot;
     private double degToRad(double degree) {
         assert degree >= 0;
         return ((int)(degree) % 360) * Math.PI / 180.0;
+    }
+
+    /**
+     * sets wheel power for the bot
+     * @param _fl front left wheel power
+     * @param _fr front right wheel power
+     * @param _bl back left wheel power
+     * @param _br back right wheel power
+     */
+    private void localSetWheelPower(double _fl, double _fr, double _bl,
+                                     double _br) {
+        Optional<Bot> possibleBot = BaseStation.getInstance().getBotManager()
+                .getBotByName(botName);
+        if (possibleBot.isPresent()) {
+            // if bot exists, make it mine
+            Bot myBot = possibleBot.get();
+
+            if (myBot.getCommandCenter() instanceof FourWheelMovement) {
+                // command center is correctly referenced
+                FourWheelMovement fwmCommandCenter = (FourWheelMovement) myBot
+                        .getCommandCenter();
+                fwmCommandCenter.setWheelPower(_fl, _fr, _bl, _br);
+            }
+        }
     }
 
     /**
@@ -91,29 +126,39 @@ package minibot;
      *                is default state
      */
     public void dpadMove(int dpadVal) {
-        switch (moveDirDpad(dpadVal)) {
+        int dirFromDpad = moveDirDpad(dpadVal);
+        switch (dirFromDpad) {
             case 0:
                 // move forward
-                // Handler.sendMotors(MAX_MOTOR_POW, MAX_MOTOR_POW, MAX_MOTOR_POW, MAX_MOTOR_POW)
+                localSetWheelPower(MAX_MOTOR_POW, MAX_MOTOR_POW, MAX_MOTOR_POW,
+                        MAX_MOTOR_POW);
+
                 System.out.println("forward");
                 break;
             case 1:
                 // move right - forward or CW
-                // Handler.sendMotors(MAX_MOTOR_POW, -MAX_MOTOR_POW, MAX_MOTOR_POW, -MAX_MOTOR_POW)
+                localSetWheelPower(MAX_MOTOR_POW, -MAX_MOTOR_POW, MAX_MOTOR_POW,
+                        -MAX_MOTOR_POW);
+
                 System.out.println("right - forward");
                 break;
             case 2:
                 // move left - forward or CCW
-                // Handler.sendMotors(-MAX_MOTOR_POW, MAX_MOTOR_POW, -MAX_MOTOR_POW, MAX_MOTOR_POW)
+                localSetWheelPower(-MAX_MOTOR_POW, MAX_MOTOR_POW, -MAX_MOTOR_POW,
+                        MAX_MOTOR_POW);
+
                 System.out.println("left - forward");
                 break;
             case 3:
                 // move backward
-                // Handler.sendMotors(-MAX_MOTOR_POW, -MAX_MOTOR_POW, -MAX_MOTOR_POW, -MAX_MOTOR_POW)
+                localSetWheelPower(-MAX_MOTOR_POW, -MAX_MOTOR_POW,
+                        -MAX_MOTOR_POW, -MAX_MOTOR_POW);
+
                 System.out.println("backward");
                 break;
             case -1:
-                System.out.println("no movement");
+                localSetWheelPower(0.0, 0.0, 0.0, 0.0);
+                System.out.println("stop");
         }
     }
 
@@ -150,25 +195,31 @@ package minibot;
         switch (moveDirLeftThumb(direction)) {
             case 0:
                 // move forward
-                // Handler.sendMotors(power, power, power, power)
+                localSetWheelPower(power, power, power, power);
+
                 System.out.println("forward");
                 break;
             case 1:
                 // move right - forward or CW
-                // Handler.sendMotors(power, -power, power, -power)
+                localSetWheelPower(power, -power, power, -power);
+
                 System.out.println("right - forward");
                 break;
             case 2:
                 // move left - forward or CCW
-                // Handler.sendMotors(-power, power, -power, power)
+                localSetWheelPower(-power, power, -power, power);
+
                 System.out.println("left - forward");
                 break;
             case 3:
                 // move backward
-                // Handler.sendMotors(-power, -power, -power, -power)
+                localSetWheelPower(-power, -power, -power, -power);
+
                 System.out.println("backward");
                 break;
             case -1:
+                localSetWheelPower(0.0, 0.0, 0.0, 0.0);
+
                 System.out.println("no movement");
         }
     }

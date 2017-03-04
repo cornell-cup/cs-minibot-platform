@@ -78,12 +78,14 @@ import javax.swing.JOptionPane;
  * An instance of the XboxControllerDriver class reads input from the
  * XboxController, and transfers the data to the MiniBot Handler class
  */
-public class XboxControllerDriver {
+public class XboxControllerDriver extends Thread {
 
+    private static final int MAX_VIBRATE_VALUE = 65535;
     private XboxController xc;
-    private MiniBotInputEventHandler mbEventHandler;
-    private int leftVibrate;        // in 0..65535
-    private int rightVibrate;       // in 0..65535
+    private MiniBotXboxInputEventHandler mbXboxEventHandler;
+    private String botName;         // name of the bot
+    private int leftVibrate;        // in 0..MAX_VIBRATE_VALUE
+    private int rightVibrate;       // in 0..MAX_VIBRATE_VALUE
     private double leftMag;         // in 0..1
     private double rightMag;        // in 0..1
     private double leftDir;         // in 0..360 -- 0 is North, angles increase
@@ -96,11 +98,16 @@ public class XboxControllerDriver {
     /**
      * Constructor: runs all xbox functions
      */
-    private XboxControllerDriver() {
+    /*package*/ XboxControllerDriver(String _botName) {
 
         xc = new XboxController();
-        mbEventHandler = new MiniBotInputEventHandler();
+        botName = _botName;
+        mbXboxEventHandler = new MiniBotXboxInputEventHandler(botName);
 
+        // testIsConnected();
+        /* --- already being checked where an instance of this class is
+            initialized --- if this instance's main method is called, then it
+             must be using the testIsConnected method ---
         if (!xc.isConnected()) {
             // if Xbox is not connected, pop up a dialog box
             JOptionPane.showMessageDialog(null,
@@ -109,7 +116,29 @@ public class XboxControllerDriver {
                     JOptionPane.ERROR_MESSAGE);
             xc.release();
             return;
+        }*/
+    }
+
+    /**
+     * tests if the bot is connected, if not then terminates with an error
+     * @return false if not connected, true is connected
+     */
+    private boolean testIsConnected() {
+        if (!xc.isConnected()) {
+            // if Xbox is not connected, pop up a dialog box
+            JOptionPane.showMessageDialog(null,
+                    "Xbox controller not connected.",
+                    "Fatal error",
+                    JOptionPane.ERROR_MESSAGE);
+            xc.release();
+            return false;
         }
+        return true;
+    }
+    /**
+     * Listens to XboxController's inputs
+     */
+    private void listenToXbox() {
 
         // 0.0 <= thumbs' output value <= 1.0
         // values <= 0.5 are ignored (reduced to 0)
@@ -129,38 +158,38 @@ public class XboxControllerDriver {
 
             // implement all required functions
             public void leftTrigger(double value) {
-                leftVibrate = (int)(65535 * value * value);
+                leftVibrate = (int)(MAX_VIBRATE_VALUE * value * value);
                 xc.vibrate(leftVibrate, rightVibrate);
                 // System.out.println("LeftTrigger: " + value);
             }
 
             public void rightTrigger(double value) {
-                rightVibrate = (int)(65535 * value * value);
+                rightVibrate = (int)(MAX_VIBRATE_VALUE * value * value);
                 xc.vibrate(leftVibrate, rightVibrate);
                 // System.out.println("RightTrigger: " + value);
             }
 
             public void buttonA(boolean pressed) {
-                leftVibrate = 65535;
-                rightVibrate = 65535;
+                leftVibrate = MAX_VIBRATE_VALUE;
+                rightVibrate = MAX_VIBRATE_VALUE;
                 xc.vibrate(leftVibrate, rightVibrate);
             }
 
             public void buttonB(boolean pressed) {
-                leftVibrate = 65535;
-                rightVibrate = 65535;
+                leftVibrate = MAX_VIBRATE_VALUE;
+                rightVibrate = MAX_VIBRATE_VALUE;
                 xc.vibrate(leftVibrate, rightVibrate);
             }
 
             public void buttonX(boolean pressed) {
-                leftVibrate = 65535;
-                rightVibrate = 65535;
+                leftVibrate = MAX_VIBRATE_VALUE;
+                rightVibrate = MAX_VIBRATE_VALUE;
                 xc.vibrate(leftVibrate, rightVibrate);
             }
 
             public void buttonY(boolean pressed) {
-                leftVibrate = 65535;
-                rightVibrate = 65535;
+                leftVibrate = MAX_VIBRATE_VALUE;
+                rightVibrate = MAX_VIBRATE_VALUE;
                 xc.vibrate(leftVibrate, rightVibrate);
             }
 
@@ -206,10 +235,10 @@ public class XboxControllerDriver {
                 "XboxController MiniBot",
                 JOptionPane.PLAIN_MESSAGE);
 
+        // stop listening
         xc.release();
         System.exit(0);
     }
-
     /**
      * Assigns default values to all fields
      */
@@ -229,16 +258,36 @@ public class XboxControllerDriver {
         // move based on input from either dpadVal or leftThumb
         if (dpadVal != -1) {
             // dpad is pressed
-            mbEventHandler.dpadMove(dpadVal);
+            mbXboxEventHandler.dpadMove(dpadVal);
         } else if (leftMag > 0.0) {
             // leftThumb is moved
-            mbEventHandler.leftThumbMove(leftMag, leftDir);
+            mbXboxEventHandler.leftThumbMove(leftMag, leftDir);
         }
         // System.out.println("DEFAULTEDDDDDD");
         defaultAllFields();
     }
 
+    @Override
+    public void run() {
+        listenToXbox();
+    }
+
     public static void main(String[] args) {
-        new XboxControllerDriver();
+        // --- USE ONLY FOR TESTING PURPOSES ---
+        XboxController testxc = new XboxController();
+
+        if (!(testxc.isConnected())) {
+            // if Xbox is not connected, pop up a dialog box
+            JOptionPane.showMessageDialog(null,
+                    "Xbox controller not connected.",
+                    "Fatal error",
+                    JOptionPane.ERROR_MESSAGE);
+            testxc.release();
+            return;
+        }
+
+        // xbox controller is connected
+        XboxControllerDriver xcd = new XboxControllerDriver("anmol");
+        xcd.listenToXbox();
     }
 }
