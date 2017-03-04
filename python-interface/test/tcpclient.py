@@ -1,7 +1,7 @@
 from socket import *
 
 serverName = 'localhost'
-serverPort = 3001
+serverPort = 10000
 serverSocket= socket(AF_INET, SOCK_STREAM)
 serverSocket.connect( (serverName, serverPort) )
 script=open('testcommand.py','rb')
