@@ -63,7 +63,7 @@ def main(p):
                     command = command[command.find(",")+1:]
                 wheels.append(val)
 
-            script = "set_wheel_power(" + wheels[0] + ","+wheels[1]+","+wheels[2] + ","+ wheels[3] + ")"
+            script = "bot.set_wheel_power(" + wheels[0] + ","+wheels[1]+","+wheels[2] + ","+ wheels[3] + ")"
         else:
             print("Bad Input, please send SCRIPT or WHEELS command")
 
@@ -77,16 +77,17 @@ def main(p):
             pass
         received = open("received/received.py",'w')
         if (cozmo):
-            prepend_module=open("../bot/cozmo_minibot.py","r") 
+            prepend_module=open("received/cozmo_minibot.py","r")
         else:
-            prepend_module=open("../bot/cup_minibot.py","r") 
+            prepend_module=open("received/cup_minibot_prepend.py","r")
         for line in prepend_module:
             received.write(line)
             newline=''
         if (cozmo):
             received.write("bot=CozmoMiniBot()\n")
         else:
-            received.write("bot=CupMiniBot()\n")
+            pass
+            #received.write("bot=CupMiniBot()\n")
         prepend_module.close()
         received.write(script)
         received.close()
@@ -94,6 +95,6 @@ def main(p):
         #connectionSocket.close()
 
 # Since we are using multiple processes, need to check for main.
-if (__name__ == "__main__"): 
+if (__name__ == "__main__"):
     p = multiprocessing.Process(target=time.sleep, args=(1000,))
     main(p)

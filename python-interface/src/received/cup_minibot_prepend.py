@@ -1,4 +1,4 @@
-class BaseMiniBot:
+class CupMiniBot:
     """
     Abstract class defining the base functions of the MiniBot. More customized MiniBots may
     subclass this.
@@ -9,7 +9,7 @@ class BaseMiniBot:
     def move_forward(self, power):
         """
         Moves the bot forward at a percentage of its full power
-        
+
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
@@ -18,7 +18,7 @@ class BaseMiniBot:
     def move_backward(self, power):
         """
         Moves the bot backward at a percentage of its full power
-        
+
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
@@ -27,7 +27,7 @@ class BaseMiniBot:
     def turn_clockwise(self, power):
         """
         Moves the bot clockwise  at a percentage of its full power
-        
+
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
@@ -36,7 +36,7 @@ class BaseMiniBot:
     def turn_counter_clockwise(self, power):
         """
         Moves the bot counter-clockwise at a percentage of its full power
-        
+
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
@@ -63,3 +63,4 @@ class BaseMiniBot:
         """
         time.sleep(t)
 
+bot = CupMiniBot()
