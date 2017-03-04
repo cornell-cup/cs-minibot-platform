@@ -83,13 +83,19 @@ def main(p):
         for line in prepend_module:
             received.write(line)
             newline=''
-        if (cozmo):
-            received.write("bot=CozmoMiniBot()\n")
-        else:
-            pass
-            #received.write("bot=CupMiniBot()\n")
         prepend_module.close()
-        received.write(script)
+        if (cozmo):
+        	for line in script:
+        		if line!=('\n') and line!=('\r') and line!=(')'):
+        			newline+=line
+        		if line==(")"):
+        			newline+=', bot)'
+        			received.write("	"+newline+'\n')
+        			newline=''
+        else:
+            received.write(script)
+        if (cozmo):
+            received.write('\n'+'cozmo.run_program(cozmo_program)')
         received.close()
         p = spawn_script_process(p)
         #connectionSocket.close()

@@ -33,3 +33,5 @@ def turn_right(self):
 
 def wait(self, t):
     time.sleep(t)
+
+def cozmo_program(bot):
