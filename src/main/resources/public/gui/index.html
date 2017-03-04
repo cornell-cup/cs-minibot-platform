@@ -5,8 +5,6 @@
 	<!-- IMPORTS -->
 	<link rel="stylesheet" href="../css/general.css"/>
 	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
-	<script type="text/javascript" src="../js/vendor/downloadify/js/swfobject.js"></script>
-	<script type="text/javascript" src="../js/vendor/downloadify/js/downloadify.min.js"></script>
 	<!-- END IMPORTS -->
 </head>
 
@@ -114,6 +112,9 @@
 			<block type="math_arithmetic"></block>
 			<block type="text"></block>
 			<block type="text_print"></block>
+
+			<!-- ADDING CUSTOM BLOCKS ->
+			<block type="move"></block-->
 		</xml>
 
 		<!-- SUBMIT/DOWNLOAD/UPLOAD FUNCTIONALITIES -->
@@ -147,7 +148,10 @@
 	<script src="../js/vendor/blockly/blocks_compressed.js"></script>
 	<script src="../js/vendor/blockly/en.js"></script>
 	<script src="../js/vendor/prettify/prettify.js"></script>
-	<script src="../js/blockly.js"></script>
+	<script src="../js/blockly.js"></script>	
+	<!-- IMPORT CUSTOM BLOCKS -->
+	<script type="text/javascript" src="../js/blocks/custom_blocks.js"></script>
+	<script type="text/javascript" src="../js/blocks/custom_json.js"></script>
 	<!--<script src="../js/response.js"></script>-->
 	<script src="../js/interface.js"></script>
 	<script src="../js/view.js"></script>
