@@ -33,8 +33,8 @@
 
 		<!-- SUBMIT/DOWNLOAD/UPLOAD FUNCTIONALITIES -->
 			<!-- download script-->
-		<form onsubmit="download(this['name'].value, this['text'].value)">
-			<input type="text" name="name" value="test.txt">
+		<form id="dwn" onsubmit="download(this['name'].value, this['text'].value)">
+			<input type="text" name="name" value="myBlocklyCode.py">
 			<textarea name="text" size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
 			<input type="submit" value="Download">
 		</form>

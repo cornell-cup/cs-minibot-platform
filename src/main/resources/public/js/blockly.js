@@ -39,6 +39,11 @@ workspace.addChangeListener(function(event){
 
   Allows users to download raw code as a file. Users must
   manually input file name and file type. */
+
+// Prevents page from refreshing when download button is clicked.
+$("#dwn").submit(function(event){ event.preventDefault(); });
+
+// Download file as file-name manually inputted into textbox.
 function download(filename, text) {
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
