@@ -62,20 +62,19 @@ function download(filename, text) {
     represented as blocks in the blockly view???
 
     */
-setUF("upload file");
-function setUF(text) {
-  $("#uploadedFileName").innerHTML = text;
-  return true;
-}
-var fileReader = new FileReader();
-function uploadText() {
-  fileReader.onload = function(event) {
-    console.log("filereader.onload!")
-    console.log(event.target.result);
-    setCode(event.target.result);
-  }
-  reader.readAsText(filePath.files[0]);
-}
+$("#upload").change(function(event) {
+  //console.log("upload change listener");
+  var files = event.target.files;
+  //console.log("files:" + files[0]);
+  var reader = new FileReader();
+  var f = files[0];
+  reader.onload = (function(file) {
+    return function(e) {
+      setCode(e.target.result);
+    }
+  })(f);
+  reader.readAsText(f);
+});
 
 /*
   RUN/SEND FUNCTION
@@ -103,4 +102,8 @@ function sendBlockly(event){
 /* Returns a string of the entire blockly script. */
 function getBlocklyScript() { return Blockly.Python.workspaceToCode(workspace); }
 function setCode(code) { $("#data").val(code); }
+function appendCode(code) {
+  var content = $("#data").val();
+  $("data").val(content + code);
+}
 
