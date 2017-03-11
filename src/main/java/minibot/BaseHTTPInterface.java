@@ -74,6 +74,13 @@ public class BaseHTTPInterface {
                 TCPConnection c = new TCPConnection(ip, port);
                 newBot = new MiniBot(c, name);
             }
+               else {
+                TCPConnection c = new TCPConnection(ip, port);
+                newBot = new SimBot(c, name);
+                System.out.println("simbot created");
+                BaseStation.getInstance().getVisionManager().addVisionSystem(
+            }
+
 
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
