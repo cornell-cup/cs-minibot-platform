@@ -70,7 +70,7 @@ public class BaseHTTPInterface {
             if(type.equals("modbot")) {
                 IceConnection ice = new IceConnection(ip, port);
                 newBot = new ModBot(ice, name);
-            } else {
+            } else if(type.equals("minibot")) {
                 TCPConnection c = new TCPConnection(ip, port);
                 newBot = new MiniBot(c, name);
             }
