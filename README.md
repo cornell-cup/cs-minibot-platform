@@ -1,6 +1,6 @@
 # cs-minibot-platform
 
-The shared software for the MiniBot platform. Includes a web server running over the base station and python scripts to run on the minibot.
+The shared software for the MiniBot platform. Includes a web server running over the base station and python scripts to run on the minibot. Works for Python 3.6, not Python 2.7. 
 
 # Setup
 
