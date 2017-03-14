@@ -14,25 +14,25 @@ package minibot;
  * implementing
  * MiniBot movements
  */
-/*package*/ interface XboxInputEventHandler {
+/*package*/ abstract class XboxInputEventHandler {
 
-    void dpadMove(int dpadVal);
+    public abstract void dpadMove(int dpadVal);
 
-    void leftThumbMove(double magnitude, double direction);
-    void rightThumbAction(double magnitude, double direction);
+    public abstract void leftThumbMove(double magnitude, double direction);
+    public abstract void rightThumbAction(double magnitude, double direction);
 
-    void leftTriggerAction(double value);
-    void rightTriggerAction(double value);
+    public abstract void leftTriggerAction(double value);
+    public abstract void rightTriggerAction(double value);
 
-    void leftShoulderAction(boolean pressed);
-    void rightShoulderAction(boolean pressed);
+    public abstract void leftShoulderAction(boolean pressed);
+    public abstract void rightShoulderAction(boolean pressed);
 
-    void buttonAAction(boolean pressed);
-    void buttonBAction(boolean pressed);
-    void buttonXAction(boolean pressed);
-    void buttonYAction(boolean pressed);
+    public abstract void buttonAAction(boolean pressed);
+    public abstract void buttonBAction(boolean pressed);
+    public abstract void buttonXAction(boolean pressed);
+    public abstract void buttonYAction(boolean pressed);
 
-    void buttonBackAction(boolean pressed);
-    void buttonStartAction(boolean pressed);
+    public abstract void buttonBackAction(boolean pressed);
+    public abstract void buttonStartAction(boolean pressed);
 
 }

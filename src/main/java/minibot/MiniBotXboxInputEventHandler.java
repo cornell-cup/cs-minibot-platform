@@ -42,7 +42,7 @@ import java.util.Optional;
  * An instance of the MiniBotXboxInputEventHandler class is capable of sending
  * commands to the basestation to maneuver the MiniBot
  */
-/*package*/ class MiniBotXboxInputEventHandler implements
+/*package*/ class MiniBotXboxInputEventHandler extends
         XboxInputEventHandler {
 
     private static final double MAX_MOTOR_POW = 100.0;

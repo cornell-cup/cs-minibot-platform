@@ -14,11 +14,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.w3c.dom.events.EventException;
 import spark.route.RouteOverview;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import static spark.Spark.*;
 
@@ -31,6 +33,7 @@ public class BaseHTTPInterface {
 
     // Temp config settings
     public static final boolean OVERHEAD_VISION = true;
+
 
     public static void main(String[] args) {
         // Spark configuration
@@ -48,19 +51,22 @@ public class BaseHTTPInterface {
         // Global objects
         JsonParser jp = new JsonParser();
         Gson gson = new Gson();
-        try {
-            if (!(new XboxController().isConnected())) {
-                // if xbox controller is not connected
-                throw new
-                        UnsupportedOperationException("Xbox Controller not " +
-                        "Connected");
-            }
 
-            // xbox controller is connected
-            XboxControllerDriver xcd;
-            xcd = new XboxControllerDriver("anmol");
-            xcd.start();
-        } catch (UnsupportedOperationException e) {}
+        // Xbox Control --- testing purposes
+        // does the use want to load the Xbox Controller Driver?
+        Scanner reader = new Scanner(System.in);
+        System.out.println("Press 1 to connect to the xbox controller: ");
+        if (reader.nextInt() == 1) {
+            try{
+                XboxControllerDriver xcd = new XboxControllerDriver("anmol");
+                System.out.println("Xbox driver started");
+                if (!xcd.runDriver())
+                    xcd.stopDriver();
+                System.out.println("Xbox driver stopped");
+            } catch (UnsupportedOperationException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
