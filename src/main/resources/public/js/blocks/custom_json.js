@@ -7,39 +7,43 @@
 	- set wheel power
 	- wheel power percentage stub
 */
-// var a = {
-//   	"type": "move",
-//   	"message0": "move %1 with %2 %% power",
-//   	"args0": [
-//   	{
-//   		"type": "field_dropdown",
-//   		"name": "direction",
-//   		"options": [
-//   		    [
-//   				"forward",
-//   				"fwd"
-//   		    ],
-//   		    [
-//   				"backwards",
-//   				"bkw"
-//   		    ]
-//   		]
-//   	},
-//   	{
-//   		"type": "field_number",
-//   		"name": "speed",
-//   		"value": 50,
-//   		"min": 0,
-//   		"max": 100
-//   	}
-//   	],
-//   	"output": "Boolean",
-//   	"colour": 230,
-//   	"tooltip": "",
-//   	"helpUrl": ""
-// }
 
-var b = [{
+var miniblocks = {
+// MOVE
+move: {
+    "type": "move",
+    "message0": "move %1 with %2 %% power",
+    "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "direction",
+      "options": [
+          [
+          "forward",
+          "fwd"
+          ],
+          [
+          "backwards",
+          "bkw"
+          ]
+      ]
+    },
+    {
+      "type": "field_number",
+      "name": "speed",
+      "value": 50,
+      "min": 0,
+      "max": 100
+    }
+    ],
+    "output": "Boolean",
+    "colour": 230,
+    "tooltip": "",
+    "helpUrl": ""
+  },
+ 
+// TURN 
+turn: {
   "type": "turn",
   "message0": "turn %1 with %2 %% power",
   "args0": [
@@ -70,7 +74,9 @@ var b = [{
   "tooltip": "",
   "helpUrl": ""
 },
-{
+
+// SETPOWER
+setpower: {
   "type": "setpower",
   "message0": "set wheel power %1 %2",
   "args0": [
@@ -89,7 +95,9 @@ var b = [{
   "tooltip": "",
   "helpUrl": ""
 },
-{
+
+//WHEELPOWER
+wheelpower: {
   "type": "wheelpower",
   "message0": "%1 %2 %%",
   "args0": [
@@ -128,4 +136,5 @@ var b = [{
   "colour": 230,
   "tooltip": "",
   "helpUrl": ""
-}]
+}
+};
