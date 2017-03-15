@@ -7,7 +7,7 @@
 	- set wheel power
 	- wheel power percentage stub
 */
-['move': {
+[{
   	"type": "move",
   	"message0": "move %1 with %2 %% power",
   	"args0": [
@@ -39,7 +39,7 @@
   	"helpUrl": ""
 },
 
-'turn': {
+{
   "type": "turn",
   "message0": "turn %1 with %2 %% power",
   "args0": [
@@ -70,7 +70,7 @@
   "tooltip": "",
   "helpUrl": ""
 },
-'setpower': {
+{
   "type": "setpower",
   "message0": "set wheel power %1 %2",
   "args0": [
@@ -89,7 +89,7 @@
   "tooltip": "",
   "helpUrl": ""
 },
-'wheelpower': {
+{
   "type": "wheelpower",
   "message0": "%1 %2 %%",
   "args0": [
