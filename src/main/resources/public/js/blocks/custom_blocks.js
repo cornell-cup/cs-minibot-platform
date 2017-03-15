@@ -1,13 +1,34 @@
 /*
 	Code generators for custom blocks.
-*/
+*
+
+Blockly.Python.math_arithmetic = function(a){
+  var b={
+      ADD:[" + ",Blockly.Python.ORDER_ADDITIVE],
+      MINUS:[" - ",Blockly.Python.ORDER_ADDITIVE],
+      MULTIPLY:[" * ",Blockly.Python.ORDER_MULTIPLICATIVE],
+      DIVIDE:[" / ",Blockly.Python.ORDER_MULTIPLICATIVE],
+      POWER:[" ** ",Blockly.Python.ORDER_EXPONENTIATION]
+    }[a.getFieldValue("OP")],
+    c=b[0],
+    b=b[1],
+    d=Blockly.Python.valueToCode(a,"A",b)||"0";
+  a=Blockly.Python.valueToCode(a,"B",b)||"0";
+  return[d+c+a,b]
+};*/
 
 Blockly.Python['move'] = function(block) {
-	var dir = block.getFieldValue('direction');
+  console.log("move has been touched");
+	// from blockly
+  var dropdown_direction = block.getFieldValue('direction');
 	var number_speed = block.getFieldValue('speed');
-	// TODO: Assemble Python into code variable.
-	var code = "move_forward("+number_speed+")";
-	return [code, Blockly.Python.ORDER_NONE];
+	
+  //string representation of function
+  var fcn = {
+    fwd: "move_forward(",
+    bkw: "move_backward("
+  }[dropdown_direction];
+	return [fcn+number_speed+")", Blockly.Python.ORDER_NONE];
 };
 
 Blockly.Python['turn'] = function(block) {

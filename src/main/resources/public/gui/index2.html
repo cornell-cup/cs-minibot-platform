@@ -2,16 +2,25 @@
 <html>
 <head>
 	<title>ModBot GUI</title>
-
 	<!-- IMPORTS -->
 	<link rel="stylesheet" href="../css/general.css"/>
 	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
-	<!-- END IMPORTS -->
 
+	<!-- blockly imports -->
+	<script src="../js/vendor/blockly/blockly_compressed.js"></script>
+	<script src="../js/vendor/blockly/javascript_compressed.js"></script>
+	<script src="../js/vendor/blockly/python_compressed.js"></script>
+	<script src="../js/vendor/blockly/blocks_compressed.js"></script>
+	<script src="../js/vendor/blockly/en.js"></script>
+	<script src="../js/vendor/prettify/prettify.js"></script>
+
+	<!-- IMPORT CUSTOM BLOCKS -->
+	<script type="text/javascript" src="../js/blocks/custom_json.js"></script>
+	<script type="text/javascript" src="../js/blocks/custom_blocks.js"></script>
+	<!-- END IMPORTS -->
 </head>
 
 <body>
-	<!-- HEADER -->
 	<header>
 		<h1>modbot gui v2.0</h1><br>
 		A GUI to control Cornell Cup's modbot.
@@ -21,7 +30,7 @@
 	<div class="box">
 		<!-- BLOCKLY TOOLBOX -->
 		<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
-		<xml id="toolbox" style="display: none">
+		<xml id="toolbox" style="display:none;">
 			<block type="controls_if"></block>
 			<block type="logic_compare"></block>
 			<block type="controls_repeat_ext"></block>
@@ -29,6 +38,10 @@
 			<block type="math_arithmetic"></block>
 			<block type="text"></block>
 			<block type="text_print"></block>
+
+			<!-- ADDING CUSTOM BLOCKS -->
+			<block type="move"></block>
+			<block type="blobblahblabjk"></block>
 		</xml>
 
 		<!-- SUBMIT/DOWNLOAD/UPLOAD FUNCTIONALITIES -->
@@ -51,21 +64,16 @@
 				accept=".py"
 			/>
 		</form>
-	</div>
-	
-	<!-- MORE IMPORTS -->
+
+
+</div>
+	<!-- basic imports -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="http://pixijs.download/release/pixi.min.js"></script>
-	<script src="../js/vendor/blockly/blockly_compressed.js"></script>
-	<script src="../js/vendor/blockly/javascript_compressed.js"></script>
-	<script src="../js/vendor/blockly/python_compressed.js"></script>
-	<script src="../js/vendor/blockly/blocks_compressed.js"></script>
-	<script src="../js/vendor/blockly/en.js"></script>
-	<script src="../js/vendor/prettify/prettify.js"></script>
-	<script src="../js/blockly.js"></script>
-	<!--<script src="../js/response.js"></script>-->
+
+	<!-- manual scripts -->
+	<script src="../js/blockly.js"></script>	
 	<script src="../js/interface.js"></script>
 	<script src="../js/view.js"></script>
-
 </body>
 </html>

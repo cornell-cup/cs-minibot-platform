@@ -7,38 +7,39 @@
 	- set wheel power
 	- wheel power percentage stub
 */
-[{
-	"type": "move",
-	"message0": "move %1 with %2 %% power",
-	"args0": [
-	{
-		"type": "field_dropdown",
-		"name": "direction",
-		"options": [
-		    [
-				"forward",
-				"fwd"
-		    ],
-		    [
-				"backwards",
-				"bkw"
-		    ]
-		]
-	},
-	{
-		"type": "field_number",
-		"name": "speed",
-		"value": 50,
-		"min": 0,
-		"max": 100
-	}
-	],
-	"output": "Boolean",
-	"colour": 230,
-	"tooltip": "",
-	"helpUrl": ""
+['move': {
+  	"type": "move",
+  	"message0": "move %1 with %2 %% power",
+  	"args0": [
+  	{
+  		"type": "field_dropdown",
+  		"name": "direction",
+  		"options": [
+  		    [
+  				"forward",
+  				"fwd"
+  		    ],
+  		    [
+  				"backwards",
+  				"bkw"
+  		    ]
+  		]
+  	},
+  	{
+  		"type": "field_number",
+  		"name": "speed",
+  		"value": 50,
+  		"min": 0,
+  		"max": 100
+  	}
+  	],
+  	"output": "Boolean",
+  	"colour": 230,
+  	"tooltip": "",
+  	"helpUrl": ""
 },
-{
+
+'turn': {
   "type": "turn",
   "message0": "turn %1 with %2 %% power",
   "args0": [
@@ -69,7 +70,7 @@
   "tooltip": "",
   "helpUrl": ""
 },
-{
+'setpower': {
   "type": "setpower",
   "message0": "set wheel power %1 %2",
   "args0": [
@@ -88,7 +89,7 @@
   "tooltip": "",
   "helpUrl": ""
 },
-{
+'wheelpower': {
   "type": "wheelpower",
   "message0": "%1 %2 %%",
   "args0": [
