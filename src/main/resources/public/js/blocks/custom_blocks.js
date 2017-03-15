@@ -59,19 +59,19 @@ Blockly.Python['move'] = {
   }
 }
 
-Blockly.Python['move'] = function(block) {
-  console.log("move has been touched");
-	// from blockly
-  var dropdown_direction = block.getFieldValue('direction');
-	var number_speed = block.getFieldValue('speed');
+// Blockly.Python['move'] = function(block) {
+//   console.log("move has been touched");
+// 	// from blockly
+//   var dropdown_direction = block.getFieldValue('direction');
+// 	var number_speed = block.getFieldValue('speed');
 	
-  //string representation of function
-  var fcn = {
-    fwd: "move_forward(",
-    bkw: "move_backward("
-  }[dropdown_direction];
-	return [fcn+number_speed+")", Blockly.Python.ORDER_NONE];
-};
+//   //string representation of function
+//   var fcn = {
+//     fwd: "move_forward(",
+//     bkw: "move_backward("
+//   }[dropdown_direction];
+// 	return [fcn+number_speed+")", Blockly.Python.ORDER_NONE];
+// };
 
 Blockly.Python['turn'] = function(block) {
   var dropdown_direction = block.getFieldValue('direction');
