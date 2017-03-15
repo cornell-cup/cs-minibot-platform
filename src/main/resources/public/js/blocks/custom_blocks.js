@@ -17,6 +17,48 @@ Blockly.Python.math_arithmetic = function(a){
   return[d+c+a,b]
 };*/
 
+var a = {
+    "type": "move",
+    "message0": "move %1 with %2 %% power",
+    "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "direction",
+      "options": [
+          [
+          "forward",
+          "fwd"
+          ],
+          [
+          "backwards",
+          "bkw"
+          ]
+      ]
+    },
+    {
+      "type": "field_number",
+      "name": "speed",
+      "value": 50,
+      "min": 0,
+      "max": 100
+    }
+    ],
+    "output": "Boolean",
+    "colour": 230,
+    "tooltip": "",
+    "helpUrl": ""
+}
+
+Blockly.Python['move'] = {
+  init: function() {
+    this.jsonInit(a);
+    var thisBlock = this;
+    this.setTooltip(function() {
+      return 'Add a number to variable';
+    });
+  }
+}
+
 Blockly.Python['move'] = function(block) {
   console.log("move has been touched");
 	// from blockly
