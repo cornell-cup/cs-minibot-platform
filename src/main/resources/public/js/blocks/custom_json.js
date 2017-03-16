@@ -53,11 +53,11 @@ turn: {
       "options": [
         [
           "counterclockwise",
-          "CCW"
+          "turn_counter_clockwise"
         ],
         [
           "clockwise",
-          "CW"
+          "turn_clockwise"
         ]
       ]
     },
@@ -133,6 +133,47 @@ wheelpower: {
   ],
   "previousStatement": null,
   "nextStatement": "wheelpower",
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+},
+
+// SET WHEELPOWER
+setwheelpower: {
+  "type": "setwheelpower",
+  "message0": "set wheelpower %1 front left (%%) %2 front right (%%) %3 back left (%%) %4 back right (%%) %5",
+  "args0": [
+    {
+      "type": "input_dummy",
+      "align": "CENTRE"
+    },
+    {
+      "type": "input_value",
+      "name": "FL",
+      "check": "Number",
+      "align": "RIGHT"
+    },
+    {
+      "type": "input_value",
+      "name": "FR",
+      "check": "Number",
+      "align": "RIGHT"
+    },
+    {
+      "type": "input_value",
+      "name": "BL",
+      "check": "Number",
+      "align": "RIGHT"
+    },
+    {
+      "type": "input_value",
+      "name": "BR",
+      "check": "Number",
+      "align": "RIGHT"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
   "colour": 230,
   "tooltip": "",
   "helpUrl": ""

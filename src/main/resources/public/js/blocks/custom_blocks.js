@@ -32,38 +32,33 @@ Blockly.Blocks['turn'] = {
 Blockly.Python['turn'] = function(block) {
   var dropdown_direction = block.getFieldValue('direction');
   var number_power = block.getFieldValue('power');
-  // TODO: Assemble Python into code variable.
-  var code = '...';
-  // TODO: Change ORDER_NONE to the correct strength.
+  var code = dropdown_direction+"("+number_power+")";
   return [code, Blockly.Python.ORDER_NONE];
 };
 
-// ================ SETPOWER BLOCK ================ //
-Blockly.Blocks['setpower'] = {
+// ================ SET WHEELPOWER BLOCK ================ //
+Blockly.Blocks['setwheelpower'] = {
   init: function() {
-    console.log(miniblocks.setpower);
-    this.jsonInit(miniblocks.setpower);
+    this.jsonInit(miniblocks.setwheelpower);
   }
 };
-Blockly.Python['setpower'] = function(block) {
-  var statements_fl = Blockly.Python.statementToCode(block, 'FL');
-  // TODO: Assemble Python into code variable.
-  var code = '...\n';
-  return code;
-};
+Blockly.Python['setwheelpower'] = function(block) {
+  var power = [
+    Blockly.Python.valueToCode(block, 'FL', Blockly.Python.ORDER_ATOMIC) || 0,
+    Blockly.Python.valueToCode(block, 'FR', Blockly.Python.ORDER_ATOMIC) || 0,
+    Blockly.Python.valueToCode(block, 'BL', Blockly.Python.ORDER_ATOMIC) || 0,
+    Blockly.Python.valueToCode(block, 'BR', Blockly.Python.ORDER_ATOMIC) || 0
+  ]
 
-// ================ WHEELPOWER BLOCK ================ //
-Blockly.Blocks['wheelpower'] = {
-  init: function() {
-    console.log(miniblocks.wheelpower);
-    this.jsonInit(miniblocks.wheelpower);
+  // dealing with wrong inputs
+  for(var i=0; i<4; i++){
+    if(parseInt(power[i])<0) power[i] = 0;
+    else if(power[i]>100) power[i] = 100;
   }
-};
-
-Blockly.Python['wheelpower'] = function(block) {
-  var dropdown_wheel = block.getFieldValue('wheel');
-  var number_power = block.getFieldValue('power');
-  // TODO: Assemble Python into code variable.
-  var code = '...\n';
-  return code;
+  var code = 'set_wheel_power(' 
+    + power[0] + ',' 
+    + power[1] + ',' 
+    + power[2] + ',' 
+    + power[3] + ')';
+  return [code, Blockly.Python.ORDER_NONE];
 };
