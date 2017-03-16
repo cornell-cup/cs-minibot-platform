@@ -32,6 +32,7 @@ def print_flush(msg):
     print(msg)
     sys.stdout.flush()
 
+# Parses cmd and creates a received.py consisting of the semantics of cmd with custom modules prepended
 def runScript(cmd,coz):
     global p
     script = ""
@@ -85,16 +86,15 @@ def runScript(cmd,coz):
         received.write('\n'+'cozmo.run_program(cozmo_program)')
     
     received.close()
-    print("works")
     p = spawn_script_process(p)
 #connectionSocket.close()
 
+# Defines WHEEL powers depending on button that is pressed 
 def move_command(b):
     if b == "A":
         runScript("<<<<WHEELS,0,0,0,0>>>>",False)
     if b == "dd":
         runScript("<<<<WHEELS,-100,-100,-100,-100>>>>",False) 
-        print("yes")
     elif b == "dr":
         runScript("<<<<WHEELS,100,-100,100,-100>>>>",False)
     elif b == "dl":
@@ -102,11 +102,18 @@ def move_command(b):
     else:
         runScript("<<<<WHEELS,100,100,100,100>>>>",False)
 
+# Reads in xbox button inputs from controller directly attached to RPi
 def xbox():
     for event in xbox_read.event_stream(deadzone=12000):
+        
+        # Convert input event into a string so we can parse it
         event_triggered = str(event)
+        
+        # Extracts the button pressed and value (0 or 1 depending on pressed or unpressed)
         button = event_triggered[event_triggered.find("(")+1:event_triggered.find(",")]
         value = event_triggered[event_triggered.find(",")+1:event_triggered.rfind(",")]
+        
+        # Button is 1 when it is pressed
         if value == "1":
             move_command(button)            
 
