@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from socket import *
-import multiprocessing, time, signal, os, sys
+import multiprocessing, time, signal, os, sys, threading
 from multiprocessing import Process
 
 # Initialize our process
@@ -23,6 +23,29 @@ def spawn_script_process(p):
 def print_flush(msg):
     print(msg)
     sys.stdout.flush()
+
+# UDP code taken from < https://pymotw.com/2/socket/udp.html >
+def udpBeacon():
+	# Create a UDP socket
+	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+	server_address = ('192.168.4.255', 5001)
+	message = 'This is the message.  It will be repeated.'
+
+	try:
+
+	    # Send data
+	    # print >>sys.stderr, 'sending "%s"' % message
+	    sent = sock.sendto(message, server_address)
+
+	    # Receive response
+	    # print >>sys.stderr, 'waiting to receive'
+	    data, server = sock.recvfrom(4096)
+	    # print >>sys.stderr, 'received "%s"' % data
+
+	finally:
+	    # print >>sys.stderr, 'closing socket'
+	    sock.close()
 
 def main(p):
     # Process Arguments
@@ -104,3 +127,5 @@ def main(p):
 if (__name__ == "__main__"):
     p = multiprocessing.Process(target=time.sleep, args=(1000,))
     main(p)
+    beacon = threading.Thread(target=udpBeacon)
+    beacon.start()
