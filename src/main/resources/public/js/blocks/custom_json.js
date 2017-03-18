@@ -5,7 +5,7 @@
 	- move
 	- turn
 	- set wheel power
-	- wheel power percentage stub
+  - wait
 */
 
 var miniblocks = {
@@ -75,69 +75,6 @@ turn: {
   "helpUrl": ""
 },
 
-// SETPOWER
-setpower: {
-  "type": "setpower",
-  "message0": "set wheel power %1 %2",
-  "args0": [
-    {
-      "type": "input_dummy"
-    },
-    {
-      "type": "input_statement",
-      "name": "FL",
-      "check": "wheelpower"
-    }
-  ],
-  "previousStatement": null,
-  "nextStatement": null,
-  "colour": 120,
-  "tooltip": "",
-  "helpUrl": ""
-},
-
-//WHEELPOWER
-wheelpower: {
-  "type": "wheelpower",
-  "message0": "%1 %2 %%",
-  "args0": [
-    {
-      "type": "field_dropdown",
-      "name": "wheel",
-      "options": [
-        [
-          "front left",
-          "FL"
-        ],
-        [
-          "front right",
-          "FR"
-        ],
-        [
-          "back left",
-          "BL"
-        ],
-        [
-          "back right",
-          "BR"
-        ]
-      ]
-    },
-    {
-      "type": "field_number",
-      "name": "power",
-      "value": 50,
-      "min": 0,
-      "max": 100
-    }
-  ],
-  "previousStatement": null,
-  "nextStatement": "wheelpower",
-  "colour": 230,
-  "tooltip": "",
-  "helpUrl": ""
-},
-
 // SET WHEELPOWER
 setwheelpower: {
   "type": "setwheelpower",
@@ -170,6 +107,23 @@ setwheelpower: {
       "name": "BR",
       "check": "Number",
       "align": "RIGHT"
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 230,
+  "tooltip": "",
+  "helpUrl": ""
+},
+
+wait: {
+  "type": "wait",
+  "message0": "wait for %1 seconds",
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "time",
+      "check": "Number"
     }
   ],
   "previousStatement": null,

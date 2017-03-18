@@ -43,22 +43,41 @@ Blockly.Blocks['setwheelpower'] = {
   }
 };
 Blockly.Python['setwheelpower'] = function(block) {
-  var power = [
-    Blockly.Python.valueToCode(block, 'FL', Blockly.Python.ORDER_ATOMIC) || 0,
-    Blockly.Python.valueToCode(block, 'FR', Blockly.Python.ORDER_ATOMIC) || 0,
-    Blockly.Python.valueToCode(block, 'BL', Blockly.Python.ORDER_ATOMIC) || 0,
-    Blockly.Python.valueToCode(block, 'BR', Blockly.Python.ORDER_ATOMIC) || 0
-  ]
+  var wheels = ['FL', 'FR', 'BL', 'BR']
+  var power = [0,0,0,0];
 
   // dealing with wrong inputs
   for(var i=0; i<4; i++){
-    if(parseInt(power[i])<0) power[i] = 0;
-    else if(power[i]>100) power[i] = 100;
+    power[i] = Blockly.Python.valueToCode(block, wheels[i], Blockly.Python.ORDER_ATOMIC) || 0;
+    console.log("INSERTED: " + power[i]*1);
+    if(power[i] < 100) {
+    }
+    else if(power[i] > 100) {
+      alert("Oops! Please insert a number between 0 and 100.");
+      power[i] = 100;
+    }
+    else {
+      alert("Oops! Please insert a number between 0 and 100.");
+      power[i] = 0;
+    }
   }
   var code = 'set_wheel_power(' 
     + power[0] + ',' 
     + power[1] + ',' 
     + power[2] + ',' 
     + power[3] + ')';
+  return [code, Blockly.Python.ORDER_NONE];
+};
+
+// ================== WAIT BLOCK ================== //
+Blockly.Blocks['wait'] = {
+  init: function(){
+    this.jsonInit(miniblocks.wait);
+  }
+};
+Blockly.Python['wait'] = function(block) {
+  var time = Blockly.Python.valueToCode(block, 'time', Blockly.Python.ORDER_ATOMIC) || 0;
+  // TODO: Assemble Python into code variable.
+  var code = 'wait(' + time + ')';
   return [code, Blockly.Python.ORDER_NONE];
 };
