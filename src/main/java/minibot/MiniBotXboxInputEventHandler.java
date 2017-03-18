@@ -133,32 +133,32 @@ import java.util.Optional;
                 localSetWheelPower(MAX_MOTOR_POW, MAX_MOTOR_POW, MAX_MOTOR_POW,
                         MAX_MOTOR_POW);
 
-                System.out.println("forward");
+                System.out.println("forward" + botName);
                 break;
             case 1:
                 // move right - forward or CW
                 localSetWheelPower(MAX_MOTOR_POW, -MAX_MOTOR_POW, MAX_MOTOR_POW,
                         -MAX_MOTOR_POW);
 
-                System.out.println("right - forward");
+                System.out.println("right - forward" + botName);
                 break;
             case 2:
                 // move left - forward or CCW
                 localSetWheelPower(-MAX_MOTOR_POW, MAX_MOTOR_POW, -MAX_MOTOR_POW,
                         MAX_MOTOR_POW);
 
-                System.out.println("left - forward");
+                System.out.println("left - forward" + botName);
                 break;
             case 3:
                 // move backward
                 localSetWheelPower(-MAX_MOTOR_POW, -MAX_MOTOR_POW,
                         -MAX_MOTOR_POW, -MAX_MOTOR_POW);
 
-                System.out.println("backward");
+                System.out.println("backward" + botName);
                 break;
             case -1:
                 localSetWheelPower(0.0, 0.0, 0.0, 0.0);
-                System.out.println("stop");
+                System.out.println("stop" + botName);
         }
     }
 
@@ -222,6 +222,11 @@ import java.util.Optional;
 
                 System.out.println("no movement");
         }
+    }
+
+    public void setBotName(String botName) {
+        this.botName = botName;
+        System.out.println(botName);
     }
 
     public void rightThumbAction(double magnitude, double direction) {

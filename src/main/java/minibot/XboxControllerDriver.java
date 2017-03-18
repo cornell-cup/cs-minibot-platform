@@ -80,12 +80,13 @@ import javax.swing.*;
  * An instance of the XboxControllerDriver class reads input from the
  * XboxController, and transfers the data to the MiniBot Handler class
  */
-public class XboxControllerDriver /*implements Runnable*/ {
+public class XboxControllerDriver {
 
     // =========================================================================
     // Fields
     // =========================================================================
 
+    private static XboxControllerDriver instance;
     private static final int MAX_VIBRATE_VALUE = 65535;
     private XboxController xc;
     private MiniBotXboxInputEventHandler mbXboxEventHandler;
@@ -108,11 +109,18 @@ public class XboxControllerDriver /*implements Runnable*/ {
     /**
      * Constructor: Initializes the Controller and the Bot
      */
-    /*package*/ XboxControllerDriver(String _botName) {
+    private XboxControllerDriver(String _botName) {
 
         xc = new XboxController();
         botName = _botName;
         mbXboxEventHandler = new MiniBotXboxInputEventHandler(botName);
+    }
+
+    public static XboxControllerDriver getInstance() {
+        if (instance == null) {
+            instance = new XboxControllerDriver("anmol");
+        }
+        return instance;
     }
 
     // =========================================================================
@@ -311,8 +319,12 @@ public class XboxControllerDriver /*implements Runnable*/ {
     // Main method to test independently
     // =========================================================================
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         XboxControllerDriver xcd = new XboxControllerDriver("anmol");
         xcd.runDriver();
+    }
+
+    public MiniBotXboxInputEventHandler getMbXboxEventHandler() {
+        return this.mbXboxEventHandler;
     }
 }

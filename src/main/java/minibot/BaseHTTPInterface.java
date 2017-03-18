@@ -52,22 +52,6 @@ public class BaseHTTPInterface {
         JsonParser jp = new JsonParser();
         Gson gson = new Gson();
 
-        // Xbox Control --- testing purposes
-        // does the use want to load the Xbox Controller Driver?
-        Scanner reader = new Scanner(System.in);
-        System.out.println("Press 1 to connect to the xbox controller: ");
-        if (reader.nextInt() == 1) {
-            try{
-                XboxControllerDriver xcd = new XboxControllerDriver("anmol");
-                System.out.println("Xbox driver started");
-                if (!xcd.runDriver())
-                    xcd.stopDriver();
-                System.out.println("Xbox driver stopped");
-            } catch (UnsupportedOperationException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(ovs);
@@ -177,5 +161,33 @@ public class BaseHTTPInterface {
             }
             return respData;
         });
+
+        post("/updateXboxBotName", (req, res) -> {
+            System.out.println("HI");
+            String body = req.body();
+            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+
+            /* storing json objects into actual variables */
+            String name = commandInfo.get("name").getAsString();
+
+            XboxControllerDriver.getInstance().getMbXboxEventHandler().setBotName(name);
+            return true;
+        });
+
+        // Xbox Control --- testing purposes
+        // does the use want to load the Xbox Controller Driver?
+        Scanner reader = new Scanner(System.in);
+        System.out.println("Press 1 to connect to the xbox controller: ");
+        if (reader.nextInt() == 1) {
+            try{
+                XboxControllerDriver xcd = XboxControllerDriver.getInstance();
+                System.out.println("Xbox driver started");
+                if (!xcd.runDriver())
+                    xcd.stopDriver();
+                System.out.println("Xbox driver stopped");
+            } catch (UnsupportedOperationException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 }
