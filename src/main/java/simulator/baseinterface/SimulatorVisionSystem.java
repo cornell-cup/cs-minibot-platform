@@ -1,6 +1,6 @@
 package simulator.baseinterface;
 
-import basestation.BaseStation;
+
 import basestation.vision.VisionCoordinate;
 import basestation.vision.VisionObject;
 import basestation.vision.VisionSystem;
@@ -13,11 +13,6 @@ import java.util.Set;
 
 import org.jbox2d.dynamics.World;
 
-import static java.lang.System.nanoTime;
-
-/**
- * Created by Administrator on 11/8/2016.
- */
 public class SimulatorVisionSystem extends VisionSystem {
     /**
      * Sets up a VisionSystem with o as its origin
@@ -46,7 +41,6 @@ public class SimulatorVisionSystem extends VisionSystem {
         if (instance == null) {
             instance = new SimulatorVisionSystem();
         }
-
         return instance;
     }
 
@@ -56,6 +50,7 @@ public class SimulatorVisionSystem extends VisionSystem {
     }
 
     public World getWorld() { return world;}
+
     /**
      * Handles a new input of data
      *
@@ -64,23 +59,17 @@ public class SimulatorVisionSystem extends VisionSystem {
     public void processPhysicalObjects(ArrayList<PhysicalObject> pObjs) {
         HashSet<VisionObject> newSet = new HashSet<>();
         for(PhysicalObject obj: pObjs) {
-            //direction is stored as radians in simulator.physics
-//            double dirDegrees = obj.getPhysics().getDirection() * 360.0 / (2*Math.PI);
-
             VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(), 0.0);
             VisionObject vo = new VisionObject(this,obj.getID(),vc);
             newSet.add(vo);
             po_set.add(obj);
         }
-
     }
 
     public void stepSimulation() {
         long now = System.nanoTime();
         long delta = now - before;
         before = now;
-        //System.out.println(delta / 10e8);
-        //float timeStep = 1.0f / UPDATES_PER_SECOND;
         float timeStep = (float)(delta / 10e8);
         int velocityIterations = 6;
         int positionIterations = 4;
@@ -93,10 +82,6 @@ public class SimulatorVisionSystem extends VisionSystem {
                 VisionObject vo = new VisionObject(this,po.getID(),vc);
 
                 newSet.add(vo);
-
-                //Vec2 position = po.getBody().getPosition();
-                //float angle = po.getBody().getAngle();
-                //System.out.printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
             }
         this.set = newSet;
     }

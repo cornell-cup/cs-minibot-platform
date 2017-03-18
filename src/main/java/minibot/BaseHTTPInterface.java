@@ -164,7 +164,6 @@ public class BaseHTTPInterface {
          */
         get("/updateloc", (req, res) -> {
             // Locations of all active bots
-            //System.out.println("post to update received");
             List<VisionObject> vol = BaseStation
                     .getInstance()
                     .getVisionManager()

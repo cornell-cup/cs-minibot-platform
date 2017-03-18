@@ -88,7 +88,6 @@ console.log("reset");
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
 function drawBot(b) {
-//console.log("drawBot");
 	var circle = new PIXI.Graphics();
 	circle.beginFill(0x0EB530);
 	circle.drawCircle(0, 0, 25);
@@ -96,6 +95,15 @@ function drawBot(b) {
 
 	circle.x = b.x*x_int;
 	circle.y = b.y*y_int;
+
+    var circle2 = new PIXI.Graphics();
+    circle2.beginFill(0xFF0000);
+    circle2.drawCircle(0, 0, 5);
+    circle2.endFill();
+
+    circle2.x = b.x*x_int+25*Math.sin(b.angle);
+    circle2.y = b.y*y_int+25*Math.cos(b.angle);
+
 	botContainer.addChild(circle);
 }
 
