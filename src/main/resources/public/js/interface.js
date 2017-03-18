@@ -123,6 +123,7 @@ $('#removeBot').click(function() {
 
 // when adding a bot
 $('#addBot').click(function() {
+    console.log("addbot from interface.js")
     $.ajax({
         method: "POST",
         url: '/addBot',

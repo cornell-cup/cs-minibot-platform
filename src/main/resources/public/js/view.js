@@ -11,7 +11,7 @@ the current vision).
 Bots have four fields: x coordinate, y coordinate, angle, and id.
 */
 
-const TIME_PER_UPDATE = 120; // modbot update interval in ms
+const MILLIS_PER_VISION_UPDATE = 33; // modbot update interval in ms
 var bots = [            // hard-coded bots for testing
     newBot(1,1,0,"bob"), 
     newBot(3,3,0,"bobette")
@@ -47,7 +47,7 @@ function main() {
     displayBots(bots);
     grid.render(stage);
 
-    // TODO MAKE FAULT TOLERANT setInterval(getNewVisionData, TIME_PER_UPDATE);
+    getNewVisionData();
     pollBotNames();
 }
 
@@ -64,6 +64,7 @@ function newBot(x, y, angle, id) {
 
 /* Zoom-out function to make all active bots visible on grid. */
 $("#zoom-out").click(function() {
+    console.log("zoom out");
     if(bots.length!==0) {
         scaleToFit();
         zoomclicked = true;
@@ -73,7 +74,8 @@ $("#zoom-out").click(function() {
 });
 
 /* Reset function to return to original view (from zoom-out). */
-$("#reset").click(function(){ 
+$("#reset").click(function(){
+console.log("reset");
     updateInfo(x_int, y_int);
     botContainer.removeChildren();
     setupGridLines();
@@ -93,6 +95,15 @@ function drawBot(b) {
 
 	circle.x = b.x*x_int;
 	circle.y = b.y*y_int;
+
+    var circle2 = new PIXI.Graphics();
+    circle2.beginFill(0xFF0000);
+    circle2.drawCircle(0, 0, 5);
+    circle2.endFill();
+
+    circle2.x = b.x*x_int+25*Math.sin(b.angle);
+    circle2.y = b.y*y_int+25*Math.cos(b.angle);
+
 	botContainer.addChild(circle);
 }
 
@@ -141,23 +152,35 @@ function setupGridLines() {
 	Updating location of bots on grid.
 */
 function getNewVisionData() {
-    $.ajax({
-        url: '/updateloc',
-        type: 'GET',
-        dataType: 'json',
-        success: function visionDataGot(data) {
-            bots = [];
-            botContainer.removeChildren();
-            for (var b in data) {
-                var bot = data[b];
-                bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
-            }
 
-            setupGridLines();
-            displayBots(bots);
-            grid.render(stage);
-        }
-    });
+    if (document.getElementById('vision-poll').checked) {
+        $.ajax({
+            url: '/updateloc',
+            type: 'GET',
+            dataType: 'json',
+            success: function visionDataGot(data) {
+                bots = [];
+                botContainer.removeChildren();
+                for (var b in data) {
+                    //console.log("YAY");
+                    var bot = data[b];
+                    var zz = bot.x;
+                    var aa = bot.y
+                    var bb = bot.angle
+                    var idid = bot.id
+                    bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
+                }
+
+                setupGridLines();
+                displayBots(bots);
+                grid.render(stage);
+                setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE);
+                          },
+            error: () => {getNewVisionData(MILLIS_PER_VISION_UPDATE)}
+        });
+    } else {
+        setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE * 10);
+    }
 }
 
 /*
@@ -167,6 +190,7 @@ function getNewVisionData() {
     inv: bots is not empty.
 */
 function scaleToFit() {
+    console.log("scaled to fit");
 	var botmin_x = bots[0].x;
     var botmin_y = bots[0].y;
     var botmax_x = bots[0].x;
@@ -223,6 +247,9 @@ function pollBotNames() {
             }
 
 
+            setTimeout(pollBotNames,2000); // Try again in 2 sec
+        },
+        error: function() {
             setTimeout(pollBotNames,2000); // Try again in 2 sec
         }
     });
