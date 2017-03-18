@@ -1,9 +1,7 @@
-package basestation.bot.robot.simbot;
+package simbot;
 
 import basestation.bot.connection.TCPConnection;
 import basestation.bot.robot.Bot;
-import basestation.bot.robot.minibot.MiniBotCommandCenter;
-import basestation.bot.robot.minibot.MiniBotSensorCenter;
 import basestation.bot.sensors.SensorCenter;
 
 /**

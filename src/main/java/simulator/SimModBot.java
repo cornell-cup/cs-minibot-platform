@@ -1,8 +1,9 @@
 package simulator;
 
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 import simulator.physics.PhysicalObject;
-import org.jbox2d.common.Vec2;
+
 /**
  * Created by Administrator on 11/15/2016.
  */

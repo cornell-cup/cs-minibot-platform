@@ -2,30 +2,48 @@ package simulator.physics; /**
  * Physical Object can be any object in the simulator including modbots, walls, and obstacles.
  */
 //import graphics.*;
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.collision.shapes.PolygonShape;
+
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.dynamics.FixtureDef;
+
+import java.awt.geom.Rectangle2D;
 
 public class PhysicalObject {
     private final String name;
     private Body body;
     private int id;
+    private World world;
 
     public PhysicalObject(String name, int id, World world, float xSpeed, float ySpeed, float xPos, float yPos, boolean isDynamic) {
         this.name = name;
         this.id = id;
-        BodyDef bd = new BodyDef();
-        bd.type = isDynamic ? BodyType.DYNAMIC : BodyType.STATIC;
-        bd.position = (new Vec2(xPos, yPos));
-        bd.linearVelocity = (new Vec2(xSpeed, ySpeed));
-        this.body = new Body(bd, world);
+
+        BodyDef testbody = new BodyDef();
+        testbody.position.set(new Vec2(xPos, yPos));
+        testbody.type = BodyType.DYNAMIC;
+        Vec2 testvec = new Vec2(xSpeed, ySpeed);
+        testbody.linearVelocity = testvec;
+        //testbody.linearDamping = 0.1f;
+
+        CircleShape cs = new CircleShape();
+        cs.m_radius = 2.0f;
+
+        FixtureDef testFixture = new FixtureDef();
+        testFixture.shape = cs;
+        testFixture.density = 0.5f;
+
+        this.world = world;
+        Body b = world.createBody(testbody);
+        b.createFixture(testFixture);
+        Vec2 gravity = new Vec2(0.0f, 0.0f);
+        world.setGravity(gravity);
+        this.body = b;
+
     }
 
     /**
@@ -67,6 +85,9 @@ public class PhysicalObject {
         return speed.y;
     }
 
+    public World getWorld() {
+        return world;
+    }
     public void setSpeed(float x, float y) {
         this.body.setLinearVelocity(new Vec2(x,y));
     }
@@ -77,7 +98,11 @@ public class PhysicalObject {
      * @return the object's x-coordinate
      */
     public double getX() {
-        return x;
+        return this.body.getPosition().x;
+    }
+
+    public double getY() {
+        return this.body.getPosition().y;
     }
 
     /**
@@ -86,52 +111,6 @@ public class PhysicalObject {
     public Body getBody() { return body;}
 
     //change all instances of rectangle to Rectangle2D/whichever allows for doubles
-
-    /**
-     * Updates the object's velocity and position based off it's acceleration and velocity
-     */
-    public void move () {
-        //If the angular velocity is 0, then the robot is moving linearly
-        if (this.getPhysics().getAngularVel()==0) {
-
-            //Find x and y components of acceleration and add to velocity
-            double vel_x = (((this.getPhysics().getAcceleration() / simulator.Simulator.STEPS_PER_SECOND) *
-                    Math.cos(this.getPhysics().getDirection()))  +
-                    (this.getPhysics().getXVelocity() / simulator.Simulator.STEPS_PER_SECOND));
-            double vel_y = (((this.getPhysics().getAcceleration() / simulator.Simulator.STEPS_PER_SECOND) *
-                    Math.sin(this.getPhysics().getDirection())) +
-                    (this.getPhysics().getYVelocity() / simulator.Simulator.STEPS_PER_SECOND));
-
-            double new_vel = this.getPhysics().getSpeed();
-
-            //Change the rectangle coordinates to move it
-            ((Rectangle2D.Double) this.getShape()).setRect(((Rectangle2D.Double) this.getShape()).getX() + vel_x,
-                    ((Rectangle2D.Double) this.getShape()).getY() + vel_y,
-                    ((Rectangle2D.Double) this.getShape()).getHeight(),
-                    ((Rectangle2D.Double) this.getShape()).getWidth());
-
-            this.x = this.getX() + vel_x;
-            this.y = this.getY() + vel_y;
-
-            //Change velocity and momentum in simulator.physics.Physics of this object
-            this.setPhysics(new Physics(this.getPhysics().getMass(), new_vel, this.getPhysics().getDirection(),
-                    this.getPhysics().getAcceleration(), this.getPhysics().getStaticFriction(),
-                    this.getPhysics().getDynamicFriction(), this.getPhysics().getForce(),
-                    this.getPhysics().getMass() * new_vel, this.getPhysics().getAngularVel()));
-        }
-        //If the angular velocity is not 0, then the robot is spinning
-        else{
-            double new_ang = (((this.getPhysics().getAngularVel() / simulator.Simulator.STEPS_PER_SECOND) +
-                    this.getPhysics().getDirection()) % (2*Math.PI));
-
-            this.setPhysics(new Physics(this.getPhysics().getMass(), this.getPhysics().getSpeed(),new_ang,
-                    this.getPhysics().getAcceleration(), this.getPhysics().getStaticFriction(),
-                    this.getPhysics().getDynamicFriction(), this.getPhysics().getForce(),
-                    this.getPhysics().getMomentum(), this.getPhysics().getAngularVel()));
-
-        }
-    }
-
 
 
 

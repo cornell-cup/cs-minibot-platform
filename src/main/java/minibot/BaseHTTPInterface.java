@@ -13,11 +13,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import simulator.physics.PhysicalObject;
 import spark.route.RouteOverview;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
+import simulator.baseinterface.SimulatorVisionSystem;
+
+
+import simbot.SimBot;
 
 import static spark.Spark.*;
 
@@ -36,7 +42,7 @@ public class BaseHTTPInterface {
         port(8080);
         staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
-
+       SimulatorVisionSystem simvs;
         // Show exceptions
         exception(Exception.class, (exception,request,response) -> {
             exception.printStackTrace();
@@ -51,6 +57,9 @@ public class BaseHTTPInterface {
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(ovs);
+            simvs = SimulatorVisionSystem.getInstance();
+            BaseStation.getInstance().getVisionManager().addVisionSystem( simvs);
+
         }
 
         // Routes
@@ -78,7 +87,13 @@ public class BaseHTTPInterface {
                 TCPConnection c = new TCPConnection(ip, port);
                 newBot = new SimBot(c, name);
                 System.out.println("simbot created");
-                BaseStation.getInstance().getVisionManager().addVisionSystem(
+
+                PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.4f, 0.0f, 1f, 1f, true);
+
+                ArrayList<PhysicalObject> pObjs = new ArrayList<>();
+                pObjs.add(po);
+                simvs.processPhysicalObjects(pObjs);
+
             }
 
 
@@ -86,6 +101,7 @@ public class BaseHTTPInterface {
         });
 
         post("/commandBot", (req,res) -> {
+            System.out.println("post to command bot called");
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
 
@@ -149,6 +165,9 @@ public class BaseHTTPInterface {
          */
         get("/updateloc", (req, res) -> {
             // Locations of all active bots
+            //System.out.println("post to update received");
+            simvs.stepSimulation();
+            Thread.sleep(90);
             List<VisionObject> vol = BaseStation
                     .getInstance()
                     .getVisionManager()

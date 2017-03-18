@@ -1,4 +1,4 @@
-package basestation.bot.robot.simbot;
+package simbot;
 
 import basestation.bot.sensors.SensorCenter;
 /**

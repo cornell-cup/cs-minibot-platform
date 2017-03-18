@@ -64,6 +64,7 @@ function newBot(x, y, angle, id) {
 
 /* Zoom-out function to make all active bots visible on grid. */
 $("#zoom-out").click(function() {
+    console.log("zoom out");
     if(bots.length!==0) {
         scaleToFit();
         zoomclicked = true;
@@ -73,7 +74,8 @@ $("#zoom-out").click(function() {
 });
 
 /* Reset function to return to original view (from zoom-out). */
-$("#reset").click(function(){ 
+$("#reset").click(function(){
+console.log("reset");
     updateInfo(x_int, y_int);
     botContainer.removeChildren();
     setupGridLines();
@@ -83,9 +85,18 @@ $("#reset").click(function(){
     $(this).css("display","none");
 });
 
+$("#updateLocs").click(function() {
+    for(var iterations = 0; iterations < 180; iterations++) {
+        setTimeout(function(){
+            //do what you need here
+        }, 90);
+        getNewVisionData();}
+    });
+
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
 function drawBot(b) {
+//console.log("drawBot");
 	var circle = new PIXI.Graphics();
 	circle.beginFill(0x0EB530);
 	circle.drawCircle(0, 0, 25);
@@ -141,15 +152,24 @@ function setupGridLines() {
 	Updating location of bots on grid.
 */
 function getNewVisionData() {
+
     $.ajax({
         url: '/updateloc',
         type: 'GET',
         dataType: 'json',
         success: function visionDataGot(data) {
+            console.log("getNewVisionData was a success");
             bots = [];
             botContainer.removeChildren();
             for (var b in data) {
+                //console.log("YAY");
                 var bot = data[b];
+                var zz = bot.x;
+                var aa = bot.y
+                var bb = bot.angle
+                var idid = bot.id
+                //console.log(zz);
+                //console.log(aa);
                 bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
             }
 
@@ -167,6 +187,7 @@ function getNewVisionData() {
     inv: bots is not empty.
 */
 function scaleToFit() {
+    console.log("scaled to fit");
 	var botmin_x = bots[0].x;
     var botmin_y = bots[0].y;
     var botmax_x = bots[0].x;
