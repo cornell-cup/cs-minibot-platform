@@ -18,20 +18,26 @@ public class SimBotCommandCenter implements FourWheelMovement {
         //forwards
         if(fl > 0 && fr > 0 && bl >0 && br>0) {
             System.out.println("forward");
-            b.setLinearVelocity(new Vec2((float)(0.655*fl/100), 0.0f));
+            float angle = b.getAngle();
+            float newX = (float) (topspeed*fl/100*Math.cos(angle));
+            float newY = (float) (topspeed*fl/100*Math.sin(angle));
+            b.setLinearVelocity(new Vec2(newX, newY));
             b.setAngularVelocity(0.0f);
         }
 
         //backwards
         if(fl < 0 && fr < 0 && bl < 0 && br < 0) {
+            float angle = b.getAngle();
+            float newX = (float) (topspeed*fl/100*Math.cos(angle));
+            float newY = (float) (topspeed*fl/100*Math.sin(angle));
             System.out.println("backward");
-            b.setLinearVelocity(new Vec2((float)(0.655*fl/100), 0.0f));
+            b.setLinearVelocity(new Vec2(newX, newY));
             b.setAngularVelocity(0.0f);
         }
 
         //no motor power
         if(fl == 0 && fr == 0 && bl == 0 && br == 0) {
-            System.out.println("motor stopped");
+            System.out.println("no motor power");
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
             b.setAngularVelocity(0.0f);
         }
@@ -40,14 +46,14 @@ public class SimBotCommandCenter implements FourWheelMovement {
         if(fl > 0 && fr < 0 && bl > 0 && br < 0) {
             System.out.println("turning right");
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
-            b.setAngularVelocity(turningspeed);
+            b.setAngularVelocity(-turningspeed);
         }
 
         //turning left
         if(fl < 0 && fr > 0 && bl < 0 && br > 0) {
             System.out.println("turning left");
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
-            b.setAngularVelocity(-turningspeed);
+            b.setAngularVelocity(turningspeed);
         }
 
         return true;

@@ -101,8 +101,8 @@ function drawBot(b) {
     circle2.drawCircle(0, 0, 5);
     circle2.endFill();
 
-    circle2.x = b.x*x_int+25*Math.sin(b.angle);
-    circle2.y = b.y*y_int+25*Math.cos(b.angle);
+    circle2.x = b.x*x_int+25*Math.cos(b.angle);
+    circle2.y = b.y*y_int+25*Math.sin(b.angle);
 
 	botContainer.addChild(circle);
 	botContainer.addChild(circle2);
@@ -110,7 +110,7 @@ function drawBot(b) {
 
 /* Displays all bots given an array of bots */
 function displayBots(botArray) {
-	for(var b in botArray) {
+	for(var b=0; b<botArray.length;b++) {
 		drawBot(botArray[b]);
 	}
 }
@@ -166,9 +166,10 @@ function getNewVisionData() {
                     //console.log("YAY");
                     var bot = data[b];
                     var zz = bot.x;
-                    var aa = bot.y
-                    var bb = bot.angle
-                    var idid = bot.id
+                    var aa = bot.y;
+                    var bb = bot.angle;
+                    console.log(bot.angle);
+                    var idid = bot.id;
                     bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
                 }
 
