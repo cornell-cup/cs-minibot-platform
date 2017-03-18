@@ -27,11 +27,15 @@ public class SimulatorVisionSystem extends VisionSystem {
     private HashSet<PhysicalObject> po_set;
     private World world;
 
+    public static final float UPDATES_PER_SECOND = 60;
+
     public SimulatorVisionSystem() {
         super(new VisionCoordinate(0, 0, 0));
         set = new HashSet<>();
         world = new World(new Vec2(0f, 0f));
         po_set = new HashSet<>();
+        SimRunner sr = new SimRunner();
+        sr.start();
     }
 
     public static SimulatorVisionSystem getInstance() {
@@ -65,11 +69,10 @@ public class SimulatorVisionSystem extends VisionSystem {
             po_set.add(obj);
         }
 
-
     }
 
     public void stepSimulation() {
-        float timeStep = 1.0f / 30.f;
+        float timeStep = 1.0f / UPDATES_PER_SECOND;
         int velocityIterations = 6;
         int positionIterations = 4;
 
@@ -88,7 +91,20 @@ public class SimulatorVisionSystem extends VisionSystem {
                 //System.out.printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
             }
         this.set = newSet;
+    }
 
+    private class SimRunner extends Thread {
 
+        @Override
+        public void run() {
+            while (true) {
+                stepSimulation();
+                try {
+                    Thread.sleep((long)(1000f / UPDATES_PER_SECOND));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

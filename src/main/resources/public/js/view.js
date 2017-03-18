@@ -11,7 +11,7 @@ the current vision).
 Bots have four fields: x coordinate, y coordinate, angle, and id.
 */
 
-const MILLIS_PER_VISION_UPDATE = 33; // modbot update interval in ms
+const MILLIS_PER_VISION_UPDATE = 1; // modbot update interval in ms
 var bots = [            // hard-coded bots for testing
     newBot(1,1,0,"bob"), 
     newBot(3,3,0,"bobette")
@@ -174,7 +174,7 @@ function getNewVisionData() {
         });
     } else {
             console.log('no polling');
-        setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE);
+        setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE * 10);
     }
 }
 
@@ -242,6 +242,9 @@ function pollBotNames() {
             }
 
 
+            setTimeout(pollBotNames,2000); // Try again in 2 sec
+        },
+        error: function() {
             setTimeout(pollBotNames,2000); // Try again in 2 sec
         }
     });

@@ -14,6 +14,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import simulator.physics.PhysicalObject;
+import simulator.simbot.SimBotConnection;
 import spark.route.RouteOverview;
 
 import java.util.ArrayList;
@@ -84,7 +85,8 @@ public class BaseHTTPInterface {
                 newBot = new MiniBot(c, name);
             }
                else {
-                newBot = new SimBot(name);
+                SimBotConnection sbc = new SimBotConnection();
+                newBot = new SimBot(sbc, name);
 
                 PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.4f, 0.0f, 1f, 1f, true);
 
@@ -163,8 +165,6 @@ public class BaseHTTPInterface {
         get("/updateloc", (req, res) -> {
             // Locations of all active bots
             //System.out.println("post to update received");
-            simvs.stepSimulation();
-            Thread.sleep(90);
             List<VisionObject> vol = BaseStation
                     .getInstance()
                     .getVisionManager()

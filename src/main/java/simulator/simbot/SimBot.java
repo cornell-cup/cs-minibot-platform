@@ -12,8 +12,8 @@ public class SimBot extends Bot {
      * Currently minibots are implemented using a TCP connection
      */
 
-    public SimBot(String name) {
-        super(null);
+    public SimBot(SimBotConnection sbc, String name) {
+        super(sbc);
         this.commandCenter = new SimBotCommandCenter(this);
         this.sensorCenter = new SimBotSensorCenter();
     }
