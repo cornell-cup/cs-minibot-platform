@@ -105,6 +105,7 @@ function drawBot(b) {
     circle2.y = b.y*y_int+25*Math.cos(b.angle);
 
 	botContainer.addChild(circle);
+	botContainer.addChild(circle2);
 }
 
 /* Displays all bots given an array of bots */
