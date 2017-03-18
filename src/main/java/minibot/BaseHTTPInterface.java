@@ -41,7 +41,7 @@ public class BaseHTTPInterface {
 
     public static void main(String[] args) {
         // Spark configuration
-        port(8080);
+        port(8081);
         staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
        SimulatorVisionSystem simvs;
@@ -182,6 +182,7 @@ public class BaseHTTPInterface {
         });
 
         get("/discoverBots", (req, res) -> {
+            System.out.println("Sending back");
             return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
 
         });

@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
 from socket import *
-import multiprocessing, time, signal, os, sys, threading
+import multiprocessing, time, signal, os, sys, threading, socket
 
 #From https//github.com/zephod/legopi
-from lib.legopi.lib import xbox_read
+# from lib.legopi.lib import xbox_read
 
 from multiprocessing import Process
 from threading import Thread
@@ -45,7 +45,7 @@ def udpBeacon():
 	while True:
 		try:
 		    # Send data
-		    print('sending "%s"' % message)
+		    # print('sending "%s"' % message)
 		    sent = sock.sendto(message, server_address)
 		except:
 		    pass
@@ -122,19 +122,19 @@ def move_command(b):
         runScript("<<<<WHEELS,100,100,100,100>>>>",False)
 
 # Reads in xbox button inputs from controller directly attached to RPi
-def xbox():
-    for event in xbox_read.event_stream(deadzone=12000):
-        
-        # Convert input event into a string so we can parse it
-        event_triggered = str(event)
-        
-        # Extracts the button pressed and value (0 or 1 depending on pressed or unpressed)
-        button = event_triggered[event_triggered.find("(")+1:event_triggered.find(",")]
-        value = event_triggered[event_triggered.find(",")+1:event_triggered.rfind(",")]
-        
-        # Button is 1 when it is pressed
-        if value == "1":
-            move_command(button)
+# def xbox():
+#    for event in xbox_read.event_stream(deadzone=12000):
+#
+#        # Convert input event into a string so we can parse it
+#        event_triggered = str(event)
+#
+#        # Extracts the button pressed and value (0 or 1 depending on pressed or unpressed)
+#        button = event_triggered[event_triggered.find("(")+1:event_triggered.find(",")]
+#        value = event_triggered[event_triggered.find(",")+1:event_triggered.rfind(",")]
+#
+#        # Button is 1 when it is pressed
+#        if value == "1":
+#            move_command(button)
 
 def main(p):
     # Process Arguments
@@ -159,8 +159,8 @@ def main(p):
 
 # Since we are using multiple processes, need to check for main.
 if (__name__ == "__main__"):
-    threadxbox = Thread(target = xbox())
-    threadxbox.start()
-    main(p)
+    #threadxbox = Thread(target = xbox())
+    #threadxbox.start()
     beacon = threading.Thread(target=udpBeacon)
     beacon.start()
+    main(p)
