@@ -11,7 +11,7 @@ the current vision).
 Bots have four fields: x coordinate, y coordinate, angle, and id.
 */
 
-const TIME_PER_UPDATE = 120; // modbot update interval in ms
+const MILLIS_PER_VISION_UPDATE = 33; // modbot update interval in ms
 var bots = [            // hard-coded bots for testing
     newBot(1,1,0,"bob"), 
     newBot(3,3,0,"bobette")
@@ -47,7 +47,7 @@ function main() {
     displayBots(bots);
     grid.render(stage);
 
-    // TODO MAKE FAULT TOLERANT setInterval(getNewVisionData, TIME_PER_UPDATE);
+    getNewVisionData();
     pollBotNames();
 }
 
@@ -84,14 +84,6 @@ console.log("reset");
     $("#zoom-out").css("display","inline");
     $(this).css("display","none");
 });
-
-$("#updateLocs").click(function() {
-    for(var iterations = 0; iterations < 180; iterations++) {
-        setTimeout(function(){
-            //do what you need here
-        }, 90);
-        getNewVisionData();}
-    });
 
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
@@ -153,31 +145,37 @@ function setupGridLines() {
 */
 function getNewVisionData() {
 
-    $.ajax({
-        url: '/updateloc',
-        type: 'GET',
-        dataType: 'json',
-        success: function visionDataGot(data) {
-            console.log("getNewVisionData was a success");
-            bots = [];
-            botContainer.removeChildren();
-            for (var b in data) {
-                //console.log("YAY");
-                var bot = data[b];
-                var zz = bot.x;
-                var aa = bot.y
-                var bb = bot.angle
-                var idid = bot.id
-                //console.log(zz);
-                //console.log(aa);
-                bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
-            }
+    if (document.getElementById('vision-poll').checked) {
+        console.log('polling');
+        $.ajax({
+            url: '/updateloc',
+            type: 'GET',
+            dataType: 'json',
+            success: function visionDataGot(data) {
+                console.log("getNewVisionData was a success");
+                bots = [];
+                botContainer.removeChildren();
+                for (var b in data) {
+                    //console.log("YAY");
+                    var bot = data[b];
+                    var zz = bot.x;
+                    var aa = bot.y
+                    var bb = bot.angle
+                    var idid = bot.id
+                    bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
+                }
 
-            setupGridLines();
-            displayBots(bots);
-            grid.render(stage);
-        }
-    });
+                setupGridLines();
+                displayBots(bots);
+                grid.render(stage);
+                setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE);
+                          },
+            error: () => {getNewVisionData(MILLIS_PER_VISION_UPDATE)}
+        });
+    } else {
+            console.log('no polling');
+        setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE);
+    }
 }
 
 /*

@@ -1,26 +1,13 @@
-package simbot;
+package simulator.simbot;
 
-import basestation.BaseStation;
 import basestation.bot.commands.FourWheelMovement;
-import basestation.bot.connection.TCPConnection;
 import simulator.baseinterface.SimulatorVisionSystem;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.common.Vec2;
 
-/**
- * Created by jimmychen on 3/10/17.
- */
 public class SimBotCommandCenter implements FourWheelMovement {
-    private final TCPConnection connection;
 
-
-    public SimBotCommandCenter(TCPConnection connection, SimBot myBot) {
-        this.connection = connection;
-    }
-
-    @Override
-    public boolean sendKV(String type, String payload) {
-        return connection.sendKV(type, payload);
+    public SimBotCommandCenter(SimBot myBot) {
     }
 
     @Override
@@ -37,5 +24,10 @@ public class SimBotCommandCenter implements FourWheelMovement {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean sendKV(String key, String value) {
+        return false;
     }
 }

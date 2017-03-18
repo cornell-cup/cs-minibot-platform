@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 import simulator.baseinterface.SimulatorVisionSystem;
 
 
-import simbot.SimBot;
+import simulator.simbot.SimBot;
 
 import static spark.Spark.*;
 
@@ -84,16 +84,13 @@ public class BaseHTTPInterface {
                 newBot = new MiniBot(c, name);
             }
                else {
-                TCPConnection c = new TCPConnection(ip, port);
-                newBot = new SimBot(c, name);
-                System.out.println("simbot created");
+                newBot = new SimBot(name);
 
                 PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.4f, 0.0f, 1f, 1f, true);
 
                 ArrayList<PhysicalObject> pObjs = new ArrayList<>();
                 pObjs.add(po);
                 simvs.processPhysicalObjects(pObjs);
-
             }
 
 
