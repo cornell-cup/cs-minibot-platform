@@ -16,6 +16,8 @@ Pages and functions:
 */
 
 $("#ip").value = document.URL;
+active_bots = [];
+discovered_bots = [];
 
 /* Getters */
 function getIP(){
@@ -138,6 +140,24 @@ $('#addBot').click(function() {
     });
 });
 
+// When adding a discovered bot
+$('.discoverbot').click(function() {
+    //Get minibot's IP address
+    var target = $(event.target); //$target
+    var bot_ip = target.getAttribute("value");
+
+    //Add to active_bots list
+    active_bots.push(bot_ip);
+
+    //Remove from discovered_bots list, display refactored later
+    for(let i=0; i<discovered_bots.length; i++){
+        //If the IP addresses match, remove that element in discovered_bots
+        if(discovered_bots[i]==bot_ip){
+            splice.discovered_bots(i,i+1);
+        }
+    }
+});
+//
 /*
 	For any update to the list of active bots, the dropdown menu
 	of active bots will update accordingly (depending on the addition
@@ -194,8 +214,74 @@ function manageBots(option, name){
 	});
 }
 
+/* Get set of discoverable minibots*/
+function getDiscoveredBots(){
+    $.ajax({
+        method: "POST",
+        url: '/discoverBots',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (data) {
+             //Check if discovered_bots and data are the same (check length and then contents)
+            if(data.length != discovered_bots.length){
+                //If not then clear list and re-make displayed elements
+                redoDiscoverList(data);
+            }
+            else{
+                //Check value to ensure both structures contain the same data
+                for(let x=0;x<data.length;x++){
+                    if(data[x]!=discovered_bots[x]){
+                        redoDiscoverList(data);
+                        //Prevent the list from being remade constantly
+                        break;
+                    }
+                }
+            }
+        }
+    });
+}
+
+function redoDiscoverList(data){
+    var discover_list = document.getElementById("discovered");
+
+    //Clear all child elements from the display list
+    discover_list.empty();
+
+    for (let i = 0; i < data.length; i++) {
+        //Create elements for the site
+        var bot_ip = document.createElement('p');
+        var add_ip = document.createElement('button');
+        var next = document.createElement('break');
+        //bot_ip.idName = data[i];
+        bot_ip.text = data[i];
+        //add_ip.idName = data[i];
+        add_ip.text = "Add bot";
+        add_ip.value = data[i];
+        add_ip.className = "discoverbot";
+        //add_ip.text = "Add bot"
+
+        //Append site elements
+        discover_list.appendChild(bot_ip);
+        bot_ip.appendChild(add_ip);
+        bot_ip.appendChild(next);
+    }
+}
+
 function listBots(){
 	// lists all the bots
+
+//    $.ajax({
+//		method: "POST",
+//		url: getIP() + option,
+//		data: JSON.stringify({
+//			name: name
+//		}),
+//		processData: false,
+//		contentType: 'application/json',
+//		success: function (data){
+//		    console.log("Burp");
+//		}
+//	});
 }
 
 /*

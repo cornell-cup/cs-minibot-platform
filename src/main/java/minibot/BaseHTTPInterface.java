@@ -1,5 +1,6 @@
 package minibot;
 
+import Ice.UDPConnectionInfo;
 import basestation.BaseStation;
 import basestation.bot.commands.FourWheelMovement;
 import basestation.bot.connection.IceConnection;
@@ -156,6 +157,11 @@ public class BaseHTTPInterface {
                 respData.add(jo);
             }
             return respData;
+        });
+
+        get("/discoverBots", (req, res) -> {
+            return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
+
         });
     }
 }

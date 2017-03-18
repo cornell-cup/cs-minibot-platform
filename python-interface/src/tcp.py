@@ -37,23 +37,19 @@ def udpBeacon():
 	# Create a UDP socket
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+	# Define broadcasting address and message
 	server_address = ('192.168.4.255', 5001)
 	message = 'This is the message.  It will be repeated.'
 
-	try:
-
-	    # Send data
-	    # print >>sys.stderr, 'sending "%s"' % message
-	    sent = sock.sendto(message, server_address)
-
-	    # Receive response
-	    # print >>sys.stderr, 'waiting to receive'
-	    data, server = sock.recvfrom(4096)
-	    # print >>sys.stderr, 'received "%s"' % data
-
-	finally:
-	    # print >>sys.stderr, 'closing socket'
-	    sock.close()
+	# Send message and resend every 9 seconds
+	while True:
+		try:
+		    # Send data
+		    print('sending "%s"' % message)
+		    sent = sock.sendto(message, server_address)
+		except:
+		    pass
+		time.sleep(9)
 
 # Parses cmd and creates a received.py consisting of the semantics of cmd with custom modules prepended
 def runScript(cmd,coz):
