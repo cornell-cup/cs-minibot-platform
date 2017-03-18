@@ -13,6 +13,8 @@ import java.util.Set;
 
 import org.jbox2d.dynamics.World;
 
+import static java.lang.System.nanoTime;
+
 /**
  * Created by Administrator on 11/8/2016.
  */
@@ -26,14 +28,16 @@ public class SimulatorVisionSystem extends VisionSystem {
     private volatile HashSet<VisionObject> set;
     private HashSet<PhysicalObject> po_set;
     private World world;
+    private long before;
 
-    public static final float UPDATES_PER_SECOND = 60;
+    public static final float UPDATES_PER_SECOND = 30;
 
     public SimulatorVisionSystem() {
         super(new VisionCoordinate(0, 0, 0));
         set = new HashSet<>();
         world = new World(new Vec2(0f, 0f));
         po_set = new HashSet<>();
+        before = System.nanoTime();
         SimRunner sr = new SimRunner();
         sr.start();
     }
@@ -72,13 +76,17 @@ public class SimulatorVisionSystem extends VisionSystem {
     }
 
     public void stepSimulation() {
-        float timeStep = 1.0f / UPDATES_PER_SECOND;
+        long now = System.nanoTime();
+        long delta = now - before;
+        before = now;
+        //System.out.println(delta / 10e8);
+        //float timeStep = 1.0f / UPDATES_PER_SECOND;
+        float timeStep = (float)(delta / 10e8);
         int velocityIterations = 6;
         int positionIterations = 4;
 
         HashSet<VisionObject> newSet = new HashSet<>();
             for(PhysicalObject po: po_set ) {
-                System.out.println("step");
                 po.getWorld().step(timeStep, velocityIterations, positionIterations);
 
                 VisionCoordinate vc = new VisionCoordinate(po.getX(),po.getY(), 100.0);
