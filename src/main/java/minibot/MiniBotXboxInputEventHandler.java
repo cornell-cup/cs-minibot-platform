@@ -56,6 +56,10 @@ import java.util.Optional;
         botName = _botName;
     }
 
+    /*package*/ MiniBotXboxInputEventHandler() {
+        botName = "";
+    }
+
     /**
      * Convert degrees to radians
      * Precondition: degree >= 0

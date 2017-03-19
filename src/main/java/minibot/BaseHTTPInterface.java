@@ -33,6 +33,7 @@ public class BaseHTTPInterface {
 
     // Temp config settings
     public static final boolean OVERHEAD_VISION = true;
+    private static XboxControllerDriver xcd;
 
 
     public static void main(String[] args) {
@@ -162,32 +163,44 @@ public class BaseHTTPInterface {
             return respData;
         });
 
-        post("/updateXboxBotName", (req, res) -> {
-            System.out.println("HI");
+        post("/runXbox", (req, res) -> {
+            System.out.println("Xbox activated");
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
 
             /* storing json objects into actual variables */
             String name = commandInfo.get("name").getAsString();
 
-            XboxControllerDriver.getInstance().getMbXboxEventHandler().setBotName(name);
+            // if this is called for the first time, initialize the Xbox
+            // Controller
+            if (xcd == null) {
+                // xbox not initialized
+                xboxStartDriver(name);
+            }
+            // xbox initialized
+            xcd.getMbXboxEventHandler().setBotName(name);
+
             return true;
         });
-
-        // Xbox Control --- testing purposes
-        // does the use want to load the Xbox Controller Driver?
-        Scanner reader = new Scanner(System.in);
-        System.out.println("Press 1 to connect to the xbox controller: ");
-        if (reader.nextInt() == 1) {
-            try{
-                XboxControllerDriver xcd = XboxControllerDriver.getInstance();
-                System.out.println("Xbox driver started");
-                if (!xcd.runDriver())
-                    xcd.stopDriver();
-                System.out.println("Xbox driver stopped");
-            } catch (UnsupportedOperationException e) {
-                System.out.println(e.getMessage());
-            }
-        }
     }
+
+    /**
+     * Start the Xbox Controller Driver for the first time
+     * @param _botName Name of the Bot to be controlled
+     */
+    private static void xboxStartDriver(String _botName) {
+
+        try {
+            xcd = XboxControllerDriver.getInstance();
+            xcd.getMbXboxEventHandler().setBotName(_botName);
+            System.out.println("Xbox driver started");
+            if (!xcd.runDriver())
+                xcd.stopDriver();
+            System.out.println("Xbox driver stopped");
+        } catch (UnsupportedOperationException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
 }

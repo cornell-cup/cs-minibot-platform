@@ -90,7 +90,6 @@ public class XboxControllerDriver {
     private static final int MAX_VIBRATE_VALUE = 65535;
     private XboxController xc;
     private MiniBotXboxInputEventHandler mbXboxEventHandler;
-    private String botName;         // name of the bot
     private int leftVibrate;        // in 0..MAX_VIBRATE_VALUE
     private int rightVibrate;       // in 0..MAX_VIBRATE_VALUE
     private double leftMag;         // in 0..1
@@ -109,18 +108,29 @@ public class XboxControllerDriver {
     /**
      * Constructor: Initializes the Controller and the Bot
      */
-    private XboxControllerDriver(String _botName) {
+    private XboxControllerDriver() {
 
         xc = new XboxController();
-        botName = _botName;
-        mbXboxEventHandler = new MiniBotXboxInputEventHandler(botName);
+        mbXboxEventHandler = new MiniBotXboxInputEventHandler();
     }
 
+    /**
+     * Singleton class XboxControllerDriver's getInstance
+     * @return The Singleton object
+     */
     public static XboxControllerDriver getInstance() {
         if (instance == null) {
-            instance = new XboxControllerDriver("anmol");
+            instance = new XboxControllerDriver();
         }
         return instance;
+    }
+
+    /**
+     * Get the MinibotXboxEventHandler object
+     * @return MinibotXboxInputEventHandler object
+     */
+    public MiniBotXboxInputEventHandler getMbXboxEventHandler() {
+        return this.mbXboxEventHandler;
     }
 
     // =========================================================================
@@ -313,18 +323,5 @@ public class XboxControllerDriver {
             mbXboxEventHandler.leftThumbMove(leftMag, leftDir);
         }
         defaultAllFields();
-    }
-
-    // =========================================================================
-    // Main method to test independently
-    // =========================================================================
-
-    private static void main(String[] args) {
-        XboxControllerDriver xcd = new XboxControllerDriver("anmol");
-        xcd.runDriver();
-    }
-
-    public MiniBotXboxInputEventHandler getMbXboxEventHandler() {
-        return this.mbXboxEventHandler;
     }
 }
