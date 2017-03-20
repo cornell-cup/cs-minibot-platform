@@ -164,7 +164,6 @@ public class BaseHTTPInterface {
         });
 
         post("/runXbox", (req, res) -> {
-            System.out.println("Xbox activated");
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
 
@@ -174,33 +173,53 @@ public class BaseHTTPInterface {
             // if this is called for the first time, initialize the Xbox
             // Controller
             if (xcd == null) {
-                // xbox not initialized
-                xboxStartDriver(name);
-            }
-            // xbox initialized
-            xcd.getMbXboxEventHandler().setBotName(name);
+                // xbox not initialized, initialize it first
+                xcd = new XboxControllerDriver();
 
+                // xcd != null
+                if (xcd.xboxIsConnected()) {
+                    // xbox is connected
+                    // run the driver
+                    xcd.getMbXboxEventHandler().setBotName(name);
+                    xcd.runDriver();
+                } else {
+                    // xbox is not connected, stop the driver
+                    stopXboxDriver();
+                }
+            } else {
+                // xcd != null -- xbox initialized already
+                if (xcd.xboxIsConnected()) {
+                    // xbox is connected
+                    // should be already listening in this case
+                    // just set the new name
+                    xcd.getMbXboxEventHandler().setBotName(name);
+                } else {
+                    // xbox is not connected, stop the driver
+                    stopXboxDriver();
+                }
+            }
+            return true;
+        });
+
+        post("/stopXbox", (req, res) -> {
+            // received stop command, stop the driver
+            stopXboxDriver();
             return true;
         });
     }
 
     /**
-     * Start the Xbox Controller Driver for the first time
-     * @param _botName Name of the Bot to be controlled
+     * Tells the Xbox Controller Driver to stop
+     * Acts as a middleman between this interface and the driver on stopping
      */
-    private static void xboxStartDriver(String _botName) {
-
-        try {
-            xcd = XboxControllerDriver.getInstance();
-            xcd.getMbXboxEventHandler().setBotName(_botName);
-            System.out.println("Xbox driver started");
-            if (!xcd.runDriver())
-                xcd.stopDriver();
-            System.out.println("Xbox driver stopped");
-        } catch (UnsupportedOperationException e) {
-            System.out.println(e.getMessage());
+    private static void stopXboxDriver() {
+        if (xcd != null) {
+            // xbox is currently initialized
+            xcd.stopDriver();
+            xcd = null;
         }
-
+        // xcd == null
+        // might get this request from stopXbox HTTP post
+        // nothing to do
     }
-
 }

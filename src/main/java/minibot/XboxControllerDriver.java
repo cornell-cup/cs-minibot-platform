@@ -23,9 +23,8 @@ package minibot;
  * Important Instructions: READ THEM TO UNDERSTAND THE PROGRAM
  * (in no specific order/priority)
  *      - Whenever exiting the program, ensure calling the release() method of
- *          the XboxController instance
- *      - Check if the XboxController is connected, if not don't execute
- *          anything else
+ *          the XboxController instance [NOT FIGURED OUT YET IN THIS
+ *          IMPLEMENTATION]
  *      - If an action method is triggered by 2 or more callbacks, use the
  *          'synchronized' keyword. Example, dpad and Left/RightThumbs call
  *          moveBot
@@ -74,19 +73,17 @@ package minibot;
 
 import ch.aplu.xboxcontroller.*;
 
-import javax.swing.*;
-
 /**
  * An instance of the XboxControllerDriver class reads input from the
  * XboxController, and transfers the data to the MiniBot Handler class
  */
-public class XboxControllerDriver {
+/*package*/ class XboxControllerDriver {
 
     // =========================================================================
     // Fields
     // =========================================================================
 
-    private static XboxControllerDriver instance;
+    // private static XboxControllerDriver instance;
     private static final int MAX_VIBRATE_VALUE = 65535;
     private XboxController xc;
     private MiniBotXboxInputEventHandler mbXboxEventHandler;
@@ -108,33 +105,22 @@ public class XboxControllerDriver {
     /**
      * Constructor: Initializes the Controller and the Bot
      */
-    private XboxControllerDriver() {
+    /*package*/ XboxControllerDriver() {
 
         xc = new XboxController();
         mbXboxEventHandler = new MiniBotXboxInputEventHandler();
     }
 
     /**
-     * Singleton class XboxControllerDriver's getInstance
-     * @return The Singleton object
-     */
-    public static XboxControllerDriver getInstance() {
-        if (instance == null) {
-            instance = new XboxControllerDriver();
-        }
-        return instance;
-    }
-
-    /**
      * Get the MinibotXboxEventHandler object
      * @return MinibotXboxInputEventHandler object
      */
-    public MiniBotXboxInputEventHandler getMbXboxEventHandler() {
+    /*package*/ MiniBotXboxInputEventHandler getMbXboxEventHandler() {
         return this.mbXboxEventHandler;
     }
 
     // =========================================================================
-    // Xbox Controller Driver Utility Functions
+    // XboxControllerDriver Utility Functions
     // =========================================================================
 
     /**
@@ -142,10 +128,10 @@ public class XboxControllerDriver {
      */
     private void defaultAllFields() {
         dpadVal = -1;
-        leftDir = 0.0;
-        rightDir = 0.0;
-        leftMag = 0.0;
-        rightMag = 0.0;
+        leftDir = -1.0;
+        rightDir = -1.0;
+        leftMag = -1.0;
+        rightMag = -1.0;
     }
 
     /**
@@ -153,56 +139,26 @@ public class XboxControllerDriver {
      * error
      * @return False if not connected, true if connected
      */
-    private boolean xboxIsConnected() {
+    /*package*/ boolean xboxIsConnected() {
         if (!xc.isConnected()) {
-            // if Xbox is not connected, pop up a dialog box showing a fatal
-            // error
-            JOptionPane.showMessageDialog(null,
-                    "Xbox controller not connected", "Fatal error",
-                    JOptionPane.ERROR_MESSAGE);
-
-            // release all xbox listeners
-            xc.release();
+            // stopDriver();
             return false;
         }
-
         // xbox connected
         return true;
     }
 
     /**
-     * Runs the Xbox Controller Driver by testing the connection and listening
-     * to inputs
-     * @return False if runDriver is stopped
-     * @throws UnsupportedOperationException If Xbox is not connected
+     * Runs the Xbox Controller Driver
      */
-    /*package*/ boolean runDriver() throws UnsupportedOperationException {
-        if (!xboxIsConnected())
-            // xbox is not connected, throw exception
-            throw new UnsupportedOperationException("Xbox Not Connected");
-
-        // xbox is connected, listen to it
+    /*package*/ void runDriver() throws UnsupportedOperationException {
         listenToXbox();
-
-        // if the program is here, then listenToXbox must have completed run
-        return false;
-    }
-
-    /**
-     * Exit the driver by releasing Xbox's memory allocation
-     */
-    /*package*/ void stopDriver() {
-        System.out.println("Exiting Xbox Controller Driver...");
-
-        // release memory in Xbox Controller
-        xc.release();
     }
 
     /**
      * Listens to XboxController's inputs
-     * @return False if listening was stopped
      */
-    private boolean listenToXbox() {
+    private void listenToXbox() {
 
         // 0.0 <= thumbs' output value <= 1.0
         // values <= 0.5 are ignored (reduced to 0)
@@ -234,31 +190,19 @@ public class XboxControllerDriver {
             }
 
             public void buttonA(boolean pressed) {
-                // do nothing
-                /*leftVibrate = 65535;
-                rightVibrate = 65535;
-                xc.vibrate(leftVibrate, rightVibrate);*/
+                // do something
             }
 
             public void buttonB(boolean pressed) {
-                // do nothing
-                /*leftVibrate = MAX_VIBRATE_VALUE;
-                rightVibrate = MAX_VIBRATE_VALUE;
-                xc.vibrate(leftVibrate, rightVibrate);*/
+                // do something
             }
 
             public void buttonX(boolean pressed) {
-                // do nothing
-                /*leftVibrate = MAX_VIBRATE_VALUE;
-                rightVibrate = MAX_VIBRATE_VALUE;
-                xc.vibrate(leftVibrate, rightVibrate);*/
+                // do something
             }
 
             public void buttonY(boolean pressed) {
-                // do nothing
-                /*leftVibrate = MAX_VIBRATE_VALUE;
-                rightVibrate = MAX_VIBRATE_VALUE;
-                xc.vibrate(leftVibrate, rightVibrate);*/
+                // do something
             }
 
             public void leftThumbMagnitude(double magnitude) {
@@ -268,7 +212,6 @@ public class XboxControllerDriver {
 
             public void rightThumbMagnitude(double magnitude) {
                 rightMag = magnitude;
-                // moveBot(); -- removed moving functionality from rightThumb
             }
 
             public void leftThumbDirection(double direction) {
@@ -285,28 +228,32 @@ public class XboxControllerDriver {
             }
 
             public void back(boolean pressed) {
-                // do nothing
+                // do something
             }
 
             public void start(boolean pressed) {
-                // do nothing
+                // do something
             }
-
         });
+    }
 
-        JOptionPane.showMessageDialog(null,
-                "Xbox controller connected.\n" +
-                        "Press all buttons to test (the console prints values), " +
-                        "Ok to quit.",
-                "XboxController MiniBot",
-                JOptionPane.PLAIN_MESSAGE);
+    /**
+     * Exit the driver
+     */
+    /*package*/ void stopDriver() {
+        stopListeningToXbox();
+    }
 
-        // dialog box closed, listening stopped
-        return false;
+    /**
+     * Stops listening to XboxController's inputs
+     */
+    private void stopListeningToXbox() {
+        // just do nothing on inputs :P
+        xc.addXboxControllerListener(new XboxControllerAdapter());
     }
 
     // =========================================================================
-    // Functions to forward commands to Bot
+    // Functions to Forward Commands to Bot
     // =========================================================================
 
     /**

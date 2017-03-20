@@ -45,8 +45,16 @@ import java.util.Optional;
 /*package*/ class MiniBotXboxInputEventHandler extends
         XboxInputEventHandler {
 
+    // =========================================================================
+    // Fields
+    // =========================================================================
+
     private static final double MAX_MOTOR_POW = 100.0;
     private String botName;
+
+    // =========================================================================
+    // Constructors
+    // =========================================================================
 
     /**
      * Constructor: initializes the instance and the bot
@@ -58,6 +66,18 @@ import java.util.Optional;
 
     /*package*/ MiniBotXboxInputEventHandler() {
         botName = "";
+    }
+
+    // =========================================================================
+    // MiniBotXboxInputEventHandler Utility Functions
+    // =========================================================================
+
+    /**
+     * Set the MiniBot's Name
+     * @param botName Name of the Bot
+     */
+    /*package*/ void setBotName(String botName) {
+        this.botName = botName;
     }
 
     /**
@@ -94,6 +114,10 @@ import java.util.Optional;
             }
         }
     }
+
+    // =========================================================================
+    // Movement Functions
+    // =========================================================================
 
     /**
      * Convert dpad's directions to forward, CW, CCW or
@@ -201,36 +225,31 @@ import java.util.Optional;
                 // move forward
                 localSetWheelPower(power, power, power, power);
 
-                System.out.println("forward");
+                System.out.println("forward" + botName);
                 break;
             case 1:
                 // move right - forward or CW
                 localSetWheelPower(power, -power, power, -power);
 
-                System.out.println("right - forward");
+                System.out.println("right - forward" + botName);
                 break;
             case 2:
                 // move left - forward or CCW
                 localSetWheelPower(-power, power, -power, power);
 
-                System.out.println("left - forward");
+                System.out.println("left - forward" + botName);
                 break;
             case 3:
                 // move backward
                 localSetWheelPower(-power, -power, -power, -power);
 
-                System.out.println("backward");
+                System.out.println("backward" + botName);
                 break;
             case -1:
                 localSetWheelPower(0.0, 0.0, 0.0, 0.0);
 
-                System.out.println("no movement");
+                System.out.println("no movement" + botName);
         }
-    }
-
-    public void setBotName(String botName) {
-        this.botName = botName;
-        System.out.println(botName);
     }
 
     public void rightThumbAction(double magnitude, double direction) {
