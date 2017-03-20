@@ -91,6 +91,10 @@ public class SimBot extends Bot {
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");
                                     break;
+                                case "STOP":
+                                    this.commandCenter.setWheelPower(0,0,0,0);
+                                    System.out.println("STOPPING");
+                                    break;
                                 case "KILL":
                                     run = false;
                                     System.out.println("Exiting\n");
@@ -101,12 +105,12 @@ public class SimBot extends Bot {
                                     String[] wheel_cmds = cmd.split(",");
 
 
-//                                   this.commandCenter.setWheelPower(
-//                                           Double.parseDouble(wheel_cmds[0]),
-//                                           Double.parseDouble(wheel_cmds[1]),
-//                                           Double.parseDouble(wheel_cmds[2]),
-//                                           Double.parseDouble(wheel_cmds[3])
-//                                    );
+                                   this.commandCenter.setWheelPower(
+                                           Double.parseDouble(wheel_cmds[0]),
+                                           Double.parseDouble(wheel_cmds[1]),
+                                           Double.parseDouble(wheel_cmds[2]),
+                                           Double.parseDouble(wheel_cmds[3])
+                                    );
                                     break;
 
                             }
