@@ -1,3 +1,6 @@
 [submodule "dependencies/cs-base-station-interface"]
 	path = dependencies/cs-base-station-interface
 	url = https://github.com/cornell-cup/cs-base-station-interface.git
+[submodule "cs-bot-simulator"]
+	path = cs-bot-simulator
+	url = https://github.com/cornell-cup/cs-bot-simulator

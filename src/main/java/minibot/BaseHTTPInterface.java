@@ -14,12 +14,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.w3c.dom.events.EventException;
+import simulator.physics.PhysicalObject;
+import simulator.simbot.SimBotConnection;
 import spark.route.RouteOverview;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
+import simulator.baseinterface.SimulatorVisionSystem;
+
+
+import simulator.simbot.SimBot;
 
 import static spark.Spark.*;
 
@@ -40,7 +46,7 @@ public class BaseHTTPInterface {
         port(8080);
         staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
-
+       SimulatorVisionSystem simvs;
         // Show exceptions
         exception(Exception.class, (exception,request,response) -> {
             exception.printStackTrace();
@@ -55,6 +61,9 @@ public class BaseHTTPInterface {
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(ovs);
+            simvs = SimulatorVisionSystem.getInstance();
+            BaseStation.getInstance().getVisionManager().addVisionSystem( simvs);
+
         }
 
         // Routes
@@ -74,15 +83,27 @@ public class BaseHTTPInterface {
             if(type.equals("modbot")) {
                 IceConnection ice = new IceConnection(ip, port);
                 newBot = new ModBot(ice, name);
-            } else {
+            } else if(type.equals("minibot")) {
                 TCPConnection c = new TCPConnection(ip, port);
                 newBot = new MiniBot(c, name);
             }
+               else {
+                SimBotConnection sbc = new SimBotConnection();
+                newBot = new SimBot(sbc, name);
+
+                PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.4f, 0.0f, 1f, 1f, true);
+
+                ArrayList<PhysicalObject> pObjs = new ArrayList<>();
+                pObjs.add(po);
+                simvs.processPhysicalObjects(pObjs);
+            }
+
 
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
 
         post("/commandBot", (req,res) -> {
+            System.out.println("post to command bot called");
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
 

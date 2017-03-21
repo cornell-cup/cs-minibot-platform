@@ -1,9 +1,12 @@
-class BaseMiniBot(object):
+class BaseMiniBot:
     """
     Abstract class defining the base functions of the MiniBot. More customized MiniBots may
     subclass this.
     """
-    def move_forward(power):
+    def __init__(self):
+        pass
+
+    def move_forward(self, power):
         """
         Moves the bot forward at a percentage of its full power
         
@@ -12,7 +15,7 @@ class BaseMiniBot(object):
         """
         print("Unimplemented: Moving forward "+str(power))
 
-    def move_backward(power):
+    def move_backward(self, power):
         """
         Moves the bot backward at a percentage of its full power
         
@@ -21,7 +24,7 @@ class BaseMiniBot(object):
         """
         print("Unimplemented: Moving backward "+str(power))
 
-    def turn_clockwise(power):
+    def turn_clockwise(self, power):
         """
         Moves the bot clockwise  at a percentage of its full power
         
@@ -30,7 +33,7 @@ class BaseMiniBot(object):
         """
         print("Unimplemented: Turning clockwise "+str(power))
 
-    def turn_counter_clockwise(power):
+    def turn_counter_clockwise(self, power):
         """
         Moves the bot counter-clockwise at a percentage of its full power
         
@@ -39,7 +42,7 @@ class BaseMiniBot(object):
         """
         print("Unimplemented: Turning counter clockwise "+str(power))
 
-    def set_wheel_power(front_left, front_right, back_left, back_right):
+    def set_wheel_power(self, front_left, front_right, back_left, back_right):
         """
         Sets the power of the bot's wheels as a percentage from -100 to 100. If a wheel
         specified does not exist, the power for that wheel is ignored.
@@ -52,7 +55,7 @@ class BaseMiniBot(object):
         """
         print("Unimplemented: Setting wheel power to %d,%d,%d,%d" % (front_left, front_right, back_left, back_right))
 
-    def wait(t):
+    def wait(self, t):
         """
         Waits for a duration in seconds.
 
