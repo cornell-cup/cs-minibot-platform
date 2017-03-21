@@ -4,14 +4,12 @@ package minibot;
  * =============================================================================
  * XboxControllerDriver.java
  * Documentation on http://www.aplu.ch/home/apluhomex.jsp?site=36 |
- * WWW.APLU.CH IS THE SHIT
  * =============================================================================
- * Created by Trevor Edwards and Anmol Kabra
  * Cornell Cup Robotics Team 2016-2017
  * =============================================================================
  * Requirements:
  *      - Hardware:
- *          - XboxController (you're kidding me?)
+ *          - XboxController
  *      - Libraries:
  *          - jaw.jar               --- java wrapper class for C++ code (Xbox
  *              drivers are written in C++)
@@ -23,7 +21,7 @@ package minibot;
  * Important Instructions: READ THEM TO UNDERSTAND THE PROGRAM
  * (in no specific order/priority)
  *      - Whenever exiting the program, ensure calling the release() method of
- *          the XboxController instance [NOT FIGURED OUT YET IN THIS
+ *          the XboxController instance [NOT YET FIGURED OUT IN THIS
  *          IMPLEMENTATION]
  *      - If an action method is triggered by 2 or more callbacks, use the
  *          'synchronized' keyword. Example, dpad and Left/RightThumbs call
@@ -37,10 +35,10 @@ package minibot;
  * =============================================================================
  * How to Use the Xbox Controller:
  * ONLY DPAD AND LEFTTHUMB MOVE THE BOT
- *      - Forward: dpad N OR leftThumb N (0 in code)
- *      - Backward: dpad S OR leftThumb S (3 in code)
- *      - Right - forward or CW: dpad E or leftThumb E (1 in code)
- *      - Left - forward or CCW: dpad W or leftThumb W (2 in code)
+ *      - Forward: dpad N OR leftThumb N
+ *      - Backward: dpad S OR leftThumb S
+ *      - Right - forward or CW: dpad E or leftThumb E
+ *      - Left - forward or CCW: dpad W or leftThumb W
  * =============================================================================
  */
 
@@ -77,7 +75,7 @@ import ch.aplu.xboxcontroller.*;
  * An instance of the XboxControllerDriver class reads input from the
  * XboxController, and transfers the data to the MiniBot Handler class
  */
-/*package*/ class XboxControllerDriver {
+class XboxControllerDriver {
 
     // =========================================================================
     // Fields
@@ -85,7 +83,7 @@ import ch.aplu.xboxcontroller.*;
 
     // private static XboxControllerDriver instance;
     private static final int MAX_VIBRATE_VALUE = 65535;
-    private XboxController xc;
+    private XboxController xboxController;
     private MiniBotXboxInputEventHandler mbXboxEventHandler;
     private int leftVibrate;        // in 0..MAX_VIBRATE_VALUE
     private int rightVibrate;       // in 0..MAX_VIBRATE_VALUE
@@ -105,9 +103,9 @@ import ch.aplu.xboxcontroller.*;
     /**
      * Constructor: Initializes the Controller and the Bot
      */
-    /*package*/ XboxControllerDriver() {
+    XboxControllerDriver() {
 
-        xc = new XboxController();
+        xboxController = new XboxController();
         mbXboxEventHandler = new MiniBotXboxInputEventHandler();
     }
 
@@ -115,7 +113,7 @@ import ch.aplu.xboxcontroller.*;
      * Get the MinibotXboxEventHandler object
      * @return MinibotXboxInputEventHandler object
      */
-    /*package*/ MiniBotXboxInputEventHandler getMbXboxEventHandler() {
+    MiniBotXboxInputEventHandler getMbXboxEventHandler() {
         return this.mbXboxEventHandler;
     }
 
@@ -139,36 +137,24 @@ import ch.aplu.xboxcontroller.*;
      * error
      * @return False if not connected, true if connected
      */
-    /*package*/ boolean xboxIsConnected() {
-        if (!xc.isConnected()) {
-            // stopDriver();
-            return false;
-        }
-        // xbox connected
-        return true;
-    }
-
-    /**
-     * Runs the Xbox Controller Driver
-     */
-    /*package*/ void runDriver() throws UnsupportedOperationException {
-        listenToXbox();
+    boolean xboxIsConnected() {
+        return xboxController.isConnected();
     }
 
     /**
      * Listens to XboxController's inputs
      */
-    private void listenToXbox() {
+    void runDriver() {
 
         // 0.0 <= thumbs' output value <= 1.0
         // values <= 0.5 are ignored (reduced to 0)
-        xc.setLeftThumbDeadZone(0.2);
-        xc.setRightThumbDeadZone(1.0);  // NOT USING RIGHTTHUMB
+        xboxController.setLeftThumbDeadZone(0.2);
+        xboxController.setRightThumbDeadZone(1.0);  // NOT USING RIGHTTHUMB
 
         // 0.0 <= triggers' output value <= 1.0
         // values <= 0.2 are ignored (reduced to 0)
-        xc.setLeftTriggerDeadZone(0.2);
-        xc.setRightTriggerDeadZone(0.2);
+        xboxController.setLeftTriggerDeadZone(0.2);
+        xboxController.setRightTriggerDeadZone(0.2);
 
         // default all values so that these listeners don't take in
         // past values
@@ -176,17 +162,17 @@ import ch.aplu.xboxcontroller.*;
 
         // Register callbacks
         // implementing methods of the XboxControllerListener Interface
-        xc.addXboxControllerListener(new XboxControllerAdapter() {
+        xboxController.addXboxControllerListener(new XboxControllerAdapter() {
 
             // implement all required functions
             public void leftTrigger(double value) {
                 leftVibrate = (int)(MAX_VIBRATE_VALUE * value * value);
-                xc.vibrate(leftVibrate, rightVibrate);
+                xboxController.vibrate(leftVibrate, rightVibrate);
             }
 
             public void rightTrigger(double value) {
                 rightVibrate = (int)(MAX_VIBRATE_VALUE * value * value);
-                xc.vibrate(leftVibrate, rightVibrate);
+                xboxController.vibrate(leftVibrate, rightVibrate);
             }
 
             public void buttonA(boolean pressed) {
@@ -237,19 +223,13 @@ import ch.aplu.xboxcontroller.*;
         });
     }
 
-    /**
-     * Exit the driver
-     */
-    /*package*/ void stopDriver() {
-        stopListeningToXbox();
-    }
 
     /**
      * Stops listening to XboxController's inputs
      */
-    private void stopListeningToXbox() {
+    void stopDriver() {
         // just do nothing on inputs :P
-        xc.addXboxControllerListener(new XboxControllerAdapter());
+        xboxController.addXboxControllerListener(new XboxControllerAdapter());
     }
 
     // =========================================================================

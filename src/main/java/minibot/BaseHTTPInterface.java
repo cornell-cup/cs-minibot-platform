@@ -32,7 +32,7 @@ public class BaseHTTPInterface {
 
     // Temp config settings
     public static final boolean OVERHEAD_VISION = true;
-    private static XboxControllerDriver xcd;
+    private static XboxControllerDriver xboxControllerDriver;
 
 
     public static void main(String[] args) {
@@ -171,39 +171,53 @@ public class BaseHTTPInterface {
 
             // if this is called for the first time, initialize the Xbox
             // Controller
-            if (xcd == null) {
-                // xbox not initialized, initialize it first
-                xcd = new XboxControllerDriver();
+            try{
+                if (xboxControllerDriver == null) {
+                    // xbox not initialized, initialize it first
+                    xboxControllerDriver = new XboxControllerDriver();
 
-                // xcd != null
-                if (xcd.xboxIsConnected()) {
-                    // xbox is connected
-                    // run the driver
-                    xcd.getMbXboxEventHandler().setBotName(name);
-                    xcd.runDriver();
+                    // xboxControllerDriver != null
+                    if (xboxControllerDriver.xboxIsConnected()) {
+                        // xbox is connected
+                        // run the driver
+                        xboxControllerDriver.getMbXboxEventHandler().setBotName
+                                (name);
+                        xboxControllerDriver.runDriver();
+                    } else {
+                        // xbox is not connected, stop the driver
+                        stopXboxDriver();
+                    }
                 } else {
-                    // xbox is not connected, stop the driver
-                    stopXboxDriver();
+                    // xboxControllerDriver != null -- xbox initialized already
+                    if (xboxControllerDriver.xboxIsConnected()) {
+                        // xbox is connected
+                        // should be already listening in this case
+                        // just set the new name
+                        xboxControllerDriver.getMbXboxEventHandler().setBotName
+                                (name);
+                    } else {
+                        // xbox is not connected, stop the driver
+                        stopXboxDriver();
+                    }
                 }
-            } else {
-                // xcd != null -- xbox initialized already
-                if (xcd.xboxIsConnected()) {
-                    // xbox is connected
-                    // should be already listening in this case
-                    // just set the new name
-                    xcd.getMbXboxEventHandler().setBotName(name);
-                } else {
-                    // xbox is not connected, stop the driver
-                    stopXboxDriver();
-                }
+                // no error
+                return true;
+            } catch (Exception e) {
+                // error encountered
+                return false;
             }
-            return true;
         });
 
         post("/stopXbox", (req, res) -> {
             // received stop command, stop the driver
-            stopXboxDriver();
-            return true;
+            try{
+                stopXboxDriver();
+                // no error
+                return true;
+            } catch (Exception e) {
+                // error encountered
+                return false;
+            }
         });
     }
 
@@ -212,13 +226,12 @@ public class BaseHTTPInterface {
      * Acts as a middleman between this interface and the driver on stopping
      */
     private static void stopXboxDriver() {
-        if (xcd != null) {
+        if (xboxControllerDriver != null) {
             // xbox is currently initialized
-            xcd.stopDriver();
-            xcd = null;
+            xboxControllerDriver.stopDriver();
+            xboxControllerDriver = null;
         }
-        // xcd == null
+        // xboxControllerDriver == null
         // might get this request from stopXbox HTTP post
-        // nothing to do
     }
 }

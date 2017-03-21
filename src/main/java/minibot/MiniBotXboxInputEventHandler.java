@@ -3,13 +3,11 @@ package minibot;
 /**
  * MiniBotEventInputHandler.java
  * =============================================================================
- * Created by Anmol Kabra
  * Cornell Cup Robotics Team 2016-2017
  * =============================================================================
  * Important Instructions:
  *      - motorPower order: --- (fl, fr, bl, br) ---
- *      - moveDirection: 0=forward; 1=right-forward or CW; 2=left-forward or
- *      CCW; 3=backward
+ *      - Move Direction: Using Enum Direction
  * =============================================================================
  * <<<<< UPDATE THE TABLE AS YOU CHANGE IMPLEMENTATIONS IN THIS CLASS >>>>>
  * -----------------------------------------------------------------------------
@@ -42,7 +40,7 @@ import java.util.Optional;
  * An instance of the MiniBotXboxInputEventHandler class is capable of sending
  * commands to the basestation to maneuver the MiniBot
  */
-/*package*/ class MiniBotXboxInputEventHandler extends
+class MiniBotXboxInputEventHandler extends
         XboxInputEventHandler {
 
     // =========================================================================
@@ -58,13 +56,13 @@ import java.util.Optional;
 
     /**
      * Constructor: initializes the instance and the bot
+     * @param _botName Name of the Bot
      */
-    /*package*/ MiniBotXboxInputEventHandler (String _botName) {
-        // get the bot with the name
+    MiniBotXboxInputEventHandler (String _botName) {
         botName = _botName;
     }
 
-    /*package*/ MiniBotXboxInputEventHandler() {
+    MiniBotXboxInputEventHandler() {
         botName = "";
     }
 
@@ -76,19 +74,8 @@ import java.util.Optional;
      * Set the MiniBot's Name
      * @param botName Name of the Bot
      */
-    /*package*/ void setBotName(String botName) {
+    void setBotName(String botName) {
         this.botName = botName;
-    }
-
-    /**
-     * Convert degrees to radians
-     * Precondition: degree >= 0
-     * @param degree angle measure in degrees
-     * @return degree converted to radians
-     */
-    private double degToRad(double degree) {
-        assert degree >= 0;
-        return ((int)(degree) % 360) * Math.PI / 180.0;
     }
 
     /**
@@ -124,27 +111,27 @@ import java.util.Optional;
      * backward
      * @return Thumb directions converted to moveDirection values
      */
-    private int moveDirDpad(int _dpadVal) {
+    private Direction moveDirDpad(int _dpadVal) {
         switch(_dpadVal) {
             case 0:
             case 1:
             case 7:
                 // forward
-                return 0;
+                return Direction.FORWARD;
             case 3:
             case 4:
             case 5:
                 // backward
-                return 3;
+                return Direction.BACKWARD;
             case 2:
                 // right - forward or CW
-                return 1;
+                return Direction.RIGHTFORWARD;
             case 6:
                 // left - forward or CCW
-                return 2;
+                return Direction.LEFTFORWARD;
             default:
                 // no movement
-                return -1;
+                return null;
         }
     }
 
@@ -154,39 +141,29 @@ import java.util.Optional;
      *                is default state
      */
     public void dpadMove(int dpadVal) {
-        int dirFromDpad = moveDirDpad(dpadVal);
-        switch (dirFromDpad) {
-            case 0:
+        switch (moveDirDpad(dpadVal)) {
+            case FORWARD:
                 // move forward
                 localSetWheelPower(MAX_MOTOR_POW, MAX_MOTOR_POW, MAX_MOTOR_POW,
                         MAX_MOTOR_POW);
-
-                System.out.println("forward" + botName);
                 break;
-            case 1:
+            case RIGHTFORWARD:
                 // move right - forward or CW
                 localSetWheelPower(MAX_MOTOR_POW, -MAX_MOTOR_POW, MAX_MOTOR_POW,
                         -MAX_MOTOR_POW);
-
-                System.out.println("right - forward" + botName);
                 break;
-            case 2:
+            case LEFTFORWARD:
                 // move left - forward or CCW
                 localSetWheelPower(-MAX_MOTOR_POW, MAX_MOTOR_POW, -MAX_MOTOR_POW,
                         MAX_MOTOR_POW);
-
-                System.out.println("left - forward" + botName);
                 break;
-            case 3:
+            case BACKWARD:
                 // move backward
                 localSetWheelPower(-MAX_MOTOR_POW, -MAX_MOTOR_POW,
                         -MAX_MOTOR_POW, -MAX_MOTOR_POW);
-
-                System.out.println("backward" + botName);
                 break;
-            case -1:
+            default:
                 localSetWheelPower(0.0, 0.0, 0.0, 0.0);
-                System.out.println("stop" + botName);
         }
     }
 
@@ -195,21 +172,22 @@ import java.util.Optional;
      * backward
      * @return Thumb directions converted to moveDirection values in
      */
-    private int moveDirLeftThumb(double _direction) {
+    private Direction moveDirLeftThumb(double _direction) {
         if (_direction < 67.5 || _direction > 292.5) {
             // forward
-            return 0;
+            return Direction.FORWARD;
         } else if (_direction < 112.5) {
             // right - forward or CW
-            return 1;
+            return Direction.RIGHTFORWARD;
         } else if (_direction < 247.5) {
             // backward
-            return 3;
+            return Direction.BACKWARD;
         } else if (_direction <= 292.5) {
             // left - forward or CCW
-            return 2;
+            return Direction.LEFTFORWARD;
         }
-        return -1;
+        // default
+        return null;
     }
 
     /**
@@ -221,34 +199,24 @@ import java.util.Optional;
     public void leftThumbMove(double magnitude, double direction) {
         double power = magnitude * MAX_MOTOR_POW;
         switch (moveDirLeftThumb(direction)) {
-            case 0:
+            case FORWARD:
                 // move forward
                 localSetWheelPower(power, power, power, power);
-
-                System.out.println("forward" + botName);
                 break;
-            case 1:
+            case RIGHTFORWARD:
                 // move right - forward or CW
                 localSetWheelPower(power, -power, power, -power);
-
-                System.out.println("right - forward" + botName);
                 break;
-            case 2:
+            case LEFTFORWARD:
                 // move left - forward or CCW
                 localSetWheelPower(-power, power, -power, power);
-
-                System.out.println("left - forward" + botName);
                 break;
-            case 3:
+            case BACKWARD:
                 // move backward
                 localSetWheelPower(-power, -power, -power, -power);
-
-                System.out.println("backward" + botName);
                 break;
-            case -1:
+            default:
                 localSetWheelPower(0.0, 0.0, 0.0, 0.0);
-
-                System.out.println("no movement" + botName);
         }
     }
 

@@ -4,7 +4,6 @@ package minibot;
  * =============================================================================
  * XboxInputEventHandler.java
  * =============================================================================
- * Created by Anmol Kabra
  * Cornell Cup Robotics Team 2016-2017
  * =============================================================================
  */
@@ -14,7 +13,7 @@ package minibot;
  * implementing
  * MiniBot movements
  */
-/*package*/ abstract class XboxInputEventHandler {
+abstract class XboxInputEventHandler {
 
     public abstract void dpadMove(int dpadVal);
 
