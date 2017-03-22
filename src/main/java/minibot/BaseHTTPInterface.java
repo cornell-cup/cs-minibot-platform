@@ -25,6 +25,7 @@ import simulator.baseinterface.SimulatorVisionSystem;
 
 
 import simulator.simbot.SimBot;
+import xboxhandler.XboxControllerDriver;
 
 import static spark.Spark.*;
 
@@ -37,6 +38,8 @@ public class BaseHTTPInterface {
 
     // Temp config settings
     public static final boolean OVERHEAD_VISION = true;
+    private static XboxControllerDriver xboxControllerDriver;
+
 
     public static void main(String[] args) {
         // Spark configuration
@@ -179,5 +182,73 @@ public class BaseHTTPInterface {
             }
             return respData;
         });
+
+        post("/runXbox", (req, res) -> {
+            String body = req.body();
+            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+
+            /* storing json objects into actual variables */
+            String name = commandInfo.get("name").getAsString();
+
+            // if this is called for the first time, initialize the Xbox
+            // Controller
+            if (xboxControllerDriver == null) {
+                // xbox not initialized, initialize it first
+                xboxControllerDriver = new XboxControllerDriver();
+                // xboxControllerDriver != null
+                if (xboxControllerDriver.xboxIsConnected()) {
+                    // xbox is connected
+                    // run the driver
+                    xboxControllerDriver.getMbXboxEventHandler().setBotName
+                            (name);
+                    xboxControllerDriver.runDriver();
+                    return true;
+                } else {
+                    // xbox is not connected, stop the driver
+                    stopXboxDriver();
+                    return false;
+                }
+            } else {
+                // xboxControllerDriver != null -- xbox initialized already
+                if (xboxControllerDriver.xboxIsConnected()) {
+                    // xbox is connected
+                    // should be already listening in this case
+                    // just set the new name
+                    xboxControllerDriver.getMbXboxEventHandler().setBotName
+                            (name);
+                    return true;
+                } else {
+                    // xbox is not connected, stop the driver
+                    stopXboxDriver();
+                    return false;
+                }
+            }
+        });
+
+        post("/stopXbox", (req, res) -> {
+            // received stop command, stop the driver
+            try{
+                stopXboxDriver();
+                // no error
+                return true;
+            } catch (Exception e) {
+                // error encountered
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Tells the Xbox Controller Driver to stop
+     * Acts as a middleman between this interface and the driver on stopping
+     */
+    private static void stopXboxDriver() {
+        if (xboxControllerDriver != null) {
+            // xbox is currently initialized
+            xboxControllerDriver.stopDriver();
+            xboxControllerDriver = null;
+        }
+        // xboxControllerDriver == null
+        // might get this request from stopXbox HTTP post
     }
 }
