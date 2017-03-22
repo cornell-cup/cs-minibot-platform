@@ -34,21 +34,34 @@ function main() {
 
     stage = new PIXI.Container();
     grid = PIXI.autoDetectRenderer(520, 520);
+
     $("#view").append(grid.view);
 
-    stage.addChild(botContainer);
-    stage.addChild(gridContainer);
+    //var backTexture = PIXI.Texture.fromImage('img/line.png');
+    var backgroundSprite = new PIXI.Sprite.fromImage('img/line.png');
+    backgroundSprite.anchor.x=50;
+    backgroundSprite.anchor.y=50;
+    var viewWidth =  520;
+    var back = new PIXI.Container();
+    back.scale.x = 1300 / viewWidth;
+    back.scale.y = back.scale.x;
+    back.addChild(backgroundSprite);
+
+
+    stage.addChild(backgroundSprite);
+    //stage.addChild(botContainer);
+    //stage.addChild(gridContainer);
 
     grid.view.style.border = "1px dashed black";
     grid.view.style.position = "absolute";
     grid.view.style.display = "block";
 
-    setupGridLines();
-    displayBots(bots);
+    //setupGridLines();
+    //displayBots(bots);
     grid.render(stage);
 
-    getNewVisionData();
-    pollBotNames();
+    //getNewVisionData();
+    //pollBotNames();
 }
 
 /* pseudo-constructor for a bot object */
