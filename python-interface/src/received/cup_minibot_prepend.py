@@ -1,4 +1,6 @@
 from .sensor.Sensor import Sensor
+from .sensor.GPIOSensor import GPIOSensor
+
 
 class CupMiniBot:
     """
