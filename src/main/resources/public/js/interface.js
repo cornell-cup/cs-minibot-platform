@@ -40,14 +40,6 @@ function getScript() {
     return $("#textarea").val();
 }
 
-//function getActiveBots(){
-//    return active_bots;
-//}
-//
-//function getDiscoveredBots(){
-//    return discovered_bots;
-//}
-
 function sendMotors(fl, fr, bl, br) {
 	$.ajax({
 		method: "POST",
@@ -150,25 +142,6 @@ $('#addBot').click(function() {
     });
 });
 
-// When adding a discovered bot
-//$('.discoverbot').click(function(event) {
-//    console.log("Boop");
-//    //Get minibot's IP address
-//    var target = $(event.target); //$target
-//    var bot_ip = target.getAttribute("value");
-//
-//    //Add to active_bots list
-//    active_bots.push(bot_ip);
-//
-//    //Remove from discovered_bots list, display refactored later
-//    for(let i=0; i<discovered_bots.length; i++){
-//        //If the IP addresses match, remove that element in discovered_bots
-//        if(discovered_bots[i]==bot_ip){
-//            splice.discovered_bots(i,i+1);
-//        }
-//    }
-//});
-//
 /*
 	For any update to the list of active bots, the dropdown menu
 	of active bots will update accordingly (depending on the addition
@@ -264,13 +237,11 @@ function redoDiscoverList(data){
     var discover_list = document.getElementById("discovered");
 
     //Clear all child elements from the display list
-    //discover_list.empty();
     $("#discovered").empty();
     discovered_bots = [];
 
     for (let i = 0; i < data.length; i++) {
         //Create elements for the site
-        //if(!active_bots.includes(data[i]) && !discovered_bots.includes(data[i])){
 
         //Trim the forward-slash
         var ip_address = data[i].substring(1);
@@ -280,29 +251,14 @@ function redoDiscoverList(data){
             var add_ip = document.createElement('button');
             var next = document.createElement('break');
 
-            //Trim the forward-slash
-            var ip_address = data[i].substring(1);
-
-            //bot_ip.idName = data[i];
-            //bot_ip.id = ip_address;
-            //bot_ip.setAttribute("id", ip_address);
-            //bot_ip.attr("id", ip_address);
-            //console.log(bot_ip.id);
-            //bot_ip.text = ip_address;
             var display_text = document.createTextNode(ip_address);
-            //add_ip.idName = data[i];
-            //add_ip.text = "Add bot";
-            //add_ip.attr("id", ip_address);
-            //add_ip.setAttribute("id", ip_address);
+            var button_text = document.createTextNode("add bot");
             add_ip.setAttribute("id", i); //Use i instead of IP addresses b/c not string friendly
             add_ip.value = ip_address;
             add_ip.className = "discoverbot";
-            //add_ip.text = "Add bot"
-            var button_text = document.createTextNode("add bot");
 
             //Append site elements
             discover_list.appendChild(bot_ip);
-            //discover_list.appendChild(ip_address);
             bot_ip.appendChild(display_text);
             bot_ip.appendChild(add_ip);
             bot_ip.appendChild(next);
@@ -317,27 +273,13 @@ function redoDiscoverList(data){
     * that CURRENTLY have the class, doesn't account for future elements with that class
     */
     $('.discoverbot').click(function(event) {
-        //console.log("Boop");
         //Get minibot's IP address
         var target = $(event.target); //$target
-        //var bot_ip = target.getAttribute("value");
-        //var bot_ip = target.value;
-        //var bot_idx = target.id;
-        //var bot_ip = discovered_bots[bot_idx];
         var button_id = target[0]
         var bot_ip = button_id.value;
         var bot_idx = button_id.id;
-        //console.log(target);
-        //console.log(target[0]);
-        //console.log(target[0].value);
-        //console.log(target[1]);
-        //console.log(bot_idx);
-        //console.log(active_bots);
-
-        console.log(bot_ip);
 
         //POST request to base station
-
         $.ajax({
             method: "POST",
             url: '/addBot',
@@ -359,59 +301,13 @@ function redoDiscoverList(data){
 
         //Add to active_bots list
         active_bots.push(bot_ip);
-//        console.log(active_bots);
-//        console.log("Myurp");
-
-        //console.log(discovered_bots);
-        //Remove from discovered_bots list, display refactored later
-        //discovered_bots.splice(bot_idx,1);
-        //console.log(discovered_bots);
 
         redoDiscoverList(discovered_bots);
-        //listBots();
-
-//        for(let i=0; i<discovered_bots.length; i++){
-//            //If the IP addresses match, remove that element in discovered_bots
-//            if(discovered_bots[i]==bot_ip){
-//                //splice.discovered_bots(i,i+1);
-//                console.log(discovered_bots);
-//                discovered_bots.splice(i,1);
-//                console.log(discovered_bots);
-//
-//            }
-//        }
     });
 }
 
 function listBots(){
 	// lists all the bots
-//	console.log("Display things!")
-//    var active_list = document.getElementById("active");
-//
-//    //Clear all child elements from the display list
-//    //discover_list.empty();
-//    $("#active").empty();
-//
-//    for (let i = 0; i < active_bots.length; i++) {
-//        //Create elements for the site
-//        var bot_ip = document.createElement('p');
-//        //var next = document.createElement('break');
-//
-//        var ip_address = active_bots[i];
-//        var display_text = document.createTextNode(ip_address);
-//
-//        //add_ip.text = "Add bot";
-//        //add_ip.value = ip_address;
-//        //add_ip.className = "discoverbot";
-//
-//        //Append site elements
-//        active_list.appendChild(bot_ip);
-//        bot_ip.appendChild(display_text);
-//        //bot_ip.appendChild(next);
-//
-//    }
-//
-//    setTimeout(listBots,2000); // Try again in 5 sec
 }
 
 /*
@@ -470,4 +366,3 @@ window.onkeyup = function (e) {
 };
 
 updateDiscoveredBots();
-//listBots();

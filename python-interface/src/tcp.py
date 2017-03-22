@@ -137,6 +137,7 @@ def move_command(b):
 #            move_command(button)
 
 def main(p):
+    print("running")
     # Process Arguments
     cozmo=False
     if (len(sys.argv) > 0):
@@ -144,12 +145,16 @@ def main(p):
         if (str(sys.argv).find("cozmo") != -1):
             print_flush("Becoming a cozmo")
             cozmo=True
+    print("setting up tcp")
     serverPort = 10000
-    serverSocket = socket(AF_INET, SOCK_STREAM)
+    serverSocket = socket.socket(AF_INET, SOCK_STREAM)
     ip = "127.0.0.1"
+    print("binding socket")
     serverSocket.bind( (ip, serverPort) )
     serverSocket.listen(1)
+    print("waiting for connection")
     connectionSocket, addr = serverSocket.accept()
+    print("connection active")
     while True:
         command = ""
         while True:
