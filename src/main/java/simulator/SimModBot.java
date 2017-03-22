@@ -43,19 +43,11 @@ public class SimModBot extends PhysicalObject {
     public void left(double percent) { //currently this does the same thing as a CCW turn
         this.getBody().setLinearVelocity(new Vec2(0.0f,0.0f));
         this.getBody().setAngularVelocity((float)(MAX_ANGULAR_SPEED));
-//        assert(percent <= 100 && percent >= 0);
-//        float new_y = (float)(MAX_SPEED * 0.1 * percent);
-//        float currXSpeed = this.getXVelocity();
-//        this.getBody().setLinearVelocity(new Vec2(currXSpeed, new_y));
     }
 
     public void right(double percent) { //currently this does the same thing as a CW turn
         this.getBody().setLinearVelocity(new Vec2(0.0f,0.0f));
         this.getBody().setAngularVelocity((float)(-MAX_ANGULAR_SPEED));
-//        assert(percent <= 100 && percent >= 0);
-//        float new_y = (float)(MAX_SPEED * 0.1 * percent);
-//        float currXSpeed = this.getXVelocity();
-//        this.getBody().setLinearVelocity(new Vec2(currXSpeed, new_y));
     }
 
     public void clockwise(double percent) {
