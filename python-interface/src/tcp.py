@@ -140,6 +140,7 @@ def main(p):
             command += connectionSocket.recv(1024).decode()
             if command.find(">>>>") > 0:
                 runScript(command,cozmo)
+                command = ""
 
 # Since we are using multiple processes, need to check for main.
 if (__name__ == "__main__"):

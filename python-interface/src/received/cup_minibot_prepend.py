@@ -1,4 +1,4 @@
-from sensor import Sensor
+from .sensor.Sensor import Sensor
 
 class CupMiniBot:
     """
@@ -74,7 +74,11 @@ class CupMiniBot:
     def poll_sensors(self):
         data = {}
         for sensor in self.sensors:
-            data[sensor.name()] = sensor.read()
+            data[sensor] = self.sensors[sensor].read()
         return data
+
+    def register_sensor(self,sensor):
+        self.sensors[sensor.name] = sensor
+
 
 bot = CupMiniBot()
