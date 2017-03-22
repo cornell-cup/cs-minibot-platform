@@ -1,8 +1,8 @@
-package minibot;
+package xboxhandler;
 
 /**
  * Direction enumerates FORWARD, RIGHTFORWARD, LEFTFORWARD, BACKWARD
  */
-enum Direction {
+public enum Direction {
     FORWARD, RIGHTFORWARD, LEFTFORWARD, BACKWARD
 }

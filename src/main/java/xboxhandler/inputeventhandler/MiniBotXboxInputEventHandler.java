@@ -1,4 +1,4 @@
-package minibot;
+package xboxhandler.inputeventhandler;
 
 /**
  * MiniBotEventInputHandler.java
@@ -33,6 +33,7 @@ package minibot;
 import basestation.BaseStation;
 import basestation.bot.commands.FourWheelMovement;
 import basestation.bot.robot.Bot;
+import xboxhandler.Direction;
 
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ import java.util.Optional;
  * An instance of the MiniBotXboxInputEventHandler class is capable of sending
  * commands to the basestation to maneuver the MiniBot
  */
-class MiniBotXboxInputEventHandler extends
+public class MiniBotXboxInputEventHandler extends
         XboxInputEventHandler {
 
     // =========================================================================
@@ -62,7 +63,7 @@ class MiniBotXboxInputEventHandler extends
         botName = _botName;
     }
 
-    MiniBotXboxInputEventHandler() {
+    public MiniBotXboxInputEventHandler() {
         botName = "";
     }
 
@@ -74,7 +75,7 @@ class MiniBotXboxInputEventHandler extends
      * Set the MiniBot's Name
      * @param botName Name of the Bot
      */
-    void setBotName(String botName) {
+    public void setBotName(String botName) {
         this.botName = botName;
     }
 

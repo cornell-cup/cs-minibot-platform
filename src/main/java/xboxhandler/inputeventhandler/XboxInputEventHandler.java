@@ -1,4 +1,4 @@
-package minibot;
+package xboxhandler.inputeventhandler;
 
 /**
  * =============================================================================

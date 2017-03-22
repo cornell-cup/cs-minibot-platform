@@ -9,7 +9,6 @@ import basestation.bot.robot.minibot.MiniBot;
 import basestation.bot.robot.modbot.ModBot;
 import basestation.vision.OverheadVisionSystem;
 import basestation.vision.VisionObject;
-import ch.aplu.xboxcontroller.XboxController;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -26,6 +25,7 @@ import simulator.baseinterface.SimulatorVisionSystem;
 
 
 import simulator.simbot.SimBot;
+import xboxhandler.XboxControllerDriver;
 
 import static spark.Spark.*;
 
@@ -192,40 +192,36 @@ public class BaseHTTPInterface {
 
             // if this is called for the first time, initialize the Xbox
             // Controller
-            try{
-                if (xboxControllerDriver == null) {
-                    // xbox not initialized, initialize it first
-                    xboxControllerDriver = new XboxControllerDriver();
-
-                    // xboxControllerDriver != null
-                    if (xboxControllerDriver.xboxIsConnected()) {
-                        // xbox is connected
-                        // run the driver
-                        xboxControllerDriver.getMbXboxEventHandler().setBotName
-                                (name);
-                        xboxControllerDriver.runDriver();
-                    } else {
-                        // xbox is not connected, stop the driver
-                        stopXboxDriver();
-                    }
+            if (xboxControllerDriver == null) {
+                // xbox not initialized, initialize it first
+                xboxControllerDriver = new XboxControllerDriver();
+                // xboxControllerDriver != null
+                if (xboxControllerDriver.xboxIsConnected()) {
+                    // xbox is connected
+                    // run the driver
+                    xboxControllerDriver.getMbXboxEventHandler().setBotName
+                            (name);
+                    xboxControllerDriver.runDriver();
+                    return true;
                 } else {
-                    // xboxControllerDriver != null -- xbox initialized already
-                    if (xboxControllerDriver.xboxIsConnected()) {
-                        // xbox is connected
-                        // should be already listening in this case
-                        // just set the new name
-                        xboxControllerDriver.getMbXboxEventHandler().setBotName
-                                (name);
-                    } else {
-                        // xbox is not connected, stop the driver
-                        stopXboxDriver();
-                    }
+                    // xbox is not connected, stop the driver
+                    stopXboxDriver();
+                    return false;
                 }
-                // no error
-                return true;
-            } catch (Exception e) {
-                // error encountered
-                return false;
+            } else {
+                // xboxControllerDriver != null -- xbox initialized already
+                if (xboxControllerDriver.xboxIsConnected()) {
+                    // xbox is connected
+                    // should be already listening in this case
+                    // just set the new name
+                    xboxControllerDriver.getMbXboxEventHandler().setBotName
+                            (name);
+                    return true;
+                } else {
+                    // xbox is not connected, stop the driver
+                    stopXboxDriver();
+                    return false;
+                }
             }
         });
 

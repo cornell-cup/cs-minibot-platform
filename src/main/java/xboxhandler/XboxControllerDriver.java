@@ -1,4 +1,4 @@
-package minibot;
+package xboxhandler;
 
 /**
  * =============================================================================
@@ -70,12 +70,13 @@ package minibot;
  */
 
 import ch.aplu.xboxcontroller.*;
+import xboxhandler.inputeventhandler.MiniBotXboxInputEventHandler;
 
 /**
  * An instance of the XboxControllerDriver class reads input from the
  * XboxController, and transfers the data to the MiniBot Handler class
  */
-class XboxControllerDriver {
+public class XboxControllerDriver {
 
     // =========================================================================
     // Fields
@@ -103,7 +104,7 @@ class XboxControllerDriver {
     /**
      * Constructor: Initializes the Controller and the Bot
      */
-    XboxControllerDriver() {
+    public XboxControllerDriver() {
 
         xboxController = new XboxController();
         mbXboxEventHandler = new MiniBotXboxInputEventHandler();
@@ -113,7 +114,7 @@ class XboxControllerDriver {
      * Get the MinibotXboxEventHandler object
      * @return MinibotXboxInputEventHandler object
      */
-    MiniBotXboxInputEventHandler getMbXboxEventHandler() {
+    public MiniBotXboxInputEventHandler getMbXboxEventHandler() {
         return this.mbXboxEventHandler;
     }
 
@@ -137,14 +138,14 @@ class XboxControllerDriver {
      * error
      * @return False if not connected, true if connected
      */
-    boolean xboxIsConnected() {
+    public boolean xboxIsConnected() {
         return xboxController.isConnected();
     }
 
     /**
      * Listens to XboxController's inputs
      */
-    void runDriver() {
+    public void runDriver() {
 
         // 0.0 <= thumbs' output value <= 1.0
         // values <= 0.5 are ignored (reduced to 0)
@@ -227,7 +228,7 @@ class XboxControllerDriver {
     /**
      * Stops listening to XboxController's inputs
      */
-    void stopDriver() {
+    public void stopDriver() {
         // just do nothing on inputs :P
         xboxController.addXboxControllerListener(new XboxControllerAdapter());
     }
