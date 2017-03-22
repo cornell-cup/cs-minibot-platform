@@ -106,3 +106,5 @@ class BaseMiniBot:
         sock.sendall(message)
         sock.close()
         return
+sim = BaseMiniBot()
+sim.move_backward(100)

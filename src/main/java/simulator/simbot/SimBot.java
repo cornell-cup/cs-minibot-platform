@@ -6,11 +6,11 @@ import basestation.bot.sensors.SensorCenter;
 
 import java.io.*;
 import java.net.*;
-import java.nio.charset.*;
 
 public class SimBot extends Bot {
     private final transient SimBotCommandCenter commandCenter;
     private final transient SimBotSensorCenter sensorCenter;
+    public transient TCPServer runningThread;
 
 
     /**
@@ -24,7 +24,9 @@ public class SimBot extends Bot {
 
         try {
             Thread t = new TCPServer(11111, this.commandCenter);
-            t.start();
+            this.runningThread = (TCPServer)t;
+            this.runningThread.start();
+//            t.start();
         }catch(IOException e) {
             e.printStackTrace();
         }
@@ -40,9 +42,12 @@ public class SimBot extends Bot {
         return sensorCenter;
     }
 
+    public void resetServer() { this.runningThread.stopStream(); }
+
     public class TCPServer extends Thread {
         private ServerSocket serverSocket;
         private final transient SimBotCommandCenter commandCenter;
+        private volatile boolean exit = false;
 
         public TCPServer(int port, SimBotCommandCenter commandCenter) throws IOException {
             this.commandCenter = commandCenter;
@@ -50,9 +55,14 @@ public class SimBot extends Bot {
             serverSocket.setSoTimeout(100000);
         }
 
+        public void stopStream() {
+            exit = true;
+        }
+
         public void run() {
             while(true) {
                 try {
+                    boolean run = true;
                     System.out.println("Waiting for client on port " +
                             serverSocket.getLocalPort() + "...");
                     Socket server = serverSocket.accept();
@@ -60,9 +70,10 @@ public class SimBot extends Bot {
                     System.out.println("Just connected to " + server.getRemoteSocketAddress());
 
                     String content;
-                    boolean run = true;
                     BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
-                    while (run) {
+                    exit = false;
+                    System.out.println("About to loop forever");
+                    while (run && !exit) {
                         content = in.readLine();
 
                         if (content != null) {
@@ -73,26 +84,26 @@ public class SimBot extends Bot {
                             switch (content.substring(0, content.indexOf(':'))) {
                                 case "FORWARD":
                                     //fl fr bl br
-                                    this.commandCenter.setWheelPower(value,value,value,value);
+                                    this.commandCenter.setWheelPower(value, value, value, value);
                                     System.out.println("FORWARD " + value);
                                     break;
                                 case "BACKWARD":
-                                    this.commandCenter.setWheelPower(-value,-value,-value,-value);
+                                    this.commandCenter.setWheelPower(-value, -value, -value, -value);
                                     System.out.println("BACKWARD " + value);
                                     break;
                                 case "RIGHT":
-                                    this.commandCenter.setWheelPower(-value,value,-value,value);
+                                    this.commandCenter.setWheelPower(-value, value, -value, value);
                                     System.out.println("RIGHT " + value);
                                     break;
                                 case "LEFT":
-                                    this.commandCenter.setWheelPower(value,-value,value,-value);
+                                    this.commandCenter.setWheelPower(value, -value, value, -value);
                                     System.out.println("LEFT " + value);
                                     break;
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");
                                     break;
                                 case "STOP":
-                                    this.commandCenter.setWheelPower(0,0,0,0);
+                                    this.commandCenter.setWheelPower(0, 0, 0, 0);
                                     System.out.println("STOPPING");
                                     break;
                                 case "KILL":
@@ -105,18 +116,17 @@ public class SimBot extends Bot {
                                     String[] wheel_cmds = cmd.split(",");
 
 
-                                   this.commandCenter.setWheelPower(
-                                           Double.parseDouble(wheel_cmds[0]),
-                                           Double.parseDouble(wheel_cmds[1]),
-                                           Double.parseDouble(wheel_cmds[2]),
-                                           Double.parseDouble(wheel_cmds[3])
+                                    this.commandCenter.setWheelPower(
+                                            Double.parseDouble(wheel_cmds[0]),
+                                            Double.parseDouble(wheel_cmds[1]),
+                                            Double.parseDouble(wheel_cmds[2]),
+                                            Double.parseDouble(wheel_cmds[3])
                                     );
                                     break;
 
                             }
                         }
                     }
-                    server.close();
                 }catch(SocketTimeoutException s) {
                     System.out.println("Socket timed out!");
                     break;
