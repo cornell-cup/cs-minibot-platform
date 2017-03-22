@@ -8,6 +8,7 @@ import basestation.bot.robot.Bot;
 import basestation.bot.robot.minibot.MiniBot;
 import basestation.bot.robot.modbot.ModBot;
 import basestation.vision.OverheadVisionSystem;
+import basestation.vision.VisionCoordinate;
 import basestation.vision.VisionObject;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -39,6 +40,7 @@ public class BaseHTTPInterface {
     // Temp config settings
     public static final boolean OVERHEAD_VISION = true;
     private static XboxControllerDriver xboxControllerDriver;
+    public static ArrayList<VisionCoordinate> patrolPoints;
 
 
     public static void main(String[] args) {
@@ -57,6 +59,8 @@ public class BaseHTTPInterface {
         // Global objects
         JsonParser jp = new JsonParser();
         Gson gson = new Gson();
+        patrolPoints = new
+                ArrayList<>();
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
@@ -189,6 +193,12 @@ public class BaseHTTPInterface {
                    .getInstance().getBotManager().getAllTrackedBots()
                    .iterator().next().getCommandCenter());
             mbsd.start();
+            return true;
+        });
+
+        get("/addPointToQueue", (req, res) -> {
+            patrolPoints.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
             return true;
         });
 

@@ -4,6 +4,9 @@ import basestation.BaseStation;
 import basestation.bot.commands.FourWheelMovement;
 import basestation.bot.robot.minibot.MiniBot;
 import basestation.vision.VisionCoordinate;
+import basestation.vision.VisionObject;
+
+import java.util.List;
 
 /**
  * Created by CornellCup on 3/18/2017.
@@ -20,7 +23,7 @@ public class MiniBotSquareDance extends Thread {
 
     private final Navigator navigator;
     FourWheelMovement fwm;
-    boolean d1;
+    int index;
 
     public MiniBotSquareDance(FourWheelMovement fwm) {
         this.fwm = fwm;
@@ -33,14 +36,12 @@ public class MiniBotSquareDance extends Thread {
         // Planning
         while (true) {
             if (navigator.destinationReached()) {
-                if (d1) {
-                    navigator.goToDestination(new VisionCoordinate(-1.6,
-                            -0.64));
-                } else {
-                    navigator.goToDestination(new VisionCoordinate(-0.3,
-                            -0.64));
+                int max = BaseHTTPInterface.patrolPoints.size();
+                if (max != 0) {
+                    index = (index + 1) % max;
+                    navigator.goToDestination(BaseHTTPInterface.patrolPoints.get
+                            (index));
                 }
-                d1 = !d1;
             }
             try {
                 Thread.sleep(1000);
@@ -56,7 +57,7 @@ public class MiniBotSquareDance extends Thread {
         private VisionCoordinate destination;
 
         private static final double DISTANCE_THRESHOLD = 0.04;
-        private static final double ANGLE_THRESHOLD = 10;
+        private static final double ANGLE_THRESHOLD = Math.PI/(9*2);
         private static final int MAX_SPEED = 20;
         private static final int MIN_SPEED = 10;
 
@@ -96,8 +97,11 @@ public class MiniBotSquareDance extends Thread {
             }
 
             VisionCoordinate vc;
-            if (BaseStation.getInstance().getVisionManager
-                    ().getAllLocationData().get(0) == null){
+            List<VisionObject> wowow = BaseStation.getInstance()
+                    .getVisionManager
+                    ().getAllLocationData();
+
+            if (wowow.size() == 0 || wowow.get(0) == null){
                 System.out.println("location data is null" );
 
                 vc = null;
@@ -106,14 +110,14 @@ public class MiniBotSquareDance extends Thread {
 
             }
             else {
-                vc = BaseStation.getInstance().getVisionManager
-                        ().getAllLocationData().get(0).coord;
+                vc = wowow.get(0).coord;
                 System.out.println(vc);
             }
 
             double spectheta = vc.getThetaOrZero();
             double toAngle = vc.getAngleTo(destination);
-            double angle = mod((toAngle - spectheta + 180), 360) - 180;
+            double angle = mod((toAngle - spectheta + Math.PI), 2*Math.PI) -
+                    Math.PI;
             double dist = vc.getDistanceTo(destination);
             System.out.println("angle"+ angle);
 
@@ -124,14 +128,16 @@ public class MiniBotSquareDance extends Thread {
 
                     // Calculate angular speed
                     double angSpeed = MIN_SPEED;
-                    if (Math.abs(angle) > 20) {
-                        angSpeed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * (Math.abs(angle) - 20) / 160.;
+                    if (Math.abs(angle) > Math.toRadians(20)) {
+                        angSpeed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) *
+                                (Math.abs(angle) - Math.toRadians(20)) /
+                                Math.toRadians(160.);
                     }
 
                     if (angSpeed > MAX_SPEED) angSpeed = MAX_SPEED;
 
                     // Rotate in proper direction
-                    if (angle > 0) {
+                    if (angle < 0) {
                         System.out.println("Turn CCW");
                         fwm.setWheelPower(-angSpeed,
                                 angSpeed,-angSpeed,angSpeed);
