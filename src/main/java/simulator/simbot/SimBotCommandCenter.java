@@ -57,7 +57,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
         }
 
         else {
-            System.out.println("u wot m8");
+            System.out.println("Invalid wheel power command!");
         }
 
         return true;
