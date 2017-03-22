@@ -181,7 +181,7 @@ public class BaseHTTPInterface {
             return respData;
         });
 
-        get("/discoverBots", (req, res) -> {
+        post("/discoverBots", (req, res) -> {
             System.out.println("Sending back");
             return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
 
