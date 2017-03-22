@@ -74,16 +74,15 @@ public class SimulatorVisionSystem extends VisionSystem {
         int velocityIterations = 6;
         int positionIterations = 4;
 
-        HashSet<VisionObject> newSet = new HashSet<>();
+        set.clear();
             for(PhysicalObject po: po_set ) {
                 po.getWorld().step(timeStep, velocityIterations, positionIterations);
 
-                VisionCoordinate vc = new VisionCoordinate(po.getX(),po.getY(), 100.0);
+                VisionCoordinate vc = new VisionCoordinate(po.getX(),po.getY(), po.getAngle());
                 VisionObject vo = new VisionObject(this,po.getID(),vc);
 
-                newSet.add(vo);
+                set.add(vo);
             }
-        this.set = newSet;
     }
 
     private class SimRunner extends Thread {
