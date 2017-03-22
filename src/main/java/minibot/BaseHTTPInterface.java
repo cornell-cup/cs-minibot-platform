@@ -179,5 +179,14 @@ public class BaseHTTPInterface {
             }
             return respData;
         });
+
+        get("/runSquareDance", (req, res) -> {
+           MiniBotSquareDance mbsd = new MiniBotSquareDance( (FourWheelMovement)
+                   BaseStation
+                   .getInstance().getBotManager().getAllTrackedBots()
+                   .iterator().next().getCommandCenter());
+            mbsd.start();
+            return true;
+        });
     }
 }

@@ -4,7 +4,7 @@ from socket import *
 import multiprocessing, time, signal, os, sys
 
 #From https//github.com/zephod/legopi
-from lib.legopi.lib import xbox_read
+#from lib.legopi.lib import xbox_read
 
 from multiprocessing import Process
 from threading import Thread
@@ -140,6 +140,6 @@ def main(p):
 
 # Since we are using multiple processes, need to check for main.
 if (__name__ == "__main__"):
-    threadxbox = Thread(target = xbox())
-    threadxbox.start()
+    #threadxbox = Thread(target = xbox())
+    #threadxbox.start()
     main(p)
