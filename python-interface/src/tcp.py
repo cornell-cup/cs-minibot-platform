@@ -4,7 +4,7 @@ from socket import *
 import multiprocessing, time, signal, os, sys
 
 #From https//github.com/zephod/legopi
-from lib.legopi.lib import xbox_read
+#from lib.legopi.lib import xbox_read
 
 from multiprocessing import Process
 from threading import Thread
@@ -118,6 +118,7 @@ def xbox():
             move_command(button)            
 
 def main(p):
+    print("Script started")
     # Process Arguments
     cozmo=False
     if (len(sys.argv) > 0):
@@ -130,16 +131,19 @@ def main(p):
     ip = "127.0.0.1"
     serverSocket.bind( (ip, serverPort) )
     serverSocket.listen(1)
+    print("Waiting for connections!")
     connectionSocket, addr = serverSocket.accept()
     while True:
+        print("Connection accepted")
         command = ""
         while True:
             command += connectionSocket.recv(1024).decode()
             if command.find(">>>>") > 0:
                 runScript(command,cozmo)
+                command = ""
 
 # Since we are using multiple processes, need to check for main.
 if (__name__ == "__main__"):
-    threadxbox = Thread(target = xbox())
-    threadxbox.start()
+    #threadxbox = Thread(target = xbox())
+    #threadxbox.start()
     main(p)
