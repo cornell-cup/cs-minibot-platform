@@ -152,6 +152,8 @@ function setupGridLines() {
 /*
 	Updating location of bots on grid.
 */
+lock = false;
+lastTime = new Date();
 function getNewVisionData() {
 
     if (document.getElementById('vision-poll').checked) {
@@ -160,25 +162,40 @@ function getNewVisionData() {
             type: 'GET',
             dataType: 'json',
             success: function visionDataGot(data) {
-                bots = [];
-                botContainer.removeChildren();
-                for (var b in data) {
-                    //console.log("YAY");
-                    var bot = data[b];
-                    var zz = bot.x;
-                    var aa = bot.y;
-                    var bb = bot.angle;
-                    console.log(bot.angle);
-                    var idid = bot.id;
-                    bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
+                currentTime = new Date();
+                elapsed = (currentTime - lastTime);
+                timeout = MILLIS_PER_VISION_UPDATE;
+                if (elapsed > MILLIS_PER_VISION_UPDATE) {
+                    timeout = 2*MILLIS_PER_VISION_UPDATE - elapsed;
+                    if (timeout < 0) {
+                        timeout = 0;
+                    }
                 }
 
-                setupGridLines();
-                displayBots(bots);
-                grid.render(stage);
-                setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE);
+                setTimeout(getNewVisionData,timeout);
+                if (!lock) {
+                    lock = true;
+                    bots = [];
+                    botContainer.removeChildren();
+                    for (var b in data) {
+                        //console.log("YAY");
+                        var bot = data[b];
+                        var zz = bot.x;
+                        var aa = bot.y;
+                        var bb = bot.angle;
+                        //console.log(bot.angle);
+                        var idid = bot.id;
+                        bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
+                    }
+
+                    displayBots(bots);
+                    grid.render(stage);
+                    lock = false;
+                }
                           },
-            error: () => {getNewVisionData(MILLIS_PER_VISION_UPDATE)}
+            error: () => {
+            console.log("oh no error");
+            setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE*10);}
         });
     } else {
         setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE * 10);

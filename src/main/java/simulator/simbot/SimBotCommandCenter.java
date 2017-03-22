@@ -26,7 +26,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
         }
 
         //backwards
-        if(fl < 0 && fr < 0 && bl < 0 && br < 0) {
+        else if(fl < 0 && fr < 0 && bl < 0 && br < 0) {
             float angle = b.getAngle();
             float newX = (float) (topspeed*fl/100*Math.cos(angle));
             float newY = (float) (topspeed*fl/100*Math.sin(angle));
@@ -36,24 +36,28 @@ public class SimBotCommandCenter implements FourWheelMovement {
         }
 
         //no motor power
-        if(fl == 0 && fr == 0 && bl == 0 && br == 0) {
+        else if(fl == 0 && fr == 0 && bl == 0 && br == 0) {
             System.out.println("no motor power");
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
             b.setAngularVelocity(0.0f);
         }
 
         //turning right
-        if(fl > 0 && fr < 0 && bl > 0 && br < 0) {
+        else if(fl > 0 && fr < 0 && bl > 0 && br < 0) {
             System.out.println("turning right");
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
-            b.setAngularVelocity(-turningspeed);
+            b.setAngularVelocity((float)(turningspeed*fl/100));
         }
 
         //turning left
-        if(fl < 0 && fr > 0 && bl < 0 && br > 0) {
+        else if(fl < 0 && fr > 0 && bl < 0 && br > 0) {
             System.out.println("turning left");
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
-            b.setAngularVelocity(turningspeed);
+            b.setAngularVelocity((float)(turningspeed*fl/100));
+        }
+
+        else {
+            System.out.println("u wot m8");
         }
 
         return true;
