@@ -1,10 +1,12 @@
+from sensor import Sensor
+
 class CupMiniBot:
     """
     Abstract class defining the base functions of the MiniBot. More customized MiniBots may
     subclass this.
     """
     def __init__(self):
-        pass
+        self.sensors = {}
 
     def move_forward(self, power):
         """
@@ -62,5 +64,17 @@ class CupMiniBot:
         :param t The duration in seconds
         """
         time.sleep(t)
+
+    def get_all_sensors(self):
+        return self.sensors.values()
+
+    def get_sensor_by_name(self, name):
+        return self.sensors[name]
+
+    def poll_sensors(self):
+        data = {}
+        for sensor in self.sensors:
+            data[sensor.name()] = sensor.read()
+        return data
 
 bot = CupMiniBot()
