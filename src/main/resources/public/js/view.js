@@ -22,9 +22,13 @@ var x_int = 40; // actual spacing between grid lines
 var y_int = 40;
 
 var stage; // pixi elements for displaying information
+var back;
 var botContainer;
 var gridContainer;
 var grid;
+var imageLoader;
+
+var viewWidth =  520;
 
 function main() {
     updateInfo(x_int, y_int);
@@ -33,35 +37,43 @@ function main() {
     gridContainer = new PIXI.Container();
 
     stage = new PIXI.Container();
+    back = new PIXI.Container();
     grid = PIXI.autoDetectRenderer(520, 520);
 
     $("#view").append(grid.view);
 
-    //var backTexture = PIXI.Texture.fromImage('img/line.png');
-    var backgroundSprite = new PIXI.Sprite.fromImage('img/line.png');
-    backgroundSprite.anchor.x=50;
-    backgroundSprite.anchor.y=50;
-    var viewWidth =  520;
-    var back = new PIXI.Container();
-    back.scale.x = 1300 / viewWidth;
-    back.scale.y = back.scale.x;
+    var loadUrl = 'img/line.png';
+    imageLoader = PIXI.loader;
+    imageLoader.add('background', loadUrl);
+    imageLoader.once("complete", imageLoaded);
+    imageLoader.load();
+}
+
+function imageLoaded(){
+    var background = PIXI.Texture.fromImage('img/line.png');
+    var backgroundTexture =  background;
+    var backgroundSprite = new PIXI.Sprite(backgroundTexture);
+    backgroundSprite.scale.x =  520/1300;
+    backgroundSprite.scale.y =  520/1300;
+    backgroundSprite.position.x = 0;
+    backgroundSprite.position.y = 0;
+
     back.addChild(backgroundSprite);
+    stage.addChild(back);
+    stage.addChild(botContainer);
+    stage.addChild(gridContainer);
 
-
-    stage.addChild(backgroundSprite);
-    //stage.addChild(botContainer);
-    //stage.addChild(gridContainer);
 
     grid.view.style.border = "1px dashed black";
     grid.view.style.position = "absolute";
     grid.view.style.display = "block";
-
-    //setupGridLines();
-    //displayBots(bots);
     grid.render(stage);
+    setupGridLines();
+    displayBots(bots);
 
-    //getNewVisionData();
-    //pollBotNames();
+
+    getNewVisionData();
+    pollBotNames();
 }
 
 /* pseudo-constructor for a bot object */
@@ -147,14 +159,14 @@ function setupGridLines() {
 
     for(var i=0; i<25; i=i+1){
         lines_y[i] = new PIXI.Graphics();
-        lines_y[i].lineStyle(1, 0xFFFFFF, 1);
+        lines_y[i].lineStyle(1, 0x0000FF, 1);
         lines_y[i].moveTo(0,i*20);
         lines_y[i].lineTo(520,i*20);
         lines_y[i].x = 0; lines_y[i].y = i*20;
         gridContainer.addChild(lines_y[i]);
 
         lines_x[i] = new PIXI.Graphics();
-        lines_x[i].lineStyle(1, 0xFFFFFF, 1);
+        lines_x[i].lineStyle(1, 0x0000FF, 1);
         lines_x[i].moveTo(i*20,0);
         lines_x[i].lineTo(i*20,520);
         lines_x[i].x = i*20; lines_x[i].y = 0;
