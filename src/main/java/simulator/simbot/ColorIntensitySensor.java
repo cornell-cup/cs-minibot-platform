@@ -61,8 +61,8 @@ public class ColorIntensitySensor extends Sensor {
     }
 
     private int[] transformToPixels(VisionCoordinate vc) {
-        double X_SCALE = 10;
-        double Y_SCALE = 10;
+        double X_SCALE = 100;
+        double Y_SCALE = 100;
         int[] ret = new int[2];
 
         ret[0] = (int) Math.floor(vc.x * X_SCALE);
