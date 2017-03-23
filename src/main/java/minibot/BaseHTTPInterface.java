@@ -14,7 +14,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import simulator.physics.PhysicalObject;
+import simulator.simbot.ColorIntensitySensor;
 import simulator.simbot.SimBotConnection;
+import simulator.simbot.SimBotSensorCenter;
 import spark.route.RouteOverview;
 
 import java.util.ArrayList;
@@ -89,13 +91,17 @@ public class BaseHTTPInterface {
             }
                else {
                 SimBotConnection sbc = new SimBotConnection();
-                newBot = new SimBot(sbc, name);
-
                 PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.4f, 0.0f, 1f, 1f, true);
+                SimBot simba;
+                simba = new SimBot(sbc, name, po);
+                newBot = simba;
 
                 ArrayList<PhysicalObject> pObjs = new ArrayList<>();
                 pObjs.add(po);
                 simvs.processPhysicalObjects(pObjs);
+
+                // Color sensor TODO put somewhere nice
+                ColorIntensitySensor colorSensor = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"COLOR_SENSOR",simba);
             }
 
 

@@ -87,13 +87,12 @@ public class SimBotCommandCenter implements FourWheelMovement {
             Process p = pb.start();
 
             BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            // int ret = new Integer(in.readLine()).intValue();
-            // System.out.println("value is : "+ret);
+
             int ret;
             String line;
             while ((line = in.readLine()) != null) {
                 ret = new Integer(line).intValue();
-                System.out.println("value is : "+ ret);
+                System.out.println("" + ret);
             }
         }catch(Exception e){
             System.out.println(e);
