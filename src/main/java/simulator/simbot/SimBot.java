@@ -71,6 +71,7 @@ public class SimBot extends Bot {
 
                     String content;
                     BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
+                    PrintWriter out = new PrintWriter(server.getOutputStream(), true);
                     exit = false;
                     System.out.println("About to loop forever");
                     while (run && !exit) {
@@ -92,11 +93,11 @@ public class SimBot extends Bot {
                                     System.out.println("BACKWARD " + value);
                                     break;
                                 case "RIGHT":
-                                    this.commandCenter.setWheelPower(-value, value, -value, value);
+                                    this.commandCenter.setWheelPower(value, -value, value, -value);
                                     System.out.println("RIGHT " + value);
                                     break;
                                 case "LEFT":
-                                    this.commandCenter.setWheelPower(value, -value, value, -value);
+                                    this.commandCenter.setWheelPower(-value, value, -value, value);
                                     System.out.println("LEFT " + value);
                                     break;
                                 case "WAIT":
@@ -109,6 +110,10 @@ public class SimBot extends Bot {
                                 case "KILL":
                                     run = false;
                                     System.out.println("Exiting\n");
+                                    break;
+                                case "GET":
+                                    out.println("How much data can it send back");
+                                    System.out.println("Returning Sensor Data");
                                     break;
                                 default:
                                     String cmd = content.substring(content.indexOf(':') + 1);

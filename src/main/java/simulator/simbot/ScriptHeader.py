@@ -106,3 +106,34 @@ class BaseMiniBot:
         sock.sendall(message)
         sock.close()
         return
+
+    def getSensorData(self):
+        """
+        Get Sensor Data
+        """
+        message = "GET:1" + '\n'
+        sock.sendall(message)
+        text_file = open("Output.txt", "w")
+        text_file.write("Got: " + sock.recv(1024))
+        text_file.close()
+
+        return
+
+class Sensor:
+    def __init__(self, bot, name):
+        self.name = name
+        bot.register_sensor(self)
+
+    def read(self):
+        return "Invalid: Abstract Sensor Class Reading"
+
+
+class GPIOSensor(Sensor):
+    def __init__(self, bot, name, pin_number):
+        Sensor.__init__(self, bot, name)
+        self.pin_number = pin_number
+
+    def read(self):
+        return 0.5 # TODO: Actually read a value!
+
+bot = BaseMiniBot()
