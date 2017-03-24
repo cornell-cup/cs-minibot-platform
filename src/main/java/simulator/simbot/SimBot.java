@@ -24,6 +24,7 @@ public class SimBot extends Bot {
         super(sbc);
         this.commandCenter = new SimBotCommandCenter(this);
         this.sensorCenter = new SimBotSensorCenter();
+        this.myPhysicalObject = myPhysicalObject;
 
         try {
             Thread t = new TCPServer(11111, this.commandCenter, this.sensorCenter);
@@ -34,9 +35,8 @@ public class SimBot extends Bot {
             e.printStackTrace();
         }
 
-        this.myPhysicalObject = myPhysicalObject;
-        Reader r = new Reader(this);
-        r.start();
+//        Reader r = new Reader(this);
+//        r.start();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class SimBot extends Bot {
                     BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
                     PrintWriter out = new PrintWriter(server.getOutputStream(), true);
                     exit = false;
-                    System.out.println("About to loop forever");
+
                     while (run && !exit) {
                         content = in.readLine();
 
@@ -142,7 +142,7 @@ public class SimBot extends Bot {
                                 case "GET":
 //                                    out.println("How much data can it send back");
                                     out.println(this.sensorCenter.getAllDataGson());
-//                                    System.out.println("Returning Sensor Data");
+                                    System.out.println("Returning Sensor Data");
                                     break;
                                 default:
                                     String cmd = content.substring(content.indexOf(':') + 1);

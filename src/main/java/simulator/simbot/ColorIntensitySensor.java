@@ -50,12 +50,15 @@ public class ColorIntensitySensor extends Sensor {
         // TODO: Coordinate transform, for now just read at the middle
 
         int[] transformed = transformToPixels(parentCoordinate);
-
         // Get pixel values
+        if (img == null) {
+            jo.addProperty("error","no image");
+            return jo;
+        }
         int rgb = img.getRGB(transformed[0], transformed[1]);
         jo.addProperty("data",rgb);
 
-        System.out.printf("%d, %d\n",transformed[0], transformed[1]);
+//        System.out.printf("%d, %d\n",transformed[0], transformed[1]);
 
         return jo;
     }

@@ -136,3 +136,5 @@ class GPIOSensor(Sensor):
         return 0.5 # TODO: Actually read a value!
 
 bot = BaseMiniBot()
+for _ in range(0,5):
+  bot.getSensorData()
