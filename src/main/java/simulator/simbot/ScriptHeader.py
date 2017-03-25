@@ -141,6 +141,7 @@ class GPIOSensor(Sensor):
         #     file.write("Got: " + sock.recv(1024) + "\n")
         # file.close()
         result = sock.recv(1024)
+        print(result)
         return result
 
     def read(self, name):
@@ -153,6 +154,7 @@ class GPIOSensor(Sensor):
         #     file.write("Got: " + sock.recv(1024) + "\n")
         # file.close()
         result = sock.recv(1024)
+        print(result)
         return result
 
 bot = BaseMiniBot()

@@ -101,7 +101,9 @@ public class BaseHTTPInterface {
                 simvs.processPhysicalObjects(pObjs);
 
                 // Color sensor TODO put somewhere nice
-                ColorIntensitySensor colorSensor = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"COLOR_SENSOR",simba);
+                ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"right",simba, 7);
+                ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"left",simba, -7);
+                ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"center",simba, 0);
             }
 
 
