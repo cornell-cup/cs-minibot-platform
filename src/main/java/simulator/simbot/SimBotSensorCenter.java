@@ -32,6 +32,18 @@ public class SimBotSensorCenter extends SensorCenter {
         return allData;
     }
 
+    public JsonObject getSensorData(String name) {
+        JsonObject data = new JsonObject();
+        for (Sensor s : sensors.values()) {
+            if (s.getName().equals(name)) {
+                data.add(s.getName(),s.read());
+                return data;
+            }
+        }
+        data.addProperty(name,"NOT FOUND");
+        return data;
+    }
+
     /**
      * Adds s to the sensor set.
      * @param s The sensor to add.

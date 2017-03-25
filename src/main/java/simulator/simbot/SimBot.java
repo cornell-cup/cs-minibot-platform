@@ -27,7 +27,7 @@ public class SimBot extends Bot {
         this.myPhysicalObject = myPhysicalObject;
 
         try {
-            Thread t = new TCPServer(11111, this.commandCenter, this.sensorCenter);
+            Thread t = new TCPServer(11111, this, this.commandCenter, this.sensorCenter);
             this.runningThread = (TCPServer)t;
             this.runningThread.start();
 //            t.start();
@@ -72,11 +72,13 @@ public class SimBot extends Bot {
 
     public class TCPServer extends Thread {
         private ServerSocket serverSocket;
+        private final transient SimBot sim;
         private final transient SimBotCommandCenter commandCenter;
         private final transient SimBotSensorCenter sensorCenter;
         private volatile boolean exit = false;
 
-        public TCPServer(int port, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException {
+        public TCPServer(int port, SimBot sim, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException {
+            this.sim = sim;
             this.commandCenter = commandCenter;
             this.sensorCenter = sensorCenter;
             serverSocket = new ServerSocket(port);
@@ -107,7 +109,7 @@ public class SimBot extends Bot {
 
                         if (content != null) {
                             double value = 0;
-                            if (!content.contains("WHEELS")) {
+                            if (!content.contains("WHEELS") && !content.contains("REGISTER") && !content.contains("GET")) {
                                 value = Double.parseDouble(content.substring(content.indexOf(':') + 1));
                             }
                             switch (content.substring(0, content.indexOf(':'))) {
@@ -140,9 +142,18 @@ public class SimBot extends Bot {
                                     System.out.println("Exiting\n");
                                     break;
                                 case "GET":
-//                                    out.println("How much data can it send back");
-                                    out.println(this.sensorCenter.getAllDataGson());
-                                    System.out.println("Returning Sensor Data");
+                                    String name = content.substring(content.indexOf(':') + 1);
+                                    if (name.equals("ALL")) {
+                                        out.println(this.sensorCenter.getAllDataGson());
+                                    } else {
+                                        out.println(this.sensorCenter.getSensorData(name));
+                                    }
+                                    System.out.println("Returning " + name + " data");
+                                    break;
+                                case "REGISTER":
+//                                    String name = content.substring(content.indexOf(':') + 1);
+//                                    ColorIntensitySensor colorSensor = new ColorIntensitySensor((SimBotSensorCenter) this.sensorCenter,name, this.sim);
+                                    System.out.println("Added New sensor");
                                     break;
                                 default:
                                     String cmd = content.substring(content.indexOf(':') + 1);

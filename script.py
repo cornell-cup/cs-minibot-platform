@@ -98,6 +98,19 @@ class BaseMiniBot:
         sock.sendall(message)
         return
 
+    # def getSensorData(self):
+    #     message = "GET:1" + '\n'
+    #     sock.sendall(message)
+    #     with open('output.txt', 'a') as file:
+    #         file.write("Got: " + sock.recv(1024) + "\n")
+    #     file.close()
+    #     return
+
+    def register_sensor(self, name):
+        message = "REGISTER:" + name + '\n'
+        sock.sendall(message)
+        return
+
     def kill(self):
         """
         Kills TCP connection
@@ -107,21 +120,11 @@ class BaseMiniBot:
         sock.close()
         return
 
-    def getSensorData(self):
-        """
-        Get Sensor Data
-        """
-        message = "GET:1" + '\n'
-        sock.sendall(message)
-        with open('output.txt', 'a') as file:
-            file.write("Got: " + sock.recv(1024) + "\n")
-        file.close()
-        return
 
 class Sensor:
     def __init__(self, bot, name):
         self.name = name
-        bot.register_sensor(self)
+        bot.register_sensor(name)
 
     def read(self):
         return "Invalid: Abstract Sensor Class Reading"
@@ -132,9 +135,28 @@ class GPIOSensor(Sensor):
         Sensor.__init__(self, bot, name)
         self.pin_number = pin_number
 
-    def read(self):
-        return 0.5 # TODO: Actually read a value!
+    def readAll(self):
+        """
+        Get Sensor Data
+        """
+        message = "GET:ALL" + '\n'
+        sock.sendall(message)
+        with open('output.txt', 'a') as file:
+            file.write("Got: " + sock.recv(1024) + "\n")
+        file.close()
+        return
+
+    def read(self, name):
+        """
+        Get Sensor Data
+        """
+        message = "GET:" + name + '\n'
+        sock.sendall(message)
+        with open('output.txt', 'a') as file:
+            file.write("Got: " + sock.recv(1024) + "\n")
+        file.close()
+        return
 
 bot = BaseMiniBot()
-for _ in range(0,5):
-  bot.getSensorData()
+s = GPIOSensor(bot, 'COLOR_SENSOR', 3)
+s.read('COLOR_SENSOR')
