@@ -56,6 +56,11 @@ public class ColorIntensitySensor extends Sensor {
             return jo;
         }
         int rgb = img.getRGB(transformed[0], transformed[1]);
+        if (rgb <= -16777216) {
+            rgb=1;
+        } else {
+            rgb=0;
+        }
         jo.addProperty("data",rgb);
 
 //        System.out.printf("%d, %d\n",transformed[0], transformed[1]);
@@ -66,10 +71,16 @@ public class ColorIntensitySensor extends Sensor {
     private int[] transformToPixels(VisionCoordinate vc) {
         double X_SCALE = 100;
         double Y_SCALE = 100;
+        double medial_offset = 62.5; //offset along the medial axis of the robot, positive values indicate a "forwards" offset. 62.5 corresponds with offsetting it to the front of the bot
+        double lateral_offset = 0; //offset along lateral axis of robot, positive values indicate a "leftwards" offset, 0 indicates that there is no left/right offset
         int[] ret = new int[2];
 
-        ret[0] = (int) Math.floor(vc.x * X_SCALE);
-        ret[1] = (int) Math.floor(vc.y * Y_SCALE);
+        double angle = vc.getThetaOrZero();
+        double angle_offset = Math.atan(lateral_offset/medial_offset)+angle; //intermediate step for calculating coordinates
+        double total_offset = Math.sqrt(medial_offset*medial_offset+lateral_offset*lateral_offset); //intermediate step for calculating coordinates
+
+        ret[0] = (int) Math.floor(vc.x * X_SCALE + total_offset*Math.cos(angle_offset));
+        ret[1] = (int) Math.floor(vc.y * Y_SCALE + total_offset*Math.sin(angle_offset));
         return ret;
     }
 }
