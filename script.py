@@ -158,5 +158,6 @@ class GPIOSensor(Sensor):
         return
 
 bot = BaseMiniBot()
-s = GPIOSensor(bot, 'COLOR_SENSOR', 3)
-s.read('COLOR_SENSOR')
+bot.turn_clockwise(50)
+bot.wait(2)
+bot.move_forward(100)
