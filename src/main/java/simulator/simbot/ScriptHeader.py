@@ -1,6 +1,7 @@
 import socket
 import sys
 import time
+import json
 
 HOST = "localhost"
 PORT = 11111
@@ -141,20 +142,19 @@ class GPIOSensor(Sensor):
         #     file.write("Got: " + sock.recv(1024) + "\n")
         # file.close()
         result = sock.recv(1024)
-        print(result)
         return result
 
-    def read(self, name):
+    def read(self):
         """
         Get Sensor Data
         """
-        message = "GET:" + name + '\n'
+        message = "GET:" + self.name + '\n'
         sock.sendall(message)
+        print(self.name)
         # with open('output.txt', 'a') as file:
         #     file.write("Got: " + sock.recv(1024) + "\n")
         # file.close()
         result = sock.recv(1024)
-        print(result)
         return result
 
 bot = BaseMiniBot()

@@ -5,13 +5,14 @@ import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SimBotSensorCenter extends SensorCenter {
 
     Map<String,Sensor> sensors;
 
     public SimBotSensorCenter() {
-        this.sensors = new HashMap<>();
+        this.sensors = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -40,7 +41,7 @@ public class SimBotSensorCenter extends SensorCenter {
                 return data;
             }
         }
-        data.addProperty(name,"NOT FOUND");
+        data.addProperty(name,-1);
         return data;
     }
 

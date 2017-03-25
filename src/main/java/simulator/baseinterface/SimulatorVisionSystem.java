@@ -10,6 +10,7 @@ import simulator.physics.PhysicalObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jbox2d.dynamics.World;
 
@@ -20,7 +21,7 @@ public class SimulatorVisionSystem extends VisionSystem {
      * @param o A coordinate specifying the origin of the VisionSystem
      */
     private static SimulatorVisionSystem instance;
-    private volatile HashSet<VisionObject> set;
+    private volatile Set<VisionObject> set;
     private HashSet<PhysicalObject> po_set;
     private World world;
     private long before;
@@ -29,7 +30,7 @@ public class SimulatorVisionSystem extends VisionSystem {
 
     public SimulatorVisionSystem() {
         super(new VisionCoordinate(0, 0, 0));
-        set = new HashSet<>();
+        set = ConcurrentHashMap.newKeySet();
         world = new World(new Vec2(0f, 0f));
         po_set = new HashSet<>();
         before = System.nanoTime();
@@ -57,7 +58,7 @@ public class SimulatorVisionSystem extends VisionSystem {
      * @param pObjs The data sent from simulator
      */
     public void processPhysicalObjects(ArrayList<PhysicalObject> pObjs) {
-        HashSet<VisionObject> newSet = new HashSet<>();
+        Set<VisionObject> newSet = ConcurrentHashMap.newKeySet();
         for(PhysicalObject obj: pObjs) {
             VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(), 0.0);
             VisionObject vo = new VisionObject(this,obj.getID(),vc);

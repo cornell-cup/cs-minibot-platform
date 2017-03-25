@@ -91,7 +91,7 @@ public class BaseHTTPInterface {
             }
                else {
                 SimBotConnection sbc = new SimBotConnection();
-                PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.4f, 0.0f, 1f, 1f, true);
+                PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
                 SimBot simba;
                 simba = new SimBot(sbc, name, po);
                 newBot = simba;
@@ -101,8 +101,8 @@ public class BaseHTTPInterface {
                 simvs.processPhysicalObjects(pObjs);
 
                 // Color sensor TODO put somewhere nice
-                ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"right",simba, 7);
-                ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"left",simba, -7);
+                ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"right",simba, 5);
+                ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"left",simba, -5);
                 ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"center",simba, 0);
             }
 

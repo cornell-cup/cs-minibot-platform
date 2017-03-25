@@ -116,19 +116,19 @@ public class SimBot extends Bot {
                                 case "FORWARD":
                                     //fl fr bl br
                                     this.commandCenter.setWheelPower(value, value, value, value);
-                                    System.out.println("FORWARD " + value);
+//                                    System.out.println("FORWARD " + value);
                                     break;
                                 case "BACKWARD":
                                     this.commandCenter.setWheelPower(-value, -value, -value, -value);
-                                    System.out.println("BACKWARD " + value);
+//                                    System.out.println("BACKWARD " + value);
                                     break;
                                 case "RIGHT":
                                     this.commandCenter.setWheelPower(value, -value, value, -value);
-                                    System.out.println("RIGHT " + value);
+//                                    System.out.println("RIGHT " + value);
                                     break;
                                 case "LEFT":
                                     this.commandCenter.setWheelPower(-value, value, -value, value);
-                                    System.out.println("LEFT " + value);
+//                                    System.out.println("LEFT " + value);
                                     break;
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");
@@ -148,7 +148,7 @@ public class SimBot extends Bot {
                                     } else {
                                         out.println(this.sensorCenter.getSensorData(name));
                                     }
-                                    System.out.println("Returning " + name + " data");
+//                                    System.out.println("Returning " + name + " data");
                                     break;
                                 case "REGISTER":
 //                                    String name = content.substring(content.indexOf(':') + 1);

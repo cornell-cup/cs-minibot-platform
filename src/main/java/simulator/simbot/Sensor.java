@@ -23,7 +23,7 @@ public class Sensor {
 
     public JsonObject read() {
         JsonObject dataBlob = new JsonObject();
-        dataBlob.addProperty("data","INVALID: Abstract Sensor");
+        dataBlob.addProperty("data",-1);
         return dataBlob;
     }
 }
