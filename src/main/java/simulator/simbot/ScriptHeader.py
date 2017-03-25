@@ -98,15 +98,11 @@ class BaseMiniBot:
         sock.sendall(message)
         return
 
-    # def getSensorData(self):
-    #     message = "GET:1" + '\n'
-    #     sock.sendall(message)
-    #     with open('output.txt', 'a') as file:
-    #         file.write("Got: " + sock.recv(1024) + "\n")
-    #     file.close()
-    #     return
-
     def register_sensor(self, name):
+        """
+        Registers a new sensor.
+        :param name The name of the sensor
+        """
         message = "REGISTER:" + name + '\n'
         sock.sendall(message)
         return
@@ -141,10 +137,11 @@ class GPIOSensor(Sensor):
         """
         message = "GET:ALL" + '\n'
         sock.sendall(message)
-        with open('output.txt', 'a') as file:
-            file.write("Got: " + sock.recv(1024) + "\n")
-        file.close()
-        return
+        # with open('output.txt', 'a') as file:
+        #     file.write("Got: " + sock.recv(1024) + "\n")
+        # file.close()
+        result = sock.recv(1024)
+        return result
 
     def read(self, name):
         """
@@ -152,9 +149,10 @@ class GPIOSensor(Sensor):
         """
         message = "GET:" + name + '\n'
         sock.sendall(message)
-        with open('output.txt', 'a') as file:
-            file.write("Got: " + sock.recv(1024) + "\n")
-        file.close()
-        return
+        # with open('output.txt', 'a') as file:
+        #     file.write("Got: " + sock.recv(1024) + "\n")
+        # file.close()
+        result = sock.recv(1024)
+        return result
 
 bot = BaseMiniBot()
