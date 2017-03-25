@@ -18,8 +18,9 @@ public class ColorIntensitySensor extends Sensor {
 
     transient BufferedImage img;
     private transient SimBot parent;
+    private double lateralOffset;
 
-    public ColorIntensitySensor(SimBotSensorCenter myCenter, String name, SimBot parent) {
+    public ColorIntensitySensor(SimBotSensorCenter myCenter, String name, SimBot parent, double lateralOffset) {
         super(myCenter, name);
         this.parent = parent;
         try {
@@ -27,6 +28,7 @@ public class ColorIntensitySensor extends Sensor {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.lateralOffset = lateralOffset;
     }
 
     public JsonObject read() {
@@ -49,9 +51,14 @@ public class ColorIntensitySensor extends Sensor {
 
         // TODO: Coordinate transform, for now just read at the middle
 
-        int[] transformed = transformToPixels(parentCoordinate);
+        int[] transformed = transformToPixels(parentCoordinate, this.lateralOffset);
 
         // Get pixel values
+        if(img==null) {
+            System.err.println("null image");
+            jo.addProperty("data", 0);
+            return jo;
+        }
         int rgb = img.getRGB(transformed[0], transformed[1]);
         if (rgb <= -16777216) {
             rgb=1;
@@ -65,11 +72,11 @@ public class ColorIntensitySensor extends Sensor {
         return jo;
     }
 
-    private int[] transformToPixels(VisionCoordinate vc) {
+    private int[] transformToPixels(VisionCoordinate vc, double lateralOffset) {
         double X_SCALE = 100;
         double Y_SCALE = 100;
-        double medial_offset = 62.5; //offset along the medial axis of the robot, positive values indicate a "forwards" offset. 62.5 corresponds with offsetting it to the front of the bot
-        double lateral_offset = 0; //offset along lateral axis of robot, positive values indicate a "leftwards" offset, 0 indicates that there is no left/right offset
+        double medial_offset = 9.5; //offset along the medial axis of the robot, positive values indicate a "forwards" offset. 62.5 corresponds with offsetting it to the front of the bot
+        double lateral_offset = lateralOffset; //offset along lateral axis of robot, positive values indicate a "leftwards" offset, 0 indicates that there is no left/right offset
         int[] ret = new int[2];
 
         double angle = vc.getThetaOrZero();

@@ -115,7 +115,7 @@ console.log("reset");
 function drawBot(b) {
 	var circle = new PIXI.Graphics();
 	circle.beginFill(0x0EB530);
-	circle.drawCircle(0, 0, 25);
+	circle.drawCircle(0, 0, 6);
 	circle.endFill();
 
 	circle.x = b.x*x_int;
@@ -123,14 +123,23 @@ function drawBot(b) {
 
     var circle2 = new PIXI.Graphics();
     circle2.beginFill(0xFF0000);
-    circle2.drawCircle(0, 0, 5);
+    circle2.drawCircle(0, 0, 3);
     circle2.endFill();
 
-    circle2.x = b.x*x_int+25*Math.cos(b.angle);
-    circle2.y = b.y*y_int+25*Math.sin(b.angle);
+    var circle3 = new PIXI.Graphics();
+        circle3.beginFill(0xFF0000);
+        circle3.drawCircle(0, 0, 3);
+        circle3.endFill();
+
+    circle2.x = b.x*x_int+6*Math.cos(b.angle+Math.PI/6);
+    circle2.y = b.y*y_int+6*Math.sin(b.angle+Math.PI/6);
+
+    circle3.x = b.x*x_int+6*Math.cos(b.angle-Math.PI/6);
+    circle3.y = b.y*y_int+6*Math.sin(b.angle-Math.PI/6);
 
 	botContainer.addChild(circle);
 	botContainer.addChild(circle2);
+	botContainer.addChild(circle3);
 }
 
 /* Displays all bots given an array of bots */
