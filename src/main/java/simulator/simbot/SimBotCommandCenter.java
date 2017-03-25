@@ -1,4 +1,7 @@
 package simulator.simbot;
+import java.net.*;
+import java.io.*;
+import java.nio.*;
 
 import basestation.bot.commands.FourWheelMovement;
 import simulator.baseinterface.SimulatorVisionSystem;
@@ -65,6 +68,35 @@ public class SimBotCommandCenter implements FourWheelMovement {
 
     @Override
     public boolean sendKV(String key, String value) {
+        try{
+            BufferedReader reader =
+                    new BufferedReader(new FileReader("src/main/java/simulator/simbot/ScriptHeader.py"));
+            String header = "";
+            String sCurrentLine;
+            while ((sCurrentLine = reader.readLine()) != null) {
+                header = header + sCurrentLine + "\n";
+            }
+
+            String prg = value;
+            BufferedWriter out = new BufferedWriter(new FileWriter("script.py"));
+            out.write(header);
+            out.write(prg);
+            out.close();
+
+            ProcessBuilder pb = new ProcessBuilder("python","script.py");
+            Process p = pb.start();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            int ret;
+            String line;
+            while ((line = in.readLine()) != null) {
+                ret = new Integer(line).intValue();
+                System.out.println("" + ret);
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
         return false;
     }
 }

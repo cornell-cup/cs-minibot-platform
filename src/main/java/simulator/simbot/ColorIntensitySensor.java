@@ -67,7 +67,7 @@ public class ColorIntensitySensor extends Sensor {
         }
         jo.addProperty("data",rgb);
 
-        System.out.printf("%d, %d\n",transformed[0], transformed[1]);
+//        System.out.printf("%d, %d\n",transformed[0], transformed[1]);
 
         return jo;
     }
