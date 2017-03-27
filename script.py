@@ -150,7 +150,6 @@ class GPIOSensor(Sensor):
         """
         message = "GET:" + self.name + '\n'
         sock.sendall(message)
-        print(self.name)
         # with open('output.txt', 'a') as file:
         #     file.write("Got: " + sock.recv(1024) + "\n")
         # file.close()
@@ -158,5 +157,23 @@ class GPIOSensor(Sensor):
         return result
 
 bot = BaseMiniBot()
-s = GPIOSensor(bot, 'right', 1)
-print(s.read())
+bot.move_forward(70)
+s = GPIOSensor(bot, 'bot1', 1)
+state = 0
+while(True):
+ data = s.readAll()
+ j = json.loads(data)
+ center = j['center']['data']
+ right = j['right']['data']
+ left = j['left']['data']
+ 
+ if left != 1 and right != 1:
+   bot.move_forward(70)
+ else:
+   if left and right:
+     bot.move_forward(70)
+     state = 1
+   elif right:
+     bot.turn_clockwise(70)
+   elif left:
+     bot.turn_counter_clockwise(70)

@@ -134,7 +134,7 @@ class GPIOSensor(Sensor):
 
     def readAll(self):
         """
-        Get Sensor Data
+        Get All Sensor Data
         """
         message = "GET:ALL" + '\n'
         sock.sendall(message)
@@ -150,7 +150,6 @@ class GPIOSensor(Sensor):
         """
         message = "GET:" + self.name + '\n'
         sock.sendall(message)
-        print(self.name)
         # with open('output.txt', 'a') as file:
         #     file.write("Got: " + sock.recv(1024) + "\n")
         # file.close()

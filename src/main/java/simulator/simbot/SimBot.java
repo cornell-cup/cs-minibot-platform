@@ -1,6 +1,5 @@
 package simulator.simbot;
 
-import basestation.bot.commands.FourWheelMovement;
 import basestation.bot.robot.Bot;
 import basestation.bot.sensors.SensorCenter;
 import simulator.physics.PhysicalObject;
@@ -34,9 +33,6 @@ public class SimBot extends Bot {
         }catch(IOException e) {
             e.printStackTrace();
         }
-
-//        Reader r = new Reader(this);
-//        r.start();
     }
 
     @Override
@@ -47,25 +43,6 @@ public class SimBot extends Bot {
     @Override
     public SensorCenter getSensorCenter() {
         return sensorCenter;
-    }
-
-    private class Reader extends Thread {
-        private SimBot parent;
-
-        public Reader(SimBot parent) {
-            this.parent = parent;
-        }
-
-        public void run() {
-            while (true) {
-                System.out.println(parent.sensorCenter.getAllDataGson());
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     public void resetServer() { this.runningThread.stopStream(); }
@@ -116,19 +93,19 @@ public class SimBot extends Bot {
                                 case "FORWARD":
                                     //fl fr bl br
                                     this.commandCenter.setWheelPower(value, value, value, value);
-//                                    System.out.println("FORWARD " + value);
+                                    System.out.println("FORWARD " + value);
                                     break;
                                 case "BACKWARD":
                                     this.commandCenter.setWheelPower(-value, -value, -value, -value);
-//                                    System.out.println("BACKWARD " + value);
+                                    System.out.println("BACKWARD " + value);
                                     break;
                                 case "RIGHT":
                                     this.commandCenter.setWheelPower(value, -value, value, -value);
-//                                    System.out.println("RIGHT " + value);
+                                    System.out.println("RIGHT " + value);
                                     break;
                                 case "LEFT":
                                     this.commandCenter.setWheelPower(-value, value, -value, value);
-//                                    System.out.println("LEFT " + value);
+                                    System.out.println("LEFT " + value);
                                     break;
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");
@@ -148,7 +125,7 @@ public class SimBot extends Bot {
                                     } else {
                                         out.println(this.sensorCenter.getSensorData(name));
                                     }
-//                                    System.out.println("Returning " + name + " data");
+                                    System.out.println("Returning " + name + " data");
                                     break;
                                 case "REGISTER":
 //                                    String name = content.substring(content.indexOf(':') + 1);
