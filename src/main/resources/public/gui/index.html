@@ -104,7 +104,7 @@
 	<div class="box">
 		<!-- BLOCKLY TOOLBOX -->
 		<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
-		<xml id="toolbox" style="display: none">
+		<xml id="toolbox" style="display:none;">
 			<block type="controls_if"></block>
 			<block type="logic_compare"></block>
 			<block type="controls_repeat_ext"></block>
@@ -115,6 +115,9 @@
 
 			<!-- ADDING CUSTOM BLOCKS -->
 			<block type="move"></block>
+			<block type="turn"></block>
+			<block type="setwheelpower"></block>
+			<block type="wait"></block>
 		</xml>
 
 		<!-- SUBMIT/DOWNLOAD/UPLOAD FUNCTIONALITIES -->
@@ -137,9 +140,8 @@
 				accept=".py"
 			/>
 		</form>
-
-
-</div>
+	</div>
+	
 	<!-- basic imports -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="http://pixijs.download/release/pixi.min.js"></script>
