@@ -83,10 +83,10 @@ $(".dir").click(function(event) {
 		sendMotors(-pow, -pow, -pow, -pow);
 	}
 	else if(target.is("#lft")) {
-		sendMotors(-pow, pow, pow, -pow);
+		sendMotors(-pow, pow, -pow, pow);
 	}
 	else if(target.is("#rt")) {
-		sendMotors(pow, -pow, -pow, pow);
+		sendMotors(pow, -pow, pow, -pow);
 	}
 	else if(target.is("#cw")){
 		sendMotors(pow, -pow, pow, -pow);
@@ -121,6 +121,7 @@ $('#removeBot').click(function() {
 
 // when adding a bot
 $('#addBot').click(function() {
+    console.log("addbot from interface.js")
     $.ajax({
         method: "POST",
         url: '/addBot',

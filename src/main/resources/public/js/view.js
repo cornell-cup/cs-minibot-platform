@@ -11,7 +11,7 @@ the current vision).
 Bots have four fields: x coordinate, y coordinate, angle, and id.
 */
 
-const TIME_PER_UPDATE = 120; // modbot update interval in ms
+const MILLIS_PER_VISION_UPDATE = 33; // modbot update interval in ms
 var bots = [            // hard-coded bots for testing
     newBot(1,1,0,"bob"), 
     newBot(3,3,0,"bobette")
@@ -47,7 +47,7 @@ function main() {
     displayBots(bots);
     grid.render(stage);
 
-    // TODO MAKE FAULT TOLERANT setInterval(getNewVisionData, TIME_PER_UPDATE);
+    getNewVisionData();
     pollBotNames();
 }
 
@@ -64,6 +64,7 @@ function newBot(x, y, angle, id) {
 
 /* Zoom-out function to make all active bots visible on grid. */
 $("#zoom-out").click(function() {
+    console.log("zoom out");
     if(bots.length!==0) {
         scaleToFit();
         zoomclicked = true;
@@ -73,7 +74,8 @@ $("#zoom-out").click(function() {
 });
 
 /* Reset function to return to original view (from zoom-out). */
-$("#reset").click(function(){ 
+$("#reset").click(function(){
+console.log("reset");
     updateInfo(x_int, y_int);
     botContainer.removeChildren();
     setupGridLines();
@@ -93,12 +95,22 @@ function drawBot(b) {
 
 	circle.x = b.x*x_int;
 	circle.y = b.y*y_int;
+
+    var circle2 = new PIXI.Graphics();
+    circle2.beginFill(0xFF0000);
+    circle2.drawCircle(0, 0, 5);
+    circle2.endFill();
+
+    circle2.x = b.x*x_int+25*Math.cos(b.angle);
+    circle2.y = b.y*y_int+25*Math.sin(b.angle);
+
 	botContainer.addChild(circle);
+	botContainer.addChild(circle2);
 }
 
 /* Displays all bots given an array of bots */
 function displayBots(botArray) {
-	for(var b in botArray) {
+	for(var b=0; b<botArray.length;b++) {
 		drawBot(botArray[b]);
 	}
 }
@@ -140,24 +152,54 @@ function setupGridLines() {
 /*
 	Updating location of bots on grid.
 */
+lock = false;
+lastTime = new Date();
 function getNewVisionData() {
-    $.ajax({
-        url: '/updateloc',
-        type: 'GET',
-        dataType: 'json',
-        success: function visionDataGot(data) {
-            bots = [];
-            botContainer.removeChildren();
-            for (var b in data) {
-                var bot = data[b];
-                bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
-            }
 
-            setupGridLines();
-            displayBots(bots);
-            grid.render(stage);
-        }
-    });
+    if (document.getElementById('vision-poll').checked) {
+        $.ajax({
+            url: '/updateloc',
+            type: 'GET',
+            dataType: 'json',
+            success: function visionDataGot(data) {
+                currentTime = new Date();
+                elapsed = (currentTime - lastTime);
+                timeout = MILLIS_PER_VISION_UPDATE;
+                if (elapsed > MILLIS_PER_VISION_UPDATE) {
+                    timeout = 2*MILLIS_PER_VISION_UPDATE - elapsed;
+                    if (timeout < 0) {
+                        timeout = 0;
+                    }
+                }
+
+                setTimeout(getNewVisionData,timeout);
+                if (!lock) {
+                    lock = true;
+                    bots = [];
+                    botContainer.removeChildren();
+                    for (var b in data) {
+                        //console.log("YAY");
+                        var bot = data[b];
+                        var zz = bot.x;
+                        var aa = bot.y;
+                        var bb = bot.angle;
+                        //console.log(bot.angle);
+                        var idid = bot.id;
+                        bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
+                    }
+
+                    displayBots(bots);
+                    grid.render(stage);
+                    lock = false;
+                }
+                          },
+            error: () => {
+            console.log("oh no error");
+            setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE*10);}
+        });
+    } else {
+        setTimeout(getNewVisionData,MILLIS_PER_VISION_UPDATE * 10);
+    }
 }
 
 /*
@@ -167,6 +209,7 @@ function getNewVisionData() {
     inv: bots is not empty.
 */
 function scaleToFit() {
+    console.log("scaled to fit");
 	var botmin_x = bots[0].x;
     var botmin_y = bots[0].y;
     var botmax_x = bots[0].x;
@@ -204,13 +247,28 @@ function pollBotNames() {
         type: 'GET',
         dataType: 'json',
         success: function visionDataGot(data) {
+            listBotsPrev = listBots;
             listBots = [];
             for (var b in data) {
                 var bot = data[b];
                 listBots.push({name: bot.name});
             }
 
-            redoDropdown(listBots);
+            if (listBots.length !== listBotsPrev.length) {
+                redoDropdown(listBots);
+            } else {
+                for(let i = 0; i < listBots.length; i=i+1) {
+                    if (listBots[i].name !== listBotsPrev[i].name) {
+                        redoDropdown(listBots);
+                        break;            
+                    }
+                }
+            }
+
+
+            setTimeout(pollBotNames,2000); // Try again in 2 sec
+        },
+        error: function() {
             setTimeout(pollBotNames,2000); // Try again in 2 sec
         }
     });
