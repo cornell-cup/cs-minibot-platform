@@ -49,7 +49,6 @@ Blockly.Python['setwheelpower'] = function(block) {
   // dealing with wrong inputs
   for(var i=0; i<4; i++){
     power[i] = Blockly.Python.valueToCode(block, wheels[i], Blockly.Python.ORDER_ATOMIC) || 0;
-    console.log("INSERTED: " + power[i]*1);
     if(power[i] < 100) {
     }
     else if(power[i] > 100) {
@@ -77,7 +76,6 @@ Blockly.Blocks['wait'] = {
 };
 Blockly.Python['wait'] = function(block) {
   var time = Blockly.Python.valueToCode(block, 'time', Blockly.Python.ORDER_ATOMIC) || 0;
-  // TODO: Assemble Python into code variable.
   var code = 'wait(' + time + ')';
   return [code, Blockly.Python.ORDER_NONE];
 };
