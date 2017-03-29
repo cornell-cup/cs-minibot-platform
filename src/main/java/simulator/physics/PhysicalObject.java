@@ -105,6 +105,10 @@ public class PhysicalObject {
         return this.body.getPosition().y;
     }
 
+    public double getAngle() {
+        return this.body.getAngle();
+    }
+
     /**
      * @return the object's JBox2D body
      */
