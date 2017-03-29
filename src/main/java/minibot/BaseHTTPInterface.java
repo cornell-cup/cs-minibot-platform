@@ -1,6 +1,5 @@
 package minibot;
 
-import Ice.UDPConnectionInfo;
 import basestation.BaseStation;
 import basestation.bot.commands.FourWheelMovement;
 import basestation.bot.connection.IceConnection;
@@ -44,10 +43,10 @@ public class BaseHTTPInterface {
 
     public static void main(String[] args) {
         // Spark configuration
-        port(8081);
+        port(8080);
         staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
-       SimulatorVisionSystem simvs;
+        SimulatorVisionSystem simvs;
         // Show exceptions
         exception(Exception.class, (exception,request,response) -> {
             exception.printStackTrace();
@@ -63,8 +62,7 @@ public class BaseHTTPInterface {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(ovs);
             simvs = SimulatorVisionSystem.getInstance();
-            BaseStation.getInstance().getVisionManager().addVisionSystem( simvs);
-
+            BaseStation.getInstance().getVisionManager().addVisionSystem(simvs);
         }
 
         // Routes
@@ -98,7 +96,6 @@ public class BaseHTTPInterface {
                 pObjs.add(po);
                 simvs.processPhysicalObjects(pObjs);
             }
-
 
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
@@ -185,9 +182,7 @@ public class BaseHTTPInterface {
         });
 
         post("/discoverBots", (req, res) -> {
-            System.out.println("Sending back");
             return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
-
         });
 
         post("/runXbox", (req, res) -> {
