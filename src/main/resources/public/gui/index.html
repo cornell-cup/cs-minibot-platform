@@ -14,6 +14,7 @@
 		A GUI to control Cornell Cup's modbot.
 	</header>
 
+	<!-- BOT VIEW -->
 	<div class="box view">
 		<h3>VIEW
 			<button id="zoom-out">scale view</button>
@@ -41,6 +42,8 @@
 		</div>
 	</div>
 
+
+	<!-- BOT CONTROLS -->
 	<div class="box">
 		<h4>Movement controls:</h4>
 		Choose bot:<br>
@@ -83,6 +86,7 @@
 		</table>
 	</div>
 
+	<!-- BOT CONFIGURATIONS -->
 	<div class="box">
 		<h4>Add a bot:</h4>
 		IP: <input type="text" name="ip" id="ip"><br/>
@@ -98,36 +102,67 @@
 		<button id = "updateLocs"> Run simulator </button>
 	</div>
 
+
+	<!-- BEGINNING OF BLOCKLY CODE -->
 	<div class="box">
+		<!-- BLOCKLY TOOLBOX -->
+		<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+		<xml id="toolbox" style="display:none;">
+			<block type="controls_if"></block>
+			<block type="logic_compare"></block>
+			<block type="controls_repeat_ext"></block>
+			<block type="math_number"></block>
+			<block type="math_arithmetic"></block>
+			<block type="text"></block>
+			<block type="text_print"></block>
 
-	<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+			<!-- ADDING CUSTOM BLOCKS -->
+			<block type="move"></block>
+			<block type="turn"></block>
+			<block type="setwheelpower"></block>
+			<block type="wait"></block>
+		</xml>
 
-  <xml id="toolbox" style="display: none">
-    <block type="controls_if"></block>
-    <block type="logic_compare"></block>
-    <block type="controls_repeat_ext"></block>
-    <block type="math_number"></block>
-    <block type="math_arithmetic"></block>
-    <block type="text"></block>
-    <block type="text_print"></block>
-  </xml>
+		<!-- SUBMIT/DOWNLOAD/UPLOAD FUNCTIONALITIES -->
+			<!-- download script-->
+		<form id="dwn" onsubmit="download(this['name'].value, this['text'].value)">
+			<input type="text" name="name" value="myBlocklyCode.py">
+			<textarea name="text" size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
+			<input type="submit" value="Download">
+		</form>
 
-  <textarea size="100" cols="100" rows="10" id="textarea"></textarea><br/>
-  <button id="download" onclick="downloadScript()">download</button>
-  <button id="send">run</button>
-
-
-</div>
+			<!-- send script -->
+		<button id="send">run</button>
+		
+			<!-- upload script -->
+		<form type=POST>
+			<input 
+				type="file" 
+				id="upload" 
+				multipleSize="1" 
+				accept=".py"
+			/>
+		</form>
+	</div>
+	
+	<!-- basic imports -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="http://pixijs.download/release/pixi.min.js"></script>
+
+	<!-- blockly imports -->
 	<script src="../js/vendor/blockly/blockly_compressed.js"></script>
 	<script src="../js/vendor/blockly/javascript_compressed.js"></script>
 	<script src="../js/vendor/blockly/python_compressed.js"></script>
 	<script src="../js/vendor/blockly/blocks_compressed.js"></script>
 	<script src="../js/vendor/blockly/en.js"></script>
 	<script src="../js/vendor/prettify/prettify.js"></script>
-	<script src="../js/blockly.js"></script>
-	<!--<script src="../js/response.js"></script>-->
+
+	<!-- IMPORT CUSTOM BLOCKS -->
+	<script type="text/javascript" src="../js/blocks/custom_blocks.js"></script>
+	<script type="text/javascript" src="../js/blocks/custom_json.js"></script>
+
+	<!-- manual scripts -->
+	<script src="../js/blockly.js"></script>	
 	<script src="../js/interface.js"></script>
 	<script src="../js/view.js"></script>
 </body>
