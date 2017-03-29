@@ -8,9 +8,9 @@ PORT = 11111
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-class BaseMiniBot:
+class SimMiniBot:
     """
-    Abstract class defining the base functions of the MiniBot. More customized MiniBots may
+    Abstract simulator class defining the base functions of the MiniBot. More customized MiniBots may
     subclass this.
     """
     def __init__(self):
@@ -35,7 +35,6 @@ class BaseMiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        # print("Unimplemented: Moving backward "+str(power))
         message = "BACKWARD:" + str(power) + '\n'
         sock.sendall(message)
         return
@@ -47,7 +46,6 @@ class BaseMiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        # print("Unimplemented: Turning clockwise "+str(power))
         message = "RIGHT:" + str(power) + '\n'
         sock.sendall(message)
         return
@@ -59,7 +57,6 @@ class BaseMiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        # print("Unimplemented: Turning counter clockwise "+str(power))
         message = "LEFT:" + str(power) + '\n'
         sock.sendall(message)
         return
@@ -74,7 +71,6 @@ class BaseMiniBot:
         :param back_right power to deliver to the back_right wheel
         :return True if the action is supported
         """
-        # print("Unimplemented: Setting wheel power to %d,%d,%d,%d" % (front_left, front_right, back_left, back_right))
         message = "WHEELS:" + str(front_left) + ',' + str(front_right) + ',' + str(back_left) + ',' \
                   + str(back_right) + '\n';
         sock.sendall(message)
@@ -138,9 +134,6 @@ class GPIOSensor(Sensor):
         """
         message = "GET:ALL" + '\n'
         sock.sendall(message)
-        # with open('output.txt', 'a') as file:
-        #     file.write("Got: " + sock.recv(1024) + "\n")
-        # file.close()
         result = sock.recv(1024)
         return result
 
@@ -150,10 +143,7 @@ class GPIOSensor(Sensor):
         """
         message = "GET:" + self.name + '\n'
         sock.sendall(message)
-        # with open('output.txt', 'a') as file:
-        #     file.write("Got: " + sock.recv(1024) + "\n")
-        # file.close()
         result = sock.recv(1024)
         return result
 
-bot = BaseMiniBot()
+bot = SimMiniBot()

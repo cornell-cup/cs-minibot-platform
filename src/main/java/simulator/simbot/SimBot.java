@@ -29,7 +29,6 @@ public class SimBot extends Bot {
             Thread t = new TCPServer(11111, this, this.commandCenter, this.sensorCenter);
             this.runningThread = (TCPServer)t;
             this.runningThread.start();
-//            t.start();
         }catch(IOException e) {
             e.printStackTrace();
         }
