@@ -16,8 +16,9 @@ If you have already cloned the repository, then you can use the following comman
 ```
 git submodule update --init
 ```
-
-- Open the project in IntelliJ Idea. 
+Because this is a maven project, you should import it in the following way:
+- Open intellij idea and select import project
+- Select the pom.xml under cs-minibot-platform (the repo you just cloned)
 - Go to src/main/java/minibot/BaseHTTPInterface.java and run it.
 - Open your web browser and navigate to localhost:8080/gui
 
