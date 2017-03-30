@@ -1,8 +1,10 @@
-from cup_minibot_prepend import CupMiniBot
 import os
 from os import sys, path
-sys.path.append(os.path.join(os.path.dirname('sensor'), '..'))
+sys.path.append(os.path.dirname('../src/received/'))
+sys.path.append(os.path.join('../src/received/sensor/'))
+#sys.path.append(os.path.join(os.path.dirname('../src/received/'), '..'))
 from sensor import Sensor
+from cup_minibot_prepend import CupMiniBot
 
 bot = CupMiniBot()
 left = Sensor(bot, 'left')
