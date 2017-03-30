@@ -2,7 +2,7 @@
 # Needs to be updated to actually work, fake for now!
 # Abstract class representing the sensor interface
 
-from .Sensor import Sensor
+from sensor import Sensor
 
 class GPIOSensor(Sensor):
     def __init__(self, bot, name, pin_number):
