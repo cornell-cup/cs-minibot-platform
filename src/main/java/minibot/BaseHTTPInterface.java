@@ -48,7 +48,7 @@ public class BaseHTTPInterface {
         port(8080);
         staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
-       SimulatorVisionSystem simvs;
+        SimulatorVisionSystem simvs;
         // Show exceptions
         exception(Exception.class, (exception,request,response) -> {
             exception.printStackTrace();
@@ -64,8 +64,7 @@ public class BaseHTTPInterface {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(ovs);
             simvs = SimulatorVisionSystem.getInstance();
-            BaseStation.getInstance().getVisionManager().addVisionSystem( simvs);
-
+            BaseStation.getInstance().getVisionManager().addVisionSystem(simvs);
         }
 
         // Routes
@@ -103,7 +102,6 @@ public class BaseHTTPInterface {
                 // Color sensor TODO put somewhere nice
                 ColorIntensitySensor colorSensor = new ColorIntensitySensor((SimBotSensorCenter) simba.getSensorCenter(),"COLOR_SENSOR",simba);
             }
-
 
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
@@ -187,6 +185,10 @@ public class BaseHTTPInterface {
                 respData.add(jo);
             }
             return respData;
+        });
+
+        post("/discoverBots", (req, res) -> {
+            return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
         });
 
         post("/runXbox", (req, res) -> {
