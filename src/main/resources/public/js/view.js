@@ -16,10 +16,15 @@ var bots = [            // hard-coded bots for testing
     newBot(1,1,0,"bob"), 
     newBot(3,3,0,"bobette")
     ]; 
-const X_RANGE = 11; // x range for grid, TODO: capitalize const
-const Y_RANGE = 11; // y range for grid
-var x_int = 40; // actual spacing between grid lines
-var y_int = 40;
+//const X_RANGE = 11; // x range for grid, TODO: capitalize const
+//const Y_RANGE = 11; // y range for grid  <---- what does this mean?????????
+var viewWidth =  520;
+var x_int = 520/4; // actual spacing between grid lines
+var y_int =520/4;
+
+var scale = 100; //percentage, 100% is equal to 4x4 grid displayed, with each grid being 130pixels wide
+var x_offset = 0; //for purposes of adjusting viewport, this is a raw pixel value
+var y_offset = 0; //same as above
 
 var stage; // pixi elements for displaying information
 var back;
@@ -27,8 +32,56 @@ var botContainer;
 var gridContainer;
 var grid;
 var imageLoader;
+var backgroundSprite;
 
-var viewWidth =  520;
+
+$('#scale').on('change',function(){
+    var val = $(this).val();
+    scale=val;
+    x_int = viewWidth/4*val/100;
+    y_int = viewWidth/4*val/100;
+    updateInfo(x_int, y_int);
+
+    stage.removeChild(gridContainer);
+    gridContainer = new PIXI.Container();
+    botContainer.removeChildren();
+    setupGridLines(scale, x_offset, y_offset);
+    stage.addChild(gridContainer);
+    displayBots(bots,scale, x_offset, y_offset);
+    grid.render(stage);
+});
+
+/* for moving the viewport */
+window.onkeydown = function (e) {
+
+    let code = e.keyCode ? e.keyCode : e.which;
+
+    if (code === 37) {
+       //move view left
+       x_offset-=1;
+    } else if (code === 39) {
+       //move view right
+       x_offset+=1;
+
+    } else if (code == 38) {
+    	//move view up
+        y_offset-=1;
+
+    } else if (code == 40) {
+    	// move view down
+        y_offset+=1;
+    } else {
+        return;
+    }
+    stage.removeChild(gridContainer);
+    gridContainer = new PIXI.Container();
+    botContainer.removeChildren();
+    setupGridLines(scale, x_offset, y_offset);
+    stage.addChild(gridContainer);
+    displayBots(bots, scale, x_offset, y_offset);
+    grid.render(stage);
+};
+
 
 function main() {
     updateInfo(x_int, y_int);
@@ -50,11 +103,11 @@ function main() {
 }
 
 function imageLoaded(){
-    var background = PIXI.Texture.fromImage('img/line.png');
+    var background = PIXI.Texture.fromImage('/img/line.png');
     var backgroundTexture =  background;
-    var backgroundSprite = new PIXI.Sprite(backgroundTexture);
-    backgroundSprite.scale.x =  520/1300;
-    backgroundSprite.scale.y =  520/1300;
+    backgroundSprite = new PIXI.Sprite(backgroundTexture);
+    backgroundSprite.scale.x =  1300*scale/100;
+    backgroundSprite.scale.y =  1300*scale/100;
     backgroundSprite.position.x = 0;
     backgroundSprite.position.y = 0;
 
@@ -68,8 +121,8 @@ function imageLoaded(){
     grid.view.style.position = "absolute";
     grid.view.style.display = "block";
     grid.render(stage);
-    setupGridLines();
-    displayBots(bots);
+    setupGridLines(scale, x_offset, y_offset);
+    displayBots(bots,scale, x_offset, y_offset);
 
 
     getNewVisionData();
@@ -87,55 +140,58 @@ function newBot(x, y, angle, id) {
     return bot;
 }
 
-/* Zoom-out function to make all active bots visible on grid. */
-$("#zoom-out").click(function() {
-    console.log("zoom out");
-    if(bots.length!==0) {
-        scaleToFit();
-        zoomclicked = true;
-        $("#reset").css("display","inline");
-        $(this).css("display","none");
-    }
-});
 
-/* Reset function to return to original view (from zoom-out). */
-$("#reset").click(function(){
-console.log("reset");
-    updateInfo(x_int, y_int);
-    botContainer.removeChildren();
-    setupGridLines();
-    displayBots(bots);
-    grid.render(stage);
-    $("#zoom-out").css("display","inline");
-    $(this).css("display","none");
-});
+///* Zoom-out function to make all active bots visible on grid. */
+//$("#zoom-out").click(function() {
+//    console.log("zoom out");
+//    if(bots.length!==0) {
+//        scaleToFit();
+//        zoomclicked = true;
+//        $("#reset").css("display","inline");
+//        $(this).css("display","none");
+//    }
+//});
+//
+///* Reset function to return to original view (from zoom-out). */
+//$("#reset").click(function(){
+//console.log("reset");
+//    updateInfo(x_int, y_int);
+//    botContainer.removeChildren();
+//    setupGridLines();
+//    displayBots(bots);
+//    grid.render(stage);
+//    $("#zoom-out").css("display","inline");
+//    $(this).css("display","none");
+//});
 
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
-function drawBot(b) {
+function drawBot(b, scale, x_offset, y_offset) {
+    var botradius = scale/4
 	var circle = new PIXI.Graphics();
 	circle.beginFill(0x0EB530);
-	circle.drawCircle(0, 0, 6);
+	circle.drawCircle(0, 0, botradius);
 	circle.endFill();
-
-	circle.x = b.x*x_int;
-	circle.y = b.y*y_int;
+    var cx = (b.x)*x_int+x_offset;
+    var cy = (b.y)*y_int+y_offset;
+	circle.x = cx;
+	circle.y = cy;
 
     var circle2 = new PIXI.Graphics();
     circle2.beginFill(0xFF0000);
-    circle2.drawCircle(0, 0, 3);
+    circle2.drawCircle(0, 0, scale/10);
     circle2.endFill();
 
     var circle3 = new PIXI.Graphics();
         circle3.beginFill(0xFF0000);
-        circle3.drawCircle(0, 0, 3);
+        circle3.drawCircle(0, 0, scale/10);
         circle3.endFill();
 
-    circle2.x = b.x*x_int+6*Math.cos(b.angle+Math.PI/6);
-    circle2.y = b.y*y_int+6*Math.sin(b.angle+Math.PI/6);
+    circle2.x = cx+botradius*Math.cos(b.angle+Math.PI/6);
+    circle2.y = cy+botradius*Math.sin(b.angle+Math.PI/6);
 
-    circle3.x = b.x*x_int+6*Math.cos(b.angle-Math.PI/6);
-    circle3.y = b.y*y_int+6*Math.sin(b.angle-Math.PI/6);
+    circle3.x = cx+botradius*Math.cos(b.angle-Math.PI/6);
+    circle3.y = cy+botradius*Math.sin(b.angle-Math.PI/6);
 
 	botContainer.addChild(circle);
 	botContainer.addChild(circle2);
@@ -143,9 +199,9 @@ function drawBot(b) {
 }
 
 /* Displays all bots given an array of bots */
-function displayBots(botArray) {
+function displayBots(botArray, scale, x_offset, y_offset) {
 	for(var b=0; b<botArray.length;b++) {
-		drawBot(botArray[b]);
+		drawBot(botArray[b], scale, x_offset, y_offset);
 	}
 }
 
@@ -162,23 +218,25 @@ function updateInfo(xint, yint){
 	- x:[0, 12], y:[0, 12]
 	- 
 */
-function setupGridLines() {
+function setupGridLines(scale, x_offset, y_offset) {
     var lines_y = [];
     var lines_x = [];
 
-    for(var i=0; i<25; i=i+1){
+    for(var i=0; i<80; i=i+1){
         lines_y[i] = new PIXI.Graphics();
         lines_y[i].lineStyle(1, 0x0000FF, 1);
-        lines_y[i].moveTo(0,i*20);
-        lines_y[i].lineTo(520,i*20);
-        lines_y[i].x = 0; lines_y[i].y = i*20;
+        lines_y[i].moveTo(0,i*65*scale/100);
+        lines_y[i].lineTo(520,i*65*scale/100);
+        lines_y[i].x = 0;
+        lines_y[i].y =(i-40)*65*scale/100 + y_offset;
         gridContainer.addChild(lines_y[i]);
 
         lines_x[i] = new PIXI.Graphics();
         lines_x[i].lineStyle(1, 0x0000FF, 1);
-        lines_x[i].moveTo(i*20,0);
-        lines_x[i].lineTo(i*20,520);
-        lines_x[i].x = i*20; lines_x[i].y = 0;
+        lines_x[i].moveTo(i*65*scale/100,0);
+        lines_x[i].lineTo(i*65*scale/100,520);
+        lines_x[i].x = (i-40)*65*scale/100 +x_offset;
+        lines_x[i].y = 0;
         gridContainer.addChild(lines_x[i]);
     }
 }
@@ -222,7 +280,7 @@ function getNewVisionData() {
                         bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
                     }
 
-                    displayBots(bots);
+                    displayBots(bots, scale, x_offset, y_offset);
                     grid.render(stage);
                     lock = false;
                 }
@@ -242,7 +300,7 @@ function getNewVisionData() {
 
     inv: bots is not empty.
 */
-function scaleToFit() {
+/* function scaleToFit() {
     console.log("scaled to fit");
 	var botmin_x = bots[0].x;
     var botmin_y = bots[0].y;
@@ -274,7 +332,7 @@ function scaleToFit() {
     displayBots(zoombots);
     grid.render(stage);
 }
-
+*/
 function pollBotNames() {
     $.ajax({
         url: '/trackedBots',
@@ -307,5 +365,12 @@ function pollBotNames() {
         }
     });
 }
+
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
 
 main();
