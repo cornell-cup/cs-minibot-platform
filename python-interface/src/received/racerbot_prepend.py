@@ -1,13 +1,18 @@
 import RPi.GPIO as GPIO
+import sys, threading, time, os
 
 class CupMiniBot:
-    """
-    Abstract class defining the base functions of the MiniBot. More customized MiniBots may
-    subclass this.
-    """
     def __init__(self):
-        pass
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(13, GPIO.OUT)
+        GPIO.setup(19, GPIO.OUT)
+        GPIO.setup(16, GPIO.OUT)
+        GPIO.setup(20, GPIO.OUT)
 
+        GPIO.output(13, GPIO.LOW)
+        GPIO.output(19, GPIO.HIGH)
+        GPIO.output(16, GPIO.LOW)
+        GPIO.output(20, GPIO.HIGH)
     def move_forward(self, power):
         """
         Moves the bot forward at a percentage of its full power
@@ -15,8 +20,10 @@ class CupMiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        print("Unimplemented: Moving forward "+str(power))
-
+        GPIO.output(13, GPIO.LOW)
+        GPIO.output(19, GPIO.LOW)
+        GPIO.output(16, GPIO.HIGH)
+        GPIO.output(20, GPIO.HIGH)
     def move_backward(self, power):
         """
         Moves the bot backward at a percentage of its full power
@@ -24,8 +31,10 @@ class CupMiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        print("Unimplemented: Moving backward "+str(power))
-
+        GPIO.output(13, GPIO.HIGH)
+        GPIO.output(19, GPIO.HIGH)
+        GPIO.output(16, GPIO.LOW)
+        GPIO.output(20, GPIO.LOW)
     def turn_clockwise(self, power):
         """
         Moves the bot clockwise  at a percentage of its full power
