@@ -107,7 +107,7 @@ public class BaseHTTPInterface {
                 ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
             }
 
-
+            
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
 
@@ -144,6 +144,14 @@ public class BaseHTTPInterface {
             return BaseStation.getInstance().getBotManager().removeBotByName(name);
         });
 
+        post( "/logdata", (req,res) -> {
+            String body = req.body();
+            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+
+            String name = commandInfo.get("name").getAsString();
+            System.out.println(name);
+            return true;
+        });
 
         /**
          * GET /sendScript sends script to the bot identified by botName
@@ -256,6 +264,8 @@ public class BaseHTTPInterface {
                 return false;
             }
         });
+
+
     }
 
     /**

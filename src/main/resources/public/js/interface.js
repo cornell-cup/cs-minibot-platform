@@ -54,6 +54,18 @@ function sendMotors(fl, fr, bl, br) {
 	});
 }
 
+function startLogging() {
+	$.ajax({
+		method: "POST",
+		url: "/logdata",
+		data: JSON.stringify({
+			name: getBotID()
+		}),
+		processData: false,
+		contentType: 'application/json'
+	});
+}
+
 function sendScript() {
     $.ajax({
     		method: "POST",
@@ -75,7 +87,6 @@ $("#send").click(function(event) {
 $(".dir").click(function(event) {
 	var pow = getPower();
 	var target = $(event.target); //$target
-
 	if(target.is("#fwd")) {
 		sendMotors(pow, pow, pow, pow);
 	}
@@ -95,7 +106,11 @@ $(".dir").click(function(event) {
 		sendMotors(-pow, pow, -pow, pow);
 	}
 	else if(target.is("#stop")){
+	    console.log("stop");
 		sendMotors(0,0,0,0);
+	}
+	else if(target.is("#log")) {
+	    startLogging();
 	}
 	else {
 		console.error("Clicked on a direction button but nothing has been executed.");
