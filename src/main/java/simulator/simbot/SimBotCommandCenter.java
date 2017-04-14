@@ -63,34 +63,94 @@ public class SimBotCommandCenter implements FourWheelMovement {
 
     @Override
     public boolean sendKV(String key, String value) {
-        try{
-            BufferedReader reader =
-                    new BufferedReader(new FileReader("src/main/java/simulator/simbot/ScriptHeader.py"));
-            String header = "";
-            String sCurrentLine;
-            while ((sCurrentLine = reader.readLine()) != null) {
-                header = header + sCurrentLine + "\n";
+        if (key == "WHEELS") {
+
+            int i = value.indexOf(',');
+            int j = value.indexOf('>');
+            String str_wheel_commands = value.substring(i+1, j);
+            String[] wheel_commands = str_wheel_commands.split(",");
+
+            double fl = Double.parseDouble(wheel_commands[0]);
+            double fr = Double.parseDouble(wheel_commands[1]);;
+            double bl = Double.parseDouble(wheel_commands[2]);;
+            double br = Double.parseDouble(wheel_commands[3]);;
+
+            Body b = SimulatorVisionSystem.getInstance().getWorld().getBodyList();
+
+            //forwards
+            if(fl > 0 && fr > 0 && bl >0 && br>0) {
+                float angle = b.getAngle();
+                float newX = (float) (topspeed*fl/100*Math.cos(angle));
+                float newY = (float) (topspeed*fl/100*Math.sin(angle));
+                b.setLinearVelocity(new Vec2(newX, newY));
+                b.setAngularVelocity(0.0f);
             }
 
-            String prg = value;
-            BufferedWriter out = new BufferedWriter(new FileWriter("script.py"));
-            out.write(header);
-            out.write(prg);
-            out.close();
-
-            ProcessBuilder pb = new ProcessBuilder("python","script.py");
-            Process p = pb.start();
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String ret;
-            String line;
-            while ((line = in.readLine()) != null) {
-                ret = new String(line);
-                System.out.println(ret);
+            //backwards
+            else if(fl < 0 && fr < 0 && bl < 0 && br < 0) {
+                float angle = b.getAngle();
+                float newX = (float) (topspeed*fl/100*Math.cos(angle));
+                float newY = (float) (topspeed*fl/100*Math.sin(angle));
+                b.setLinearVelocity(new Vec2(newX, newY));
+                b.setAngularVelocity(0.0f);
             }
-        }catch(Exception e){
-            System.out.println(e);
+
+            //no motor power
+            else if(fl == 0 && fr == 0 && bl == 0 && br == 0) {
+                b.setLinearVelocity(new Vec2(0.0f, 0.0f));
+                b.setAngularVelocity(0.0f);
+            }
+
+            //turning right
+            else if(fl > 0 && fr < 0 && bl > 0 && br < 0) {
+                b.setLinearVelocity(new Vec2(0.0f, 0.0f));
+                b.setAngularVelocity((float)(turningspeed*fl/100));
+            }
+
+            //turning left
+            else if(fl < 0 && fr > 0 && bl < 0 && br > 0) {
+                b.setLinearVelocity(new Vec2(0.0f, 0.0f));
+                b.setAngularVelocity((float)(turningspeed*fl/100));
+            }
+
+            else {
+                System.out.println("Invalid wheel power command!");
+            }
+
+            return true;
+
+        } else {
+
+            try{
+                BufferedReader reader =
+                        new BufferedReader(new FileReader("src/main/java/simulator/simbot/ScriptHeader.py"));
+                String header = "";
+                String sCurrentLine;
+                while ((sCurrentLine = reader.readLine()) != null) {
+                    header = header + sCurrentLine + "\n";
+                }
+
+                String prg = value;
+                BufferedWriter out = new BufferedWriter(new FileWriter("script.py"));
+                out.write(header);
+                out.write(prg);
+                out.close();
+
+                ProcessBuilder pb = new ProcessBuilder("python","script.py");
+                Process p = pb.start();
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                String ret;
+                String line;
+                while ((line = in.readLine()) != null) {
+                    ret = new String(line);
+                    System.out.println(ret);
+                }
+            }catch(Exception e){
+                System.out.println(e);
+            }
+
         }
         return false;
     }

@@ -1,6 +1,7 @@
 package minibot;
 
 import basestation.BaseStation;
+import basestation.bot.commands.CommandCenter;
 import basestation.bot.commands.FourWheelMovement;
 import basestation.bot.connection.IceConnection;
 import basestation.bot.connection.TCPConnection;
@@ -117,15 +118,21 @@ public class BaseHTTPInterface {
 
             // gets (botID, fl, fr, bl, br) from json
             String botName = commandInfo.get("name").getAsString();
-            int fl = commandInfo.get("fl").getAsInt();
-            int fr = commandInfo.get("fr").getAsInt();
-            int bl = commandInfo.get("bl").getAsInt();
-            int br = commandInfo.get("br").getAsInt();
+//            int fl = commandInfo.get("fl").getAsInt();
+//            int fr = commandInfo.get("fr").getAsInt();
+//            int bl = commandInfo.get("bl").getAsInt();
+//            int br = commandInfo.get("br").getAsInt();
+            String fl = commandInfo.get("fl").getAsString();
+            String fr = commandInfo.get("fr").getAsString();
+            String bl = commandInfo.get("bl").getAsString();
+            String br = commandInfo.get("br").getAsString();
 
             // Forward the command to the bot
             Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(botName).get();
-            FourWheelMovement fwmCommandCenter = (FourWheelMovement) myBot.getCommandCenter();
-            return fwmCommandCenter.setWheelPower(fl,fr,bl,br);
+//            FourWheelMovement fwmCommandCenter = (FourWheelMovement) myBot.getCommandCenter();
+//            return fwmCommandCenter.setWheelPower(fl,fr,bl,br);
+            CommandCenter cc =  myBot.getCommandCenter();
+            return cc.sendKV("WHEELS", "<<<<WHEELS," + fl + "," + fr + "," + bl + "," + br + ">>>>");
         });
 
         post("/removeBot", (req,res) -> {

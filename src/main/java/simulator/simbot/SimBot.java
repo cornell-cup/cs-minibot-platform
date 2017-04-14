@@ -84,33 +84,44 @@ public class SimBot extends Bot {
                         content = in.readLine();
 
                         if (content != null) {
-                            double value = 0;
+//                            double value = 0;
+                            String value = "";
                             if (!content.contains("WHEELS") && !content.contains("REGISTER") && !content.contains("GET")) {
-                                value = Double.parseDouble(content.substring(content.indexOf(':') + 1));
+//                                value = Double.parseDouble(content.substring(content.indexOf(':') + 1));
+                                value = content.substring(content.indexOf(':') + 1);
                             }
                             switch (content.substring(0, content.indexOf(':'))) {
                                 case "FORWARD":
                                     //fl fr bl br
-                                    this.commandCenter.setWheelPower(value, value, value, value);
+//                                    this.commandCenter.setWheelPower(value, value, value, value);
+                                    this.commandCenter.sendKV("WHEELS",
+                                            "<<<<WHEELS," + value + "," + value + "," + value + "," + value + ">>>>");
                                     System.out.println("FORWARD " + value);
                                     break;
                                 case "BACKWARD":
-                                    this.commandCenter.setWheelPower(-value, -value, -value, -value);
+//                                    this.commandCenter.setWheelPower(-value, -value, -value, -value);
+                                    this.commandCenter.sendKV("WHEELS",
+                                            "<<<<WHEELS,-" + value + ",-" + value + ",-" + value + ",-" + value + ">>>>");
                                     System.out.println("BACKWARD " + value);
                                     break;
                                 case "RIGHT":
-                                    this.commandCenter.setWheelPower(value, -value, value, -value);
+//                                    this.commandCenter.setWheelPower(value, -value, value, -value);
+                                    this.commandCenter.sendKV("WHEELS",
+                                            "<<<<WHEELS," + value + ",-" + value + "," + value + ",-" + value + ">>>>");
                                     System.out.println("RIGHT " + value);
                                     break;
                                 case "LEFT":
-                                    this.commandCenter.setWheelPower(-value, value, -value, value);
+//                                    this.commandCenter.setWheelPower(-value, value, -value, value);
+                                    this.commandCenter.sendKV("WHEELS",
+                                            "<<<<WHEELS,-" + value + "," + value + ",-" + value + "," + value + ">>>>");
                                     System.out.println("LEFT " + value);
                                     break;
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");
                                     break;
                                 case "STOP":
-                                    this.commandCenter.setWheelPower(0, 0, 0, 0);
+//                                    this.commandCenter.setWheelPower(0, 0, 0, 0);
+                                    this.commandCenter.sendKV("WHEELS", "<<<<WHEELS,0,0,0,0>>>>");
                                     System.out.println("STOPPING");
                                     break;
                                 case "KILL":
@@ -137,12 +148,15 @@ public class SimBot extends Bot {
                                     String[] wheel_cmds = cmd.split(",");
 
 
-                                    this.commandCenter.setWheelPower(
-                                            Double.parseDouble(wheel_cmds[0]),
-                                            Double.parseDouble(wheel_cmds[1]),
-                                            Double.parseDouble(wheel_cmds[2]),
-                                            Double.parseDouble(wheel_cmds[3])
-                                    );
+//                                    this.commandCenter.setWheelPower(
+//                                            Double.parseDouble(wheel_cmds[0]),
+//                                            Double.parseDouble(wheel_cmds[1]),
+//                                            Double.parseDouble(wheel_cmds[2]),
+//                                            Double.parseDouble(wheel_cmds[3])
+//                                    );
+
+                                    this.commandCenter.sendKV("WHEELS", "<<<<WHEELS," + wheel_cmds[0] + "," + wheel_cmds[1]
+                                            + "," + wheel_cmds[2] + "," + wheel_cmds[3] + ">>>>");
                                     break;
 
                             }
