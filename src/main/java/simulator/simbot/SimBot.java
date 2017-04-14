@@ -20,7 +20,7 @@ public class SimBot extends Bot {
      */
 
     public SimBot(SimBotConnection sbc, String name, PhysicalObject myPhysicalObject) {
-        super(sbc);
+        super(sbc, name);
         this.commandCenter = new SimBotCommandCenter(this);
         this.sensorCenter = new SimBotSensorCenter();
         this.myPhysicalObject = myPhysicalObject;
