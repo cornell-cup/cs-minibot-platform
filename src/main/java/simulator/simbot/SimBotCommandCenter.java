@@ -73,21 +73,22 @@ public class SimBotCommandCenter implements FourWheelMovement {
             }
 
             String prg = value;
-            BufferedWriter out = new BufferedWriter(new FileWriter("script.py"));
-            out.write(header);
-            out.write(prg);
-            out.close();
+            BufferedWriter scriptOut = new BufferedWriter(new FileWriter("temp.py"));
+            scriptOut.write(header);
+            scriptOut.write(prg);
+            scriptOut.close();
 
-            ProcessBuilder pb = new ProcessBuilder("python","script.py");
+            ProcessBuilder pb = new ProcessBuilder("python","temp.py");
             Process p = pb.start();
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader scriptFeedbackInStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-            String ret;
+
             String line;
-            while ((line = in.readLine()) != null) {
-                ret = new String(line);
-                System.out.println(ret);
+            while ((line = scriptFeedbackInStream.readLine()) != null) {
+                int ret = new Integer(line).intValue();
+                System.out.println("" + ret);
+
             }
         }catch(Exception e){
             System.out.println(e);

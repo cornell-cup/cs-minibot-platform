@@ -1,5 +1,8 @@
-from .sensor.Sensor import Sensor
-from .sensor.GPIOSensor import GPIOSensor
+import os
+from os import sys, path
+sys.path.append(os.path.join(os.path.dirname('sensor'), '..'))
+from sensor import Sensor
+from sensor import GPIOSensor
 
 
 class CupMiniBot:

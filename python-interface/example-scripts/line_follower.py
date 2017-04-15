@@ -1,5 +1,11 @@
+import os
+from os import sys, path
+sys.path.append(os.path.dirname('../src/received/'))
+sys.path.append(os.path.join('../src/received/sensor/'))
+#sys.path.append(os.path.join(os.path.dirname('../src/received/'), '..'))
+from sensor import Sensor
 from cup_minibot_prepend import CupMiniBot
-from .sensor.Sensor import Sensor
+
 bot = CupMiniBot()
 left = Sensor(bot, 'left')
 right = Sensor(bot, 'right')
@@ -13,7 +19,7 @@ while(not end):
     while(center.read() != 1):
         if(left.read() == 1):
             bot.turn_clockwise(100)
-        else if(right.read() == 1):
+        elif(right.read() == 1):
             bot.turn_counter_clockwise(100)
         else:
             end = True
