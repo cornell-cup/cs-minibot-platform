@@ -14,8 +14,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import examples.gobot.Course;
+import examples.patrol.Patrol;
 import simulator.physics.PhysicalObject;
 import simulator.simbot.SimBotConnection;
+import spark.Request;
+import spark.Response;
+import spark.Route;
 import spark.route.RouteOverview;
 
 import java.util.ArrayList;
@@ -59,8 +64,10 @@ public class BaseHTTPInterface {
         // Global objects
         JsonParser jp = new JsonParser();
         Gson gson = new Gson();
-        patrolPoints = new
-                ArrayList<>();
+        patrolPoints = new ArrayList<>();
+        Course course = new Course();
+        ArrayList<VisionCoordinate> outerTrackCoords = new ArrayList<>();
+        ArrayList<VisionCoordinate> innerTrackCoords = new ArrayList<>();
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
@@ -187,21 +194,6 @@ public class BaseHTTPInterface {
             return respData;
         });
 
-        get("/runSquareDance", (req, res) -> {
-           MiniBotSquareDance mbsd = new MiniBotSquareDance( (FourWheelMovement)
-                   BaseStation
-                   .getInstance().getBotManager().getAllTrackedBots()
-                   .iterator().next().getCommandCenter());
-            mbsd.start();
-            return true;
-        });
-
-        get("/addPointToQueue", (req, res) -> {
-            patrolPoints.add(BaseStation.getInstance().getVisionManager()
-                    .getAllLocationData().get(0).coord);
-            return true;
-        });
-
         post("/runXbox", (req, res) -> {
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
@@ -255,6 +247,44 @@ public class BaseHTTPInterface {
                 return false;
             }
         });
+
+        // Examplescript routes
+        get("/example/patrol/run", (req, res) -> {
+            Patrol mbsd = new Patrol( (FourWheelMovement)
+                    BaseStation
+                            .getInstance().getBotManager().getAllTrackedBots()
+                            .iterator().next().getCommandCenter());
+            mbsd.start();
+            return true;
+        });
+
+        get("/example/patrol/addPointToQueue", (req, res) -> {
+            patrolPoints.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            return true;
+        });
+
+        get("/example/gobot/addPointToInnerTrack", (req, res) -> {
+            innerTrackCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            return true;
+        });
+
+        get("/example/gobot/addPointToOuterTrack", (req, res) -> {
+            outerTrackCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            return true;
+        });
+
+        get("/example/gobot/finishedTrack", (request, response) -> {
+            course.setOuter(outerTrackCoords);
+            course.setInner(innerTrackCoords);
+            return true;
+        });
+
+        get("/example/gobot/isBotInside", (req, res) -> course.isInsideTrack(BaseStation.getInstance().getVisionManager()
+                .getAllLocationData().get(0).coord));
+
     }
 
     /**
