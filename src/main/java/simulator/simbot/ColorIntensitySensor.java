@@ -49,7 +49,6 @@ public class ColorIntensitySensor extends Sensor {
             return jo;
         }
 
-        // TODO: Coordinate transform, for now just read at the middle
 
         int[] transformed = transformToPixels(parentCoordinate, this.lateralOffset);
 
@@ -67,7 +66,6 @@ public class ColorIntensitySensor extends Sensor {
         }
         jo.addProperty("data",rgb);
 
-//        System.out.printf("%d, %d\n",transformed[0], transformed[1]);
 
         return jo;
     }
