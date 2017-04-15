@@ -91,6 +91,7 @@ public class BaseHTTPInterface {
                else {
                 SimBotConnection sbc = new SimBotConnection();
 
+
                 PhysicalObject po = new PhysicalObject("simbot", 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
                 SimBot simbot;
                 simbot = new SimBot(sbc, name, po);
@@ -105,6 +106,7 @@ public class BaseHTTPInterface {
                 ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
                 ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
                 ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
+
             }
 
             return BaseStation.getInstance().getBotManager().addBot(newBot);

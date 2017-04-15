@@ -88,6 +88,7 @@ public class SimBot extends Bot {
                             if (!content.contains("WHEELS") && !content.contains("REGISTER") && !content.contains("GET")) {
                                 value = Double.parseDouble(content.substring(content.indexOf(':') + 1));
                             }
+                            String name = content.substring(content.indexOf(':') + 1);
                             switch (content.substring(0, content.indexOf(':'))) {
                                 case "FORWARD":
                                     //fl fr bl br
@@ -118,7 +119,6 @@ public class SimBot extends Bot {
                                     System.out.println("Exiting\n");
                                     break;
                                 case "GET":
-                                    String name = content.substring(content.indexOf(':') + 1);
                                     if (name.equals("ALL")) {
                                         out.println(this.sensorCenter.getAllDataGson());
                                     } else {
@@ -132,11 +132,8 @@ public class SimBot extends Bot {
                                     System.out.println("Added New sensor");
                                     break;
                                 default:
-                                    String cmd = content.substring(content.indexOf(':') + 1);
-                                    System.out.println(cmd);
-                                    String[] wheel_cmds = cmd.split(",");
-
-
+                                    System.out.println(name);
+                                    String[] wheel_cmds = name.split(",");
                                     this.commandCenter.setWheelPower(
                                             Double.parseDouble(wheel_cmds[0]),
                                             Double.parseDouble(wheel_cmds[1]),
@@ -144,7 +141,6 @@ public class SimBot extends Bot {
                                             Double.parseDouble(wheel_cmds[3])
                                     );
                                     break;
-
                             }
                         }
                     }
