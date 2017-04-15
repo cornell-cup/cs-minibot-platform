@@ -2,8 +2,12 @@ package simulator.simbot;
 import java.net.*;
 import java.io.*;
 import java.nio.*;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import basestation.bot.commands.FourWheelMovement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import simulator.baseinterface.SimulatorVisionSystem;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.common.Vec2;
@@ -11,7 +15,58 @@ import org.jbox2d.common.Vec2;
 public class SimBotCommandCenter implements FourWheelMovement {
     public final float topspeed = 0.655f; //top speed of minibot in meters/second
     public final float turningspeed = (float) Math.PI;
+    public transient boolean record = false;
+    Map<String,String> commands_log = new ConcurrentHashMap<>();
+
     public SimBotCommandCenter(SimBot myBot) {
+    }
+
+    /**
+     * Does not record data until start is called
+     */
+    public void startLogging() {
+        this.record = true;
+    }
+
+    public boolean isLogging() {
+        return this.record;
+    }
+
+    public void setData(String name, String value) {
+        this.commands_log.put(name,value);
+    }
+
+    public void setWheelsData(String fl, String v1, String fr, String v2, String bl, String v3, String br, String v4) {
+        this.commands_log.put(fl,v1);
+        this.commands_log.put(fr,v2);
+        this.commands_log.put(bl,v3);
+        this.commands_log.put(br,v4);
+    }
+
+    public JsonObject getData(String name) {
+        JsonObject data = new JsonObject();
+        for (Map.Entry<String, String> entry : this.commands_log.entrySet()) {
+            String n = entry.getKey();
+            if (name.equals(n)) {
+                String value = entry.getValue();
+                data.addProperty(name, value);
+                return data;
+            }
+        }
+        data.addProperty(name,"");
+        return data;
+    }
+
+    public JsonObject getAllData() {
+        JsonObject allData = new JsonObject();
+
+        for (Map.Entry<String, String> entry : this.commands_log.entrySet()) {
+            String name = entry.getKey();
+            String value = entry.getValue();
+            allData.addProperty(name, value);
+        }
+
+        return allData;
     }
 
     @Override
@@ -116,6 +171,9 @@ public class SimBotCommandCenter implements FourWheelMovement {
             else {
                 System.out.println("Invalid wheel power command!");
             }
+
+            this.setWheelsData("fl", wheel_commands[0], "fr", wheel_commands[1],
+                    "bl", wheel_commands[2],"br", wheel_commands[3]);
 
             return true;
 

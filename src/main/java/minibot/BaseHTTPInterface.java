@@ -14,10 +14,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.xml.internal.rngom.parse.host.Base;
 import simulator.physics.PhysicalObject;
-import simulator.simbot.ColorIntensitySensor;
-import simulator.simbot.SimBotConnection;
-import simulator.simbot.SimBotSensorCenter;
+import simulator.simbot.*;
 import spark.route.RouteOverview;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import java.util.NoSuchElementException;
 import simulator.baseinterface.SimulatorVisionSystem;
 
 
-import simulator.simbot.SimBot;
 import xboxhandler.XboxControllerDriver;
 
 import static spark.Spark.*;
@@ -147,9 +145,11 @@ public class BaseHTTPInterface {
         post( "/logdata", (req,res) -> {
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
-
             String name = commandInfo.get("name").getAsString();
-            System.out.println(name);
+            Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(name).get();
+            SimBotCommandCenter cc = (SimBotCommandCenter) myBot.getCommandCenter();
+            System.out.println("Start Logging Data...");
+            cc.startLogging();
             return true;
         });
 

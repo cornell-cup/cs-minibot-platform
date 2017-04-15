@@ -2,16 +2,20 @@ package simulator.simbot;
 
 import basestation.bot.robot.Bot;
 import basestation.bot.sensors.SensorCenter;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import simulator.physics.PhysicalObject;
 
 import java.io.*;
 import java.net.*;
+import java.util.Map;
 
 public class SimBot extends Bot {
 
     private final transient SimBotCommandCenter commandCenter;
     private final transient SimBotSensorCenter sensorCenter;
     public transient TCPServer runningThread;
+    public transient DataLog loggingThread;
     private transient PhysicalObject myPhysicalObject;
 
 
@@ -29,6 +33,10 @@ public class SimBot extends Bot {
             Thread t = new TCPServer(11111, this, this.commandCenter, this.sensorCenter);
             this.runningThread = (TCPServer)t;
             this.runningThread.start();
+
+            Thread log = new DataLog("log.csv", this.commandCenter, this.sensorCenter);
+            this.loggingThread = (DataLog)log;
+            this.loggingThread.start();
         }catch(IOException e) {
             e.printStackTrace();
         }
@@ -46,6 +54,115 @@ public class SimBot extends Bot {
 
     public void resetServer() { this.runningThread.stopStream(); }
 
+    public class DataLog extends Thread {
+        private final transient SimBotCommandCenter commandCenter;
+        private final transient SimBotSensorCenter sensorCenter;
+        private static final char DEFAULT_SEPARATOR = ',';
+        private final String path;
+        private FileWriter writer;
+        private boolean fileCreated = false;
+        private volatile boolean exit = false;
+        private static final int INTERVAL = 250;
+
+        public DataLog(String path, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException{
+            this.commandCenter = commandCenter;
+            this.sensorCenter = sensorCenter;
+            this.path = path;
+            if (commandCenter.isLogging()) {
+                File file = new File(path);
+                file.createNewFile();
+                this.writer = new FileWriter(file);
+                this.fileCreated = true;
+            }
+        }
+
+        public void stopLogging() {
+            this.exit = true;
+        }
+
+        public void myRun() throws Exception {
+            boolean first_header = true;
+            while (!exit) {
+                if (this.commandCenter.isLogging()) {
+                    //Creates csv file if it hasn't been created yet
+                    if (!fileCreated) {
+                        File file = new File(this.path);
+                        file.createNewFile();
+                        this.writer = new FileWriter(file);
+                        this.fileCreated = true;
+                    }
+
+                    //Adjusts the interval of sampling data
+                    this.sleep(INTERVAL);
+
+                    //Grabs command data
+                    boolean first = true;
+                    StringBuilder sb_command = new StringBuilder();
+                    StringBuilder sb_header_command = new StringBuilder();
+                    JsonObject commandData = this.commandCenter.getAllData();
+                    for (Map.Entry<String, JsonElement> entry : commandData.entrySet()) {
+                        String name = entry.getKey();
+                        String value = entry.getValue().getAsString();
+                        if (!first) {
+                            sb_command.append(DEFAULT_SEPARATOR);
+                            sb_header_command.append(DEFAULT_SEPARATOR);
+                        }
+                        sb_command.append(value);
+                        sb_header_command.append(name);
+
+                        first = false;
+                    }
+
+                    //Grabs sensor data
+                    StringBuilder sb_sensor = new StringBuilder();
+                    StringBuilder sb_header_sensor = new StringBuilder();
+                    JsonObject sensorData = this.sensorCenter.getAllDataGson();
+                    for (Map.Entry<String, JsonElement> entry : sensorData.entrySet()) {
+                        String name = entry.getKey();
+                        JsonObject data = entry.getValue().getAsJsonObject();
+                        String value = Integer.toString(data.get("data").getAsInt());
+                        sb_sensor.append(DEFAULT_SEPARATOR);
+                        sb_header_sensor.append(DEFAULT_SEPARATOR);
+                        if (value.equals("")) {
+                            value = " ";
+                        }
+                        sb_sensor.append(value);
+                        sb_header_sensor.append(name);
+                    }
+
+
+                    //Record Header if there is a header
+                    if (first_header &&
+                            !sb_header_sensor.toString().equals("") &&
+                            !sb_header_command.toString().equals("")) {
+                        sb_header_command.append(sb_header_sensor);
+                        sb_header_command.append("\n");
+                        writer.append(sb_header_command.toString());
+                        first_header = false;
+                    }
+
+                    //Write to csv
+                    if (!sb_command.toString().equals("") && !sb_sensor.toString().equals("")) {
+                        sb_command.append(sb_sensor);
+                        sb_command.append("\n");
+                        writer.append(sb_command.toString());
+                        writer.flush();
+                    }
+                }
+            }
+            writer.close();
+        }
+
+        public void run(){
+            try {
+                this.myRun();
+            } catch(Exception e) {
+                System.out.println("ERROR IN LOGGING");
+            }
+        }
+
+
+    }
     public class TCPServer extends Thread {
         private ServerSocket serverSocket;
         private final transient SimBot sim;
