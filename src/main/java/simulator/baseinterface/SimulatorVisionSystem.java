@@ -61,7 +61,8 @@ public class SimulatorVisionSystem extends VisionSystem {
         Set<VisionObject> newSet = ConcurrentHashMap.newKeySet();
         for(PhysicalObject obj: pObjs) {
             VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(), 0.0);
-            VisionObject vo = new VisionObject(this,obj.getID(),vc);
+            VisionObject vo = new VisionObject(this,obj.getID(),vc, obj
+                    .getSize());
             newSet.add(vo);
             po_set.add(obj);
         }
@@ -80,7 +81,8 @@ public class SimulatorVisionSystem extends VisionSystem {
                 po.getWorld().step(timeStep, velocityIterations, positionIterations);
 
                 VisionCoordinate vc = new VisionCoordinate(po.getX(),po.getY(), po.getAngle());
-                VisionObject vo = new VisionObject(this,po.getID(),vc);
+                VisionObject vo = new VisionObject(this,po.getID(),vc, po
+                        .getSize());
 
                 set.add(vo);
             }

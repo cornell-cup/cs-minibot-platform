@@ -13,8 +13,8 @@ Bots have four fields: x coordinate, y coordinate, angle, and id.
 
 const MILLIS_PER_VISION_UPDATE = 33; // modbot update interval in ms
 var bots = [            // hard-coded bots for testing
-    newBot(1,1,0,"bob"), 
-    newBot(3,3,0,"bobette")
+    newBot(1,1,0,"bob",0),
+    newBot(3,3,0,"bobette",0)
     ]; 
 
 const VIEW_WIDTH =  520; //size of simulator display in pixels
@@ -33,6 +33,8 @@ var botContainer;
 var gridContainer;
 var grid;
 var imageLoader;
+
+var listBots = [];
 
 var backgroundSprite;
 
@@ -130,12 +132,13 @@ function imageLoaded(){
 }
 
 /* pseudo-constructor for a bot object */
-function newBot(x, y, angle, id) {
+function newBot(x, y, angle, id, size) {
     var bot = {
         x: x,
         y: y,
         angle: angle, // radians
-        id: id
+        id: id,
+        size: size
     };
     return bot;
 }
@@ -181,10 +184,36 @@ function drawBot(b, scale, xOffset, yOffset) {
 	botContainer.addChild(circle3);
 }
 
+function drawScenarioObject(b, scale, xOffset, yOffset) {
+
+    var size = b.size*x_int;
+	var scenarioObject = new PIXI.Graphics();
+	scenarioObject.beginFill(0x0EB530);
+	scenarioObject.drawRect(0, 0, size, size);
+	scenarioObject.pivot = new PIXI.Point(size/2, size/2);
+    scenarioObject.rotation = b.angle;
+	scenarioObject.endFill();
+
+	 var cx = (b.x)*x_int;
+     var cy = (b.y)*y_int;
+     scenarioObject.x = cx+xOffset;
+     scenarioObject.y = cy+yOffset;
+     console.log(cx);
+     console.log(cy)
+
+
+
+	botContainer.addChild(scenarioObject);
+}
+
 /* Displays all bots given an array of bots */
 function displayBots(botArray, scale, xOffset, yOffset) {
 	for(var b=0; b<botArray.length;b++) {
-		drawBot(botArray[b], scale, xOffset, yOffset);
+	if (botArray[b].size==0){
+	    drawBot(botArray[b], scale, xOffset, yOffset);
+	} else {
+	    drawScenarioObject(botArray[b], scale, xOffset, yOffset);
+	}
 	}
 }
 
@@ -261,9 +290,10 @@ function getNewVisionData() {
                         var zz = bot.x;
                         var aa = bot.y;
                         var bb = bot.angle;
-                        //console.log(bot.angle);
+                        var ss = bot.size;
                         var idid = bot.id;
-                        bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
+                        bots.push(newBot(bot.x, bot.y, bot.angle, bot.id, bot
+                        .size));
                     }
 
                     displayBots(bots, scale, xOffset, yOffset);

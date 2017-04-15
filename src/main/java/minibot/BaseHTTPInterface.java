@@ -112,6 +112,28 @@ public class BaseHTTPInterface {
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
 
+        post("/addScenario", (req,res) -> {
+            String body = req.body();
+            JsonObject addInfo = jp.parse(body).getAsJsonObject(); // gets (ip, port) from js
+
+            /* storing json objects into actual variables */
+            String ip = addInfo.get("ip").getAsString();
+            int port = addInfo.get("port").getAsInt();
+            String type = addInfo.get("type").getAsString();
+            int size = addInfo.get("size").getAsInt();
+            int angle = addInfo.get("angle").getAsInt();
+            int[] position = gson.fromJson(addInfo.get("position")
+                    .getAsString(),int[].class);
+
+            PhysicalObject po = new PhysicalObject("scenario_object", 100,
+                        simvs.getWorld(), (float)position[0],
+                    (float)position[1], size, angle);
+            ArrayList<PhysicalObject> pObjs = new ArrayList<>();
+            pObjs.add(po);
+            simvs.processPhysicalObjects(pObjs);
+            return addInfo;
+        });
+
         post("/commandBot", (req,res) -> {
             System.out.println("post to command bot called");
             String body = req.body();
@@ -193,6 +215,7 @@ public class BaseHTTPInterface {
                 jo.addProperty("y", vo.coord.y);
                 jo.addProperty("angle", vo.coord.getThetaOrZero());
                 jo.addProperty("id", vo.vid);
+                jo.addProperty("size",vo.size);
                 respData.add(jo);
             }
             return respData;

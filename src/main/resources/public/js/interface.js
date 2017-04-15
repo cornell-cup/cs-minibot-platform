@@ -142,6 +142,33 @@ $('#addBot').click(function() {
     });
 });
 
+//adding a scenario
+$('#addScenario').click(function() {
+    console.log("add scenario from interface.js")
+    var scenario = JSON.parse($("#scenario").val());
+    console.log(scenario);
+    scenario.forEach(function(e){
+    $.ajax({
+        method: "POST",
+        url: '/addScenario',
+        dataType: 'json',
+        data: JSON.stringify({
+                ip: getIP(),
+                port: (getPort() || 10000),
+                name: "",
+                type: e.type,
+                size: e.size,
+                angle: e.angle,
+                position: e.position
+            }),
+        contentType: 'application/json',
+        success: function (data){
+            console.log("successfully added"+data);
+        }
+    });
+    });
+});
+
 /*
 	For any update to the list of active bots, the dropdown menu
 	of active bots will update accordingly (depending on the addition
@@ -209,7 +236,6 @@ function updateDiscoveredBots(){
         data: '',
         contentType: 'application/json',
         success: function (data) {
-            console.log(data);
              //Check if discovered_bots and data are the same (check length and then contents)
             if(data.length != discovered_bots.length){
                 //If not then clear list and re-make displayed elements
