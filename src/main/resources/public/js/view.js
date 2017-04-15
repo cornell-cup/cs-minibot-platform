@@ -32,8 +32,8 @@ var botContainer;
 var gridContainer;
 var grid;
 var imageLoader;
-var backgroundSprite;
 
+var backgroundSprite;
 
 $('#scale').on('change',function(){
     var val = $(this).val();
@@ -108,6 +108,7 @@ function imageLoaded(){
     backgroundSprite = new PIXI.Sprite(backgroundTexture);
     backgroundSprite.scale.x =  1300*scale/100;
     backgroundSprite.scale.y =  1300*scale/100;
+
     backgroundSprite.position.x = 0;
     backgroundSprite.position.y = 0;
 
@@ -121,10 +122,10 @@ function imageLoaded(){
     grid.view.style.position = "absolute";
     grid.view.style.display = "block";
     grid.render(stage);
+
     setupGridLines(scale, x_offset, y_offset);
     displayBots(bots,scale, x_offset, y_offset);
-
-
+  
     getNewVisionData();
     pollBotNames();
 }
@@ -170,7 +171,9 @@ function drawBot(b, scale, x_offset, y_offset) {
     var botradius = scale/4
 	var circle = new PIXI.Graphics();
 	circle.beginFill(0x0EB530);
+
 	circle.drawCircle(0, 0, botradius);
+
 	circle.endFill();
     var cx = (b.x)*x_int+x_offset;
     var cy = (b.y)*y_int+y_offset;
@@ -179,11 +182,14 @@ function drawBot(b, scale, x_offset, y_offset) {
 
     var circle2 = new PIXI.Graphics();
     circle2.beginFill(0xFF0000);
+
     circle2.drawCircle(0, 0, scale/10);
+
     circle2.endFill();
 
     var circle3 = new PIXI.Graphics();
         circle3.beginFill(0xFF0000);
+
         circle3.drawCircle(0, 0, scale/10);
         circle3.endFill();
 
@@ -192,6 +198,7 @@ function drawBot(b, scale, x_offset, y_offset) {
 
     circle3.x = cx+botradius*Math.cos(b.angle-Math.PI/6);
     circle3.y = cy+botradius*Math.sin(b.angle-Math.PI/6);
+
 
 	botContainer.addChild(circle);
 	botContainer.addChild(circle2);
@@ -225,18 +232,26 @@ function setupGridLines(scale, x_offset, y_offset) {
     for(var i=0; i<80; i=i+1){
         lines_y[i] = new PIXI.Graphics();
         lines_y[i].lineStyle(1, 0x0000FF, 1);
+
         lines_y[i].moveTo(0,i*65*scale/100);
         lines_y[i].lineTo(520,i*65*scale/100);
         lines_y[i].x = 0;
         lines_y[i].y =(i-40)*65*scale/100 + y_offset;
+
         gridContainer.addChild(lines_y[i]);
 
         lines_x[i] = new PIXI.Graphics();
         lines_x[i].lineStyle(1, 0x0000FF, 1);
+
         lines_x[i].moveTo(i*65*scale/100,0);
         lines_x[i].lineTo(i*65*scale/100,520);
         lines_x[i].x = (i-40)*65*scale/100 +x_offset;
         lines_x[i].y = 0;
+
+        lines_x[i].moveTo(i*20,0);
+        lines_x[i].lineTo(i*20,520);
+        lines_x[i].x = i*20; lines_x[i].y = 0;
+
         gridContainer.addChild(lines_x[i]);
     }
 }

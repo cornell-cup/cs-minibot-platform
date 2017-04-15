@@ -4,9 +4,6 @@ bot = CupMiniBot()
 left = Sensor(bot, 'left')
 right = Sensor(bot, 'right')
 center = Sensor(bot, 'center')
-# redundant? bot.register_sensor(left)
-# redundant? bot.register_sensor(right)
-# redundant? bot.register_sensor(center)
 
 end = False
 while(not end):
