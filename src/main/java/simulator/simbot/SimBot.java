@@ -1,6 +1,5 @@
 package simulator.simbot;
 
-import basestation.bot.commands.FourWheelMovement;
 import basestation.bot.robot.Bot;
 import basestation.bot.sensors.SensorCenter;
 import simulator.physics.PhysicalObject;
@@ -21,7 +20,7 @@ public class SimBot extends Bot {
      */
 
     public SimBot(SimBotConnection sbc, String name, PhysicalObject myPhysicalObject) {
-        super(sbc);
+        super(sbc, name);
         this.commandCenter = new SimBotCommandCenter(this);
         this.sensorCenter = new SimBotSensorCenter();
         this.myPhysicalObject = myPhysicalObject;
@@ -30,13 +29,9 @@ public class SimBot extends Bot {
             Thread t = new TCPServer(11111, this, this.commandCenter, this.sensorCenter);
             this.runningThread = (TCPServer)t;
             this.runningThread.start();
-//            t.start();
         }catch(IOException e) {
             e.printStackTrace();
         }
-
-//        Reader r = new Reader(this);
-//        r.start();
     }
 
     @Override
@@ -47,25 +42,6 @@ public class SimBot extends Bot {
     @Override
     public SensorCenter getSensorCenter() {
         return sensorCenter;
-    }
-
-    private class Reader extends Thread {
-        private SimBot parent;
-
-        public Reader(SimBot parent) {
-            this.parent = parent;
-        }
-
-        public void run() {
-            while (true) {
-                System.out.println(parent.sensorCenter.getAllDataGson());
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     public void resetServer() { this.runningThread.stopStream(); }

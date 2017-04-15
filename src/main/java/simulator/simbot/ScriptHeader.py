@@ -1,15 +1,16 @@
 import socket
 import sys
 import time
+import json
 
 HOST = "localhost"
 PORT = 11111
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-class BaseMiniBot:
+class SimMiniBot:
     """
-    Abstract class defining the base functions of the MiniBot. More customized MiniBots may
+    Abstract simulator class defining the base functions of the MiniBot. More customized MiniBots may
     subclass this.
     """
     def __init__(self):
@@ -34,7 +35,6 @@ class BaseMiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        # print("Unimplemented: Moving backward "+str(power))
         message = "BACKWARD:" + str(power) + '\n'
         sock.sendall(message)
         return
@@ -46,7 +46,6 @@ class BaseMiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        # print("Unimplemented: Turning clockwise "+str(power))
         message = "RIGHT:" + str(power) + '\n'
         sock.sendall(message)
         return
@@ -58,7 +57,6 @@ class BaseMiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        # print("Unimplemented: Turning counter clockwise "+str(power))
         message = "LEFT:" + str(power) + '\n'
         sock.sendall(message)
         return
@@ -73,7 +71,6 @@ class BaseMiniBot:
         :param back_right power to deliver to the back_right wheel
         :return True if the action is supported
         """
-        # print("Unimplemented: Setting wheel power to %d,%d,%d,%d" % (front_left, front_right, back_left, back_right))
         message = "WHEELS:" + str(front_left) + ',' + str(front_right) + ',' + str(back_left) + ',' \
                   + str(back_right) + '\n';
         sock.sendall(message)
@@ -98,15 +95,11 @@ class BaseMiniBot:
         sock.sendall(message)
         return
 
-    # def getSensorData(self):
-    #     message = "GET:1" + '\n'
-    #     sock.sendall(message)
-    #     with open('output.txt', 'a') as file:
-    #         file.write("Got: " + sock.recv(1024) + "\n")
-    #     file.close()
-    #     return
-
     def register_sensor(self, name):
+        """
+        Registers a new sensor.
+        :param name The name of the sensor
+        """
         message = "REGISTER:" + name + '\n'
         sock.sendall(message)
         return
@@ -137,24 +130,20 @@ class GPIOSensor(Sensor):
 
     def readAll(self):
         """
-        Get Sensor Data
+        Get All Sensor Data
         """
         message = "GET:ALL" + '\n'
         sock.sendall(message)
-        with open('output.txt', 'a') as file:
-            file.write("Got: " + sock.recv(1024) + "\n")
-        file.close()
-        return
+        result = sock.recv(1024)
+        return result
 
-    def read(self, name):
+    def read(self):
         """
         Get Sensor Data
         """
-        message = "GET:" + name + '\n'
+        message = "GET:" + self.name + '\n'
         sock.sendall(message)
-        with open('output.txt', 'a') as file:
-            file.write("Got: " + sock.recv(1024) + "\n")
-        file.close()
-        return
+        result = sock.recv(1024)
+        return result
 
-bot = BaseMiniBot()
+bot = SimMiniBot()

@@ -38,25 +38,24 @@ public class ColorIntensitySensor extends Sensor {
         JsonObject jo = new JsonObject();
 
         if (allLocs.size() == 0) {
-            jo.addProperty("error","no object");
+            jo.addProperty("data",-1);
             return jo;
         }
 
         VisionCoordinate parentCoordinate = allLocs.get(0).coord;
 
         if (parentCoordinate == null) {
-            jo.addProperty("error","null object");
+            jo.addProperty("data",-1);
             return jo;
         }
 
-        // TODO: Coordinate transform, for now just read at the middle
 
         int[] transformed = transformToPixels(parentCoordinate, this.lateralOffset);
 
         // Get pixel values
         if(img==null) {
             System.err.println("null image");
-            jo.addProperty("data", 0);
+            jo.addProperty("data", -1);
             return jo;
         }
         int rgb = img.getRGB(transformed[0], transformed[1]);
@@ -67,7 +66,6 @@ public class ColorIntensitySensor extends Sensor {
         }
         jo.addProperty("data",rgb);
 
-//        System.out.printf("%d, %d\n",transformed[0], transformed[1]);
 
         return jo;
     }
