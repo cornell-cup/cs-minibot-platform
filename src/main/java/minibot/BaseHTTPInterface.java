@@ -14,7 +14,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import simulator.physics.PhysicalObject;
+import simulator.simbot.ColorIntensitySensor;
 import simulator.simbot.SimBotConnection;
+import simulator.simbot.SimBotSensorCenter;
 import spark.route.RouteOverview;
 
 import java.util.ArrayList;
@@ -88,13 +90,19 @@ public class BaseHTTPInterface {
             }
                else {
                 SimBotConnection sbc = new SimBotConnection();
-                newBot = new SimBot(sbc, name);
-
-                PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.4f, 0.0f, 1f, 1f, true);
+                PhysicalObject po = new PhysicalObject("simbot", 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
+                SimBot simbot;
+                simbot = new SimBot(sbc, name, po);
+                newBot = simbot;
 
                 ArrayList<PhysicalObject> pObjs = new ArrayList<>();
                 pObjs.add(po);
                 simvs.processPhysicalObjects(pObjs);
+
+                // Color sensor TODO put somewhere nice
+                ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
+                ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
+                ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
             }
 
             return BaseStation.getInstance().getBotManager().addBot(newBot);
@@ -142,6 +150,11 @@ public class BaseHTTPInterface {
             /* storing json objects into actual variables */
             String name = commandInfo.get("name").getAsString();
             String script = commandInfo.get("script").getAsString();
+
+            ((SimBot)BaseStation.getInstance()
+                    .getBotManager()
+                    .getBotByName(name)
+                    .orElseThrow(NoSuchElementException::new)).resetServer();
 
             return BaseStation.getInstance()
                     .getBotManager()
