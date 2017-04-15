@@ -23,10 +23,15 @@ def event_stream(deadzone=0,scale=32768):
     _data = None
     subprocess = popen('nohup xboxdrv','r',65536)
     while (True):
-        line = subprocess.readline()
+        try:
+            line = subprocess.readline()
+        except:
+            pass
         if 'Error' in line:
             raise ValueError(line)
         data = list(filter(bool,s.split(line[:-1])))
+        #print("im so mad rn")
+        #print(line)
         if len(data)==42:
             # Break input string into a data dict
             data = { data[x]:int(data[x+1]) for x in range(0,len(data),2) }

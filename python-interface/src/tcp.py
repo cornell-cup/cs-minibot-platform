@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 from socket import *
-import multiprocessing, time, signal, os, sys
+import RPi.GPIO as GPIO
+import multiprocessing, time, signal, os, sys, math
 
 #From https//github.com/zephod/legopi
 from lib2.legopi.lib import xbox_read
@@ -55,7 +56,7 @@ def runScript(cmd,coz):
                 val = cmd[:cmd.find(",")]
                 cmd = cmd[cmd.find(",")+1:]
             wheels.append(val)
-        script = "bot.set_wheel_power(" + wheels[0] + ","+wheels[1]+","+wheels[2] + ","+ wheels[3] + ")"
+        script = "bot.set_wheel_power(" + wheels[0] + ","+wheels[1]+","+wheels[2] + ","+ wheels[3] + ")\nGPIO.cleanup()"
     else:
         print("Bad Input, please send SCRIPT or WHEELS command")
 
@@ -106,12 +107,50 @@ def move_command(b):
     else:
         runScript("<<<<WHEELS,100,100,100,100>>>>",False)
 
+def move_command(fl,fr,bl,br):
+    runScript("<<<<WHEELS,"+fl+","+fr+","+bl+","+br+">>>>",False)
+
+
 # Reads in xbox button inputs from controller directly attached to RPi
 def xbox():
+    lastX = 0
+    lastY = 0
     print("running xbox")
+    print("Setting up GPIO")
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(13, GPIO.OUT)
+    GPIO.setup(16, GPIO.OUT)
+    GPIO.setup(19, GPIO.OUT)
+    GPIO.setup(20, GPIO.OUT)
+
+    pwmFrequency = 30 # Hz
+    # 13 16 left
+    #pwnRightA = GPIO.PWM(20,pwmFrequency)
+    #pwnLeftA = GPIO.PWM(16,pwmFrequency)
+    #pwnLeftB = GPIO.PWM(13,pwmFrequency)
+    #pwnRightB = GPIO.PWM(19,pwmFrequency)
+
+    #pwnLeftA.start(0)
+    #pwnRightA.start(0)
+    #pwnLeftB.start(0)
+    #pwnRightB.start(0)
+
+    pwn20 = GPIO.PWM(20, pwmFrequency)
+    pwn16 = GPIO.PWM(16, pwmFrequency)
+    pwn13 = GPIO.PWM(13, pwmFrequency)
+    pwn19 = GPIO.PWM(19, pwmFrequency)
+
+    pwn20.start(0)
+    pwn16.start(0)
+    pwn13.start(0)
+    pwn19.start(0)
+
+    wow=True
+
+
     for event in xbox_read.event_stream(deadzone=12000):
 
-        print("yay")
+        #print("yay")
         
         # Convert input event into a string so we can parse it
         event_triggered = str(event)
@@ -119,10 +158,109 @@ def xbox():
         # Extracts the button pressed and value (0 or 1 depending on pressed or unpressed)
         button = event_triggered[event_triggered.find("(")+1:event_triggered.find(",")]
         value = event_triggered[event_triggered.find(",")+1:event_triggered.rfind(",")]
-        
+        #print(button)
+        #print(value)
+
+        if (button == "X1" or button == "Y1" or wow):
+            wow=False
+            if button == "X1":
+                lastX = ((int(value)) / 32766)
+            if button == "Y1":
+                lastY = ((int(value)) / 32766)
+            radius = math.sqrt(lastX*lastX + lastY*lastY)  
+            angle = math.atan2(lastY,lastX)
+            if (radius < 0):
+                radius = 0
+            radius = radius * 100 # Scaling
+            if radius > 100:
+                radius = 100
+            
+            if angle >=0 and angle <= math.pi/2:
+                fl = radius
+            elif angle > math.pi/2 and angle < math.pi:
+                fl = radius * math.cos(angle*2 - math.pi)
+            elif angle >= -math.pi and angle <= -math.pi/2:
+                fl = -radius
+            else:
+                fl = radius * math.sin(angle)
+            
+            if angle > 0 and angle <= math.pi/2:
+                fr = radius * math.sin(angle)
+            elif angle >= math.pi/2 and angle <= math.pi:
+                fr = radius
+            elif angle < -math.pi/2 and angle > -math.pi:
+                fr = radius * -math.cos(angle*2 + math.pi)             
+            else:
+                fr = -radius
+
+            front_left = int(fl)
+            front_right = int(fr)
+            print("Setting the power to: " + str(front_left) + "," + str(front_right))
+            if front_right < 0:
+                front_right = -front_right
+                BR = 100 - front_right
+            if front_left < 0:
+                front_left = -front_left
+                BL = 100 - front_left
+            if front_left > 100:
+                front_left = 100
+            if front_right > 100:
+                front_right = 100
+            BL=100-front_left
+            BR=100-front_right
+            print(BL)
+            print(BR)
+            #pwnRightB.ChangeDutyCycle(int(BR))
+            #pwnLeftB.ChangeDutyCycle(int(BL))
+            #pwnRightA.ChangeDutyCycle(int(front_right))
+            #pwnLeftA.ChangeDutyCycle(int(front_left))
+            
+
+            print(angle)
+            if radius > 10:
+                if angle < 2 * math.pi / 3 and angle > math.pi / 3:
+                    print("forwarz")
+                    pwn20.ChangeDutyCycle(front_right)
+                    pwn19.ChangeDutyCycle(BR)
+                    pwn16.ChangeDutyCycle(front_left)
+                    pwn13.ChangeDutyCycle(BL)
+                elif angle > -(2 * math.pi / 3) and (angle < -math.pi / 3):
+                    #backwardz
+                    print("backz")
+                    pwn20.ChangeDutyCycle(BR)
+                    pwn19.ChangeDutyCycle(front_right)
+                    pwn16.ChangeDutyCycle(BL)
+                    pwn13.ChangeDutyCycle(front_left)
+                elif angle < math.pi/2:
+                    pwn20.ChangeDutyCycle(BR)
+                    pwn19.ChangeDutyCycle(BR)
+                    pwn16.ChangeDutyCycle(BL)
+                    pwn13.ChangeDutyCycle(BL)
+                elif angle < math.pi:
+                    pwn20.ChangeDutyCycle(front_right)
+                    pwn19.ChangeDutyCycle(front_right)
+                    pwn16.ChangeDutyCycle(front_left)
+                    pwn13.ChangeDutyCycle(front_left)
+                elif angle < 3 * math.pi / 2:
+                    pwn20.ChangeDutyCycle(BL)
+                    pwn19.ChangeDutyCycle(BL)
+                    pwn16.ChangeDutyCycle(BR)
+                    pwn13.ChangeDutyCycle(BR)
+                else:
+                    pwn20.ChangeDutyCycle(BL)
+                    pwn19.ChangeDutyCycle(BL)
+                    pwn16.ChangeDutyCycle(BR)
+                    pwn13.ChangeDutyCycle(BR)
+            else:
+                print("stahp")
+                pwn20.ChangeDutyCycle(100)
+                pwn19.ChangeDutyCycle(100)
+                pwn13.ChangeDutyCycle(0)
+                pwn16.ChangeDutyCycle(0)
+
         # Button is 1 when it is pressed
-        if value == "1":
-            move_command(button)            
+        #if value == "1":
+            #move_command(button)            
 
 def main(p):
     print("Script started")
