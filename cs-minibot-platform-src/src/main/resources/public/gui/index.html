@@ -17,9 +17,10 @@
 	<!-- BOT VIEW -->
 	<div class="box view">
 		<h3>VIEW
-			<button id="zoom-out">scale view</button>
-			<button id="reset">reset</button>
-			<input type="checkbox" id="vision-poll"> Poll for Vision Data
+			<!--<button id="zoom-out">scale view</button>
+			<button id="reset">reset</button>-->
+			<input type="checkbox" id="vision-poll"> Poll for Vision Data<br>
+			Scale (10-100%): <input id="scale" type="range" name="power" min="10" max="100" value="100">
 		</h3>
 		<table>
 			<tr>
@@ -53,7 +54,7 @@
 		</select>
 
 		<button class="controls" id="removeBot">remove</button><br>
-		Power (0-100): <input id="power" type="range" name="power" min="0" max="100" value="0">
+		Power (0-100): <input id="power" type="range" name="power" min="0" max="100" value="100">
 		<br><br>
 		
 		<hr><br>
