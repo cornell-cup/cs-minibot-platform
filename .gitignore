@@ -6,3 +6,4 @@ __pycache__/
 received.py
 temp.py
 *.iml
+META-INF/
