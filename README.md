@@ -1,4 +1,5 @@
-# cs-minibot-platform
+# cs-minibot-platform ![If this does not say passing, someone really messed up](https://travis-ci.org/cornell-cup/cs-minibot-platform.svg?branch=develop)
+
 
 The shared software for the MiniBot platform. Includes a web server running over the base station and python scripts to run on the minibot. Works for Python 3.6, not Python 2.7. 
 
