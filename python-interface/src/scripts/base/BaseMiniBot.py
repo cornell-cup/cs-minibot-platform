@@ -1,15 +1,22 @@
+import os
+from os import sys, path
+sys.path.append(os.path.join(os.path.dirname('sensor'), '..'))
+from sensor import Sensor
+from sensor import GPIOSensor
+
+
 class BaseMiniBot:
     """
     Abstract class defining the base functions of the MiniBot. More customized MiniBots may
     subclass this.
     """
     def __init__(self):
-        pass
+        self.sensors = {}
 
     def move_forward(self, power):
         """
         Moves the bot forward at a percentage of its full power
-        
+
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
@@ -18,7 +25,7 @@ class BaseMiniBot:
     def move_backward(self, power):
         """
         Moves the bot backward at a percentage of its full power
-        
+
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
@@ -27,7 +34,7 @@ class BaseMiniBot:
     def turn_clockwise(self, power):
         """
         Moves the bot clockwise  at a percentage of its full power
-        
+
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
@@ -36,7 +43,7 @@ class BaseMiniBot:
     def turn_counter_clockwise(self, power):
         """
         Moves the bot counter-clockwise at a percentage of its full power
-        
+
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
@@ -63,3 +70,20 @@ class BaseMiniBot:
         """
         time.sleep(t)
 
+    def get_all_sensors(self):
+        return self.sensors.values()
+
+    def get_sensor_by_name(self, name):
+        return self.sensors[name]
+
+    def poll_sensors(self):
+        data = {}
+        for sensor in self.sensors:
+            data[sensor] = self.sensors[sensor].read()
+        return data
+
+    def register_sensor(self,sensor):
+        self.sensors[sensor.name] = sensor
+
+
+bot = CupMiniBot()
