@@ -19,10 +19,10 @@ git submodule update --init
 Because this is a maven project, you should import it in the following way:
 - Open intellij idea and select import project
 - Select the pom.xml under cs-minibot-platform (the repo you just cloned)
-- Go to src/main/java/minibot/BaseHTTPInterface.java and run it.
+- Go to cs-minibot-platform-src/src/main/java/minibot/BaseHTTPInterface.java and run it.
 - Open your web browser and navigate to localhost:8080/gui
 
-# How to run python interface:
+## How to run python interface:
 
 Console printout- input commands into testcommand.py
 
@@ -36,3 +36,9 @@ python tcpclient.py
 ```
 
 For controlling the Cozmo, connect to the Cozmo and activate SDK, follow instructions as above, except input commands into testcommand2.py and run tcp_cozmo.py and tcpclient_cozmo.py
+
+# Testing
+To test, run 
+```
+mvn clean verify
+```
