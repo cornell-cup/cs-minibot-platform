@@ -58,11 +58,9 @@ public class SimulatorVisionSystem extends VisionSystem {
      * @param pObjs The data sent from simulator
      */
     public void processPhysicalObjects(ArrayList<PhysicalObject> pObjs) {
-        Set<VisionObject> newSet = ConcurrentHashMap.newKeySet();
         for(PhysicalObject obj: pObjs) {
             VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(), 0.0);
             VisionObject vo = new VisionObject(this,obj.getID(),vc);
-            newSet.add(vo);
             po_set.add(obj);
         }
     }
@@ -84,6 +82,10 @@ public class SimulatorVisionSystem extends VisionSystem {
 
                 set.add(vo);
             }
+    }
+
+    public HashSet<PhysicalObject> getAllPhysicalObjects() {
+        return po_set;
     }
 
     private class SimRunner extends Thread {
