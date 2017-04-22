@@ -151,7 +151,7 @@ def main(p):
             print_flush("Becoming a cozmo")
             cozmo=True
     print("setting up tcp")
-    serverPort = 10003
+    serverPort = 10000
     serverSocket = socket.socket(AF_INET, SOCK_STREAM)
     ip = "127.0.0.1"
     print("binding socket")

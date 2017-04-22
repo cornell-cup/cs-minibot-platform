@@ -4,11 +4,9 @@
 
 import basestation.BaseStation;
 import basestation.bot.commands.FourWheelMovement;
-import basestation.bot.connection.IceConnection;
 import basestation.bot.connection.TCPConnection;
 import basestation.bot.robot.Bot;
 import basestation.bot.robot.minibot.MiniBot;
-import basestation.bot.robot.modbot.ModBot;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -21,9 +19,9 @@ import simulator.physics.PhysicalObject;
 import simulator.simbot.SimBot;
 import simulator.simbot.SimBotConnection;
 import spark.route.RouteOverview;
-import java.net.*;
+
 import java.io.*;
-import java.nio.*;
+
 import java.util.Optional;
 
 import java.util.ArrayList;
