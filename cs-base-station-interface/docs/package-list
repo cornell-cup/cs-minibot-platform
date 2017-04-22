@@ -1,0 +1,12 @@
+CommModule
+VisionModule
+basestation
+basestation.bot
+basestation.bot.commands
+basestation.bot.connection
+basestation.bot.robot
+basestation.bot.robot.minibot
+basestation.bot.robot.modbot
+basestation.bot.sensors
+basestation.vision
+util
