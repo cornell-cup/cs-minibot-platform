@@ -22,7 +22,7 @@ public class SimulatorVisionSystem extends VisionSystem {
      */
     private static SimulatorVisionSystem instance;
     private volatile Set<VisionObject> set;
-    private HashSet<PhysicalObject> po_set;
+    private HashSet<PhysicalObject> poSet;
     private World world;
     private long before;
 
@@ -32,7 +32,7 @@ public class SimulatorVisionSystem extends VisionSystem {
         super(new VisionCoordinate(0, 0, 0));
         set = ConcurrentHashMap.newKeySet();
         world = new World(new Vec2(0f, 0f));
-        po_set = new HashSet<>();
+        poSet = new HashSet<>();
         before = System.nanoTime();
         SimRunner sr = new SimRunner();
         sr.start();
@@ -61,7 +61,7 @@ public class SimulatorVisionSystem extends VisionSystem {
         for(PhysicalObject obj: pObjs) {
             VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(), 0.0);
             VisionObject vo = new VisionObject(this,obj.getID(),vc);
-            po_set.add(obj);
+            poSet.add(obj);
         }
     }
 
@@ -74,7 +74,7 @@ public class SimulatorVisionSystem extends VisionSystem {
         int positionIterations = 4;
 
         set.clear();
-            for(PhysicalObject po: po_set ) {
+            for(PhysicalObject po: poSet ) {
                 po.getWorld().step(timeStep, velocityIterations, positionIterations);
 
                 VisionCoordinate vc = new VisionCoordinate(po.getX(),po.getY(), po.getAngle());
@@ -85,7 +85,7 @@ public class SimulatorVisionSystem extends VisionSystem {
     }
 
     public HashSet<PhysicalObject> getAllPhysicalObjects() {
-        return po_set;
+        return poSet;
     }
 
     private class SimRunner extends Thread {
