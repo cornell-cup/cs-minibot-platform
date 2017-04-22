@@ -16,8 +16,7 @@ public class SimBot extends Bot {
     private final transient SimBotSensorCenter sensorCenter;
     public transient TCPServer runningThread;
     public transient DataLog loggingThread;
-    private transient PhysicalObject myPhysicalObject;
-
+    public transient PhysicalObject myPhysicalObject;
 
     /**
      * Currently minibots are implemented using a TCP connection
@@ -30,10 +29,12 @@ public class SimBot extends Bot {
         this.myPhysicalObject = myPhysicalObject;
 
         try {
+            //starts thread for tcp server
             Thread t = new TCPServer(11111, this, this.commandCenter, this.sensorCenter);
             this.runningThread = (TCPServer)t;
             this.runningThread.start();
 
+            //starts thread for data logging
             Thread log = new DataLog("log.csv", this.commandCenter, this.sensorCenter);
             this.loggingThread = (DataLog)log;
             this.loggingThread.start();
@@ -54,6 +55,9 @@ public class SimBot extends Bot {
 
     public void resetServer() { this.runningThread.stopStream(); }
 
+    /**
+     * Datalog thread logs data for (Sim)bot <-- once command center is updated, change to bot in general
+     */
     public class DataLog extends Thread {
         private final transient SimBotCommandCenter commandCenter;
         private final transient SimBotSensorCenter sensorCenter;
@@ -62,12 +66,14 @@ public class SimBot extends Bot {
         private FileWriter writer;
         private boolean fileCreated = false;
         private volatile boolean exit = false;
-        private static final int INTERVAL = 250;
+        private static final int INTERVAL = 100;    //for now it is set to 100 ms
 
         public DataLog(String path, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException{
             this.commandCenter = commandCenter;
             this.sensorCenter = sensorCenter;
             this.path = path;
+
+            //Create csv file only if command center is currently logging
             if (commandCenter.isLogging()) {
                 File file = new File(path);
                 file.createNewFile();
@@ -92,7 +98,7 @@ public class SimBot extends Bot {
                         this.fileCreated = true;
                     }
 
-                    //Adjusts the interval of sampling data
+                    //Interval of sampling data
                     this.sleep(INTERVAL);
 
                     //Grabs command data
@@ -130,6 +136,8 @@ public class SimBot extends Bot {
                         sb_header_sensor.append(name);
                     }
 
+                    //Can add log additional data, add here
+
 
                     //Record Header if there is a header
                     if (first_header &&
@@ -160,9 +168,11 @@ public class SimBot extends Bot {
                 System.out.println("ERROR IN LOGGING");
             }
         }
-
-
     }
+
+    /**
+     * TCP server thread, server side
+     */
     public class TCPServer extends Thread {
         private ServerSocket serverSocket;
         private final transient SimBot sim;
@@ -201,45 +211,32 @@ public class SimBot extends Bot {
                         content = in.readLine();
 
                         if (content != null) {
-//                            double value = 0;
                             String value = "";
                             if (!content.contains("WHEELS") && !content.contains("REGISTER") && !content.contains("GET")) {
-//                                value = Double.parseDouble(content.substring(content.indexOf(':') + 1));
                                 value = content.substring(content.indexOf(':') + 1);
                             }
                             switch (content.substring(0, content.indexOf(':'))) {
                                 case "FORWARD":
-                                    //fl fr bl br
-//                                    this.commandCenter.setWheelPower(value, value, value, value);
                                     this.commandCenter.sendKV("WHEELS",
                                             "<<<<WHEELS," + value + "," + value + "," + value + "," + value + ">>>>");
-                                    System.out.println("FORWARD " + value);
                                     break;
                                 case "BACKWARD":
-//                                    this.commandCenter.setWheelPower(-value, -value, -value, -value);
                                     this.commandCenter.sendKV("WHEELS",
                                             "<<<<WHEELS,-" + value + ",-" + value + ",-" + value + ",-" + value + ">>>>");
-                                    System.out.println("BACKWARD " + value);
                                     break;
                                 case "RIGHT":
-//                                    this.commandCenter.setWheelPower(value, -value, value, -value);
                                     this.commandCenter.sendKV("WHEELS",
                                             "<<<<WHEELS," + value + ",-" + value + "," + value + ",-" + value + ">>>>");
-                                    System.out.println("RIGHT " + value);
                                     break;
                                 case "LEFT":
-//                                    this.commandCenter.setWheelPower(-value, value, -value, value);
                                     this.commandCenter.sendKV("WHEELS",
                                             "<<<<WHEELS,-" + value + "," + value + ",-" + value + "," + value + ">>>>");
-                                    System.out.println("LEFT " + value);
                                     break;
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");
                                     break;
                                 case "STOP":
-//                                    this.commandCenter.setWheelPower(0, 0, 0, 0);
                                     this.commandCenter.sendKV("WHEELS", "<<<<WHEELS,0,0,0,0>>>>");
-                                    System.out.println("STOPPING");
                                     break;
                                 case "KILL":
                                     run = false;
@@ -252,7 +249,6 @@ public class SimBot extends Bot {
                                     } else {
                                         out.println(this.sensorCenter.getSensorData(name));
                                     }
-                                    System.out.println("Returning " + name + " data");
                                     break;
                                 case "REGISTER":
 //                                    String name = content.substring(content.indexOf(':') + 1);
@@ -263,14 +259,6 @@ public class SimBot extends Bot {
                                     String cmd = content.substring(content.indexOf(':') + 1);
                                     System.out.println(cmd);
                                     String[] wheel_cmds = cmd.split(",");
-
-
-//                                    this.commandCenter.setWheelPower(
-//                                            Double.parseDouble(wheel_cmds[0]),
-//                                            Double.parseDouble(wheel_cmds[1]),
-//                                            Double.parseDouble(wheel_cmds[2]),
-//                                            Double.parseDouble(wheel_cmds[3])
-//                                    );
 
                                     this.commandCenter.sendKV("WHEELS", "<<<<WHEELS," + wheel_cmds[0] + "," + wheel_cmds[1]
                                             + "," + wheel_cmds[2] + "," + wheel_cmds[3] + ">>>>");
