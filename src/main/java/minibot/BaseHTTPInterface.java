@@ -9,20 +9,15 @@ import basestation.bot.robot.minibot.MiniBot;
 import basestation.bot.robot.modbot.ModBot;
 import basestation.vision.OverheadVisionSystem;
 import basestation.vision.VisionObject;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import simulator.physics.PhysicalObject;
 import simulator.simbot.ColorIntensitySensor;
 import simulator.simbot.SimBotConnection;
 import simulator.simbot.SimBotSensorCenter;
 import spark.route.RouteOverview;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+
 import simulator.baseinterface.SimulatorVisionSystem;
 
 
@@ -90,23 +85,16 @@ public class BaseHTTPInterface {
             }
                else {
                 SimBotConnection sbc = new SimBotConnection();
-
-
-                PhysicalObject po = new PhysicalObject("simbot", 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
                 SimBot simbot;
-                simbot = new SimBot(sbc, name, po);
+                simbot = new SimBot(sbc, name, 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
                 newBot = simbot;
 
-                ArrayList<PhysicalObject> pObjs = new ArrayList<>();
-                pObjs.add(po);
-                simvs.processPhysicalObjects(pObjs);
+                simvs.importPhysicalObject(simbot.getMyPhysicalObject());
 
                 // Color sensor TODO put somewhere nice
-
                 ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
                 ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
                 ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
-
             }
 
             return BaseStation.getInstance().getBotManager().addBot(newBot);
@@ -114,23 +102,25 @@ public class BaseHTTPInterface {
 
         post("/addScenario", (req,res) -> {
             String body = req.body();
-            JsonObject addInfo = jp.parse(body).getAsJsonObject(); // gets (ip, port) from js
 
-            /* storing json objects into actual variables */
-            String ip = addInfo.get("ip").getAsString();
-            int port = addInfo.get("port").getAsInt();
-            String type = addInfo.get("type").getAsString();
-            int size = addInfo.get("size").getAsInt();
-            int angle = addInfo.get("angle").getAsInt();
-            int[] position = gson.fromJson(addInfo.get("position")
-                    .getAsString(),int[].class);
-
-            PhysicalObject po = new PhysicalObject("scenario_object", 100,
+            JsonObject scenario = jp.parse(body).getAsJsonObject();
+            String scenarioBody = scenario.get("scenario").getAsString();
+            JsonArray addInfo = jp.parse(scenarioBody).getAsJsonArray();
+            for (JsonElement je : addInfo) {
+                String type = je.getAsJsonObject().get("type").getAsString();
+                int size = je.getAsJsonObject().get("size").getAsInt();
+                int angle = je.getAsJsonObject().get("angle").getAsInt();
+                int[] position = gson.fromJson(je.getAsJsonObject().get("position")
+                        .getAsString(),int[].class);
+                String name = Integer.toString(size)+Integer.toString(angle)
+                        + Arrays.toString(position);
+                PhysicalObject po = new PhysicalObject(name, 100,
                         simvs.getWorld(), (float)position[0],
-                    (float)position[1], size, angle);
-            ArrayList<PhysicalObject> pObjs = new ArrayList<>();
-            pObjs.add(po);
-            simvs.processPhysicalObjects(pObjs);
+                        (float)position[1], size, angle);
+                simvs.importPhysicalObject(po);
+            }
+            /* storing json objects into actual variables */
+
             return addInfo;
         });
 
@@ -147,7 +137,8 @@ public class BaseHTTPInterface {
             int br = commandInfo.get("br").getAsInt();
 
             // Forward the command to the bot
-            Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(botName).get();
+            Bot myBot = BaseStation.getInstance().getBotManager()
+                    .getBotByName(botName).get();
             FourWheelMovement fwmCommandCenter = (FourWheelMovement) myBot.getCommandCenter();
             return fwmCommandCenter.setWheelPower(fl,fr,bl,br);
         });
@@ -219,6 +210,7 @@ public class BaseHTTPInterface {
                 respData.add(jo);
             }
             return respData;
+
         });
 
         post("/discoverBots", (req, res) -> {

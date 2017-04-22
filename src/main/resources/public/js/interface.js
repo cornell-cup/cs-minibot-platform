@@ -74,10 +74,11 @@ $("#send").click(function(event) {
 });
 
 /* When .dir is clicked, send motors to act based on button clicked. */
-$(".dir").click(function(event) {
+$(".dir").mousedown(function(event) {
 	var pow = getPower();
 	var target = $(event.target); //$target
 	console.log(target);
+
 
 	if(target.is("#fwd")) {
 		sendMotors(pow, pow, pow, pow);
@@ -104,6 +105,10 @@ $(".dir").click(function(event) {
 		console.error("Clicked on a direction button but nothing has been executed.");
 	}
 });
+
+$(".dir").mouseup(function(event){
+    sendMotors(0,0,0,0);
+})
 
 // when removing a bot
 $('#removeBot').click(function() {
@@ -145,29 +150,19 @@ $('#addBot').click(function() {
 //adding a scenario
 $('#addScenario').click(function() {
     console.log("add scenario from interface.js")
-    var scenario = JSON.parse($("#scenario").val());
+    var scenario = $("#scenario").val();
     console.log(scenario);
-    scenario.forEach(function(e){
     $.ajax({
         method: "POST",
         url: '/addScenario',
-        dataType: 'json',
-        data: JSON.stringify({
-                ip: getIP(),
-                port: (getPort() || 10000),
-                name: "",
-                type: e.type,
-                size: e.size,
-                angle: e.angle,
-                position: e.position
-            }),
-        contentType: 'application/json',
+        dataType: 'text',
+        data: JSON.stringify({'scenario': scenario.toString()}),
+        contentType: 'application/json; charset=utf-8',
         success: function (data){
             console.log("successfully added"+data);
         }
     });
-    });
-});
+ });
 
 /*
 	For any update to the list of active bots, the dropdown menu

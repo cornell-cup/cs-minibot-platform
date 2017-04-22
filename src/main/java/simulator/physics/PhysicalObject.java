@@ -31,14 +31,19 @@ public class PhysicalObject {
         testbody.type = BodyType.DYNAMIC;
         Vec2 testvec = new Vec2(xSpeed, ySpeed);
         testbody.linearVelocity = testvec;
-        //testbody.linearDamping = 0.1f;
+        //testbody.linearDamping = 0.5f;
 
-        CircleShape cs = new CircleShape();
-        cs.m_radius = 5/8.0f; //should be 5/8 of a meter, that's the bot size
-        // ATM I think
+        Vec2[] vertices = new Vec2[4];
+        vertices[0] = new Vec2(-4/16.0f,-4/16.0f);
+        vertices[1] = new Vec2(4/16.0f,-4/16.0f);
+        vertices[2] = new Vec2(4/16.0f,4/16.0f);
+        vertices[3] = new Vec2(-4/16.0f,4/16.0f);
+
+        PolygonShape ps = new PolygonShape();
+        ps.setAsBox(5/16.0f, 5/16.0f, new Vec2(0.0f,0.0f), 0.0f);
 
         FixtureDef testFixture = new FixtureDef();
-        testFixture.shape = cs;
+        testFixture.shape = ps;
         testFixture.density = 0.5f;
 
         this.world = world;
@@ -47,7 +52,6 @@ public class PhysicalObject {
         Vec2 gravity = new Vec2(0.0f, 0.0f);
         world.setGravity(gravity);
         this.body = b;
-
     }
 //this one is for scenario objects
     public PhysicalObject(String name, int id, World world, float xPos, float
@@ -73,13 +77,11 @@ public class PhysicalObject {
 
         FixtureDef testFixture = new FixtureDef();
         testFixture.shape = ps;
-        testFixture.density = 0.75f;
+        testFixture.density = 100.0f;
 
         this.world = world;
         Body b = world.createBody(testbody);
         b.createFixture(testFixture);
-        Vec2 gravity = new Vec2(0.0f, 0.0f);
-        world.setGravity(gravity);
         this.body = b;
     }
 
@@ -100,8 +102,6 @@ public class PhysicalObject {
     public boolean equals(Object o) {
         return this.toString().equals(o.toString());
     }
-
-
 
     /**
      *

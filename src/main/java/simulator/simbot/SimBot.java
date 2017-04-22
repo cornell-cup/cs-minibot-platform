@@ -2,6 +2,7 @@ package simulator.simbot;
 
 import basestation.bot.robot.Bot;
 import basestation.bot.sensors.SensorCenter;
+import org.jbox2d.dynamics.World;
 import simulator.physics.PhysicalObject;
 
 import java.io.*;
@@ -19,11 +20,15 @@ public class SimBot extends Bot {
      * Currently minibots are implemented using a TCP connection
      */
 
-    public SimBot(SimBotConnection sbc, String name, PhysicalObject myPhysicalObject) {
+    public SimBot(SimBotConnection sbc, String name, int id, World world, float xSpeed, float ySpeed, float xPos, float yPos, boolean isDynamic) {
         super(sbc, name);
-        this.commandCenter = new SimBotCommandCenter(this);
+
         this.sensorCenter = new SimBotSensorCenter();
-        this.myPhysicalObject = myPhysicalObject;
+        PhysicalObject po = new PhysicalObject(name, id, world, xSpeed, ySpeed,
+                xPos, yPos, isDynamic);
+        this.myPhysicalObject = po;
+        this.commandCenter = new SimBotCommandCenter(this, this
+                .myPhysicalObject.getBody());
 
         try {
             Thread t = new TCPServer(11111, this, this.commandCenter, this.sensorCenter);
@@ -32,6 +37,9 @@ public class SimBot extends Bot {
         }catch(IOException e) {
             e.printStackTrace();
         }
+    }
+    public PhysicalObject getMyPhysicalObject() {
+        return myPhysicalObject;
     }
 
     @Override

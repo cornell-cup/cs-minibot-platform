@@ -52,7 +52,7 @@ public class Simulator extends Thread {
 //                pObjects.get(i).move();
 //            }
 //
-//            simvs.processPhysicalObjects(pObjects);
+//            simvs.importPhysicalObject(pObjects);
 //
 //            try {
 //                Thread.sleep(1000/STEPS_PER_SECOND);
