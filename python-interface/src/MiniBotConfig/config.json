@@ -1,5 +1,5 @@
 {
-  "name": "swarm",
+  "name": "gobot",
   "startupScript": "",
   "keepStartupRunning": true,
   "discoverable": true,

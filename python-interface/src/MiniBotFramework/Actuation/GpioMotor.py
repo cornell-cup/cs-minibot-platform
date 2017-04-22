@@ -17,10 +17,25 @@ class GpioMotor(Actuator):
         self.in_pwm.ChangeDutyCycle(100)
         self.value_in = 0
         self.value_out = 0
+        self.state_stop = False
+        self.state_forward = True
 
     def read(self):
         return self.value
 
-    def set(self, value):
-        """ Sets the duty cycle for PWM """
-        return "Invalid: Abstract Class"
+    def rotate_forward(self,power):
+        self.set(False,True)
+        self.in_pwm.ChangeDutyCycle(power)
+        self.out_pwm.ChangeDutyCycle(100 - power)
+
+    def rotate_backward(self,power):
+        self.set(False,False)
+        self.in_pwm.ChangeDutyCycle(100 - power)
+        self.out_pwm.ChangeDutyCycle(100 - power)
+
+    def stop(self):
+        self.set(True,True)
+
+    def set(self, state_stop, state_forward):
+        self.state_stop = state_stop
+        self.state_forward = state_forward
