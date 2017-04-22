@@ -44,6 +44,7 @@ def parse_command(cmd, bot):
     key = cmd[4:comma]
     value = cmd[comma+1:end]
     if key == "GPIO":
+        # [debug] send pwm duty cycles to motors directly
         # A;B;C;D
         values = value.split(";")
         print(values)
@@ -54,10 +55,10 @@ def parse_command(cmd, bot):
         left.get_out_pwm().ChangeDutyCycle(int(values[1]))
         right.get_in_pwm().ChangeDutyCycle(int(values[2]))
         right.get_out_pwm().ChangeDutyCycle(int(values[3]))
-        print(int(values[0]))
-        print(int(values[1]))
-        print(int(values[2]))
-        print(int(values[3]))
+    elif key == "WHEELS":
+        print("TODO: Handle wheels")
+    elif key == "SCRIPT":
+        print("TODO: Handle script")
     else:
         print("Unknown key: " + key)
 
