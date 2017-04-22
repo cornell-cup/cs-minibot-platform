@@ -5,7 +5,7 @@ from threading import Thread
 
 
 PORT = 10000
-IP = "127.0.0.1"
+IP = ""
 
 class TCP(object):
 
@@ -34,6 +34,7 @@ def run():
     while True:
         print("Waiting for connection")
         connectionSocket, addr = TCP.tcp.server_socket.accept()
+        connectionSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         print("Connection accepted")
         while True:
             command = ""

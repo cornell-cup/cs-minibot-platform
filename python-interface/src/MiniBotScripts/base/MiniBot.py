@@ -86,5 +86,3 @@ class MiniBot:
     def register_sensor(self,sensor):
         self.sensors[sensor.name] = sensor
 
-
-bot = CupMiniBot()

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python -u main.py
+sudo python -u main.py
