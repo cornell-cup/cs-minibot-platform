@@ -153,7 +153,7 @@ def main(p):
     print("setting up tcp")
     serverPort = 10000
     serverSocket = socket.socket(AF_INET, SOCK_STREAM)
-    ip = "127.0.0.1"
+    ip = ""
     print("binding socket")
     serverSocket.bind( (ip, serverPort) )
     serverSocket.listen(1)
