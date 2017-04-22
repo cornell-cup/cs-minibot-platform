@@ -28,6 +28,10 @@ def main():
         # TODO
         pass
 
+    if config["acceptXbox"]:
+        #TODO
+        pass
+
     print("Entering main loop")
     # Main loop
     while True:

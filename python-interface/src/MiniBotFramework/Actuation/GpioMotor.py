@@ -4,44 +4,47 @@ class GpioMotor(Actuator):
 
     PWM_FREQUENCY=30
 
-    def __init__(self, bot, name, pin_in, pin_out, GPIO):
+    def __init__(self, bot, name, pin_pwm, pin_hl, GPIO):
         Actuator.__init__(self, bot, name)
-        self.pin_in = pin_in
-        self.pin_out = pin_out
-        GPIO.setup(self.pin_in, GPIO.OUT)
-        GPIO.setup(self.pin_out, GPIO.OUT)
-        self.in_pwm = GPIO.PWM(self.pin_in, GpioMotor.PWM_FREQUENCY)
-        self.out_pwm = GPIO.PWM(self.pin_out, GpioMotor.PWM_FREQUENCY)
+        self.pin_pwm = pin_pwm
+        self.pin_hl = pin_hl
+        GPIO.setup(self.pin_pwm, GPIO.OUT)
+        GPIO.setup(self.pin_hl, GPIO.OUT)
+
+        self.pwm = GPIO.PWM(self.pin_pwm, GpioMotor.PWM_FREQUENCY)
+
         # Stop the bot
-        self.in_pwm.start(0)
-        self.out_pwm.start(100)
-        self.value_in = 0
-        self.value_out = 0
-        self.state_stop = False
-        self.state_forward = True
+        GPIO.output(self.pin_pwm, GPIO.HIGH)
+        GPIO.output(self.pin_hl, GPIO.LOW)
+        self.value_pwm_pin = self.pwm #Duty cycle
+        self.value_hl_pin = true #returns if is_Low
+        self.state_stop = True
+        self.state_forward = False
 
     def read(self):
-        return self.value
+        return "TODO"
 
     def rotate_forward(self,power):
         self.set(False,True)
-        self.in_pwm.ChangeDutyCycle(power)
-        self.out_pwm.ChangeDutyCycle(100 - power)
+        self.pin_pwm.ChangeDutyCycle(power)
+        if self.pin_hl == 20:
+            GPIO.output(self.pin_hl, GPIO.HIGH)
+        else:
+            GPIO.output(self.pin_hl, GPIO.LOW)
 
     def rotate_backward(self,power):
         self.set(False,False)
-        self.in_pwm.ChangeDutyCycle(100 - power)
-        self.out_pwm.ChangeDutyCycle(100 - power)
+        self.pin_pwm.ChangeDutyCycle(power)
+        if self.pin_hl == 20:
+            GPIO.output(self.pin_hl, GPIO.LOW)
+        else:
+            GPIO.output(self.pin_hl, GPIO.HIGH)
 
     def stop(self):
-        self.set(True,True)
+        self.set(True,False)
+        GPIO.output(self.pin_pwm, GPIO.HIGH)
+        GPIO.output(self.pin_hl, GPIO.LOW)        
 
     def set(self, state_stop, state_forward):
         self.state_stop = state_stop
         self.state_forward = state_forward
-
-    def get_in_pwm(self):
-        return self.in_pwm
-
-    def get_out_pwm(self):
-        return self.out_pwm

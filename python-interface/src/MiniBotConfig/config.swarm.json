@@ -6,14 +6,14 @@
     {
       "type": "gpioMotor",
       "name": "leftMotor",
-      "pinIn": 19,
-      "pinOut": 13
+      "pinIn": 13,
+      "pinOut": 20
     },
     {
       "type": "gpioMotor",
       "name": "rightMotor",
-      "pinIn": 20,
-      "pinOut": 16
+      "pinIn": 19,
+      "pinOut": 18
     }
   ],
   "sensors": [
