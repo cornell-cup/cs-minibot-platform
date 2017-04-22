@@ -13,10 +13,8 @@ import simulator.physics.PhysicalObject;
 import simulator.simbot.SimBot;
 import simulator.simbot.SimBotConnection;
 import spark.route.RouteOverview;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+
+import java.io.*;
 import java.util.ArrayList;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -26,7 +24,16 @@ public class BaseHTTPInterfaceTest {
     public static void setUpClass() throws Exception {
         try {
             ProcessBuilder pb = new ProcessBuilder("python", "python-interface/src/tcp.py");
-            pb.start();
+            Process p = pb.start();
+            BufferedReader scriptFeedbackInStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+
+            String line;
+            while ((line = scriptFeedbackInStream.readLine()) != null) {
+                int ret = new Integer(line).intValue();
+                System.out.println("" + ret);
+
+            }
         }
         catch(Exception e){
             e.printStackTrace();
