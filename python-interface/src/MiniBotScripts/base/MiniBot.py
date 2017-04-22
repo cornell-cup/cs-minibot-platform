@@ -1,11 +1,7 @@
 import os
 from os import sys, path
-sys.path.append(os.path.join(os.path.dirname('sensor'), '..'))
-from sensor import Sensor
-from sensor import GPIOSensor
 import RPi.GPIO as GPIO
-
-
+import MiniBotFramework
 
 class MiniBot:
     """

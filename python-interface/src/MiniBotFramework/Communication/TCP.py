@@ -40,5 +40,5 @@ def run():
             while True:
                 command += connectionSocket.recv(1024).decode()
                 if command.find(">>>>") > 0:
-                    tcp.set_command(command)
+                    TCP.tcp.set_command(command)
                     command = ""
