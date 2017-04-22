@@ -11,8 +11,11 @@ class MiniBot:
     def __init__(self, config):
         self.sensors = {}
         self.actuators = {}
-        GPIO.setwarnings(False)
+        #GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
+        #TODO: Make less hardcoded
+        self.leftActuator = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self,"leftMotor",19,13,GPIO)
+        self.rightActuator = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self,"rightMotor",20,16,GPIO)
 
     def move_forward(self, power):
         """
@@ -86,3 +89,8 @@ class MiniBot:
     def register_sensor(self,sensor):
         self.sensors[sensor.name] = sensor
 
+    def register_actuator(self,actuator):
+        self.actuators[actuator.name] = actuator
+
+    def get_actuator_by_name(self, name):
+        return self.actuators[name]

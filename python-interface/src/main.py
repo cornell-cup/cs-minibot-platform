@@ -34,11 +34,11 @@ def main():
         # Poll TCP Connection
         tcpCmd = tcpInstance.get_command()
         if tcpCmd != "":
-            parse_command(tcpCmd)
+            parse_command(tcpCmd, bot)
         # Check on the main code
         time.sleep(0.01)
 
-def parse_command(cmd):
+def parse_command(cmd, bot):
     comma = cmd.find(",")
     end = cmd.find(">>>>")
     key = cmd[4:comma]
@@ -47,6 +47,17 @@ def parse_command(cmd):
         # A;B;C;D
         values = value.split(";")
         print(values)
+        print(bot)
+        left=bot.get_actuator_by_name("leftMotor")
+        right=bot.get_actuator_by_name("rightMotor")
+        left.get_in_pwm().ChangeDutyCycle(int(values[0]))
+        left.get_out_pwm().ChangeDutyCycle(int(values[1]))
+        right.get_in_pwm().ChangeDutyCycle(int(values[2]))
+        right.get_out_pwm().ChangeDutyCycle(int(values[3]))
+        print(int(values[0]))
+        print(int(values[1]))
+        print(int(values[2]))
+        print(int(values[3]))
     else:
         print("Unknown key: " + key)
 
