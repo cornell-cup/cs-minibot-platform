@@ -32,7 +32,7 @@ public class BaseHTTPInterfaceTest {
             e.printStackTrace();
         }
         System.out.println("opening TCP");
-        Thread.sleep(5000);
+        Thread.sleep(10000);
     }
 
     @Test
