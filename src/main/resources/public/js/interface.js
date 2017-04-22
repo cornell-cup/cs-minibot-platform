@@ -74,7 +74,7 @@ $("#send").click(function(event) {
 });
 
 /* When .dir is clicked, send motors to act based on button clicked. */
-$(".dir").mousedown(function(event) {
+$(".dir").click(function(event) {
 	var pow = getPower();
 	var target = $(event.target); //$target
 	console.log(target);
@@ -105,10 +105,6 @@ $(".dir").mousedown(function(event) {
 		console.error("Clicked on a direction button but nothing has been executed.");
 	}
 });
-
-$(".dir").mouseup(function(event){
-    sendMotors(0,0,0,0);
-})
 
 // when removing a bot
 $('#removeBot').click(function() {
