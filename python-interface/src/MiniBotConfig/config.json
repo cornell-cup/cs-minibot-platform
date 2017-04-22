@@ -1,0 +1,43 @@
+{
+  "name": "swarm",
+  "startupScript": "",
+  "keepStartupRunning": true,
+  "discoverable": true,
+  "acceptTcp": true,
+  "actuators": [
+    {
+      "type": "gpioMotor",
+      "name": "leftMotor",
+      "pinIn": 19,
+      "pinOut": 13
+    },
+    {
+      "type": "gpioMotor",
+      "name": "rightMotor",
+      "pinIn": 20,
+      "pinOut": 16
+    }
+  ],
+  "sensors": [
+    {
+      "type": "gpioSensor",
+      "name": "leftLineSensor",
+      "pin": 22
+    },
+    {
+      "type": "gpioSensor",
+      "name": "rightLineSensor",
+      "pin": 23
+    },
+    {
+      "type": "gpioSensor",
+      "name": "farRightLineSensor",
+      "pin": 24
+    },
+    {
+      "type": "gpioSensor",
+      "name": "farLeftLineSensor",
+      "pin": 17
+    }
+  ]
+}
