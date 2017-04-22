@@ -25,12 +25,11 @@ public class BaseHTTPInterfaceTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         try {
-
-            ProcessBuilder pb = new ProcessBuilder("python", "././python-interface/src/tcp.py");
+            ProcessBuilder pb = new ProcessBuilder("python", "python-interface/src/tcp.py");
             pb.start();
         }
         catch(Exception e){
-            System.out.println(e);
+            e.printStackTrace();
         }
         System.out.println("opening TCP");
         Thread.sleep(5000);
