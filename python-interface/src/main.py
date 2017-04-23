@@ -29,8 +29,7 @@ def main():
         pass
 
     if config["acceptXbox"]:
-        #TODO
-        pass
+        xboxInstance = MiniBotFramework.Controls.Xbox.Xbox()
 
     print("Entering main loop")
     # Main loop
@@ -39,8 +38,15 @@ def main():
         tcpCmd = tcpInstance.get_command()
         if tcpCmd != "":
             parse_command(tcpCmd, bot)
+
+        # Poll Xbox
+        if MiniBotFramework.Controls.Xbox.updated:
+            MiniBotFramework.Controls.Xbox.updated = False
+            x_left = MiniBotFramework.Controls.Xbox.left
+            x_right = MiniBotFramework.Controls.Xbox.right
+            bot.get_actuator_by_name("two_wheel_movement").move(x_left,x_right)
         # Check on the main code
-        time.sleep(0.01)
+        time.sleep(0.001)
 
 def parse_command(cmd, bot):
     comma = cmd.find(",")
