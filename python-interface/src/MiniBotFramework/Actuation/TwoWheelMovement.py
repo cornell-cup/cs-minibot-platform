@@ -1,43 +1,37 @@
-#Given two GPIO motors and desired wheel sppeds for left and right wheel, sets the GPIO signals
+#Given two GPIO motors and desired wheel speeds for left and right wheel, sets the GPIO signals
+from MiniBotFramework.Actuation.Actuator import Actuator
 
+class TwoWheelMovement(Actuator):
 
-class TwoWheelMovement(motorL, motorR, speedL, speedR, angle):
-        front_left = int(speedL)
-        front_right = int(speedR)
+    def __init__(self, bot, name, motorL, motorR):
+        Actuator.__init__(self, bot, name)
+        self.motor_left = motorL
+        self.motor_right = motorR
 
-        if angle < 2 * math.pi / 3 and angle > math.pi / 3:
-            #move forwards
-            motorL.rotate_forward(front_right)
-            motorR.rotate_forward(front_left)
-        elif angle > -(2 * math.pi / 3) and (angle < -math.pi / 3):
-            #move backwards
-            pwn20.ChangeDutyCycle(BR)
-            pwn19.ChangeDutyCycle(front_right)
-            pwn16.ChangeDutyCycle(BL)
-            pwn13.ChangeDutyCycle(front_left)
-        elif angle < math.pi/2:
-            pwn20.ChangeDutyCycle(BR)
-            pwn19.ChangeDutyCycle(BR)
-            pwn16.ChangeDutyCycle(BL)
-            pwn13.ChangeDutyCycle(BL)
-        elif angle < math.pi:
-            pwn20.ChangeDutyCycle(front_right)
-            pwn19.ChangeDutyCycle(front_right)
-            pwn16.ChangeDutyCycle(front_left)
-            pwn13.ChangeDutyCycle(front_left)
-        elif angle < 3 * math.pi / 2:
-            pwn20.ChangeDutyCycle(BL)
-            pwn19.ChangeDutyCycle(BL)
-            pwn16.ChangeDutyCycle(BR)
-            pwn13.ChangeDutyCycle(BR)
+    def move(self, speedL, speedR):
+        # Normalize speeds
+        if speedL < -100:
+            speedL = -100
+        if speedR < -100:
+            speedR = -100
+        if speedL > 100:
+            speedL = 100
+        if speedR > 100:
+            speedR = 100
+
+        # Apply speeds to motors
+        # Left
+        if speedL > 0:
+            self.motor_left.rotate_forward(speedL)
+        elif speelL < 0:
+            self.motor_left.rotate_backward(-speedL)
         else:
-            pwn20.ChangeDutyCycle(BL)
-            pwn19.ChangeDutyCycle(BL)
-            pwn16.ChangeDutyCycle(BR)
-            pwn13.ChangeDutyCycle(BR)
-    else:
-        print("stahp")
-        pwn20.ChangeDutyCycle(100)
-        pwn19.ChangeDutyCycle(100)
-        pwn13.ChangeDutyCycle(0)
-        pwn16.ChangeDutyCycle(0)
+            self.motor_left.stop()
+
+        # Right
+        if speedR > 0:
+            self.motor_right.rotate_backward(speedR)
+        elif speedR < 0:
+            self.motor_right.rotate_forward(-speedR)
+        else:
+            self.motor_right.stop()

@@ -25,25 +25,21 @@ class GpioMotor(Actuator):
         return "TODO"
 
     def rotate_forward(self,power):
+        """ Requires 0 <= power <= 100 """
         self.set(False,True)
         self.pin_pwm.ChangeDutyCycle(power)
-        if self.pin_hl == 20:
-            GPIO.output(self.pin_hl, GPIO.HIGH)
-        else:
-            GPIO.output(self.pin_hl, GPIO.LOW)
+        GPIO.output(self.pin_hl, GPIO.HIGH)
 
     def rotate_backward(self,power):
+        """ Requires 0 <= power <= 100 """
         self.set(False,False)
-        self.pin_pwm.ChangeDutyCycle(power)
-        if self.pin_hl == 20:
-            GPIO.output(self.pin_hl, GPIO.LOW)
-        else:
-            GPIO.output(self.pin_hl, GPIO.HIGH)
+        self.pin_pwm.ChangeDutyCycle(100-power)
+        GPIO.output(self.pin_hl, GPIO.LOW)
 
     def stop(self):
         self.set(True,False)
         GPIO.output(self.pin_pwm, GPIO.HIGH)
-        GPIO.output(self.pin_hl, GPIO.LOW)        
+        GPIO.output(self.pin_hl, GPIO.LOW)
 
     def set(self, state_stop, state_forward):
         self.state_stop = state_stop

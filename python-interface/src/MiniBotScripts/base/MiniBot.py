@@ -5,17 +5,18 @@ import MiniBotFramework
 
 class MiniBot:
     """
-    Abstract class defining the base functions of the MiniBot. More customized MiniBots may
-    subclass this.
+    Defines the base functions of the MiniBot
     """
     def __init__(self, config):
         self.sensors = {}
         self.actuators = {}
         #GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
-        #TODO: Make less hardcoded
-        self.leftActuator = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self,"leftMotor",13,20,GPIO)
-        self.rightActuator = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self,"rightMotor",19,18,GPIO)
+
+        #TODO: Make less hardcoded by using config
+        self.left_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "left_motor", 13, 20, GPIO)
+        self.right_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "right_motor", 19, 18, GPIO)
+        self.two_wheel_movement = MiniBotFramework.Actuation.TwoWheelMovement.TwoWheelMovement(self, "two_wheel_movement", self.left_motor, self.right_motor, GPIO)
 
     def move_forward(self, power):
         """
@@ -53,7 +54,7 @@ class MiniBot:
         """
         print("Unimplemented: Turning counter clockwise "+str(power))
 
-    def set_wheel_power(self, front_left, front_right, back_left, back_right):
+    def set_wheel_power(self, left, right):
         """
         Sets the power of the bot's wheels as a percentage from -100 to 100. If a wheel
         specified does not exist, the power for that wheel is ignored.
@@ -64,7 +65,7 @@ class MiniBot:
         :param back_right power to deliver to the back_right wheel
         :return True if the action is supported
         """
-        print("Unimplemented: Setting wheel power to %d,%d,%d,%d" % (front_left, front_right, back_left, back_right))
+        print("Unimplemented: Setting wheel power to %d,%d,%d,%d" % (left, right))
 
     def wait(self, t):
         """
