@@ -6,12 +6,15 @@ import MiniBotScripts.base
 CONFIG_LOCATION = "MiniBotConfig/config.json"
 bot = None
 
+# Globals
+p = multiprocessing.Process(target=time.sleep, args=(1000,))
+
 def main():
     print("Initializing MiniBot Software")
     # Load config
     config_file = open(CONFIG_LOCATION)
     config = json.loads(config_file.read())
-    bot = MiniBotScripts.base.MiniBot.MiniBot(config)
+    bot = MiniBotFramework.MiniBot.MiniBot(config)
 
     # Initialize TCP
     tcpInstance = None
@@ -20,12 +23,12 @@ def main():
 
     # Initialize UDP broadcast
     if config["discoverable"]:
-        # TODO
-        pass
+        thread_udp = Thread(target = MiniBotFramework.Communication.UDP.udpBeacon)
+        thread_udp.start()
 
     # If startup script specified, run it
     if config["startupScript"] != "":
-        # TODO
+        # TODO Allow uploading startup scripts!
         pass
 
     accept_xbox = False
@@ -60,9 +63,27 @@ def parse_command(cmd, bot):
         bot.get_actuator_by_name("two_wheel_movement").move(int(float(values[0])),int(float(values[1])))
         print(int(float(values[0])))
     elif key == "SCRIPT":
-        print("TODO: Handle script")
+        user_script_file = open("MiniBotScripts/UserScript.py",'w')
+        user_script_file.write(value)
+        user_script_file.close()
+        p = spawn_script_process(p)
     else:
         print("Unknown key: " + key)
+
+def spawn_script_process(p):
+    if (p.is_alive()):
+        p.terminate()
+    time.sleep(0.1)
+    p = Process(target=run_script)
+    p.start()
+    # Return control to main after .1 seconds
+    p.join(0.1)
+    return p
+
+def run_script():
+    from MiniBotScripts import UserScript
+    UserScript.run(bot)
+
 
 if (__name__ == "__main__"):
     main()
