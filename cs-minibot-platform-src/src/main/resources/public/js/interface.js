@@ -310,6 +310,10 @@ function listBots(){
 	// lists all the bots
 }
 
+updateDiscoveredBots();
+
+$(document).ready(function() {
+
 /*
  * Event listener for key inputs. Sends to selected bot.
  */
@@ -364,5 +368,4 @@ window.onkeyup = function (e) {
        lastKeyPressed = -1;
     }
 };
-
-updateDiscoveredBots();
+});
