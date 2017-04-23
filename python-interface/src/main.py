@@ -28,7 +28,9 @@ def main():
         # TODO
         pass
 
+    accept_xbox = False
     if config["acceptXbox"]:
+        accept_xbox = True
         xboxInstance = MiniBotFramework.Controls.Xbox.Xbox()
 
     print("Entering main loop")
@@ -40,10 +42,10 @@ def main():
             parse_command(tcpCmd, bot)
 
         # Poll Xbox
-        if MiniBotFramework.Controls.Xbox.updated:
-            MiniBotFramework.Controls.Xbox.updated = False
-            x_left = MiniBotFramework.Controls.Xbox.left
-            x_right = MiniBotFramework.Controls.Xbox.right
+        if accept_xbox and MiniBotFramework.Controls.Xbox.Xbox.updated:
+            MiniBotFramework.Controls.Xbox.Xbox.updated = False
+            x_left = MiniBotFramework.Controls.Xbox.Xbox.left
+            x_right = MiniBotFramework.Controls.Xbox.Xbox.right
             bot.get_actuator_by_name("two_wheel_movement").move(x_left,x_right)
         # Check on the main code
         time.sleep(0.001)
@@ -55,9 +57,8 @@ def parse_command(cmd, bot):
     value = cmd[comma+1:end]
     if key == "WHEELS":
         values = value.split(",")
-        bot.get_actuator_by_name("two_wheel_movement").move(int(values[0]),int(values[1]))
-        print(values[0])
-        print(values[1])
+        bot.get_actuator_by_name("two_wheel_movement").move(int(float(values[0])),int(float(values[1])))
+        print(int(float(values[0])))
     elif key == "SCRIPT":
         print("TODO: Handle script")
     else:

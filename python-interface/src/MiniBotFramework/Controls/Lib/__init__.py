@@ -1,1 +1,1 @@
-import MiniBotFramework.Lib.legopi
+import MiniBotFramework.Controls.Lib.legopi

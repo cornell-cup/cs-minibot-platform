@@ -36,10 +36,18 @@ def run():
         connectionSocket, addr = TCP.tcp.server_socket.accept()
         connectionSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         print("Connection accepted")
-        while True:
+        active=True
+        while active:
             command = ""
-            while True:
-                command += connectionSocket.recv(1024).decode()
-                if command.find(">>>>") > 0:
-                    TCP.tcp.set_command(command)
-                    command = ""
+            while active:
+                try:
+                    command += connectionSocket.recv(1024).decode()
+                except socket.error, e:
+                    active = False
+                    break
+                end_index = command.find(">>>>")
+                # In case of command overload
+                while end_index > 0:
+                    TCP.tcp.set_command(command[0:end_index+4])
+                    command = command[end_index+4:]
+                    end_index = command.find(">>>>")
