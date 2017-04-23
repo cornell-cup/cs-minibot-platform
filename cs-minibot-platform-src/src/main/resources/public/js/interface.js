@@ -37,7 +37,7 @@ function getBotID() {
 }
 
 function getScript() {
-    return $("#textarea").val();
+    return $("#data").val();
 }
 
 function sendMotors(fl, fr, bl, br) {
