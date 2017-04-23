@@ -16,31 +16,29 @@ class GpioMotor(Actuator):
         # Stop the bot
         GPIO.output(self.pin_pwm, GPIO.HIGH)
         GPIO.output(self.pin_hl, GPIO.LOW)
-        self.value_pwm_pin = self.pwm #Duty cycle
-        self.value_hl_pin = true #returns if is_Low
-        self.state_stop = True
-        self.state_forward = False
+        self.speed = 0
+        self.forward = True
 
     def read(self):
-        return "TODO"
+        return (self.speed, self.forward)
 
     def rotate_forward(self,power):
         """ Requires 0 <= power <= 100 """
-        self.set(False,True)
+        self.set(power,True)
         self.pin_pwm.ChangeDutyCycle(power)
         GPIO.output(self.pin_hl, GPIO.HIGH)
 
     def rotate_backward(self,power):
         """ Requires 0 <= power <= 100 """
-        self.set(False,False)
+        self.set(power,False)
         self.pin_pwm.ChangeDutyCycle(100-power)
         GPIO.output(self.pin_hl, GPIO.LOW)
 
     def stop(self):
-        self.set(True,False)
+        self.set(0,True)
         GPIO.output(self.pin_pwm, GPIO.HIGH)
         GPIO.output(self.pin_hl, GPIO.LOW)
 
-    def set(self, state_stop, state_forward):
-        self.state_stop = state_stop
-        self.state_forward = state_forward
+    def set(self, speed, forward):
+        self.speed = speed
+        self.forward = forward
