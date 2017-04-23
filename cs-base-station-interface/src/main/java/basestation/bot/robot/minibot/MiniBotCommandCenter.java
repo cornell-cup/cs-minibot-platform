@@ -24,6 +24,6 @@ public class MiniBotCommandCenter implements FourWheelMovement {
 
     @Override
     public boolean setWheelPower(double fl, double fr, double bl, double br) {
-        return sendKV("WHEELS",fl+","+fr+","+bl+","+br);
+        return sendKV("WHEELS",fl+","+fr);
     }
 }

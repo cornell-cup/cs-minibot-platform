@@ -106,7 +106,8 @@ public class XboxControllerDriver {
      */
     public XboxControllerDriver() {
 
-        xboxController = new XboxController();
+        xboxController = new XboxController
+                ("cs-minibot-platform-src/lib/xboxcontroller64", 1, 50, 50);
         mbXboxEventHandler = new MiniBotXboxInputEventHandler();
     }
 
