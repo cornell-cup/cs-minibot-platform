@@ -50,6 +50,8 @@ def parse_command(cmd, bot):
     if key == "WHEELS":
         values = value.split(",")
         bot.get_actuator_by_name("two_wheel_movement").move(int(values[0]),int(values[1]))
+        print(values[0])
+        print(values[1])
     elif key == "SCRIPT":
         print("TODO: Handle script")
     else:

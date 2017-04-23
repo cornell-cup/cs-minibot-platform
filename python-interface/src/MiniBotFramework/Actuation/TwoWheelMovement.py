@@ -22,16 +22,16 @@ class TwoWheelMovement(Actuator):
         # Apply speeds to motors
         # Left
         if speedL > 0:
-            self.motor_left.rotate_forward(speedL)
-        elif speelL < 0:
-            self.motor_left.rotate_backward(-speedL)
+            self.motor_left.rotate_backward(speedL)
+        elif speedL < 0:
+            self.motor_left.rotate_forward(-speedL)
         else:
             self.motor_left.stop()
 
         # Right
         if speedR > 0:
-            self.motor_right.rotate_backward(speedR)
+            self.motor_right.rotate_forward(speedR)
         elif speedR < 0:
-            self.motor_right.rotate_forward(-speedR)
+            self.motor_right.rotate_backward(-speedR)
         else:
             self.motor_right.stop()

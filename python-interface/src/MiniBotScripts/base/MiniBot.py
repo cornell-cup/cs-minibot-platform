@@ -14,9 +14,9 @@ class MiniBot:
         GPIO.setmode(GPIO.BCM)
 
         #TODO: Make less hardcoded by using config
-        self.left_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "left_motor", 13, 20, GPIO)
-        self.right_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "right_motor", 19, 18, GPIO)
-        self.two_wheel_movement = MiniBotFramework.Actuation.TwoWheelMovement.TwoWheelMovement(self, "two_wheel_movement", self.left_motor, self.right_motor, GPIO)
+        self.right_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "left_motor", 13, 20, GPIO)
+        self.left_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "right_motor", 19, 18, GPIO)
+        self.two_wheel_movement = MiniBotFramework.Actuation.TwoWheelMovement.TwoWheelMovement(self, "two_wheel_movement", self.left_motor, self.right_motor)
 
     def move_forward(self, power):
         """
