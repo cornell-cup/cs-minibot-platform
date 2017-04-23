@@ -1,4 +1,7 @@
 # UDP code taken from < https://pymotw.com/2/socket/udp.html >
+
+import socket, time
+
 def udpBeacon():
 	# Create a UDP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

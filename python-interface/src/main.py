@@ -1,15 +1,16 @@
-import json, time
+import json, time, multiprocessing
 import MiniBotFramework
 import MiniBotScripts.base
+from threading import Thread
+from multiprocessing import Process
 
 # Constants
 CONFIG_LOCATION = "MiniBotConfig/config.json"
 bot = None
 
-# Globals
-p = multiprocessing.Process(target=time.sleep, args=(1000,))
-
 def main():
+    global bot
+    p = multiprocessing.Process(target=time.sleep, args=(1000,))
     print("Initializing MiniBot Software")
     # Load config
     config_file = open(CONFIG_LOCATION)
@@ -42,8 +43,9 @@ def main():
         # Poll TCP Connection
         tcpCmd = tcpInstance.get_command()
         if tcpCmd != "":
-            parse_command(tcpCmd, bot)
-
+            x = parse_command(tcpCmd, bot, p)
+            if x is not None:
+                p = x
         # Poll Xbox
         if accept_xbox and MiniBotFramework.Controls.Xbox.Xbox.updated:
             MiniBotFramework.Controls.Xbox.Xbox.updated = False
@@ -53,7 +55,7 @@ def main():
         # Check on the main code
         time.sleep(0.001)
 
-def parse_command(cmd, bot):
+def parse_command(cmd, bot, p):
     comma = cmd.find(",")
     end = cmd.find(">>>>")
     key = cmd[4:comma]
@@ -67,8 +69,10 @@ def parse_command(cmd, bot):
         user_script_file.write(value)
         user_script_file.close()
         p = spawn_script_process(p)
+        return p
     else:
         print("Unknown key: " + key)
+    return None
 
 def spawn_script_process(p):
     if (p.is_alive()):
@@ -81,6 +85,7 @@ def spawn_script_process(p):
     return p
 
 def run_script():
+    global bot
     from MiniBotScripts import UserScript
     UserScript.run(bot)
 
