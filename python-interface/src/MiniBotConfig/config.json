@@ -4,7 +4,7 @@
   "keepStartupRunning": true,
   "discoverable": true,
   "acceptTcp": true,
-  "acceptXbox": true,
+  "acceptXbox": false,
   "actuators": [
     {
       "type": "gpioMotor",
