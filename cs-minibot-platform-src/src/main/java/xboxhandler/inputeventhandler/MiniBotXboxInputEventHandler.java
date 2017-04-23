@@ -50,6 +50,8 @@ public class MiniBotXboxInputEventHandler extends
 
     private static final double MAX_MOTOR_POW = 100.0;
     private String botName;
+    double curLeft;
+    double curRight;
 
     // =========================================================================
     // Constructors
@@ -198,32 +200,39 @@ public class MiniBotXboxInputEventHandler extends
      *                  leftThumb; 0 is due North
      */
     public void leftThumbMove(double magnitude, double direction) {
-        double power = magnitude * MAX_MOTOR_POW;
-        switch (moveDirLeftThumb(direction)) {
-            case FORWARD:
-                // move forward
-                localSetWheelPower(power, power, power, power);
-                break;
-            case RIGHTFORWARD:
-                // move right - forward or CW
-                localSetWheelPower(power, -power, power, -power);
-                break;
-            case LEFTFORWARD:
-                // move left - forward or CCW
-                localSetWheelPower(-power, power, -power, power);
-                break;
-            case BACKWARD:
-                // move backward
-                localSetWheelPower(-power, -power, -power, -power);
-                break;
-            default:
-                localSetWheelPower(0.0, 0.0, 0.0, 0.0);
-        }
+//        double power = magnitude * MAX_MOTOR_POW;
+        curLeft = MAX_MOTOR_POW * magnitude * Math.sin(Math.PI/2 + Math
+                .toRadians
+                (direction));
+        localSetWheelPower(curLeft,curRight,0,0);
+
+//        switch (moveDirLeftThumb(direction)) {
+//            case FORWARD:
+//                // move forward
+//                localSetWheelPower(power, power, power, power);
+//                break;
+//            case RIGHTFORWARD:
+//                // move right - forward or CW
+//                localSetWheelPower(power, -power, power, -power);
+//                break;
+//            case LEFTFORWARD:
+//                // move left - forward or CCW
+//                localSetWheelPower(-power, power, -power, power);
+//                break;
+//            case BACKWARD:
+//                // move backward
+//                localSetWheelPower(-power, -power, -power, -power);
+//                break;
+//            default:
+//                localSetWheelPower(0.0, 0.0, 0.0, 0.0);
+//        }
     }
 
-    public void rightThumbAction(double magnitude, double direction) {
-        throw new UnsupportedOperationException("Right Thumb Action not yet " +
-                "implemented!");
+    public void rightThumbMove(double magnitude, double direction) {
+        curRight = MAX_MOTOR_POW * magnitude * Math.sin(Math.PI/2 + Math
+                .toRadians
+                (direction));
+        localSetWheelPower(curLeft,curRight,0,0);
     }
 
     public void leftTriggerAction(double value) {

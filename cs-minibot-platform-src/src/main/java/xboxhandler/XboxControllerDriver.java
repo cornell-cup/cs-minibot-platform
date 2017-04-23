@@ -151,7 +151,7 @@ public class XboxControllerDriver {
         // 0.0 <= thumbs' output value <= 1.0
         // values <= 0.5 are ignored (reduced to 0)
         xboxController.setLeftThumbDeadZone(0.2);
-        xboxController.setRightThumbDeadZone(1.0);  // NOT USING RIGHTTHUMB
+        xboxController.setRightThumbDeadZone(0.2);
 
         // 0.0 <= triggers' output value <= 1.0
         // values <= 0.2 are ignored (reduced to 0)
@@ -195,19 +195,22 @@ public class XboxControllerDriver {
 
             public void leftThumbMagnitude(double magnitude) {
                 leftMag = magnitude;
-                moveBot();
+                mbXboxEventHandler.leftThumbMove(leftMag, leftDir);
             }
 
             public void rightThumbMagnitude(double magnitude) {
                 rightMag = magnitude;
+                mbXboxEventHandler.rightThumbMove(rightMag, rightDir);
             }
 
             public void leftThumbDirection(double direction) {
                 leftDir = direction;
+                mbXboxEventHandler.leftThumbMove(leftMag, leftDir);
             }
 
             public void rightThumbDirection(double direction) {
                 rightDir = direction;
+                mbXboxEventHandler.rightThumbMove(rightMag, rightDir);
             }
 
             public void dpad(int direction, boolean pressed) {
@@ -249,7 +252,10 @@ public class XboxControllerDriver {
             mbXboxEventHandler.dpadMove(dpadVal);
         } else if (leftMag > 0.0) {
             // leftThumb is moved
-            mbXboxEventHandler.leftThumbMove(leftMag, leftDir);
+//            mbXboxEventHandler.leftThumbMove(leftMag, leftDir);
+         } else if (rightMag > 0.0) {
+            // rightThumb is moved
+//            mbXboxEventHandler.rightThumbMove(rightMag, rightDir);
         }
         defaultAllFields();
     }

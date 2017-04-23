@@ -18,7 +18,7 @@ abstract class XboxInputEventHandler {
     public abstract void dpadMove(int dpadVal);
 
     public abstract void leftThumbMove(double magnitude, double direction);
-    public abstract void rightThumbAction(double magnitude, double direction);
+    public abstract void rightThumbMove(double magnitude, double direction);
 
     public abstract void leftTriggerAction(double value);
     public abstract void rightTriggerAction(double value);
