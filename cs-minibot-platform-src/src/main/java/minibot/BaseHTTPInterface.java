@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.xml.internal.rngom.parse.host.Base;
 import simulator.physics.PhysicalObject;
 import simulator.simbot.*;
 import spark.route.RouteOverview;
