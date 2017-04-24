@@ -1,6 +1,5 @@
 import json, time, multiprocessing
 import MiniBotFramework
-import MiniBotScripts.base
 from threading import Thread
 from multiprocessing import Process
 
