@@ -12,10 +12,7 @@ Bots have four fields: x coordinate, y coordinate, angle, and id.
 */
 
 const MILLIS_PER_VISION_UPDATE = 33; // modbot update interval in ms
-var bots = [            // hard-coded bots for testing
-    newBot(1,1,0,"bob"), 
-    newBot(3,3,0,"bobette")
-    ]; 
+var bots = [];           // hard-coded bots for testing];
 
 const VIEW_WIDTH =  520; //size of simulator display in pixels
 const START_SCALE = 4; //number of meters displayed by simulator at start, 4 is 4x4 meters
@@ -33,6 +30,8 @@ var botContainer;
 var gridContainer;
 var grid;
 var imageLoader;
+
+var listBots = [];
 
 var backgroundSprite;
 
@@ -130,13 +129,18 @@ function imageLoaded(){
 }
 
 /* pseudo-constructor for a bot object */
-function newBot(x, y, angle, id) {
+function newBot(x, y, angle, id, size) {
     var bot = {
         x: x,
         y: y,
         angle: angle, // radians
-        id: id
+        id: id,
+        size: size
     };
+    if (size==0){
+    bot.type = 'bot';}
+    else{
+    bot.type = 'scenario_obj';}
     return bot;
 }
 
@@ -144,17 +148,18 @@ function newBot(x, y, angle, id) {
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
 function drawBot(b, scale, xOffset, yOffset) {
-    var botradius = scale/4
-	var circle = new PIXI.Graphics();
-	circle.beginFill(0x0EB530);
+    var size = scale/4
+    var bot = new PIXI.Graphics();
+    	bot.beginFill(0x0EB530);
+    	bot.drawRect(0, 0, size*2, size*2);
+    	bot.pivot = new PIXI.Point(size, size);
+        bot.rotation = b.angle;
+    	bot.endFill()
 
-	circle.drawCircle(0, 0, botradius);
-
-	circle.endFill();
     var cx = (b.x)*x_int+xOffset;
     var cy = (b.y)*y_int+yOffset;
-	circle.x = cx;
-	circle.y = cy;
+	bot.x = cx;
+	bot.y = cy;
 
     var circle2 = new PIXI.Graphics();
     circle2.beginFill(0xFF0000);
@@ -169,22 +174,44 @@ function drawBot(b, scale, xOffset, yOffset) {
         circle3.drawCircle(0, 0, scale/10);
         circle3.endFill();
 
-    circle2.x = cx+botradius*Math.cos(b.angle+Math.PI/6);
-    circle2.y = cy+botradius*Math.sin(b.angle+Math.PI/6);
+    circle2.x = cx+size*Math.cos(b.angle+Math.PI/6);
+    circle2.y = cy+size*Math.sin(b.angle+Math.PI/6);
 
-    circle3.x = cx+botradius*Math.cos(b.angle-Math.PI/6);
-    circle3.y = cy+botradius*Math.sin(b.angle-Math.PI/6);
+    circle3.x = cx+size*Math.cos(b.angle-Math.PI/6);
+    circle3.y = cy+size*Math.sin(b.angle-Math.PI/6);
 
 
-	botContainer.addChild(circle);
+	botContainer.addChild(bot);
 	botContainer.addChild(circle2);
 	botContainer.addChild(circle3);
+}
+
+function drawScenarioObject(b, scale, xOffset, yOffset) {
+    var size = b.size*x_int;
+	var scenarioObject = new PIXI.Graphics();
+
+	scenarioObject.beginFill(0x0EB530);
+	scenarioObject.drawRect(0, 0, size, size);
+	scenarioObject.pivot = new PIXI.Point(size/2, size/2);
+    scenarioObject.rotation = b.angle;
+	scenarioObject.endFill();
+
+    var cx = (b.x)*x_int;
+    var cy = (b.y)*y_int;
+    scenarioObject.x = cx+xOffset;
+    scenarioObject.y = cy+yOffset;
+
+	botContainer.addChild(scenarioObject);
 }
 
 /* Displays all bots given an array of bots */
 function displayBots(botArray, scale, xOffset, yOffset) {
 	for(var b=0; b<botArray.length;b++) {
-		drawBot(botArray[b], scale, xOffset, yOffset);
+	if (botArray[b].type=='bot'){
+	    drawBot(botArray[b], scale, xOffset, yOffset);
+	} else {
+	    drawScenarioObject(botArray[b], scale, xOffset, yOffset);
+	}
 	}
 }
 
@@ -233,7 +260,6 @@ function setupGridLines(scale, xOffset, yOffset) {
 lock = false;
 lastTime = new Date();
 function getNewVisionData() {
-
     if (document.getElementById('vision-poll').checked) {
         $.ajax({
             url: '/updateloc',
@@ -256,14 +282,14 @@ function getNewVisionData() {
                     bots = [];
                     botContainer.removeChildren();
                     for (var b in data) {
-                        //console.log("YAY");
                         var bot = data[b];
-                        var zz = bot.x;
-                        var aa = bot.y;
-                        var bb = bot.angle;
-                        //console.log(bot.angle);
-                        var idid = bot.id;
-                        bots.push(newBot(bot.x,bot.y,bot.angle,bot.id));
+                        var botX = bot.x;
+                        var botY = bot.y;
+                        var botAngle = bot.angle;
+                        var botSize = bot.size;
+                        var botId = bot.id;
+                        bots.push(newBot(bot.x, bot.y, bot.angle, bot.id, bot
+                        .size));
                     }
 
                     displayBots(bots, scale, xOffset, yOffset);
@@ -289,8 +315,8 @@ function pollBotNames() {
             listBotsPrev = listBots;
             listBots = [];
             for (var b in data) {
-                var bot = data[b];
-                listBots.push({name: bot.name});
+                    var bot = data[b];
+                    listBots.push({name: bot.name});
             }
 
             if (listBots.length !== listBotsPrev.length) {

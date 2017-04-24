@@ -77,7 +77,6 @@ $("#send").click(function(event) {
 $(".dir").click(function(event) {
 	var pow = getPower();
 	var target = $(event.target); //$target
-	console.log(target);
 
 	if(target.is("#fwd")) {
 		sendMotors(pow, pow, pow, pow);
@@ -171,6 +170,23 @@ $('#addBot').click(function() {
     });
 });
 
+//adding a scenario
+$('#addScenario').click(function() {
+    console.log("add scenario from interface.js")
+    var scenario = $("#scenario").val();
+
+    $.ajax({
+        method: "POST",
+        url: '/addScenario',
+        dataType: 'text',
+        data: JSON.stringify({'scenario': scenario.toString()}),
+        contentType: 'application/json; charset=utf-8',
+        success: function (data){
+            console.log("successfully added"+data);
+        }
+    });
+ });
+
 /*
 	For any update to the list of active bots, the dropdown menu
 	of active bots will update accordingly (depending on the addition
@@ -238,7 +254,6 @@ function updateDiscoveredBots(){
         data: '',
         contentType: 'application/json',
         success: function (data) {
-            console.log(data);
              //Check if discovered_bots and data are the same (check length and then contents)
             if(data.length != discovered_bots.length){
                 //If not then clear list and re-make displayed elements
