@@ -21,8 +21,7 @@ public class TCPConnection extends Connection {
             this.inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             connectionNotRefused = true;
         } catch (IOException e) {
-            System.err.println("Unable to establish connection!");
-            e.printStackTrace();
+            System.err.println("Unable to establish connection! " + e);
             connectionNotRefused = false;
         }
     }
