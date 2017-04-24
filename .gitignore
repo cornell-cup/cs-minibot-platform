@@ -7,3 +7,4 @@ received.py
 temp.py
 *.iml
 META-INF/
+*.pyc

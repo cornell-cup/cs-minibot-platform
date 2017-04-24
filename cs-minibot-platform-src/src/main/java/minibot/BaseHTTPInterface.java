@@ -155,10 +155,16 @@ public class BaseHTTPInterface {
             String name = commandInfo.get("name").getAsString();
             String script = commandInfo.get("script").getAsString();
 
-            ((SimBot)BaseStation.getInstance()
+            Bot receiver = BaseStation.getInstance()
                     .getBotManager()
                     .getBotByName(name)
-                    .orElseThrow(NoSuchElementException::new)).resetServer();
+                    .orElseThrow(NoSuchElementException::new);
+
+            if (receiver instanceof SimBot)
+                ((SimBot)BaseStation.getInstance()
+                        .getBotManager()
+                        .getBotByName(name)
+                        .orElseThrow(NoSuchElementException::new)).resetServer();
 
             return BaseStation.getInstance()
                     .getBotManager()

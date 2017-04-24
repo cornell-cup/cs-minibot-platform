@@ -37,7 +37,7 @@ function getBotID() {
 }
 
 function getScript() {
-    return $("#textarea").val();
+    return $("#data").val();
 }
 
 function sendMotors(fl, fr, bl, br) {
@@ -115,6 +115,35 @@ $('#removeBot').click(function() {
 		data: JSON.stringify({
 			name: getBotID()
 		}),
+		contentType: 'application/json',
+		success: function properlyRemoved(data) {
+		    console.log("TODO");
+		}
+	});
+});
+
+$('#xbox-on').click(function() {
+	// ajax post to backend to remove a bot from list.
+	$.ajax({
+		method: "POST",
+		url: '/runXbox',
+		dataType: 'json',
+		data: JSON.stringify({
+			name: getBotID()
+		}),
+		contentType: 'application/json',
+		success: function properlyRemoved(data) {
+		    console.log("TODO");
+		}
+	});
+});
+
+$('#xbox-off').click(function() {
+	// ajax post to backend to remove a bot from list.
+	$.ajax({
+		method: "POST",
+		url: '/stopXbox',
+		dataType: 'json',
 		contentType: 'application/json',
 		success: function properlyRemoved(data) {
 		    console.log("TODO");
@@ -310,6 +339,10 @@ function listBots(){
 	// lists all the bots
 }
 
+updateDiscoveredBots();
+
+$(document).ready(function() {
+
 /*
  * Event listener for key inputs. Sends to selected bot.
  */
@@ -364,5 +397,4 @@ window.onkeyup = function (e) {
        lastKeyPressed = -1;
     }
 };
-
-updateDiscoveredBots();
+});

@@ -1,4 +1,4 @@
-# Abstract class representing the sensor interface
+# Abstract class representing a sensor
 class Sensor:
     def __init__(self, bot, name):
         self.name = name
@@ -6,3 +6,6 @@ class Sensor:
 
     def read(self):
         return "Invalid: Abstract Sensor Class Reading"
+
+    def get_name(self):
+        return self.name
