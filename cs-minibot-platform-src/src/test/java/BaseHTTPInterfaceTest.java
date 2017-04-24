@@ -22,24 +22,25 @@ public class BaseHTTPInterfaceTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        BufferedReader scriptFeedbackInStream = null;
+
         try {
             ProcessBuilder pb = new ProcessBuilder("python", "python-interface/src/tcp.py");
             Process p = pb.start();
-            BufferedReader scriptFeedbackInStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            scriptFeedbackInStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-
-            String line;
-            while ((line = scriptFeedbackInStream.readLine()) != null) {
-                int ret = new Integer(line).intValue();
-                System.out.println("" + ret);
-
-            }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("opening TCP");
         Thread.sleep(10000);
+        String line;
+
+        while ((line = scriptFeedbackInStream.readLine()) != null) {
+            int ret = new Integer(line).intValue();
+            System.out.println("" + ret);
+            System.out.println("HELLO");
+        }
     }
 
     @Test
