@@ -63,7 +63,7 @@ public class PhysicalObject {
         BodyDef testbody = new BodyDef();
         testbody.position.set(new Vec2(xPos, yPos));
         testbody.angle = (float)(angle/180.0*Math.PI);
-        testbody.type = BodyType.DYNAMIC;
+        testbody.type = BodyType.STATIC;
         testbody.linearVelocity = new Vec2(0.0f, 0.0f);;
 
         Vec2[] vertices = new Vec2[4];
@@ -72,12 +72,12 @@ public class PhysicalObject {
         vertices[2] = new Vec2(size/2.0f,size/2.0f);
         vertices[3] = new Vec2(-size/2.0f,size/2.0f);
 
-        PolygonShape ps = new PolygonShape();
-        ps.setAsBox(size/2.0f, size/2.0f, new Vec2(0.0f,0.0f), 0.0f);
+        PolygonShape polygonShape = new PolygonShape();
+        polygonShape.setAsBox(size/2.0f, size/2.0f, new Vec2(0.0f,0.0f), 0.0f);
 
         FixtureDef testFixture = new FixtureDef();
-        testFixture.shape = ps;
-        testFixture.density = 100.0f;
+        testFixture.shape = polygonShape;
+        testFixture.density = 1000.0f;
 
         this.world = world;
         Body b = world.createBody(testbody);

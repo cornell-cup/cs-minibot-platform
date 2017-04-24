@@ -187,19 +187,19 @@ function drawBot(b, scale, xOffset, yOffset) {
 }
 
 function drawScenarioObject(b, scale, xOffset, yOffset) {
-
     var size = b.size*x_int;
 	var scenarioObject = new PIXI.Graphics();
+
 	scenarioObject.beginFill(0x0EB530);
 	scenarioObject.drawRect(0, 0, size, size);
 	scenarioObject.pivot = new PIXI.Point(size/2, size/2);
     scenarioObject.rotation = b.angle;
 	scenarioObject.endFill();
 
-	 var cx = (b.x)*x_int;
-     var cy = (b.y)*y_int;
-     scenarioObject.x = cx+xOffset;
-     scenarioObject.y = cy+yOffset;
+    var cx = (b.x)*x_int;
+    var cy = (b.y)*y_int;
+    scenarioObject.x = cx+xOffset;
+    scenarioObject.y = cy+yOffset;
 
 	botContainer.addChild(scenarioObject);
 }
@@ -283,11 +283,11 @@ function getNewVisionData() {
                     botContainer.removeChildren();
                     for (var b in data) {
                         var bot = data[b];
-                        var zz = bot.x;
-                        var aa = bot.y;
-                        var bb = bot.angle;
-                        var ss = bot.size;
-                        var idid = bot.id;
+                        var botX = bot.x;
+                        var botY = bot.y;
+                        var botAngle = bot.angle;
+                        var botSize = bot.size;
+                        var botId = bot.id;
                         bots.push(newBot(bot.x, bot.y, bot.angle, bot.id, bot
                         .size));
                     }

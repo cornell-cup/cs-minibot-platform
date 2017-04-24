@@ -9,14 +9,24 @@ import basestation.bot.robot.minibot.MiniBot;
 import basestation.bot.robot.modbot.ModBot;
 import basestation.vision.OverheadVisionSystem;
 import basestation.vision.VisionObject;
-import com.google.gson.*;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import simulator.physics.PhysicalObject;
 import simulator.simbot.ColorIntensitySensor;
 import simulator.simbot.SimBotConnection;
 import simulator.simbot.SimBotSensorCenter;
 import spark.route.RouteOverview;
 
-import java.util.*;
+import java.util.List;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.Collection;
+
 
 import simulator.baseinterface.SimulatorVisionSystem;
 

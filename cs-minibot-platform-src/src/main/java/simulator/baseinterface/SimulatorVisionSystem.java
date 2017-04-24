@@ -58,16 +58,6 @@ public class SimulatorVisionSystem extends VisionSystem {
      */
     public void importPhysicalObject(PhysicalObject pObj) {
         poSet.add(pObj);
-        System.out.println(poSet);
-//        Set<VisionObject> newSet = ConcurrentHashMap.newKeySet();
-//        for(PhysicalObject obj: pObjs) {
-//            VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(), 0.0);
-//            VisionObject vo = new VisionObject(this,obj.getID(),vc, obj
-//                    .getSize());
-//            newSet.add(vo);
-//            poSet.add(obj);
-//        }
-//        visionObjectSet = newSet;
     }
 
     /**

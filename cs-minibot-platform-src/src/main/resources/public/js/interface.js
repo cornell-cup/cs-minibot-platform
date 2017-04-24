@@ -77,8 +77,6 @@ $("#send").click(function(event) {
 $(".dir").click(function(event) {
 	var pow = getPower();
 	var target = $(event.target); //$target
-	console.log(target);
-
 
 	if(target.is("#fwd")) {
 		sendMotors(pow, pow, pow, pow);
@@ -176,7 +174,7 @@ $('#addBot').click(function() {
 $('#addScenario').click(function() {
     console.log("add scenario from interface.js")
     var scenario = $("#scenario").val();
-    console.log(scenario);
+
     $.ajax({
         method: "POST",
         url: '/addScenario',
