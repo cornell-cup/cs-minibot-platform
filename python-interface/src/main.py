@@ -2,14 +2,18 @@ import json, time, multiprocessing
 import MiniBotFramework
 from threading import Thread
 from multiprocessing import Process
+from multiprocessing.managers import BaseManager
 
 # Constants
 CONFIG_LOCATION = "MiniBotConfig/config.json"
-bot = None
 
 def main():
-    global bot
-    p = multiprocessing.Process(target=time.sleep, args=(1000,))
+    #BaseManager.register('MiniBot',MiniBotFramework.MiniBot.MiniBot)
+    #manager = BaseManager()
+    #manager.start()
+
+    #p = multiprocessing.Process(target=time.sleep, args=(1000,))
+    p = None
     print("Initializing MiniBot Software")
     # Load config
     config_file = open(CONFIG_LOCATION)
@@ -67,24 +71,23 @@ def parse_command(cmd, bot, p):
         user_script_file = open("MiniBotScripts/UserScript.py",'w')
         user_script_file.write(value)
         user_script_file.close()
-        p = spawn_script_process(p)
+        p = spawn_script_process(p, bot)
         return p
     else:
         print("Unknown key: " + key)
     return None
 
-def spawn_script_process(p):
-    if (p.is_alive()):
+def spawn_script_process(p,bot):
+    if (p is not None and p.is_alive()):
         p.terminate()
     time.sleep(0.1)
-    p = Process(target=run_script)
+    p = Thread(target=run_script, args=[bot])
     p.start()
     # Return control to main after .1 seconds
-    p.join(0.1)
+    #p.join(0.1)
     return p
 
-def run_script():
-    global bot
+def run_script(bot):
     from MiniBotScripts import UserScript
     UserScript.run(bot)
 
