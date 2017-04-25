@@ -116,10 +116,6 @@ public class BaseHTTPInterface {
 
             // gets (botID, fl, fr, bl, br) from json
             String botName = commandInfo.get("name").getAsString();
-//            int fl = commandInfo.get("fl").getAsInt();
-//            int fr = commandInfo.get("fr").getAsInt();
-//            int bl = commandInfo.get("bl").getAsInt();
-//            int br = commandInfo.get("br").getAsInt();
             String fl = commandInfo.get("fl").getAsString();
             String fr = commandInfo.get("fr").getAsString();
             String bl = commandInfo.get("bl").getAsString();
@@ -130,7 +126,7 @@ public class BaseHTTPInterface {
 //            FourWheelMovement fwmCommandCenter = (FourWheelMovement) myBot.getCommandCenter();
 //            return fwmCommandCenter.setWheelPower(fl,fr,bl,br);
             CommandCenter cc =  myBot.getCommandCenter();
-            return cc.sendKV("WHEELS", "<<<<WHEELS," + fl + "," + fr + "," + bl + "," + br + ">>>>");
+            return cc.sendKV("WHEELS", fl + "," + fr + "," + bl + "," + br);
         });
 
         post("/removeBot", (req,res) -> {
@@ -268,8 +264,6 @@ public class BaseHTTPInterface {
                 return false;
             }
         });
-
-
     }
 
     /**

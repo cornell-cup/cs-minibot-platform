@@ -10,6 +10,10 @@ import java.io.*;
 import java.net.*;
 import java.util.Map;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class SimBot extends Bot {
 
     private final transient SimBotCommandCenter commandCenter;
@@ -17,6 +21,7 @@ public class SimBot extends Bot {
     public transient TCPServer runningThread;
     public transient DataLog loggingThread;
     public transient PhysicalObject myPhysicalObject;
+    public static int IPADDRESS = 11111;
 
     /**
      * Currently minibots are implemented using a TCP connection
@@ -30,13 +35,15 @@ public class SimBot extends Bot {
 
         try {
             //starts thread for tcp server
-            Thread t = new TCPServer(11111, this, commandCenter, this.sensorCenter);
-            runningThread = (TCPServer)t;
+            Thread t = new TCPServer(IPADDRESS, this, commandCenter, this.sensorCenter);
+            runningThread = (TCPServer) t;
             runningThread.start();
 
             //starts thread for data logging
-            Thread log = new DataLog("log.csv", commandCenter, this.sensorCenter);
-            loggingThread = (DataLog)log;
+            DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+            Date dateObj = new Date();
+            Thread log = new DataLog(df.format(dateObj).substring(9) + "-log.csv", commandCenter, this.sensorCenter);
+            loggingThread = (DataLog) log;
             loggingThread.start();
         }catch(IOException e) {
             e.printStackTrace();
@@ -68,17 +75,25 @@ public class SimBot extends Bot {
         private volatile boolean exit = false;
         private static final int INTERVAL = 100;    //for now it is set to 100 ms
 
-        public DataLog(String path, SimBotCommandCenter cc, SimBotSensorCenter sc) throws IOException{
-            commandCenter = cc;
-            sensorCenter = sc;
+        public DataLog(String path, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException{
+            this.commandCenter = commandCenter;
+            this.sensorCenter = sensorCenter;
             this.path = path;
 
             //Create csv file only if command center is currently logging
             if (commandCenter.isLogging()) {
+                createFile(path);
+            }
+        }
+
+        public void createFile(String path) {
+            try {
                 File file = new File(path);
                 file.createNewFile();
                 this.writer = new FileWriter(file);
                 this.fileCreated = true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -86,86 +101,88 @@ public class SimBot extends Bot {
             this.exit = true;
         }
 
-        public void myRun() throws Exception {
-            boolean first_header = true;
-            while (!exit) {
-                if (commandCenter.isLogging()) {
-                    //Creates csv file if it hasn't been created yet
-                    if (!fileCreated) {
-                        File file = new File(this.path);
-                        file.createNewFile();
-                        this.writer = new FileWriter(file);
-                        this.fileCreated = true;
-                    }
-
-                    //Interval of sampling data
-                    this.sleep(INTERVAL);
-
-                    //Grabs command data
-                    boolean first = true;
-                    StringBuilder sb_command = new StringBuilder();
-                    StringBuilder sb_header_command = new StringBuilder();
-                    JsonObject commandData = commandCenter.getAllData();
-                    for (Map.Entry<String, JsonElement> entry : commandData.entrySet()) {
-                        String name = entry.getKey();
-                        String value = entry.getValue().getAsString();
-                        if (!first) {
-                            sb_command.append(DEFAULT_SEPARATOR);
-                            sb_header_command.append(DEFAULT_SEPARATOR);
-                        }
-                        sb_command.append(value);
-                        sb_header_command.append(name);
-
-                        first = false;
-                    }
-
-                    //Grabs sensor data
-                    StringBuilder sb_sensor = new StringBuilder();
-                    StringBuilder sb_header_sensor = new StringBuilder();
-                    JsonObject sensorData = this.sensorCenter.getAllDataGson();
-                    for (Map.Entry<String, JsonElement> entry : sensorData.entrySet()) {
-                        String name = entry.getKey();
-                        JsonObject data = entry.getValue().getAsJsonObject();
-                        String value = Integer.toString(data.get("data").getAsInt());
-                        sb_sensor.append(DEFAULT_SEPARATOR);
-                        sb_header_sensor.append(DEFAULT_SEPARATOR);
-                        if (value.equals("")) {
-                            value = " ";
-                        }
-                        sb_sensor.append(value);
-                        sb_header_sensor.append(name);
-                    }
-
-                    //Can add log additional data, add here
-
-
-                    //Record Header if there is a header
-                    if (first_header &&
-                            !sb_header_sensor.toString().equals("") &&
-                            !sb_header_command.toString().equals("")) {
-                        sb_header_command.append(sb_header_sensor);
-                        sb_header_command.append("\n");
-                        writer.append(sb_header_command.toString());
-                        first_header = false;
-                    }
-
-                    //Write to csv
-                    if (!sb_command.toString().equals("") && !sb_sensor.toString().equals("")) {
-                        sb_command.append(sb_sensor);
-                        sb_command.append("\n");
-                        writer.append(sb_command.toString());
-                        writer.flush();
-                    }
-                }
-            }
-            writer.close();
-        }
-
         public void run(){
             try {
-                this.myRun();
+                boolean firstHeader = true;
+                while (!exit) {
+                    if (commandCenter.isLogging()) {
+                        //Creates csv file if it hasn't been created yet
+                        if (!fileCreated) {
+                            createFile(this.path);
+                        }
+
+                        //Interval of sampling data
+                        this.sleep(INTERVAL);
+
+                        //Grabs command data
+                        boolean first = true;
+                        StringBuilder sbCommand = new StringBuilder();
+                        StringBuilder sbHeaderCommand = new StringBuilder();
+                        JsonObject commandData = commandCenter.getAllData();
+                        for (Map.Entry<String, JsonElement> entry : commandData.entrySet()) {
+                            String name = entry.getKey();
+                            String value = entry.getValue().getAsString();
+                            if (!first) {
+                                sbCommand.append(DEFAULT_SEPARATOR);
+                                sbHeaderCommand.append(DEFAULT_SEPARATOR);
+                            }
+                            sbCommand.append(value);
+                            sbHeaderCommand.append(name);
+                            first = false;
+                        }
+
+                        //Grabs sensor data
+                        StringBuilder sbSensor = new StringBuilder();
+                        StringBuilder sbHeaderSensor = new StringBuilder();
+                        JsonObject sensorData = this.sensorCenter.getAllDataGson();
+
+                        //Adds seperator between movement and sensor if movement has recorded some value
+                        if (!first) {
+                            sbSensor.append(DEFAULT_SEPARATOR);
+                            sbHeaderSensor.append(DEFAULT_SEPARATOR);
+                        }
+                        first = true;
+
+                        for (Map.Entry<String, JsonElement> entry : sensorData.entrySet()) {
+                            String name = entry.getKey();
+                            JsonObject data = entry.getValue().getAsJsonObject();
+                            String value = Integer.toString(data.get("data").getAsInt());
+                            if (value.equals("")) {
+                                value = " ";
+                            }
+                            if (!first) {
+                                sbSensor.append(DEFAULT_SEPARATOR);
+                                sbHeaderSensor.append(DEFAULT_SEPARATOR);
+                            }
+                            sbSensor.append(value);
+                            sbHeaderSensor.append(name);
+                            first = false;
+                        }
+
+                        //TODO Add log additional data here
+
+                        //Record Header if there is a header
+                        if (firstHeader &&
+                                !sbHeaderSensor.toString().equals("") &&
+                                !sbHeaderCommand.toString().equals("")) {
+                            sbHeaderCommand.append(sbHeaderSensor);
+                            sbHeaderCommand.append("\n");
+                            writer.append(sbHeaderCommand.toString());
+                            firstHeader = false;
+                        }
+
+                        //Write to csv
+                        if (!sbCommand.toString().equals("") && !sbSensor.toString().equals("")) {
+                            sbCommand.append(sbSensor);
+                            sbCommand.append("\n");
+                            writer.append(sbCommand.toString());
+                            writer.flush();
+                        }
+                    }
+                }
+                writer.close();
             } catch(Exception e) {
-                System.out.println("ERROR IN LOGGING");
+                e.printStackTrace();
             }
         }
     }
@@ -179,13 +196,14 @@ public class SimBot extends Bot {
         private final transient SimBotCommandCenter commandCenter;
         private final transient SimBotSensorCenter sensorCenter;
         private volatile boolean exit = false;
+        private final static int TIMEOUT = 100000;
 
-        public TCPServer(int port, SimBot s, SimBotCommandCenter cc, SimBotSensorCenter sc) throws IOException {
-            sim = s;
-            commandCenter = cc;
-            sensorCenter = sc;
+        public TCPServer(int port, SimBot simbot, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException {
+            sim = simbot;
+            this.commandCenter = commandCenter;
+            this.sensorCenter = sensorCenter;
             serverSocket = new ServerSocket(port);
-            serverSocket.setSoTimeout(100000);
+            serverSocket.setSoTimeout(TIMEOUT);
         }
 
         public void stopStream() {
@@ -218,26 +236,22 @@ public class SimBot extends Bot {
                             String name = content.substring(content.indexOf(':') + 1);
                             switch (content.substring(0, content.indexOf(':'))) {
                                 case "FORWARD":
-                                    commandCenter.sendKV("WHEELS",
-                                            "<<<<WHEELS," + value + "," + value + "," + value + "," + value + ">>>>");
+                                    commandCenter.sendKV("WHEELS", value + "," + value + "," + value + "," + value);
                                     break;
                                 case "BACKWARD":
-                                    commandCenter.sendKV("WHEELS",
-                                            "<<<<WHEELS,-" + value + ",-" + value + ",-" + value + ",-" + value + ">>>>");
+                                    commandCenter.sendKV("WHEELS", value + ",-" + value + ",-" + value + ",-" + value);
                                     break;
                                 case "RIGHT":
-                                    commandCenter.sendKV("WHEELS",
-                                            "<<<<WHEELS," + value + ",-" + value + "," + value + ",-" + value + ">>>>");
+                                    commandCenter.sendKV("WHEELS", value + ",-" + value + "," + value + ",-" + value);
                                     break;
                                 case "LEFT":
-                                    commandCenter.sendKV("WHEELS",
-                                            "<<<<WHEELS,-" + value + "," + value + ",-" + value + "," + value + ">>>>");
+                                    commandCenter.sendKV("WHEELS", value + "," + value + ",-" + value + "," + value);
                                     break;
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");
                                     break;
                                 case "STOP":
-                                    commandCenter.sendKV("WHEELS", "<<<<WHEELS,0,0,0,0>>>>");
+                                    commandCenter.sendKV("WHEELS", "0,0,0,0");
                                     break;
                                 case "KILL":
                                     run = false;
@@ -258,10 +272,10 @@ public class SimBot extends Bot {
                                 default:
                                     String cmd = content.substring(content.indexOf(':') + 1);
                                     System.out.println(cmd);
-                                    String[] wheel_cmds = cmd.split(",");
+                                    String[] wheelCmds = cmd.split(",");
 
-                                    commandCenter.sendKV("WHEELS", "<<<<WHEELS," + wheel_cmds[0] + "," + wheel_cmds[1]
-                                            + "," + wheel_cmds[2] + "," + wheel_cmds[3] + ">>>>");
+                                    commandCenter.sendKV("WHEELS", wheelCmds[0] + "," + wheelCmds[1]
+                                            + "," + wheelCmds[2] + "," + wheelCmds[3]);
                                     break;
                             }
                         }

@@ -1,13 +1,10 @@
 package simulator.simbot;
-import java.net.*;
 import java.io.*;
-import java.nio.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import basestation.bot.commands.FourWheelMovement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import simulator.baseinterface.SimulatorVisionSystem;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.common.Vec2;
@@ -16,7 +13,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
     public final float topspeed = 0.655f; //top speed of minibot in meters/second
     public final float turningspeed = (float) Math.PI;
     public transient boolean record = false;
-    Map<String,String> commands_log = new ConcurrentHashMap<>();
+    Map<String,String> commandsLog = new ConcurrentHashMap<>();
 
     public SimBotCommandCenter(SimBot myBot) {
     }
@@ -33,19 +30,19 @@ public class SimBotCommandCenter implements FourWheelMovement {
     }
 
     public void setData(String name, String value) {
-        this.commands_log.put(name,value);
+        this.commandsLog.put(name,value);
     }
 
     public void setWheelsData(String fl, String v1, String fr, String v2, String bl, String v3, String br, String v4) {
-        this.commands_log.put(fl,v1);
-        this.commands_log.put(fr,v2);
-        this.commands_log.put(bl,v3);
-        this.commands_log.put(br,v4);
+        this.commandsLog.put(fl,v1);
+        this.commandsLog.put(fr,v2);
+        this.commandsLog.put(bl,v3);
+        this.commandsLog.put(br,v4);
     }
 
     public JsonObject getData(String name) {
         JsonObject data = new JsonObject();
-        for (Map.Entry<String, String> entry : this.commands_log.entrySet()) {
+        for (Map.Entry<String, String> entry : this.commandsLog.entrySet()) {
             String n = entry.getKey();
             if (name.equals(n)) {
                 String value = entry.getValue();
@@ -60,7 +57,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
     public JsonObject getAllData() {
         JsonObject allData = new JsonObject();
 
-        for (Map.Entry<String, String> entry : this.commands_log.entrySet()) {
+        for (Map.Entry<String, String> entry : this.commandsLog.entrySet()) {
             String name = entry.getKey();
             String value = entry.getValue();
             allData.addProperty(name, value);
@@ -119,16 +116,12 @@ public class SimBotCommandCenter implements FourWheelMovement {
     @Override
     public boolean sendKV(String key, String value) {
         if (key == "WHEELS") {
+            String[] wheelCommands = value.split(",");
 
-            int i = value.indexOf(',');
-            int j = value.indexOf('>');
-            String str_wheel_commands = value.substring(i+1, j);
-            String[] wheel_commands = str_wheel_commands.split(",");
-
-            double fl = Double.parseDouble(wheel_commands[0]);
-            double fr = Double.parseDouble(wheel_commands[1]);;
-            double bl = Double.parseDouble(wheel_commands[2]);;
-            double br = Double.parseDouble(wheel_commands[3]);;
+            double fl = Double.parseDouble(wheelCommands[0]);
+            double fr = Double.parseDouble(wheelCommands[1]);;
+            double bl = Double.parseDouble(wheelCommands[2]);;
+            double br = Double.parseDouble(wheelCommands[3]);;
 
             Body b = SimulatorVisionSystem.getInstance().getWorld().getBodyList();
 
@@ -172,8 +165,8 @@ public class SimBotCommandCenter implements FourWheelMovement {
                 System.out.println("Invalid wheel power command!");
             }
 
-            this.setWheelsData("fl", wheel_commands[0], "fr", wheel_commands[1],
-                    "bl", wheel_commands[2],"br", wheel_commands[3]);
+            this.setWheelsData("fl", wheelCommands[0], "fr", wheelCommands[1],
+                    "bl", wheelCommands[2],"br", wheelCommands[3]);
 
             return true;
 
