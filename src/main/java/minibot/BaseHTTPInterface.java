@@ -15,6 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import examples.gobot.Course;
+import examples.gobot.GoBot;
 import examples.patrol.Patrol;
 import simulator.physics.PhysicalObject;
 import simulator.simbot.SimBotConnection;
@@ -68,6 +69,11 @@ public class BaseHTTPInterface {
         Course course = new Course();
         ArrayList<VisionCoordinate> outerTrackCoords = new ArrayList<>();
         ArrayList<VisionCoordinate> innerTrackCoords = new ArrayList<>();
+        ArrayList<VisionCoordinate> startAreaCoords = new ArrayList<>();
+        //ArrayList<VisionCoordinate> finishAreaCoords = new ArrayList<>();
+        ArrayList<VisionCoordinate> middleAreaCoords = new ArrayList<>();
+        GoBot gb = new GoBot();
+        Long timer = 0L;
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
@@ -88,6 +94,11 @@ public class BaseHTTPInterface {
             int port = addInfo.get("port").getAsInt();
             String name = addInfo.get("name").getAsString();
             String type = addInfo.get("type").getAsString(); //differentiate between modbot and minibot
+
+            System.out.println(ip);
+            System.out.println(port);
+            System.out.println(name);
+            System.out.println(type);
 
             /* new modbot is created to add */
             Bot newBot;
@@ -264,26 +275,65 @@ public class BaseHTTPInterface {
             return true;
         });
 
-        get("/example/gobot/addPointToInnerTrack", (req, res) -> {
+        get("/example/GoBot/addPointToInnerTrack", (req, res) -> {
             innerTrackCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
             return true;
         });
 
-        get("/example/gobot/addPointToOuterTrack", (req, res) -> {
+        get("/example/GoBot/addPointToOuterTrack", (req, res) -> {
             outerTrackCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
             return true;
         });
 
-        get("/example/gobot/finishedTrack", (request, response) -> {
-            course.setOuter(outerTrackCoords);
-            course.setInner(innerTrackCoords);
+        get("/example/GoBot/addPointToStartArea", (req, res) -> {
+            startAreaCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
             return true;
         });
 
-        get("/example/gobot/isBotInside", (req, res) -> course.isInsideTrack(BaseStation.getInstance().getVisionManager()
+        /*get("/example/GoBot/addPointToFinishArea", (req, res) -> {
+            finishAreaCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            return true;
+        });*/
+
+        get("/example/GoBot/addPointToMiddleArea", (req, res) -> {
+            middleAreaCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            return true;
+        });
+
+        get("/example/GoBot/finishedTrack", (request, response) -> {
+            course.setOuter(outerTrackCoords);
+            course.setInner(innerTrackCoords);
+            course.setStartArea(startAreaCoords);
+            //course.setFinishArea(finishAreaCoords);
+            course.setMiddleArea(middleAreaCoords);
+            gb.setCourse(course);
+            return true;
+        });
+
+        get("/example/GoBot/isBotInside", (req, res) -> course.isInsideTrack(BaseStation.getInstance().getVisionManager()
                 .getAllLocationData().get(0).coord));
+
+        get("/example/GoBot/didBotFinishALap", (req, res) -> {
+            if (gb.finishedLap()) {
+                gb.addLapTime(System.nanoTime());
+                return "Lap Time: " + gb.getLastLapTime();
+            } else {
+                return "Current Time: " + System.nanoTime();
+            }
+        });
+
+        get("/example/GoBot/numLapsCompleted", (req, res) -> gb.getLapsDone());
+
+        get("/example/GoBot/startRace", (req, res) -> {
+            gb.setTimer(System.nanoTime());
+            return gb.getTime();
+        });
+
 
     }
 
