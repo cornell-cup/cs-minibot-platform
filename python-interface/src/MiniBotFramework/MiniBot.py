@@ -13,9 +13,23 @@ class MiniBot:
         #GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
 
-        #TODO: Make less hardcoded by using config
+        for actuator in config["actuators"]:
+            if actuator["type"] == "gpioMotor":
+                name = actuator["name"]
+                pinPWM = actuator["pinPWM"]
+                pinHighLow = actuator["pinHighLow"]
+                reversed = actuator["reversed"]
+                MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, name, pinPWM, pinHighLow, GPIO)
+            else:
+                print("ERROR: Unknown actuator in config")
+
+        # TODO: Sensor parsing
+
+        # Interpret the config into all sensors and actuators
         self.right_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "left_motor", 13, 20, GPIO)
         self.left_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "right_motor", 19, 18, GPIO)
+
+        # Meta actuator. TODO: Make configurable
         self.two_wheel_movement = MiniBotFramework.Actuation.TwoWheelMovement.TwoWheelMovement(self, "two_wheel_movement", self.left_motor, self.right_motor)
 
     def move_forward(self, power):
