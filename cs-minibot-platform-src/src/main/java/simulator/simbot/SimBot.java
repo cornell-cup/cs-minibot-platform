@@ -271,7 +271,6 @@ public class SimBot extends Bot {
                                     break;
                                 default:
                                     String cmd = content.substring(content.indexOf(':') + 1);
-                                    System.out.println(cmd);
                                     String[] wheelCmds = cmd.split(",");
 
                                     commandCenter.sendKV("WHEELS", wheelCmds[0] + "," + wheelCmds[1]

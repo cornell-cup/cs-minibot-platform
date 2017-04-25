@@ -166,7 +166,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
             }
 
             this.setWheelsData("fl", wheelCommands[0], "fr", wheelCommands[1],
-                    "bl", wheelCommands[2],"br", wheelCommands[3]);
+                    "bl", wheelCommands[2], "br", wheelCommands[3]);
 
             return true;
 

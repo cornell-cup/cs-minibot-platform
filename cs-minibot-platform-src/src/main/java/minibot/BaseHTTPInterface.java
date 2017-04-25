@@ -143,7 +143,7 @@ public class BaseHTTPInterface {
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
             String name = commandInfo.get("name").getAsString();
             Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(name).get();
-            SimBotCommandCenter cc = (SimBotCommandCenter) myBot.getCommandCenter();
+            CommandCenter cc = myBot.getCommandCenter();
             System.out.println("Start Logging Data...");
             cc.startLogging();
             return true;
