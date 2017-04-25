@@ -4,8 +4,9 @@ class GpioMotor(Actuator):
 
     PWM_FREQUENCY=100
 
-    def __init__(self, bot, name, pin_pwm, pin_hl, GPIO):
+    def __init__(self, bot, name, pin_pwm, pin_hl, reversed, GPIO):
         Actuator.__init__(self, bot, name)
+        self.reversed = reversed
         self.pin_pwm = pin_pwm
         self.pin_hl = pin_hl
         self.GPIO = GPIO
