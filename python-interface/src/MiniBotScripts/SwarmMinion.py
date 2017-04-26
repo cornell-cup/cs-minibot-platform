@@ -1,6 +1,7 @@
 from MiniBotFramework.Communication.ZMQ import ZMQ
+from Queue import Queue
 
-z = ZMQ()
+z = ZMQExchange()
 
 """
 Sets up TCP connection between master and minions. Starts subscriber-side 
@@ -19,17 +20,21 @@ threads.append(self.receiveThread)
 
 def run(bot):
     try:
-            while True:
-                if (not self.receivedQueue.empty()):
-                    comm = self.receivedQueue.get()
-                    react(comm)
-                    print "running ", comm
-                else:
-                    print "nothing in queue"
-                    time.sleep(1)
+        while True:
+            if (not self.receivedQueue.empty()):
+                command = self.receivedQueue.get()
+                
+                # react to commamd
+                bot.get_actuator_by_name("two_wheel_movement").move(command[0], command[1])
+                
+                print "running ", command
+
     finally:
-        self.cleanup()
+        cleanup()
 
 
-def react(command):
-    bot.get_actuator_by_name("two_wheel_movement").move(command[0], command[1])
+def cleanup():
+    for t in threads:
+        t.join(1)
+
+    z.stopZMQExchange()
