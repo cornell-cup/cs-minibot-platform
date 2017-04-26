@@ -1,5 +1,6 @@
 from MiniBotFramework.Communication.ZMQ import ZMQ
 from Queue import Queue
+import time
 
 z = ZMQExchange()
 
@@ -27,7 +28,8 @@ def run(bot):
                 # react to commamd
                 bot.get_actuator_by_name("two_wheel_movement").move(command[0], command[1])
                 
-                print "running ", command
+                #print "running ", command
+                time.sleep(0.01)
 
     finally:
         cleanup()

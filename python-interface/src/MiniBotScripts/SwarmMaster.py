@@ -1,6 +1,7 @@
 from MiniBotFramework.Communication.ZMQ import ZMQExchange
 from MiniBotFramework.Actuation.TwoWheelMovement import TwoWheelMovement
 from threading import Thread
+import time
 
 z = ZMQExchange()
 
@@ -26,6 +27,7 @@ def run(bot):
             # msg is a tuple of left motor and right motor, respectively.
             msg = bot.get_actuator_by_name("two_wheel_movement").get_value()
             z.broadcast(msg)
+            time.sleep(0.01)
 
     finally:
         cleanup()
