@@ -1,4 +1,4 @@
-import json, time, multiprocessing
+import json, time, multiprocessing, importlib
 import MiniBotFramework
 from threading import Thread
 from multiprocessing import Process
@@ -60,8 +60,9 @@ def main():
 
 def parse_command(cmd, bot, p):
     comma = cmd.find(",")
+    start = cmd.find("<<<<")
     end = cmd.find(">>>>")
-    key = cmd[4:comma]
+    key = cmd[start+4:comma]
     value = cmd[comma+1:end]
     if key == "WHEELS":
         try:
@@ -76,8 +77,11 @@ def parse_command(cmd, bot, p):
         user_script_file.close()
         p = spawn_script_process(p, bot)
         return p
+    elif key == "RUN":
+        p = spawn_named_script_process(p, bot, value)
     else:
         print("Unknown key: " + key)
+        print("Cmd: " + cmd)
     return None
 
 def spawn_script_process(p,bot):
@@ -87,8 +91,20 @@ def spawn_script_process(p,bot):
     p = Thread(target=run_script, args=[bot])
     p.start()
     # Return control to main after .1 seconds
-    #p.join(0.1)
     return p
+
+def spawn_named_script_process(p,bot,name):
+    if (p is not None and p.is_alive()):
+        p.terminate()
+    time.sleep(0.1)
+    p = Thread(target=run_script_with_name, args=[bot,name])
+    p.start()
+    # Return control to main after .1 seconds
+    return p
+
+def run_script_with_name(bot,script_name):
+    UserScript = importlib.import_module(script_name)
+    UserScript.run(bot)
 
 def run_script(bot):
     from MiniBotScripts import UserScript
