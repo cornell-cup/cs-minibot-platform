@@ -70,8 +70,20 @@ public class BaseHTTPInterface {
         ArrayList<VisionCoordinate> outerTrackCoords = new ArrayList<>();
         ArrayList<VisionCoordinate> innerTrackCoords = new ArrayList<>();
         ArrayList<VisionCoordinate> startAreaCoords = new ArrayList<>();
-        //ArrayList<VisionCoordinate> finishAreaCoords = new ArrayList<>();
         ArrayList<VisionCoordinate> middleAreaCoords = new ArrayList<>();
+        //HARD-CODED COORDINATES
+        innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(2,2), new
+                VisionCoordinate(3,2), new VisionCoordinate(3,3), new
+                VisionCoordinate(2,3)));
+        outerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(1,1), new
+                VisionCoordinate(4,1), new VisionCoordinate(4,4), new
+                VisionCoordinate(1,4)));
+        startAreaCoords.addAll(Arrays.asList(new VisionCoordinate(3,2), new
+                VisionCoordinate(4,2), new VisionCoordinate(4,2.25), new
+                VisionCoordinate(3,2.25)));
+        middleAreaCoords.addAll(Arrays.asList(new VisionCoordinate(2,3), new
+                VisionCoordinate(2,2.75), new VisionCoordinate(1,2.75), new
+                VisionCoordinate(1,3)));
         GoBot gb = new GoBot();
         Long timer = 0L;
 
@@ -150,7 +162,7 @@ public class BaseHTTPInterface {
         });
 
         post("/commandBot", (req,res) -> {
-            System.out.println("post to command bot called");
+            //System.out.println("post to command bot called");
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
 
@@ -321,18 +333,29 @@ public class BaseHTTPInterface {
         get("/example/GoBot/addPointToInnerTrack", (req, res) -> {
             innerTrackCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
+            System.out.println("InnerTrack: " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.x + ", " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.y);
             return true;
         });
 
         get("/example/GoBot/addPointToOuterTrack", (req, res) -> {
             outerTrackCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
+            System.out.println("OuterTrack: " + BaseStation.getInstance()
+                    .getVisionManager()
+                    .getAllLocationData().get(0).coord.x + ", " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.y);
             return true;
         });
 
         get("/example/GoBot/addPointToStartArea", (req, res) -> {
             startAreaCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
+            System.out.println("StartArea: " + BaseStation.getInstance()
+                    .getVisionManager()
+                    .getAllLocationData().get(0).coord.x + ", " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.y);
             return true;
         });
 
@@ -345,36 +368,36 @@ public class BaseHTTPInterface {
         get("/example/GoBot/addPointToMiddleArea", (req, res) -> {
             middleAreaCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
-            return true;
-        });
-
-        get("/example/GoBot/finishedTrack", (request, response) -> {
-            course.setOuter(outerTrackCoords);
-            course.setInner(innerTrackCoords);
-            course.setStartArea(startAreaCoords);
-            //course.setFinishArea(finishAreaCoords);
-            course.setMiddleArea(middleAreaCoords);
-            gb.setCourse(course);
+            System.out.println("MiddleArea: " + BaseStation.getInstance()
+                    .getVisionManager()
+                    .getAllLocationData().get(0).coord.x + ", " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.y);
             return true;
         });
 
         get("/example/GoBot/isBotInside", (req, res) -> course.isInsideTrack(BaseStation.getInstance().getVisionManager()
                 .getAllLocationData().get(0).coord));
 
-        get("/example/GoBot/didBotFinishALap", (req, res) -> {
+        /*get("/example/GoBot/didBotFinishALap", (req, res) -> {
             if (gb.finishedLap()) {
                 gb.addLapTime(System.nanoTime());
                 return "Lap Time: " + gb.getLastLapTime();
             } else {
                 return "Current Time: " + System.nanoTime();
             }
-        });
+        });*/
 
         get("/example/GoBot/numLapsCompleted", (req, res) -> gb.getLapsDone());
 
         get("/example/GoBot/startRace", (req, res) -> {
-            gb.setTimer(System.nanoTime());
-            return gb.getTime();
+            course.setOuter(outerTrackCoords);
+            course.setInner(innerTrackCoords);
+            course.setStartArea(startAreaCoords);
+            course.setMiddleArea(middleAreaCoords);
+            gb.setCourse(course);
+            gb.setStartTime(System.nanoTime());
+            gb.start();
+            return System.nanoTime();
         });
 
 
