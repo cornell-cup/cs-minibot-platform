@@ -14,15 +14,17 @@ class TwoWheelMovement(Actuator):
         return (self.left,self.right)
 
     def move(self, speedL, speedR):
+        limiter = 50
+
         # Normalize speeds
-        if speedL < -100:
-            speedL = -100
-        if speedR < -100:
-            speedR = -100
-        if speedL > 100:
-            speedL = 100
-        if speedR > 100:
-            speedR = 100
+        if speedL < -limiter:
+            speedL = -limiter
+        if speedR < -limiter:
+            speedR = -limiter
+        if speedL > limiter:
+            speedL = limiter
+        if speedR > limiter:
+            speedR = limiter
 
         self.left = speedL
         self.right = speedR

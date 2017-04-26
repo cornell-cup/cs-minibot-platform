@@ -240,8 +240,8 @@ public class BaseHTTPInterface {
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
 
-            String kv_key = commandInfo.get("kv_key").getAsString();
-            String kv_value = commandInfo.get("kv_value").getAsString();
+            String kv_key = commandInfo.get("key").getAsString();
+            String kv_value = commandInfo.get("value").getAsString();
             String name = commandInfo.get("name").getAsString();
 
             Bot receiver = BaseStation.getInstance()
