@@ -17,13 +17,15 @@ receivedQueue = Queue()
 threads = []
 receiveThread = Thread(target=z.receive, args=(receivedQueue, ))
 receiveThread.start()
-threads.append(self.receiveThread)
+threads.append(receiveThread)
 
 def run(bot):
     try:
         while True:
-            if (not self.receivedQueue.empty()):
-                command = self.receivedQueue.get()
+            if (not receivedQueue.empty()):
+                command = receivedQueue.get()
+
+                print("receviging: " + str(command))
                 
                 # react to commamd
                 bot.get_actuator_by_name("two_wheel_movement").move(command[0], command[1])
