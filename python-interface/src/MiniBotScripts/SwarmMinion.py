@@ -1,5 +1,7 @@
-from MiniBotFramework.Communication.ZMQ import ZMQ
+from MiniBotFramework.Communication.ZMQ import ZMQExchange
 from Queue import Queue
+import time
+from threading import Thread
 
 z = ZMQExchange()
 
@@ -14,20 +16,23 @@ receivedQueue = Queue()
 # into the broadcaster
 
 threads = []
-receiveThread = threading.Thread(target=z.receive, args=(receivedQueue, ))
+receiveThread = Thread(target=z.receive, args=(receivedQueue, ))
 receiveThread.start()
-threads.append(self.receiveThread)
+threads.append(receiveThread)
 
 def run(bot):
     try:
         while True:
-            if (not self.receivedQueue.empty()):
-                command = self.receivedQueue.get()
+            if (not receivedQueue.empty()):
+                command = receivedQueue.get()
+
+                print("receviging: " + str(command))
                 
                 # react to commamd
                 bot.get_actuator_by_name("two_wheel_movement").move(command[0], command[1])
                 
-                print "running ", command
+                #print "running ", command
+                time.sleep(0.01)
 
     finally:
         cleanup()

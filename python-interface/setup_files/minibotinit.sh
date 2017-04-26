@@ -6,7 +6,7 @@ sudo xboxdrv --wid 0 -l 3 --detach-kernel-driver --silent &
 sleep 3
 sudo killall xboxdrv
 sleep 5
-cd /home/pi/trevor/cs-minibot-platform/python-interface/src
+cd /home/pi/cs-minibot-platform/python-interface/src
 echo "**** Starting Python Script ****"
 sudo python -u main.py &
 cd -

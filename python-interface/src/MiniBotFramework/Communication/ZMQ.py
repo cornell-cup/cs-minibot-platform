@@ -56,18 +56,18 @@ class ZMQExchange:
             # poll the proxy URLs to see what messages are waiting
             # if any, forward them
             events = dict(self.poller.poll(1000))
-            print "mediating..."
+            #print "mediating..."
 
             if self.xpub in events:
                 # message received from Minions on successful subscription
                 message = self.xpub.recv_multipart()
-                print("%r" % message[0])
+                #print("%r" % message[0])
                 self.xsub.send_multipart(message)
 
             if self.xsub in events:
                 # message from Master to be delivered to the Minions
                 message = self.xsub.recv_multipart()
-                print("publishing message: %r" % message)
+                #print("publishing message: %r" % message)
                 self.xpub.send_multipart(message)
 
     def setBroadcaster(self):
@@ -89,10 +89,10 @@ class ZMQExchange:
         """
         
         # send the message
-        print "broadcasting " + str(data)
+        #print "broadcasting " + str(data)
         msg = [self.messageTopic, str(data)]
         self.pub.send_multipart(msg)
-        print "broadcasted"
+        #print "broadcasted"
 
     def setReceiver(self):
         """
@@ -113,26 +113,30 @@ class ZMQExchange:
         :param receivedQueue A Queue for putting in values which other threads
             can access. If None, the method just prints it
         """
+        oldData = "empty"
         while True:
             # wait infinitely to receive the message
             if self.sub.poll(timeout=0):
                 data = self.sub.recv_multipart()
-                print "received ", data
-
-                # parse the data into lWheel and rWheel and send it as a
-                # tuple
-                start = data[1].find("(")
-                comma = data[1].find(",")
-                end = data[1].find(")")
-                lWheel = int(data[1][start + 1:comma])
-                rWheel = int(data[1].strip()[comma + 1:end])
-                data = (lWheel, rWheel)
+                #print "received ", data
+                
+                if oldData != data:
+                    # parse the data into lWheel and rWheel and send it as a
+                    # tuple
+                    start = data[1].find("(")
+                    comma = data[1].find(",")
+                    end = data[1].find(")")
+                    lWheel = int(data[1][start + 1:comma])
+                    rWheel = int(data[1].strip()[comma + 1:end])
+                    info = (lWheel, rWheel)
     
-                # do something, send commands
-                if receivedQueue is not None:
-                    receivedQueue.put(data)
-                else:
-                    print "received ", data
+                    # do something, send commands
+                    if receivedQueue is not None:
+                        receivedQueue.put(info)
+                    else:
+                        #print "received ", info
+                        pass
+                    oldData = data
         
     def stopZMQExchange(self):
         """

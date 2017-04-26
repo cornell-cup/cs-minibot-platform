@@ -30,7 +30,7 @@ print Setup MiniBot Config
 cat src/MiniBotConfig/$config | sed "s/replacename/$name/g" > src/MiniBotConfig/config.json
 
 print Setup autoexec in init.d
-sudo cp setupfiles/minibotinit.sh /etc/init.d/minibotinit.sh
+sudo cp ./setup_files/minibotinit.sh /etc/init.d/minibotinit.sh
 sudo chmod 755 /etc/init.d/minibotinit.sh
 sudo update-rc.d minibotinit.sh defaults
 
@@ -58,7 +58,7 @@ sudo apt-get clean
 sudo apt-get autoremove
 
 print Install lsof
-sudo apt-get install lsof
+sudo apt-get -y install lsof
 
 print Install freeport
 sudo pip install freeport
@@ -67,16 +67,16 @@ print Install ZMQ
 sudo apt-get install libtool pkg-config build-essential autoconf automake uuid-dev python-dev
 wget https://github.com/zeromq/libzmq/releases/download/v4.2.1/zeromq-4.2.1.tar.gz
 tar -xf zeromq-4.2.1.tar.gz
-cd zeromq4.2.1.tar.gz && ./configure
+cd zeromq-4.2.1 && ./configure
 sudo make install && sudo ldconfig
 sudo pip install pyzmq
 cd ..
 rm zeromq-4.2.1.tar.gz
 sudo rm -rf zeromq-4.2.1/ 
-sudo apt-get clean 
-sudo apt-get autoremove
+sudo apt-get -y clean 
+sudo apt-get -y autoremove
 
 print Updating
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get dist-upgrade
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get -y dist-upgrade
