@@ -239,9 +239,10 @@ public class BaseHTTPInterface {
         post("/sendKV", (req,res) -> {
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
-            
+
             String kv_key = commandInfo.get("kv_key").getAsString();
             String kv_value = commandInfo.get("kv_value").getAsString();
+            String name = commandInfo.get("name").getAsString();
 
             Bot receiver = BaseStation.getInstance()
                     .getBotManager()

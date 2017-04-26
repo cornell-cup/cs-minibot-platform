@@ -425,7 +425,8 @@ function sendKV(){
         dataType: 'json',
         data: JSON.stringify({
             key:$("#kv_key"),
-            value:$("$kv_value")
+            value:$("$kv_value"),
+            name:getBotID()
         }),
         contentType: 'application/json'
     });
