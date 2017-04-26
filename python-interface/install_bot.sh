@@ -21,7 +21,7 @@ read name
 print Set your SSH password...
 sudo passwd root
 
-print Configure pi to be US, not UK. And open SSH, etc. You will have to do this yourself sorry mate.
+print Configure pi to be US, not UK. And open SSH, and set hostname, etc. You will have to do this yourself sorry mate.
 sudo raspi-config
 
 print Ok time to install...
@@ -34,8 +34,8 @@ sudo cp setupfiles/minibotinit.sh /etc/init.d/minibotinit.sh
 sudo chmod 755 /etc/init.d/minibotinit.sh
 sudo update-rc.d minibotinit.sh defaults
 
-print Setup hostname and password
-sudo echo $name > /etc/hostname
+#print Setup hostname and password
+#sudo echo $name > /etc/hostname
 
 print Install vim
 sudo apt-get install vim
