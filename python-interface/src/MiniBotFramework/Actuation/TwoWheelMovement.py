@@ -7,6 +7,11 @@ class TwoWheelMovement(Actuator):
         Actuator.__init__(self, bot, name)
         self.motor_left = motorL
         self.motor_right = motorR
+        self.left = 0
+        self.right = 0
+
+    def get_value(self):
+        return (self.left,self.right)
 
     def move(self, speedL, speedR):
         # Normalize speeds
@@ -18,6 +23,9 @@ class TwoWheelMovement(Actuator):
             speedL = 100
         if speedR > 100:
             speedR = 100
+
+        self.left = speedL
+        self.right = speedR
 
         # Apply speeds to motors
         # Left

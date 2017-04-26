@@ -1,4 +1,4 @@
-import json, time, multiprocessing, importlib
+import json, time, multiprocessing, importlib, sys
 import MiniBotFramework
 from threading import Thread
 from multiprocessing import Process
@@ -103,7 +103,8 @@ def spawn_named_script_process(p,bot,name):
     return p
 
 def run_script_with_name(bot,script_name):
-    UserScript = importlib.import_module(script_name)
+    sys.path.insert(0, './lib')
+    UserScript = importlib.import_module("MiniBotScripts." + script_name)
     UserScript.run(bot)
 
 def run_script(bot):
