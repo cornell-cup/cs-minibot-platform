@@ -1,4 +1,5 @@
-# cs-minibot-platform
+# cs-minibot-platform ![If this does not say passing, someone really messed up](https://travis-ci.org/cornell-cup/cs-minibot-platform.svg?branch=develop)
+
 
 The shared software for the MiniBot platform. Includes a web server running over the base station and python scripts to run on the minibot. Works for Python 3.6, not Python 2.7. 
 
@@ -16,12 +17,13 @@ If you have already cloned the repository, then you can use the following comman
 ```
 git submodule update --init
 ```
-
-- Open the project in IntelliJ Idea. 
-- Go to src/main/java/minibot/BaseHTTPInterface.java and run it.
+Because this is a maven project, you should import it in the following way:
+- Open intellij idea and select import project
+- Select the pom.xml under cs-minibot-platform (the repo you just cloned)
+- Go to cs-minibot-platform-src/src/main/java/minibot/BaseHTTPInterface.java and run it.
 - Open your web browser and navigate to localhost:8080/gui
 
-# How to run python interface:
+## How to run python interface:
 
 Console printout- input commands into testcommand.py
 
@@ -35,3 +37,9 @@ python tcpclient.py
 ```
 
 For controlling the Cozmo, connect to the Cozmo and activate SDK, follow instructions as above, except input commands into testcommand2.py and run tcp_cozmo.py and tcpclient_cozmo.py
+
+# Testing
+To test, run 
+```
+mvn clean verify
+```
