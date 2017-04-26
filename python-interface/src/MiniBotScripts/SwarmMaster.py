@@ -21,7 +21,17 @@ threads.append(mediateThread)
 # commands for bot movement itself
 
 def run(bot):
-    while(True):
-        # msg is a tuple of left motor and right motor, respectively.
-        msg = bot.get_actuator_by_name("two_wheel_movement").get_value()
-        z.broadcast(msg)
+    try:
+        while(True):
+            # msg is a tuple of left motor and right motor, respectively.
+            msg = bot.get_actuator_by_name("two_wheel_movement").get_value()
+            z.broadcast(msg)
+
+    finally:
+        cleanup()
+
+def cleanup():
+    for t in threads:
+        t.join(0.1)
+
+    z.stopZMQBroadcast()

@@ -83,6 +83,9 @@ class ZMQExchange:
     def broadcast(self, data):
         """
         Broadcasts the message to the subscribers
+
+        :param data A tuple. data[0] is the left wheel speed, 
+            data[1] is the right wheel speed
         """
         
         # send the message
@@ -106,16 +109,30 @@ class ZMQExchange:
 
     def receive(self, receivedQueue = None):
         """
-        Receives the Data and translates into command
+        Receives the data and translates into command
+        :param receivedQueue A Queue for putting in values which other threads
+            can access. If None, the method just prints it
         """
         while True:
             # wait infinitely to receive the message
             if self.sub.poll(timeout=0):
                 data = self.sub.recv_multipart()
                 print "received ", data
+
+                # parse the data into lWheel and rWheel and send it as a
+                # tuple
+                start = data[1].find("(")
+                comma = data[1].find(",")
+                end = data[1].find(")")
+                lWheel = int(data[1][start + 1:comma])
+                rWheel = int(data[1].strip()[comma + 1:end])
+                data = (lWheel, rWheel)
+    
                 # do something, send commands
                 if receivedQueue is not None:
                     receivedQueue.put(data)
+                else:
+                    print "received ", data
         
     def stopZMQExchange(self):
         """
