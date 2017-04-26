@@ -13,6 +13,7 @@ class TCP(object):
 
     def __init__(self):
         self.server_socket = socket.socket(AF_INET, SOCK_STREAM)
+        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind( (IP, PORT) )
         self.server_socket.listen(1)
         self.thread_tcp = Thread(target = run)

@@ -64,9 +64,12 @@ def parse_command(cmd, bot, p):
     key = cmd[4:comma]
     value = cmd[comma+1:end]
     if key == "WHEELS":
-        values = value.split(",")
-        bot.get_actuator_by_name("two_wheel_movement").move(int(float(values[0])),int(float(values[1])))
-        print(int(float(values[0])))
+        try:
+            values = value.split(",")
+            bot.get_actuator_by_name("two_wheel_movement").move(int(float(values[0])),int(float(values[1])))
+        except:
+            print("oh no!")
+            pass
     elif key == "SCRIPT":
         user_script_file = open("MiniBotScripts/UserScript.py",'w')
         user_script_file.write(value)
