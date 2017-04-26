@@ -413,3 +413,16 @@ window.onkeyup = function (e) {
     }
 };
 });
+
+/*
+* Send KV
+*/
+
+function sendKV(){
+    $.ajax({
+        method:'POST',
+        url:'/sendKV',
+        key:$("#kv_key"),
+        value:$("$kv_value")
+    })
+}
