@@ -21,8 +21,8 @@ public class SimulatorVisionSystem extends VisionSystem {
      * @param o A coordinate specifying the origin of the VisionSystem
      */
     private static SimulatorVisionSystem instance;
-    private volatile Set<VisionObject> set;
-    private HashSet<PhysicalObject> poSet;
+    private volatile Set<VisionObject> visionObjectSet;
+    private Set<PhysicalObject> poSet;
     private World world;
     private long before;
 
@@ -30,9 +30,9 @@ public class SimulatorVisionSystem extends VisionSystem {
 
     public SimulatorVisionSystem() {
         super(new VisionCoordinate(0, 0, 0));
-        set = ConcurrentHashMap.newKeySet();
+        visionObjectSet = ConcurrentHashMap.newKeySet();
         world = new World(new Vec2(0f, 0f));
-        poSet = new HashSet<>();
+        poSet = ConcurrentHashMap.newKeySet();
         before = System.nanoTime();
         SimRunner sr = new SimRunner();
         sr.start();
@@ -47,22 +47,33 @@ public class SimulatorVisionSystem extends VisionSystem {
 
     @Override
     public Set<VisionObject> getAllObjects() {
-        return set;
+        return visionObjectSet;
     }
 
     public World getWorld() { return world;}
 
     /**
-     * Handles a new input of data
+     * Adds pObj to the simulation for vision tracking
      *
-     * @param pObjs The data sent from simulator
      */
-    public void processPhysicalObjects(ArrayList<PhysicalObject> pObjs) {
-        for(PhysicalObject obj: pObjs) {
-            VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(), 0.0);
-            VisionObject vo = new VisionObject(this,obj.getID(),vc);
-            poSet.add(obj);
+    public void importPhysicalObject(PhysicalObject pObj) {
+        poSet.add(pObj);
+    }
+
+    /**
+     * Updates the simulator vision system to display locs of objects after a
+     * simulation step
+     */
+    public void updateVisionCoordinates() {
+        Set<VisionObject> newSet = ConcurrentHashMap.newKeySet();
+        for(PhysicalObject obj: poSet) {
+            VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(),
+                    obj.getAngle());
+            VisionObject vo = new VisionObject(this,obj.getID(),vc, obj
+                    .getSize());
+            newSet.add(vo);
         }
+        visionObjectSet = newSet;
     }
 
     public void stepSimulation() {
@@ -73,18 +84,13 @@ public class SimulatorVisionSystem extends VisionSystem {
         int velocityIterations = 6;
         int positionIterations = 4;
 
-        set.clear();
-            for(PhysicalObject po: poSet ) {
-                po.getWorld().step(timeStep, velocityIterations, positionIterations);
-
-                VisionCoordinate vc = new VisionCoordinate(po.getX(),po.getY(), po.getAngle());
-                VisionObject vo = new VisionObject(this,po.getID(),vc);
-
-                set.add(vo);
-            }
+        for(PhysicalObject po: poSet) {
+            po.getWorld().step(timeStep, velocityIterations, positionIterations);
+        }
+        updateVisionCoordinates();
     }
 
-    public HashSet<PhysicalObject> getAllPhysicalObjects() {
+    public Set<PhysicalObject> getAllPhysicalObjects() {
         return poSet;
     }
 

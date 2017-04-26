@@ -21,6 +21,8 @@ public class VisionObject {
      */
     public final VisionCoordinate coord;
 
+    public final float size;
+
     /**
      * Creates a visionobject
      * @param vs The VisionSystem this object belongs to
@@ -31,17 +33,28 @@ public class VisionObject {
         this.vs = vs;
         this.vid = vid;
         this.coord = myCoord;
+        this.size = 0.0f;
+    }
+
+    public VisionObject(VisionSystem vs, int vid, VisionCoordinate myCoord,
+                        int size) {
+        this.vs = vs;
+        this.vid = vid;
+        this.coord = myCoord;
+        this.size = (float) size;
     }
 
     public VisionObject(VisionObject old, VisionCoordinate newCoord) {
         this.vs = old.vs;
         this.vid = old.vid;
         this.coord = newCoord;
+        this.size = old.size;
     }
 
     @Override
     public String toString() {
-        return "[Vision Object|" + vs + "|" + coord + "|" + vid + "]";
+        return "[Vision Object|" + vs + "|" + coord + "|" + vid + "|" + size +
+        "]";
     }
 
     @Override
