@@ -42,8 +42,15 @@ def run():
             command = ""
             while active:
                 try:
+                    lastLen = len(command)
                     command += connectionSocket.recv(1024).decode()
+                    if lastLen == len(command):
+                        print("Connection Lost")
+                        active = False
+                        lastLen = -1
+                        break
                 except socket.error, e:
+                    print("Connection Lost")
                     active = False
                     break
                 end_index = command.find(">>>>")

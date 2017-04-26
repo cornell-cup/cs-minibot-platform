@@ -1,5 +1,6 @@
 from MiniBotFramework.Communication.ZMQ import ZMQExchange
 from MiniBotFramework.Actuation.TwoWheelMovement import TwoWheelMovement
+from threading import Thread
 
 z = ZMQExchange()
 
@@ -14,7 +15,7 @@ z.setMediator()
 # into the broadcaster
 
 threads = []
-mediateThread = threading.Thread(target=z.mediate)
+mediateThread = Thread(target=z.mediate)
 mediateThread.start()
 threads.append(mediateThread)
 # commands for bot movement itself
