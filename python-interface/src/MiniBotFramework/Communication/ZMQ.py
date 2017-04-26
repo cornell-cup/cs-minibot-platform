@@ -113,27 +113,30 @@ class ZMQExchange:
         :param receivedQueue A Queue for putting in values which other threads
             can access. If None, the method just prints it
         """
+        oldData = "empty"
         while True:
             # wait infinitely to receive the message
             if self.sub.poll(timeout=0):
                 data = self.sub.recv_multipart()
                 #print "received ", data
-
-                # parse the data into lWheel and rWheel and send it as a
-                # tuple
-                start = data[1].find("(")
-                comma = data[1].find(",")
-                end = data[1].find(")")
-                lWheel = int(data[1][start + 1:comma])
-                rWheel = int(data[1].strip()[comma + 1:end])
-                data = (lWheel, rWheel)
+                
+                if oldData != data:
+                    # parse the data into lWheel and rWheel and send it as a
+                    # tuple
+                    start = data[1].find("(")
+                    comma = data[1].find(",")
+                    end = data[1].find(")")
+                    lWheel = int(data[1][start + 1:comma])
+                    rWheel = int(data[1].strip()[comma + 1:end])
+                    info = (lWheel, rWheel)
     
-                # do something, send commands
-                if receivedQueue is not None:
-                    receivedQueue.put(data)
-                else:
-                    #print "received ", data
-                    pass
+                    # do something, send commands
+                    if receivedQueue is not None:
+                        receivedQueue.put(info)
+                    else:
+                        #print "received ", info
+                        pass
+                    oldData = data
         
     def stopZMQExchange(self):
         """
