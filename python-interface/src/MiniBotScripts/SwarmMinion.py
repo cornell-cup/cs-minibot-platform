@@ -1,5 +1,6 @@
-from MiniBotFramework.Communication.ZMQ import ZMQ
+from MiniBotFramework.Communication.ZMQ import ZMQExchange
 from Queue import Queue
+from threading import Thread
 
 z = ZMQExchange()
 
@@ -14,7 +15,7 @@ receivedQueue = Queue()
 # into the broadcaster
 
 threads = []
-receiveThread = threading.Thread(target=z.receive, args=(receivedQueue, ))
+receiveThread = Thread(target=z.receive, args=(receivedQueue, ))
 receiveThread.start()
 threads.append(self.receiveThread)
 
