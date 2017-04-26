@@ -415,14 +415,18 @@ window.onkeyup = function (e) {
 });
 
 /*
-* Send KV
+*   Send KV -- allows users to manually send key and value to bot (for debugging/testing
+    purposes)
 */
-
 function sendKV(){
     $.ajax({
         method:'POST',
         url:'/sendKV',
-        key:$("#kv_key"),
-        value:$("$kv_value")
-    })
+        dataType: 'json',
+        data: JSON.stringify({
+            key:$("#kv_key"),
+            value:$("$kv_value")
+        }),
+        contentType: 'application/json'
+    });
 }

@@ -239,8 +239,7 @@ public class BaseHTTPInterface {
         post("/sendKV", (req,res) -> {
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
-
-            /* storing json objects into actual variables */
+            
             String kv_key = commandInfo.get("kv_key").getAsString();
             String kv_value = commandInfo.get("kv_value").getAsString();
 
