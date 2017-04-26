@@ -1,4 +1,4 @@
-from ..MiniBotFramework.Communication.ZMQ import ZMQ
+from MiniBotFramework.Communication.ZMQ import ZMQ
 
 z = ZMQ()
 

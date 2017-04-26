@@ -1,5 +1,5 @@
-from ..MiniBotFramework.Communication.ZMQ import ZMQExchange
-from ..MiniBotFramework.Actuation.TwoWheelMovement import TwoWheelMovement
+from MiniBotFramework.Communication.ZMQ import ZMQExchange
+from MiniBotFramework.Actuation.TwoWheelMovement import TwoWheelMovement
 
 z = ZMQExchange()
 
