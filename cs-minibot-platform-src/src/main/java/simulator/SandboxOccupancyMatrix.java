@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SandboxOccupancyMatrix {
 
+    public static int[][] path;
     private static HashSet<Node> settledNodes = new HashSet<Node>();
     private static HashSet<Node> unsettledNodes = new HashSet<Node>();
     private static HashMap<Node, Integer> distances;
@@ -28,6 +29,7 @@ public class SandboxOccupancyMatrix {
                 maze[i][j] = 1;
             }
         }
+        path = new int[n][m];
         return maze;
     }
 
@@ -51,7 +53,7 @@ public class SandboxOccupancyMatrix {
         Node[][] res = new Node[height][width];
         for(int i = 0; i < height; i++) {
             for(int j = 0; j < width; j++) {
-                Node n = new Node(maze[i][j], false);
+                Node n = new Node(maze[i][j], false,i,j);
                 res[i][j] = n;
                 if(maze[i][j] == 0) {
                     res[i][j].cost = Integer.MAX_VALUE;
@@ -127,6 +129,10 @@ public class SandboxOccupancyMatrix {
 
         while(!unsettledNodes.isEmpty()) {
             Node currentNode = getNodeWithLowestCost(unsettledNodes);
+            if(currentNode.isEnd){
+                break;
+            }
+            path[currentNode.getX()][currentNode.getY()] = 1;
             unsettledNodes.remove(currentNode);
             settledNodes.add(currentNode);
             processNeighbors(currentNode);
@@ -159,11 +165,17 @@ public class SandboxOccupancyMatrix {
         private boolean isEnd;
         private int cost;
         private HashSet<Node> neighbors;
+        private int x;
+        private int y;
 
-        public Node( int value, boolean isEnd) {
+        public Node( int value, boolean isEnd, int x, int y) {
             this.value = value;
             this.isEnd = isEnd;
+            this.x = x;
+            this.y = y;
         }
+        public int getX(){ return x;}
+        public int getY(){ return y;}
     }
 
     public static void main(String[] args) {
@@ -252,6 +264,15 @@ public class SandboxOccupancyMatrix {
             }
             System.out.println();
         }
+        System.out.println(answer(occupancyMatrix));
+
+        for (int j = 0; j < path.length; j++) {
+            for (int i = 0; i < path[j].length; i++) {
+                System.out.print(path[i][j] + " ");
+            }
+            System.out.println();
+        }
+
     }
 
 
