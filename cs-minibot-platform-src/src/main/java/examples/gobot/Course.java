@@ -23,8 +23,16 @@ public class Course {
         this.outer = new Border(outer);
     }
 
+    public Border getOuter() {
+        return this.outer;
+    }
+
     public void setInner(ArrayList<VisionCoordinate> inner) {
         this.inner = new Border(inner);
+    }
+
+    public Border getInner() {
+        return this.inner;
     }
 
     public void setStartArea(ArrayList<VisionCoordinate> startCoords) {
@@ -63,5 +71,13 @@ public class Course {
 
     public boolean isInsideTrack(VisionCoordinate vc) {
         return outer.inPath(vc) && !inner.inPath(vc);
+    }
+
+    public boolean isInsideInsideTrack(VisionCoordinate vc) {
+        return inner.inPath(vc);
+    }
+
+    public boolean isOutsideOutsideTrack(VisionCoordinate vc) {
+        return !outer.inPath(vc);
     }
 }
