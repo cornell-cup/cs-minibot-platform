@@ -10,18 +10,23 @@ import basestation.bot.robot.minibot.MiniBot;
 import basestation.bot.robot.modbot.ModBot;
 import basestation.vision.OverheadVisionSystem;
 import basestation.vision.VisionObject;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+
 import simulator.physics.PhysicalObject;
 import simulator.simbot.*;
 import spark.route.RouteOverview;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Collection;
+
+
 import simulator.baseinterface.SimulatorVisionSystem;
 
 
@@ -88,25 +93,43 @@ public class BaseHTTPInterface {
             }
                else {
                 SimBotConnection sbc = new SimBotConnection();
-
-                PhysicalObject po = new PhysicalObject("simbot", 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
                 SimBot simbot;
-                simbot = new SimBot(sbc, name, po);
+                simbot = new SimBot(sbc, name, 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
                 newBot = simbot;
 
-                ArrayList<PhysicalObject> pObjs = new ArrayList<>();
-                pObjs.add(po);
-                simvs.processPhysicalObjects(pObjs);
+                simvs.importPhysicalObject(simbot.getMyPhysicalObject());
 
                 // Color sensor TODO put somewhere nice
-
                 ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
                 ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
                 ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
-
             }
 
             return BaseStation.getInstance().getBotManager().addBot(newBot);
+        });
+
+        post("/addScenario", (req,res) -> {
+            String body = req.body();
+
+            JsonObject scenario = jp.parse(body).getAsJsonObject();
+            String scenarioBody = scenario.get("scenario").getAsString();
+            JsonArray addInfo = jp.parse(scenarioBody).getAsJsonArray();
+            for (JsonElement je : addInfo) {
+                String type = je.getAsJsonObject().get("type").getAsString();
+                int size = je.getAsJsonObject().get("size").getAsInt();
+                int angle = je.getAsJsonObject().get("angle").getAsInt();
+                int[] position = gson.fromJson(je.getAsJsonObject().get("position")
+                        .getAsString(),int[].class);
+                String name = Integer.toString(size)+Integer.toString(angle)
+                        + Arrays.toString(position);
+                PhysicalObject po = new PhysicalObject(name, 100,
+                        simvs.getWorld(), (float)position[0],
+                        (float)position[1], size, angle);
+                simvs.importPhysicalObject(po);
+            }
+            /* storing json objects into actual variables */
+
+            return addInfo;
         });
 
         post("/commandBot", (req,res) -> {
@@ -123,8 +146,6 @@ public class BaseHTTPInterface {
 
             // Forward the command to the bot
             Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(botName).get();
-//            FourWheelMovement fwmCommandCenter = (FourWheelMovement) myBot.getCommandCenter();
-//            return fwmCommandCenter.setWheelPower(fl,fr,bl,br);
             CommandCenter cc =  myBot.getCommandCenter();
             return cc.sendKV("WHEELS", fl + "," + fr + "," + bl + "," + br);
         });
@@ -164,10 +185,16 @@ public class BaseHTTPInterface {
             String name = commandInfo.get("name").getAsString();
             String script = commandInfo.get("script").getAsString();
 
-            ((SimBot)BaseStation.getInstance()
+            Bot receiver = BaseStation.getInstance()
                     .getBotManager()
                     .getBotByName(name)
-                    .orElseThrow(NoSuchElementException::new)).resetServer();
+                    .orElseThrow(NoSuchElementException::new);
+
+            if (receiver instanceof SimBot)
+                ((SimBot)BaseStation.getInstance()
+                        .getBotManager()
+                        .getBotByName(name)
+                        .orElseThrow(NoSuchElementException::new)).resetServer();
 
             return BaseStation.getInstance()
                     .getBotManager()
@@ -202,9 +229,44 @@ public class BaseHTTPInterface {
                 jo.addProperty("y", vo.coord.y);
                 jo.addProperty("angle", vo.coord.getThetaOrZero());
                 jo.addProperty("id", vo.vid);
+                jo.addProperty("size",vo.size);
                 respData.add(jo);
             }
             return respData;
+
+        });
+
+        /**
+         * GET /sendKV sends script to the bot identified by botName
+         *
+         * @apiParam name the name of the bot
+         * @apiParam script the full string containing the script
+         * @return true if the script sending should be successful
+         */
+        post("/sendKV", (req,res) -> {
+            String body = req.body();
+            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+
+            String kv_key = commandInfo.get("key").getAsString();
+            String kv_value = commandInfo.get("value").getAsString();
+            String name = commandInfo.get("name").getAsString();
+
+            Bot receiver = BaseStation.getInstance()
+                    .getBotManager()
+                    .getBotByName(name)
+                    .orElseThrow(NoSuchElementException::new);
+
+            if (receiver instanceof SimBot)
+                ((SimBot)BaseStation.getInstance()
+                        .getBotManager()
+                        .getBotByName(name)
+                        .orElseThrow(NoSuchElementException::new)).resetServer();
+
+            return BaseStation.getInstance()
+                    .getBotManager()
+                    .getBotByName(name)
+                    .orElseThrow(NoSuchElementException::new)
+                    .getCommandCenter().sendKV(kv_key,kv_value);
         });
 
         post("/discoverBots", (req, res) -> {

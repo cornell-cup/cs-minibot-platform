@@ -9,3 +9,7 @@ temp.py
 *.csv
 META-INF/
 script.py
+*.pyc
+.DS_Store
+config.json
+UserScript.py
