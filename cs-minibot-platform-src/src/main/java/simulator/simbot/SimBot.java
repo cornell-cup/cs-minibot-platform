@@ -30,7 +30,6 @@ public class SimBot extends Bot {
 
     public SimBot(SimBotConnection sbc, String name, int id, World world, float xSpeed, float ySpeed, float xPos, float yPos, boolean isDynamic) {
         super(sbc, name);
-        commandCenter = new SimBotCommandCenter(this);
         sensorCenter = new SimBotSensorCenter();
         PhysicalObject po = new PhysicalObject(name, id, world, xSpeed, ySpeed,
                 xPos, yPos, isDynamic);
