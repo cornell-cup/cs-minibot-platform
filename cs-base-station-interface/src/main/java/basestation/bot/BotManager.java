@@ -77,6 +77,16 @@ public class BotManager {
     }
 
     /**
+     * Gets names of all the bots currently tracked
+     *
+     * @return A collection of names of all bots being tracked by the
+     * BotManager.
+     */
+    public Collection<String> getAllTrackedBotsNames() {
+        return botMap.keySet();
+    }
+
+    /**
      * Returns the next available int for a bot number. This increments the botCounter.
      * Generally should not be used by anyone using the BaseStation.
      *

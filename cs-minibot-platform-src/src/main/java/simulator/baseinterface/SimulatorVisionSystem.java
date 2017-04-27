@@ -52,6 +52,15 @@ public class SimulatorVisionSystem extends VisionSystem {
 
     public World getWorld() { return world;}
 
+    public void resetWorld() {
+        visionObjectSet = ConcurrentHashMap.newKeySet();
+        world = new World(new Vec2(0f, 0f));
+        poSet = ConcurrentHashMap.newKeySet();
+        before = System.nanoTime();
+        SimRunner sr = new SimRunner();
+        sr.start();
+    }
+
     /**
      * Adds pObj to the simulation for vision tracking
      *

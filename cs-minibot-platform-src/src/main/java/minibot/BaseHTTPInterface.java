@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import org.jbox2d.dynamics.World;
 import simulator.physics.PhysicalObject;
 import simulator.simbot.ColorIntensitySensor;
 import simulator.simbot.SimBotConnection;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Collection;
+import java.io.*;
 
 
 import simulator.baseinterface.SimulatorVisionSystem;
@@ -113,9 +115,18 @@ public class BaseHTTPInterface {
         post("/addScenario", (req,res) -> {
             String body = req.body();
 
+            simvs.resetWorld();
+            Collection<String> botsnames = BaseStation.getInstance()
+                    .getBotManager()
+                    .getAllTrackedBotsNames();
+            for (String name :botsnames){
+                BaseStation.getInstance().getBotManager().removeBotByName(name);
+            }
+
             JsonObject scenario = jp.parse(body).getAsJsonObject();
             String scenarioBody = scenario.get("scenario").getAsString();
             JsonArray addInfo = jp.parse(scenarioBody).getAsJsonArray();
+
             for (JsonElement je : addInfo) {
                 String type = je.getAsJsonObject().get("type").getAsString();
                 int size = je.getAsJsonObject().get("size").getAsInt();
@@ -129,9 +140,56 @@ public class BaseHTTPInterface {
                         (float)position[1], size, angle);
                 simvs.importPhysicalObject(po);
             }
-            /* storing json objects into actual variables */
+
+
 
             return addInfo;
+        });
+
+        //saves a scenario as a file
+        post("/saveScenario", (req,res) -> {
+
+            String body = req.body();
+            JsonObject scenario = jp.parse(body).getAsJsonObject();
+            String scenarioBody = scenario.get("scenario").getAsString();
+            String fileName = scenario.get("name").getAsString();
+
+            //writing new scenario file
+            File file = new File
+                    ("cs-minibot-platform-src/src/main/resources" +
+                            "/public/scenario/"+fileName+".txt");
+            OutputStream out = new FileOutputStream(file);
+
+
+            FileWriter writer = new FileWriter(file, false);
+            BufferedWriter bwriter = new BufferedWriter(writer);
+            bwriter.write(scenarioBody);
+            bwriter.close();
+            out.close();
+            return fileName;
+        });
+
+        //loads a scenario from a file - input is the name of the scenario,
+        // without file extension
+        post("/loadScenario", (req,res) -> {
+            String body = req.body();
+            JsonObject scenario = jp.parse(body).getAsJsonObject();
+            String fileName = scenario.get("name").getAsString();
+            String scenarioData = "";
+
+            //loading scenario file
+            File file = new File
+                    ("cs-minibot-platform-src/src/main/resources" +
+                            "/public/scenario/"+fileName+".txt");
+            FileReader fr=	new	FileReader(file);
+            BufferedReader br=	new	BufferedReader(fr);
+            String line = br.readLine();
+            while (line!=null){
+                scenarioData+=line;
+                line = br.readLine();
+            }
+            br.close();
+            return scenarioData;
         });
 
         post("/commandBot", (req,res) -> {
