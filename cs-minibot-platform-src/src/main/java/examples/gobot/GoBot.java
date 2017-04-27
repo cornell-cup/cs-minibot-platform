@@ -12,7 +12,7 @@ import java.util.List;
 
 public class GoBot extends Thread {
 
-    private final int NUM_LAPS = 3;
+    private final int NUM_LAPS = 1;
     private Course course;
     private int lapsDone;
     private boolean reachedMiddle;
@@ -27,8 +27,8 @@ public class GoBot extends Thread {
     public static final int WAITING = 0;
     public static final int HUMAN_PLAYING = 1;
     public static final int BOT_PLAYING = 2;
-    private static final int MAX_SPEED = 80;
-    private static final int MIN_SPEED = 15;
+//    private static final int MAX_SPEED = 80;
+//    private static final int MIN_SPEED = 15;
 
     private final Navigator navigator;
     FourWheelMovement fwm;
@@ -150,9 +150,53 @@ public class GoBot extends Thread {
                     lapsDone = 0;
                     printState();
                 } else {
-                    VisionCoordinate vc = BaseStation.getInstance().getVisionManager()
-                            .getAllLocationData().get(0).coord;
-                    if (this.course.isInsideTrack(vc)) {
+                    List<VisionObject> vl =  BaseStation.getInstance().getVisionManager()
+                            .getAllLocationData();
+                    if (vl.size() != 0) {
+                        VisionCoordinate vc = vl.get(0).coord;
+                        if (this.course.isInsideTrack(vc)) {
+                            if (course.getStartArea().contains(vc.x, vc.y)) {
+                                if (!crossedLapLine && !reachedMiddle) {
+                                    this.crossedLapLine = true;
+                                } else if (crossedLapLine && reachedMiddle) {
+                                    this.lapsDone++;
+                                    this.reachedMiddle = false;
+                                    this.lapTimes.add(System.nanoTime());
+                                    System.out.println(lapTimes());
+                                }
+                            } else if (course.getMiddleArea().contains(vc.x, vc.y)) {
+                                if (!reachedMiddle) {
+                                    this.reachedMiddle = true;
+                                }
+                            }
+                        } else {
+                            //do stuff with timer later to tell to get back
+                            System.out.println("go back inside pls");
+                        }
+                    }
+                }
+            }
+            else if (botState == BOT_PLAYING) { //ASSUMING CCL TRACK
+                if (lapsDone >= NUM_LAPS) {
+                    // Finished!
+                    botState = WAITING;
+                    botTime = totalTime();
+                    lapTimes.clear();
+                    lapsDone = 0;
+                    printState();
+                } else {
+                    List<VisionObject> vl =  BaseStation.getInstance().getVisionManager()
+                            .getAllLocationData();
+                    if (vl.size() != 0) {
+                        VisionCoordinate vc = vl.get(0).coord;
+                        if (navigator.destinationReached()) {
+                            int max = BaseHTTPInterface.innerTrackCoords.size();
+                            if (max != 0) {
+                                navigator.goToDestination(BaseHTTPInterface.innerTrackCoords.get
+                                        (index));
+                                index = (index + 1) % max;
+                            }
+                        }
                         if (course.getStartArea().contains(vc.x, vc.y)) {
                             if (!crossedLapLine && !reachedMiddle) {
                                 this.crossedLapLine = true;
@@ -166,44 +210,6 @@ public class GoBot extends Thread {
                             if (!reachedMiddle) {
                                 this.reachedMiddle = true;
                             }
-                        }
-                    } else {
-                        //do stuff with timer later to tell to get back
-                        System.out.println("go back inside pls");
-                    }
-                }
-            }
-            else if (botState == BOT_PLAYING) { //ASSUMING CCL TRACK
-                if (lapsDone >= NUM_LAPS) {
-                    // Finished!
-                    botState = WAITING;
-                    botTime = totalTime();
-                    lapTimes.clear();
-                    lapsDone = 0;
-                    printState();
-                } else {
-                    VisionCoordinate vc = BaseStation.getInstance().getVisionManager()
-                            .getAllLocationData().get(0).coord;
-                    if (navigator.destinationReached()) {
-                        int max = BaseHTTPInterface.innerTrackCoords.size();
-                        if (max != 0) {
-                            navigator.goToDestination(BaseHTTPInterface.innerTrackCoords.get
-                                    (index));
-                            index = (index + 1) % max;
-                        }
-                    }
-                    if (course.getStartArea().contains(vc.x, vc.y)) {
-                        if (!crossedLapLine && !reachedMiddle) {
-                            this.crossedLapLine = true;
-                        } else if (crossedLapLine && reachedMiddle) {
-                            this.lapsDone++;
-                            this.reachedMiddle = false;
-                            this.lapTimes.add(System.nanoTime());
-                            System.out.println(lapTimes());
-                        }
-                    } else if (course.getMiddleArea().contains(vc.x, vc.y)) {
-                        if (!reachedMiddle) {
-                            this.reachedMiddle = true;
                         }
                     }
                 }
@@ -223,10 +229,10 @@ public class GoBot extends Thread {
         private boolean destinationReached;
         private VisionCoordinate destination;
 
-        private static final double DISTANCE_THRESHOLD = 0.04;
-        private static final double ANGLE_THRESHOLD = Math.PI/(9*2);
-        private static final int MAX_SPEED = 80;
-        private static final int MIN_SPEED = 15;
+        private static final double DISTANCE_THRESHOLD = 0.08;
+        private static final double ANGLE_THRESHOLD = Math.PI/(10);
+        private static final int MAX_SPEED = 100;
+        private static final int MIN_SPEED = 50;
 
         @Override
         public void run() {
