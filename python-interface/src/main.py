@@ -1,16 +1,19 @@
-import json, time, multiprocessing
+import json, time, multiprocessing, importlib, sys
 import MiniBotFramework
-import MiniBotScripts.base
 from threading import Thread
 from multiprocessing import Process
+from multiprocessing.managers import BaseManager
 
 # Constants
 CONFIG_LOCATION = "MiniBotConfig/config.json"
-bot = None
 
 def main():
-    global bot
-    p = multiprocessing.Process(target=time.sleep, args=(1000,))
+    #BaseManager.register('MiniBot',MiniBotFramework.MiniBot.MiniBot)
+    #manager = BaseManager()
+    #manager.start()
+
+    #p = multiprocessing.Process(target=time.sleep, args=(1000,))
+    p = None
     print("Initializing MiniBot Software")
     # Load config
     config_file = open(CONFIG_LOCATION)
@@ -57,35 +60,54 @@ def main():
 
 def parse_command(cmd, bot, p):
     comma = cmd.find(",")
+    start = cmd.find("<<<<")
     end = cmd.find(">>>>")
-    key = cmd[4:comma]
+    key = cmd[start+4:comma]
     value = cmd[comma+1:end]
     if key == "WHEELS":
-        values = value.split(",")
-        bot.get_actuator_by_name("two_wheel_movement").move(int(float(values[0])),int(float(values[1])))
-        print(int(float(values[0])))
+        try:
+            values = value.split(",")
+            bot.get_actuator_by_name("two_wheel_movement").move(int(float(values[0])),int(float(values[1])))
+        except:
+            print("oh no!")
+            pass
     elif key == "SCRIPT":
         user_script_file = open("MiniBotScripts/UserScript.py",'w')
         user_script_file.write(value)
         user_script_file.close()
-        p = spawn_script_process(p)
+        p = spawn_script_process(p, bot)
         return p
+    elif key == "RUN":
+        p = spawn_named_script_process(p, bot, value)
     else:
         print("Unknown key: " + key)
+        print("Cmd: " + cmd)
     return None
 
-def spawn_script_process(p):
-    if (p.is_alive()):
+def spawn_script_process(p,bot):
+    if (p is not None and p.is_alive()):
         p.terminate()
     time.sleep(0.1)
-    p = Process(target=run_script)
+    p = Thread(target=run_script, args=[bot])
     p.start()
     # Return control to main after .1 seconds
-    p.join(0.1)
     return p
 
-def run_script():
-    global bot
+def spawn_named_script_process(p,bot,name):
+    if (p is not None and p.is_alive()):
+        p.terminate()
+    time.sleep(0.1)
+    p = Thread(target=run_script_with_name, args=[bot,name])
+    p.start()
+    # Return control to main after .1 seconds
+    return p
+
+def run_script_with_name(bot,script_name):
+    sys.path.insert(0, './lib')
+    UserScript = importlib.import_module("MiniBotScripts." + script_name)
+    UserScript.run(bot)
+
+def run_script(bot):
     from MiniBotScripts import UserScript
     UserScript.run(bot)
 
