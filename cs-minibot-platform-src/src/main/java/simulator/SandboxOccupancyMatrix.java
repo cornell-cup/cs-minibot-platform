@@ -7,10 +7,7 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
 import simulator.physics.PhysicalObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -18,6 +15,156 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by CornellCup on 4/25/2017.
  */
 public class SandboxOccupancyMatrix {
+
+    private static HashSet<Node> settledNodes = new HashSet<Node>();
+    private static HashSet<Node> unsettledNodes = new HashSet<Node>();
+    private static HashMap<Node, Integer> distances;
+
+    //Fills maze with 1's
+    public static int[][] initializeMaze(int n, int m) {
+        int[][] maze = new int[n][m];
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                maze[i][j] = 1;
+            }
+        }
+        return maze;
+    }
+
+    //Takes the given maze and returns that maze wrapped in 1's
+    public static int[][] generateWrappedMaze(int[][] maze) {
+        int height = maze.length;
+        int width = maze[0].length;
+        int[][] wrappedMaze = initializeMaze(height+2,width+2);
+        for(int i = 1; i < height +1; i++) {
+            for(int j = 1; j < width + 1; j++) {
+                wrappedMaze[i][j] = maze[i-1][j-1];
+            }
+        }
+        return wrappedMaze;
+    }
+    //Makes the Nodes array but doesn't fill in neighbors
+    //Also sets cost to max int
+    public static Node[][] initializeNodeMatrix(int[][] maze) {
+        int height = maze.length;
+        int width = maze[0].length;
+        Node[][] res = new Node[height][width];
+        for(int i = 0; i < height; i++) {
+            for(int j = 0; j < width; j++) {
+                Node n = new Node(maze[i][j], false);
+                res[i][j] = n;
+                if(maze[i][j] == 0) {
+                    res[i][j].cost = Integer.MAX_VALUE;
+                }
+            }
+        }
+
+        res[height-1][width-1].isEnd = true;
+        res[1][1].cost = 1;
+        return res;
+    }
+    //Returns a HashSet of neighbors given a position and maze
+    public static HashSet<Node> generateNeighbors(int i, int j, Node[][] maze) {
+        HashSet<Node> res = new HashSet<Node>();
+        if(maze[i+1][j].value == 0) {
+            res.add(maze[i+1][j]);
+        }
+        if(maze[i][j+1].value == 0) {
+            res.add(maze[i][j+1]);
+        }
+        if(maze[i-1][j].value == 0) {
+            res.add(maze[i-1][j]);
+        }
+        if(maze[i][j-1].value == 0) {
+            res.add(maze[i][j-1]);
+        }
+        return res;
+    }
+
+    //Returns an array of Nodes with the neighbors field filled out
+    public static Node[][] populateNeighbors(Node[][] maze) {
+        int height = maze.length;
+        int width = maze[0].length;
+        for(int i = 1; i < height-1; i++) {
+            for(int j = 1; j < width -1; j++) {
+                if(maze[i][j].value == 0) {
+                    maze[i][j].neighbors = generateNeighbors(i, j, maze);
+                }
+            }
+        }
+        return maze;
+    }
+
+    public static Node getNodeWithLowestCost(HashSet<Node> unsettledNodes) {
+        int lowestCost = Integer.MAX_VALUE;
+        Node res = null;
+        for(Node n: unsettledNodes) {
+            if(n.cost < lowestCost) {
+                lowestCost = n.cost;
+                res = n;
+            }
+        }
+        return res;
+    }
+
+    public static void processNeighbors(Node currentNode) {
+        for(Node n: currentNode.neighbors) {
+            if(!settledNodes.contains(n)) {
+                int newCost = currentNode.cost + 1;
+                if(newCost < n.cost) {
+                    n.cost = newCost;
+                }
+                unsettledNodes.add(n);
+            }
+        }
+    }
+
+
+
+    public static int execute(Node[][] maze) {
+        Node sourceNode = maze[1][1];
+        unsettledNodes.add(sourceNode);
+
+        while(!unsettledNodes.isEmpty()) {
+            Node currentNode = getNodeWithLowestCost(unsettledNodes);
+            unsettledNodes.remove(currentNode);
+            settledNodes.add(currentNode);
+            processNeighbors(currentNode);
+        }
+        int width = maze.length;
+        int height = maze[0].length;
+        return maze[width-2][height-2].cost;
+    }
+
+    public static int answer(int[][] maze) {
+        int min = Integer.MAX_VALUE;
+        for(int i = 0; i < maze.length; i++) {
+            for(int j = 0; j < maze[0].length; j++) {
+                if(maze[i][j] == 1) {
+                    maze[i][j] = 0;
+                    int[][] x = generateWrappedMaze(maze);
+                    Node[][] y = initializeNodeMatrix(x);
+                    Node[][] z = populateNeighbors(y);
+                    int res = execute(z);
+                    min = res < min ? res : min;
+                    maze[i][j] = 1;
+                }
+
+            }
+        }
+        return min;
+    }
+    public static class Node {
+        private int value;
+        private boolean isEnd;
+        private int cost;
+        private HashSet<Node> neighbors;
+
+        public Node( int value, boolean isEnd) {
+            this.value = value;
+            this.isEnd = isEnd;
+        }
+    }
 
     public static void main(String[] args) {
         float xSpeed = 0.0f, ySpeed = 0.0f;
