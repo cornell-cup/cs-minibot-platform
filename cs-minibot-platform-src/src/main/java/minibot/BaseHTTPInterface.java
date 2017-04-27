@@ -1,6 +1,7 @@
 package minibot;
 
 import basestation.BaseStation;
+import basestation.bot.commands.CommandCenter;
 import basestation.bot.commands.FourWheelMovement;
 import basestation.bot.connection.IceConnection;
 import basestation.bot.connection.TCPConnection;
@@ -17,9 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import simulator.physics.PhysicalObject;
-import simulator.simbot.ColorIntensitySensor;
-import simulator.simbot.SimBotConnection;
-import simulator.simbot.SimBotSensorCenter;
+import simulator.simbot.*;
 import spark.route.RouteOverview;
 
 import java.util.List;
@@ -31,7 +30,6 @@ import java.util.Collection;
 import simulator.baseinterface.SimulatorVisionSystem;
 
 
-import simulator.simbot.SimBot;
 import xboxhandler.XboxControllerDriver;
 
 import static spark.Spark.*;
@@ -141,16 +139,15 @@ public class BaseHTTPInterface {
 
             // gets (botID, fl, fr, bl, br) from json
             String botName = commandInfo.get("name").getAsString();
-            int fl = commandInfo.get("fl").getAsInt();
-            int fr = commandInfo.get("fr").getAsInt();
-            int bl = commandInfo.get("bl").getAsInt();
-            int br = commandInfo.get("br").getAsInt();
+            String fl = commandInfo.get("fl").getAsString();
+            String fr = commandInfo.get("fr").getAsString();
+            String bl = commandInfo.get("bl").getAsString();
+            String br = commandInfo.get("br").getAsString();
 
             // Forward the command to the bot
-            Bot myBot = BaseStation.getInstance().getBotManager()
-                    .getBotByName(botName).get();
-            FourWheelMovement fwmCommandCenter = (FourWheelMovement) myBot.getCommandCenter();
-            return fwmCommandCenter.setWheelPower(fl,fr,bl,br);
+            Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(botName).get();
+            CommandCenter cc =  myBot.getCommandCenter();
+            return cc.sendKV("WHEELS", fl + "," + fr + "," + bl + "," + br);
         });
 
         post("/removeBot", (req,res) -> {
@@ -162,6 +159,16 @@ public class BaseHTTPInterface {
             return BaseStation.getInstance().getBotManager().removeBotByName(name);
         });
 
+        post( "/logdata", (req,res) -> {
+            String body = req.body();
+            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            String name = commandInfo.get("name").getAsString();
+            Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(name).get();
+            CommandCenter cc = myBot.getCommandCenter();
+            System.out.println("Start Logging Data...");
+            cc.startLogging();
+            return true;
+        });
 
         /**
          * GET /sendScript sends script to the bot identified by botName

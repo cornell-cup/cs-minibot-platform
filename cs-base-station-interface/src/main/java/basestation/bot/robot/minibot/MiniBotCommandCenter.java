@@ -11,10 +11,19 @@ import basestation.bot.connection.TCPConnection;
  */
 public class MiniBotCommandCenter implements FourWheelMovement {
     private final TCPConnection connection;
+    public transient boolean record = false;
 
 
     public MiniBotCommandCenter(TCPConnection connection, MiniBot myBot) {
         this.connection = connection;
+    }
+
+    public void startLogging() {
+        this.record = true;
+    }
+
+    public boolean isLogging() {
+        return this.record;
     }
 
     @Override
