@@ -90,6 +90,10 @@ public class SimulatorVisionSystem extends VisionSystem {
         updateVisionCoordinates();
     }
 
+    public Set<PhysicalObject> getAllPhysicalObjects() {
+        return poSet;
+    }
+
     private class SimRunner extends Thread {
 
         @Override

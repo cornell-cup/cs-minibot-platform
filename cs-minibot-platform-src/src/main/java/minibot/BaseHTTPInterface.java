@@ -229,6 +229,39 @@ public class BaseHTTPInterface {
 
         });
 
+        /**
+         * GET /sendKV sends script to the bot identified by botName
+         *
+         * @apiParam name the name of the bot
+         * @apiParam script the full string containing the script
+         * @return true if the script sending should be successful
+         */
+        post("/sendKV", (req,res) -> {
+            String body = req.body();
+            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+
+            String kv_key = commandInfo.get("key").getAsString();
+            String kv_value = commandInfo.get("value").getAsString();
+            String name = commandInfo.get("name").getAsString();
+
+            Bot receiver = BaseStation.getInstance()
+                    .getBotManager()
+                    .getBotByName(name)
+                    .orElseThrow(NoSuchElementException::new);
+
+            if (receiver instanceof SimBot)
+                ((SimBot)BaseStation.getInstance()
+                        .getBotManager()
+                        .getBotByName(name)
+                        .orElseThrow(NoSuchElementException::new)).resetServer();
+
+            return BaseStation.getInstance()
+                    .getBotManager()
+                    .getBotByName(name)
+                    .orElseThrow(NoSuchElementException::new)
+                    .getCommandCenter().sendKV(kv_key,kv_value);
+        });
+
         post("/discoverBots", (req, res) -> {
             return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
         });

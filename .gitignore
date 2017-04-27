@@ -9,3 +9,5 @@ temp.py
 META-INF/
 *.pyc
 .DS_Store
+config.json
+UserScript.py

@@ -59,3 +59,6 @@ def run():
                     TCP.tcp.set_command(command[0:end_index+4])
                     command = command[end_index+4:]
                     end_index = command.find(">>>>")
+
+tcp = TCP()
+tcp.run()

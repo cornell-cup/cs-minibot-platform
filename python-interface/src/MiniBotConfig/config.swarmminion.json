@@ -1,5 +1,5 @@
 {
-  "name": "gobot",
+  "name": "replacename",
   "startupScript": "",
   "keepStartupRunning": true,
   "discoverable": true,
@@ -8,18 +8,21 @@
   "actuators": [
     {
       "type": "gpioMotor",
-      "name": "leftMotor",
+      "name": "rightMotor",
       "pinPWM": 13,
-      "pinHighLow": 20
+      "pinHighLow": 20,
+      "reversed": true
     },
     {
       "type": "gpioMotor",
-      "name": "rightMotor",
+      "name": "leftMotor",
       "pinPWM": 19,
-      "pinHighLow": 18
+      "pinHighLow": 18,
+      "reversed": true
     }
   ],
   "sensors": [
 
   ]
 }
+

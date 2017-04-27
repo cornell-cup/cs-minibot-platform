@@ -1,6 +1,6 @@
 
 #Reads xbox inputs and returns desired l/r wheel powers
-from Lib.legopi.lib import xbox_read
+from MiniBotFramework.Controls.Lib.legopi.lib import xbox_read
 from threading import Thread
 
 class Xbox(object):
