@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by CornellCup on 4/25/2017.
  */
-public class SandboxOccupancyMatrix {
+public class SandboxOccupancyMatrix extends Thread{
 
     //public static int[][] path;
     public static Node targetNode;
@@ -56,7 +56,7 @@ public class SandboxOccupancyMatrix {
         for(int i = 0; i < height; i++) {
             for(int j = 0; j < width; j++) {
                 Node n = new Node(maze[i][j], false,i,j);
-                if(i == height-1 && j == width-1) {
+                if(i == height-2 && j == width-2) {
                     targetNode = n;
                 }
                 res[i][j] = n;
@@ -66,7 +66,7 @@ public class SandboxOccupancyMatrix {
             }
         }
 
-        res[height-1][width-1].isEnd = true;
+        res[height-2][width-2].isEnd = true;
         res[1][1].cost = 1;
         return res;
     }
@@ -120,6 +120,7 @@ public class SandboxOccupancyMatrix {
             if(!settledNodes.contains(n)) {
                 int newCost = currentNode.cost + 1;
                 if(newCost < n.cost) {
+
                     n.cost = newCost;
                     predecessors.put(n, currentNode);
                 }
@@ -127,17 +128,24 @@ public class SandboxOccupancyMatrix {
             }
         }
     }
-    public static LinkedList<Node> getPath(Node target) {
+    public static LinkedList<Node> getPath(Node target) throws InterruptedException {
+        System.out.println("FUCK");
         LinkedList<Node> path = new LinkedList<Node>();
         Node step = target;
         // check if a path exists
         if (predecessors.get(step) == null) {
+            System.out.println("ughh null");
             return null;
         }
         path.add(step);
         while (predecessors.get(step) != null) {
+            System.out.println("while get path");
             step = predecessors.get(step);
+            System.out.println("GOT NODE:  " + step.getX() + " " + step.getY());
             path.add(step);
+            Thread.sleep(50);
+
+
         }
         // Put it into the correct order
         Collections.reverse(path);
@@ -149,17 +157,28 @@ public class SandboxOccupancyMatrix {
     public static int execute(Node[][] maze) {
         Node sourceNode = maze[1][1];
         unsettledNodes.add(sourceNode);
-
+        Node curr = sourceNode;
+        predecessors.put(curr, null);
+        Node currentNode = null;
         while(!unsettledNodes.isEmpty()) {
-            Node currentNode = getNodeWithLowestCost(unsettledNodes);
+             currentNode = getNodeWithLowestCost(unsettledNodes);
+
             if(currentNode.isEnd){
+                System.out.println("ENDING");
+                System.out.println(currentNode.getX() + ", " + currentNode.getY());
+                predecessors.put(currentNode, curr);
+
                 break;
             }
             //path[currentNode.getX()][currentNode.getY()] = 1;
             unsettledNodes.remove(currentNode);
             settledNodes.add(currentNode);
+            System.out.println("PUT");
+            curr = currentNode;
             processNeighbors(currentNode);
         }
+        System.out.println("LAST CURRENTNODE " + currentNode.getX() + " " + currentNode.getY());
+
         int width = maze.length;
         int height = maze[0].length;
         return maze[width-2][height-2].cost;
@@ -167,20 +186,14 @@ public class SandboxOccupancyMatrix {
 
     public static int answer(int[][] maze) {
         int min = Integer.MAX_VALUE;
-        for(int i = 0; i < maze.length; i++) {
-            for(int j = 0; j < maze[0].length; j++) {
-                if(maze[i][j] == 1) {
-                    maze[i][j] = 0;
-                    int[][] x = generateWrappedMaze(maze);
-                    Node[][] y = initializeNodeMatrix(x);
-                    Node[][] z = populateNeighbors(y);
-                    int res = execute(z);
-                    min = res < min ? res : min;
-                    maze[i][j] = 1;
-                }
 
-            }
-        }
+        int[][] x = generateWrappedMaze(maze);
+        Node[][] y = initializeNodeMatrix(x);
+        Node[][] z = populateNeighbors(y);
+        int res = execute(z);
+        min = res < min ? res : min;
+
+
         return min;
     }
     public static class Node {
@@ -201,7 +214,7 @@ public class SandboxOccupancyMatrix {
         public int getY(){ return y;}
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         float xSpeed = 0.0f, ySpeed = 0.0f;
         float xPos = 1.0f, yPos = 3.0f;
         float width = 10.0f, height = 2.0f;
@@ -298,9 +311,22 @@ public class SandboxOccupancyMatrix {
         if(targetNode == null) {
             System.out.println("target node is null");
         }
+        else {
+            System.out.println("target node is");
+        }
+        System.out.println(targetNode.getX() + " " + targetNode.getY());
         LinkedList<Node> path = getPath(targetNode);
+        int[][] pathMatrix = new int[21][21];
         for(int i = 0; i < path.size(); i++) {
-            System.out.print("X:" + path.get(i).getX() + " Y:" + path.get(i).getY());
+            System.out.println("X:" + path.get(i).getX() + " Y:" + path.get(i).getY());
+            pathMatrix[path.get(i).getX()][path.get(i).getY()] = 1;
+        }
+
+        for (int j = 0; j < pathMatrix.length; j++) {
+            for (int i = 0; i < pathMatrix[j].length; i++) {
+                System.out.print(pathMatrix[i][j] + " ");
+            }
+            System.out.println();
         }
 
 
