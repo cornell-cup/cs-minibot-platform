@@ -22,6 +22,10 @@
     }
   ],
   "sensors": [
-
+    {
+      "type": "colorSensor",
+      "name": "ColorSensor",
+      "pin": 10
+    }
   ]
 }
