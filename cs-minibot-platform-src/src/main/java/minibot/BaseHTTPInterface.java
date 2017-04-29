@@ -251,7 +251,8 @@ public class BaseHTTPInterface {
             String br = commandInfo.get("br").getAsString();
 
             // Forward the command to the bot
-            Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(botName).get();
+            Bot myBot = BaseStation.getInstance().getBotManager()
+                    .getBotByName(botName).get();
             CommandCenter cc =  myBot.getCommandCenter();
             return cc.sendKV("WHEELS", fl + "," + fr + "," + bl + "," + br);
         });
@@ -355,6 +356,7 @@ public class BaseHTTPInterface {
             String kv_key = commandInfo.get("key").getAsString();
             String kv_value = commandInfo.get("value").getAsString();
             String name = commandInfo.get("name").getAsString();
+            System.out.println(name);
 
             Bot receiver = BaseStation.getInstance()
                     .getBotManager()
