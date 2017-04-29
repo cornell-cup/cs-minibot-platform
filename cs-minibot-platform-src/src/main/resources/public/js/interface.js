@@ -178,7 +178,11 @@ $('#addScenario').click(function() {
         method: "POST",
         url: '/addScenario',
         dataType: 'text',
-        data: JSON.stringify({scenario: scenario.toString()}),
+        data: JSON.stringify({
+            scenario: scenario.toString(),
+            ip: getIP(),
+            port: (getPort() || 10000)
+        }),
         contentType: 'application/json; charset=utf-8',
         success: function (data){
             console.log("successfully added scenario: "+data);

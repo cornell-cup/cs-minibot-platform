@@ -22,20 +22,10 @@ public class SimulatorVisionSystem extends VisionSystem {
      */
     private static SimulatorVisionSystem instance;
     private volatile Set<VisionObject> visionObjectSet;
-    private Set<PhysicalObject> poSet;
-    private World world;
-    private long before;
-
-    public static final float UPDATES_PER_SECOND = 30;
 
     public SimulatorVisionSystem() {
         super(new VisionCoordinate(0, 0, 0));
         visionObjectSet = ConcurrentHashMap.newKeySet();
-        world = new World(new Vec2(0f, 0f));
-        poSet = ConcurrentHashMap.newKeySet();
-        before = System.nanoTime();
-        SimRunner sr = new SimRunner();
-        sr.start();
     }
 
     public static SimulatorVisionSystem getInstance() {
@@ -50,30 +40,15 @@ public class SimulatorVisionSystem extends VisionSystem {
         return visionObjectSet;
     }
 
-    public World getWorld() { return world;}
-
     public void resetWorld() {
         visionObjectSet = ConcurrentHashMap.newKeySet();
-        world = new World(new Vec2(0f, 0f));
-        poSet = ConcurrentHashMap.newKeySet();
-        before = System.nanoTime();
-        SimRunner sr = new SimRunner();
-        sr.start();
-    }
-
-    /**
-     * Adds pObj to the simulation for vision tracking
-     *
-     */
-    public void importPhysicalObject(PhysicalObject pObj) {
-        poSet.add(pObj);
     }
 
     /**
      * Updates the simulator vision system to display locs of objects after a
      * simulation step
      */
-    public void updateVisionCoordinates() {
+    public void updateVisionCoordinates(Set<PhysicalObject> poSet) {
         Set<VisionObject> newSet = ConcurrentHashMap.newKeySet();
         for(PhysicalObject obj: poSet) {
             VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(),
@@ -85,32 +60,5 @@ public class SimulatorVisionSystem extends VisionSystem {
         visionObjectSet = newSet;
     }
 
-    public void stepSimulation() {
-        long now = System.nanoTime();
-        long delta = now - before;
-        before = now;
-        float timeStep = (float)(delta / 10e8);
-        int velocityIterations = 6;
-        int positionIterations = 4;
 
-        for(PhysicalObject po: poSet) {
-            po.getWorld().step(timeStep, velocityIterations, positionIterations);
-        }
-        updateVisionCoordinates();
-    }
-
-    private class SimRunner extends Thread {
-
-        @Override
-        public void run() {
-            while (true) {
-                stepSimulation();
-                try {
-                    Thread.sleep((long)(1000f / UPDATES_PER_SECOND));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }

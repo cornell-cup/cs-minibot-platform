@@ -110,19 +110,13 @@
 		Scenarios - obstacles only, add bot separately
 		Scenario name:<input type="text" id="scenarioname"
 							 value="scenario1"><br>
-		Scenario viewer: <textarea rows="4" cols="50" name="scenario"
-					   id="scenario">[{"type":	"scenario_object", "position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]</textarea>
+		Scenario viewer: <textarea rows="4" cols="100" name="scenario"
+					   id="scenario">[{"type":	"simulator.simbot",
+		"position":"[2,2]", "angle":0},{"type":	"scenario_object",
+		"position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]</textarea>
 		<button id="addScenario">add scenario to world</button>
 		<button id="loadScenario">load scenario from file</button>
 		<button id="saveScenario">save scenario to file</button>
-		<br>Instructions to load scenarios(optional)/bots:<br>
-		<ul>
-			<li>Turn on vision system</li>
-			<li>Load scenario from file or paste scenario json into scenario
-				viewer box (format based on example)</li>
-			<li>Add scenario to world</li>
-			<li>Add bot(s) to world, select from dropdown</li>
-		</ul>
 	</div>
 
 	<div class="box">

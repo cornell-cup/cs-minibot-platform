@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 import org.jbox2d.dynamics.World;
+import simulator.Simulator;
 import simulator.physics.PhysicalObject;
 import simulator.simbot.ColorIntensitySensor;
 import simulator.simbot.SimBotConnection;
@@ -56,6 +57,7 @@ public class BaseHTTPInterface {
         staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
         SimulatorVisionSystem simvs;
+        Simulator simulator = new Simulator();
         // Show exceptions
         exception(Exception.class, (exception,request,response) -> {
             exception.printStackTrace();
@@ -70,7 +72,7 @@ public class BaseHTTPInterface {
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(ovs);
-            simvs = SimulatorVisionSystem.getInstance();
+            simvs = simulator.getVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(simvs);
         }
 
@@ -97,10 +99,11 @@ public class BaseHTTPInterface {
                else {
                 SimBotConnection sbc = new SimBotConnection();
                 SimBot simbot;
-                simbot = new SimBot(sbc, name, 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
+                simbot = new SimBot(sbc, name, 50, simulator.getWorld(), 0.0f,
+                        0.0f, 1f, 3.6f, 0, true);
                 newBot = simbot;
 
-                simvs.importPhysicalObject(simbot.getMyPhysicalObject());
+                simulator.importPhysicalObject(simbot.getMyPhysicalObject());
 
                 // Color sensor TODO put somewhere nice
                 ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
@@ -111,9 +114,9 @@ public class BaseHTTPInterface {
         });
 
         post("/addScenario", (req,res) -> {
-            String body = req.body();
 
-            simvs.resetWorld();
+            String body = req.body();
+            simulator.resetWorld();
             Collection<String> botsnames = BaseStation.getInstance()
                     .getBotManager()
                     .getAllTrackedBotsNames();
@@ -127,16 +130,39 @@ public class BaseHTTPInterface {
 
             for (JsonElement je : addInfo) {
                 String type = je.getAsJsonObject().get("type").getAsString();
-                int size = je.getAsJsonObject().get("size").getAsInt();
                 int angle = je.getAsJsonObject().get("angle").getAsInt();
                 int[] position = gson.fromJson(je.getAsJsonObject().get("position")
                         .getAsString(),int[].class);
-                String name = Integer.toString(size)+Integer.toString(angle)
+                String name = Integer.toString(angle)
                         + Arrays.toString(position);
-                PhysicalObject po = new PhysicalObject(name, 100,
-                        simvs.getWorld(), (float)position[0],
-                        (float)position[1], size, angle);
-                simvs.importPhysicalObject(po);
+
+                //for scenario obstacles
+                if (!type.equals("simulator.simbot")){
+                    int size = je.getAsJsonObject().get("size").getAsInt();
+                    PhysicalObject po = new PhysicalObject(name, 100,
+                            simulator.getWorld(), (float)position[0],
+                            (float)position[1], size, angle);
+                    simulator.importPhysicalObject(po);
+                }
+                //for bots listed in scenario
+                else {
+                    Bot newBot;
+                    name = "Simbot"+name;
+                    SimBotConnection sbc = new SimBotConnection();
+                    SimBot simbot;
+                    simbot = new SimBot(sbc, name, 50, simulator.getWorld(), 0.0f,
+                            0.0f, (float) position[0], (float)
+                            position[1], angle, true);
+                    newBot = simbot;
+
+                    simulator.importPhysicalObject(simbot.getMyPhysicalObject());
+
+                    // Color sensor TODO put somewhere nice
+//                    ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
+//                    ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
+//                    ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
+                    BaseStation.getInstance().getBotManager().addBot(newBot);
+                }
             }
             return addInfo;
         });

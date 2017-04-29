@@ -20,12 +20,14 @@ public class SimBot extends Bot {
      * Currently minibots are implemented using a TCP connection
      */
 
-    public SimBot(SimBotConnection sbc, String name, int id, World world, float xSpeed, float ySpeed, float xPos, float yPos, boolean isDynamic) {
+    public SimBot(SimBotConnection sbc, String name, int id, World world,
+                  float xSpeed, float ySpeed, float xPos, float yPos,
+                  int angle, boolean isDynamic) {
         super(sbc, name);
 
         this.sensorCenter = new SimBotSensorCenter();
         PhysicalObject po = new PhysicalObject(name, id, world, xSpeed, ySpeed,
-                xPos, yPos, isDynamic);
+                xPos, yPos, angle, isDynamic);
         this.myPhysicalObject = po;
         this.commandCenter = new SimBotCommandCenter(this, this
                 .myPhysicalObject.getBody());

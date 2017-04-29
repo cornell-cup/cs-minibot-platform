@@ -12,8 +12,9 @@ public class SimModBot extends PhysicalObject {
     //The amount of radians a robot with radius 0.5 m changes by when rotating for an arc length of 1 m
     public static final double MAX_ANGULAR_SPEED = Math.PI;//4.18879;// 1 revolution every 2 seconds
 
-    public SimModBot(String name, int id, World world, float xSpeed, float ySpeed, float xPos, float yPos, boolean isDynamic) {
-        super(name, id, world, xSpeed, ySpeed, 1f, 1f, true);
+    public SimModBot(String name, int id, World world, float xSpeed, float
+            ySpeed, float xPos, float yPos, int angle, boolean isDynamic) {
+        super(name, id, world, xSpeed, ySpeed, 1f, 1f, angle, true);
     }
 
     /**
