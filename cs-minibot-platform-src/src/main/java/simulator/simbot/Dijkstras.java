@@ -145,7 +145,7 @@ public class Dijkstras {
         Node sourceNode = maze[1][1];
         unsettledNodes.add(sourceNode);
         Node curr = sourceNode;
-        predecessors.put(curr, null);
+        //predecessors.put(curr, null);
         Node currentNode = null;
         while(!unsettledNodes.isEmpty()) {
             currentNode = getNodeWithLowestCost(unsettledNodes);

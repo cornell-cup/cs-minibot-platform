@@ -46,11 +46,11 @@ public class SandboxOccupancyMatrix extends Thread{
 
         //CREATING CIRCLE
         BodyDef circlebd = new BodyDef();
-        circlebd.position.set(xPos - 1.0f, yPos + 2.0f);
+        circlebd.position.set(xPos + 3.0f, yPos - 2.5f);
         circlebd.type = BodyType.STATIC;
 
         CircleShape cs = new CircleShape();
-        cs.setRadius(7.5f);
+        cs.setRadius(6.5f);
 
         FixtureDef circlefd = new FixtureDef();
         circlefd.shape = cs;
@@ -82,14 +82,14 @@ public class SandboxOccupancyMatrix extends Thread{
                 Vec2 lowerVertex = new Vec2((float)(i), (float)(j));
                 Vec2 upperVertex = new Vec2((float)(i+1), (float)(j+1));
                 AABB currentSquare = new AABB(lowerVertex, upperVertex);
-                final Vec2 middle = new Vec2(i + 0.5f, j + 0.5f);
+                final Vec2 middle = new Vec2(i , j );
                 final int icopy = i;
                 final int jcopy = j;
                 QueryCallback callback = new QueryCallback() {
                     @Override
                     public boolean reportFixture(Fixture fixture) {
                         if(fixture.testPoint(middle)) {
-                            occupancyMatrix[icopy+10][jcopy+10] = 1;
+                            occupancyMatrix[icopy+11][jcopy+11] = 1;
                         }
                         return true;
                     }
@@ -104,18 +104,18 @@ public class SandboxOccupancyMatrix extends Thread{
             }
             System.out.println();
         }
-        int[][] skinnedOccupancyMatrix = new int[occupancyMatrix.length-2][occupancyMatrix.length-2];
-        for(int i = 0; i < skinnedOccupancyMatrix.length; i++) {
-            for(int j = 0; j < skinnedOccupancyMatrix[0].length; j++) {
-                skinnedOccupancyMatrix[i][j] = occupancyMatrix[i+1][j+1];
-            }
-        }
-        for (int j = 0; j < skinnedOccupancyMatrix.length; j++) {
-            for (int i = 0; i < skinnedOccupancyMatrix[j].length; i++) {
-                System.out.print(skinnedOccupancyMatrix[i][j] + " ");
-            }
-            System.out.println();
-        }
+//        int[][] skinnedOccupancyMatrix = new int[occupancyMatrix.length-2][occupancyMatrix.length-2];
+//        for(int i = 0; i < skinnedOccupancyMatrix.length; i++) {
+//            for(int j = 0; j < skinnedOccupancyMatrix[0].length; j++) {
+//                skinnedOccupancyMatrix[i][j] = occupancyMatrix[i+1][j+1];
+//            }
+//        }
+//        for (int j = 0; j < skinnedOccupancyMatrix.length; j++) {
+//            for (int i = 0; i < skinnedOccupancyMatrix[j].length; i++) {
+//                System.out.print(skinnedOccupancyMatrix[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
 
 
         System.out.println(Dijkstras.answer(occupancyMatrix));
@@ -130,15 +130,16 @@ public class SandboxOccupancyMatrix extends Thread{
         Node targetNode = Dijkstras.targetNode;
 
         LinkedList<Node> path = Dijkstras.getPath(targetNode);
-        int[][] pathMatrix = new int[occupancyMatrix.length+1][occupancyMatrix[0].length+1];
+        int[][] pathMatrix = new int[occupancyMatrix.length+4][occupancyMatrix[0].length+4];
+
 
         for(int i = 0; i < path.size(); i++) {
             //System.out.println("X:" + path.get(i).getX() + " Y:" + path.get(i).getY());
             pathMatrix[path.get(i).getX()][path.get(i).getY()] = 1;
         }
 
-        for (int j = 0; j < pathMatrix.length; j++) {
-            for (int i = 0; i < pathMatrix[j].length; i++) {
+        for (int j = 1; j < pathMatrix.length; j++) {
+            for (int i = 1; i < pathMatrix[j].length; i++) {
                 System.out.print(pathMatrix[i][j] + " ");
             }
             System.out.println();
