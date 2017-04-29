@@ -64,7 +64,7 @@ public class BaseHTTPInterface {
         });
 
         // Global objects
-        JsonParser jp = new JsonParser();
+        JsonParser jsonParser = new JsonParser();
         Gson gson = new Gson();
 
         if (OVERHEAD_VISION) {
@@ -75,10 +75,9 @@ public class BaseHTTPInterface {
         }
 
         // Routes
-
         post("/addBot", (req,res) -> {
             String body = req.body();
-            JsonObject addInfo = jp.parse(body).getAsJsonObject(); // gets (ip, port) from js
+            JsonObject addInfo = jsonParser.parse(body).getAsJsonObject(); // gets (ip, port) from js
 
             /* storing json objects into actual variables */
             String ip = addInfo.get("ip").getAsString();
@@ -108,7 +107,6 @@ public class BaseHTTPInterface {
                 ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
                 ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
             }
-
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
 
@@ -123,9 +121,9 @@ public class BaseHTTPInterface {
                 BaseStation.getInstance().getBotManager().removeBotByName(name);
             }
 
-            JsonObject scenario = jp.parse(body).getAsJsonObject();
+            JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
             String scenarioBody = scenario.get("scenario").getAsString();
-            JsonArray addInfo = jp.parse(scenarioBody).getAsJsonArray();
+            JsonArray addInfo = jsonParser.parse(scenarioBody).getAsJsonArray();
 
             for (JsonElement je : addInfo) {
                 String type = je.getAsJsonObject().get("type").getAsString();
@@ -140,9 +138,6 @@ public class BaseHTTPInterface {
                         (float)position[1], size, angle);
                 simvs.importPhysicalObject(po);
             }
-
-
-
             return addInfo;
         });
 
@@ -150,7 +145,7 @@ public class BaseHTTPInterface {
         post("/saveScenario", (req,res) -> {
 
             String body = req.body();
-            JsonObject scenario = jp.parse(body).getAsJsonObject();
+            JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
             String scenarioBody = scenario.get("scenario").getAsString();
             String fileName = scenario.get("name").getAsString();
 
@@ -159,7 +154,6 @@ public class BaseHTTPInterface {
                     ("cs-minibot-platform-src/src/main/resources" +
                             "/public/scenario/"+fileName+".txt");
             OutputStream out = new FileOutputStream(file);
-
 
             FileWriter writer = new FileWriter(file, false);
             BufferedWriter bwriter = new BufferedWriter(writer);
@@ -173,7 +167,7 @@ public class BaseHTTPInterface {
         // without file extension
         post("/loadScenario", (req,res) -> {
             String body = req.body();
-            JsonObject scenario = jp.parse(body).getAsJsonObject();
+            JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
             String fileName = scenario.get("name").getAsString();
             String scenarioData = "";
 
@@ -195,7 +189,7 @@ public class BaseHTTPInterface {
         post("/commandBot", (req,res) -> {
             System.out.println("post to command bot called");
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
             // gets (botID, fl, fr, bl, br) from json
             String botName = commandInfo.get("name").getAsString();
@@ -213,13 +207,10 @@ public class BaseHTTPInterface {
 
         post("/removeBot", (req,res) -> {
             String body = req.body();
-            JsonObject removeInfo = jp.parse(body).getAsJsonObject();
-
+            JsonObject removeInfo = jsonParser.parse(body).getAsJsonObject();
             String name = removeInfo.get("name").getAsString();
-
             return BaseStation.getInstance().getBotManager().removeBotByName(name);
         });
-
 
         /**
          * GET /sendScript sends script to the bot identified by botName
@@ -230,7 +221,7 @@ public class BaseHTTPInterface {
          */
         post("/sendScript", (req,res) -> {
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
             /* storing json objects into actual variables */
             String name = commandInfo.get("name").getAsString();
@@ -293,7 +284,7 @@ public class BaseHTTPInterface {
 
         post("/runXbox", (req, res) -> {
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
             /* storing json objects into actual variables */
             String name = commandInfo.get("name").getAsString();

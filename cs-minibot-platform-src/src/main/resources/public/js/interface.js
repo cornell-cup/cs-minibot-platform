@@ -179,7 +179,7 @@ $('#addScenario').click(function() {
         method: "POST",
         url: '/addScenario',
         dataType: 'text',
-        data: JSON.stringify({'scenario': scenario.toString()}),
+        data: JSON.stringify({scenario: scenario.toString()}),
         contentType: 'application/json; charset=utf-8',
         success: function (data){
             console.log("successfully added scenario: "+data);
@@ -197,8 +197,8 @@ $('#addScenario').click(function() {
          method: "POST",
          url: '/saveScenario',
          dataType: 'text',
-         data: JSON.stringify({'scenario': scenario.toString(),
-         'name':filename.toString()}),
+         data: JSON.stringify({scenario: scenario.toString(),
+         name: filename.toString()}),
          contentType: 'application/json; charset=utf-8',
          success: function (data){
              console.log("successfully saved scenario: "+data);
