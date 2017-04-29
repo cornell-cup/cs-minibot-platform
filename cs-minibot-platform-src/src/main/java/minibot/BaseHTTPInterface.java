@@ -99,7 +99,8 @@ public class BaseHTTPInterface {
                else {
                 SimBotConnection sbc = new SimBotConnection();
                 SimBot simbot;
-                simbot = new SimBot(sbc, name, 50, simulator.getWorld(), 0.0f,
+                simbot = new SimBot(sbc, simulator, name, 50, simulator.getWorld
+                        (), 0.0f,
                         0.0f, 1f, 3.6f, 0, true);
                 newBot = simbot;
 
@@ -159,7 +160,8 @@ public class BaseHTTPInterface {
                     name = "Simbot"+name;
                     SimBotConnection sbc = new SimBotConnection();
                     SimBot simbot;
-                    simbot = new SimBot(sbc, name, 50, simulator.getWorld(), 0.0f,
+                    simbot = new SimBot(sbc, simulator, name, 50, simulator
+                            .getWorld(), 0.0f,
                             0.0f, (float) position[0], (float)
                             position[1], angle, true);
                     newBot = simbot;
@@ -264,7 +266,7 @@ public class BaseHTTPInterface {
 
         post( "/logdata", (req,res) -> {
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
             String name = commandInfo.get("name").getAsString();
             Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(name).get();
             CommandCenter cc = myBot.getCommandCenter();
@@ -348,7 +350,7 @@ public class BaseHTTPInterface {
          */
         post("/sendKV", (req,res) -> {
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
             String kv_key = commandInfo.get("key").getAsString();
             String kv_value = commandInfo.get("value").getAsString();

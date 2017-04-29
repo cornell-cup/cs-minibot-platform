@@ -19,7 +19,7 @@ public class Simulator {
     public static final float UPDATES_PER_SECOND = 30;
 
     public Simulator(){
-        visionsystem = new SimulatorVisionSystem();
+        visionsystem = SimulatorVisionSystem.getInstance();
         world = new World(new Vec2(0f, 0f));
         poSet = ConcurrentHashMap.newKeySet();
         before = System.nanoTime();

@@ -5,6 +5,7 @@ import basestation.bot.sensors.SensorCenter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.jbox2d.dynamics.World;
+import simulator.Simulator;
 import simulator.physics.PhysicalObject;
 
 import java.io.*;
@@ -27,7 +28,9 @@ public class SimBot extends Bot {
     /**
      * Currently minibots are implemented using a TCP connection
      */
-    public SimBot(SimBotConnection sbc, String name, int id, World world,
+    public SimBot(SimBotConnection sbc, Simulator simulator, String name, int
+            id,
+                  World world,
                   float xSpeed, float ySpeed, float xPos, float yPos,
                   int angle, boolean isDynamic) {
         super(sbc, name);
@@ -36,7 +39,7 @@ public class SimBot extends Bot {
                 xPos, yPos, angle, isDynamic);
         this.myPhysicalObject = po;
         this.commandCenter = new SimBotCommandCenter(this, this
-                .myPhysicalObject.getBody());
+                .myPhysicalObject.getBody(), simulator);
 
         try {
             //starts thread for tcp server

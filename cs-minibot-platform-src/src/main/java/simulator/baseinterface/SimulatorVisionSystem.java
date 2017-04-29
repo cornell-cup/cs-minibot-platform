@@ -23,7 +23,7 @@ public class SimulatorVisionSystem extends VisionSystem {
     private static SimulatorVisionSystem instance;
     private volatile Set<VisionObject> visionObjectSet;
 
-    public SimulatorVisionSystem() {
+    private SimulatorVisionSystem() {
         super(new VisionCoordinate(0, 0, 0));
         visionObjectSet = ConcurrentHashMap.newKeySet();
     }
