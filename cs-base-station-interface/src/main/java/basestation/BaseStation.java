@@ -1,7 +1,10 @@
 package basestation;
 
 import basestation.bot.BotManager;
+import basestation.bot.robot.Bot;
 import basestation.vision.VisionManager;
+
+import java.util.HashMap;
 
 /**
  * Contains logic to manage and unify input and output between bots and vision sources.
@@ -47,5 +50,4 @@ public class BaseStation {
     public VisionManager getVisionManager() {
         return vManager;
     }
-
 }

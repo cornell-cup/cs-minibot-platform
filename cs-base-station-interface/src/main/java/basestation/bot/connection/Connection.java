@@ -14,4 +14,9 @@ public abstract class Connection {
      * Invariant: After calling destroy, connectionActive() must return false.
      */
     public abstract void destroy();
+
+    /**
+     * @return Returns IP address of TCP Connection
+     */
+    public abstract String getIP();
 }

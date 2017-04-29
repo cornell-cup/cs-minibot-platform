@@ -3,10 +3,7 @@ package basestation.bot;
 import basestation.bot.connection.UDPConnectionListener;
 import basestation.bot.robot.Bot;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -22,6 +19,8 @@ public class BotManager {
 
     private UDPConnectionListener udpConnection;
 
+    private HashMap<String, String> botIPMap;
+
     /**
      * Initializes the bot manager with a fresh map and counter
      */
@@ -30,6 +29,8 @@ public class BotManager {
         botMap = new ConcurrentHashMap<>();
         udpConnection = new UDPConnectionListener();
         udpConnection.start();
+        botIPMap = new HashMap<>();
+
     }
 
     /**
@@ -41,6 +42,7 @@ public class BotManager {
     public String addBot(Bot bot) throws Exception {
         if (bot.getConnection().connectionActive()) {
             botMap.put(bot.getName(), bot);
+            botIPMap.put(bot.getName(), bot.getCommandCenter().getConnection().getIP());
             return bot.getName();
         } else {
             throw new Exception("The connection was not active. Not adding the bot.");
@@ -64,6 +66,7 @@ public class BotManager {
      * @return An optional of the removed bot
      */
     public Optional<Bot> removeBotByName(String botName) {
+        botIPMap.remove(botName);
         return Optional.ofNullable(botMap.remove(botName));
     }
 
@@ -88,5 +91,14 @@ public class BotManager {
 
     public Set<String> getAllDiscoveredBots() {
         return udpConnection.getAddressSet();
+    }
+
+    /**
+     * Returns the IP associated with Bot IP Mapping
+     *
+     * @return String
+     */
+    public String getBotIP (String name) {
+        return botIPMap.get(name);
     }
 }
