@@ -54,7 +54,7 @@
 		</select>
 
 		<button class="controls" id="removeBot">remove</button><br>
-		Power (0-100): <input id="power" type="range" name="power" min="0" max="100" value="100">
+		Power (0-100): <input id="power" type="range" name="power" min="0" max="100" value="50">
 		<br><br>
 		
 		<hr><br>
@@ -73,7 +73,7 @@
 				<td><button class="dir" id="rt">right</button></td>
 			</tr>
 			<tr>
-				<td></td>
+				<td><button class="dir" id="log">log data</button></td>
 				<td><button class="dir" id="bck">backward</button></td>
 				<td></td>
 			</tr>
@@ -88,6 +88,11 @@
 				<td><button id="xbox-on">Start Xbox</td>
 				<td><button id="xbox-off">Stop Xbox</td>
 				<td></td>
+			</tr>
+			<tr>
+				<td><input type="text" id="kv_key" placeholder="Key (e.g. WHEELS)"></td>
+				<td><input type="text" id="kv_value" placeholder="Value (e.g. 10,10)"></td>
+				<td><button id="sendkv" onclick="sendKV()">Send KV</button></td>
 			</tr>
 		</table>
 	</div>

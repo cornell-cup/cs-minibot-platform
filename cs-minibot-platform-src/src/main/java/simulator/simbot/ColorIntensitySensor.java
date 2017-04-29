@@ -20,11 +20,11 @@ public class ColorIntensitySensor extends Sensor {
     private transient SimBot parent;
     private double lateralOffset;
 
-    public ColorIntensitySensor(SimBotSensorCenter myCenter, String name, SimBot parent, double lateralOffset) {
+    public ColorIntensitySensor(SimBotSensorCenter myCenter, String name, SimBot sim, double lateralOffset) {
         super(myCenter, name);
-        this.parent = parent;
+        parent = sim;
         try {
-            img = ImageIO.read(new File("./src/main/resources/public/img/line.png"));
+            img = ImageIO.read(new File("cs-minibot-platform-src/src/main/resources/public/img/line.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
