@@ -208,10 +208,6 @@ public class BaseHTTPInterface {
             return fileName;
         });
 
-        /*loads a scenario with the specified file name to the simulator
-        viewer in gui, but does not add it to the simulation
-         */
-
         /**
          * POST /loadScenario loads a scenario into the scenario viewer from a
          * txt scenario file with the specified name; does not add scenario
