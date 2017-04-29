@@ -120,19 +120,15 @@ public class Dijkstras {
         }
     }
     public static LinkedList<Node> getPath(Node target) throws InterruptedException {
-        System.out.println("FUCK");
         LinkedList<Node> path = new LinkedList<Node>();
         Node step = target;
         // check if a path exists
         if (predecessors.get(step) == null) {
-            System.out.println("ughh null");
             return null;
         }
         path.add(step);
         while (predecessors.get(step) != null) {
-            //System.out.println("while get path");
             step = predecessors.get(step);
-            //System.out.println("GOT NODE:  " + step.getX() + " " + step.getY());
             path.add(step);
             Thread.sleep(50);
 
@@ -155,8 +151,6 @@ public class Dijkstras {
             currentNode = getNodeWithLowestCost(unsettledNodes);
 
             if(currentNode.isEnd){
-                System.out.println("ENDING");
-                System.out.println(currentNode.getX() + ", " + currentNode.getY());
                 predecessors.put(currentNode, curr);
 
                 break;

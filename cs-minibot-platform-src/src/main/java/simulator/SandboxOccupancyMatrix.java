@@ -5,7 +5,6 @@ import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
-import simulator.physics.PhysicalObject;
 import simulator.simbot.Dijkstras;
 import simulator.simbot.Dijkstras.Node;
 
@@ -47,11 +46,11 @@ public class SandboxOccupancyMatrix extends Thread{
 
         //CREATING CIRCLE
         BodyDef circlebd = new BodyDef();
-        circlebd.position.set(xPos - 5.0f, yPos - 3.0f);
+        circlebd.position.set(xPos - 1.0f, yPos + 2.0f);
         circlebd.type = BodyType.STATIC;
 
         CircleShape cs = new CircleShape();
-        cs.setRadius(8.5f);
+        cs.setRadius(7.5f);
 
         FixtureDef circlefd = new FixtureDef();
         circlefd.shape = cs;
@@ -60,7 +59,7 @@ public class SandboxOccupancyMatrix extends Thread{
 
         //WHAT
         BodyDef triangledef=new BodyDef();
-        triangledef.type=BodyType.KINEMATIC;
+        triangledef.type=BodyType.STATIC;
         triangledef.position.set(-4.0f,-4.0f); //
 
         PolygonShape weirdPoly = new PolygonShape();
@@ -71,8 +70,8 @@ public class SandboxOccupancyMatrix extends Thread{
         weirdPoly.set(vertices, 3);
         FixtureDef weirdFixtureDef = new FixtureDef();
         weirdFixtureDef.shape = weirdPoly;
-        Body trianglebody = w.createBody(triangledef);
-        trianglebody.createFixture(weirdFixtureDef);
+//        Body trianglebody = w.createBody(triangledef);
+//        trianglebody.createFixture(weirdFixtureDef);
 
 
 
@@ -105,6 +104,20 @@ public class SandboxOccupancyMatrix extends Thread{
             }
             System.out.println();
         }
+        int[][] skinnedOccupancyMatrix = new int[occupancyMatrix.length-2][occupancyMatrix.length-2];
+        for(int i = 0; i < skinnedOccupancyMatrix.length; i++) {
+            for(int j = 0; j < skinnedOccupancyMatrix[0].length; j++) {
+                skinnedOccupancyMatrix[i][j] = occupancyMatrix[i+1][j+1];
+            }
+        }
+        for (int j = 0; j < skinnedOccupancyMatrix.length; j++) {
+            for (int i = 0; i < skinnedOccupancyMatrix[j].length; i++) {
+                System.out.print(skinnedOccupancyMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+
         System.out.println(Dijkstras.answer(occupancyMatrix));
 
 //        for (int j = 0; j < path.length; j++) {
@@ -113,17 +126,14 @@ public class SandboxOccupancyMatrix extends Thread{
 //            }
 //            System.out.println();
 //        }
-        if(Dijkstras.targetNode == null) {
-            System.out.println("target node is null");
-        }
-        else {
-            System.out.println("target node is");
-        }
-        System.out.println(Dijkstras.targetNode.getX() + " " + Dijkstras.targetNode.getY());
-        LinkedList<Dijkstras.Node> path = Dijkstras.getPath(Dijkstras.targetNode);
-        int[][] pathMatrix = new int[21][21];
+
+        Node targetNode = Dijkstras.targetNode;
+
+        LinkedList<Node> path = Dijkstras.getPath(targetNode);
+        int[][] pathMatrix = new int[occupancyMatrix.length+1][occupancyMatrix[0].length+1];
+
         for(int i = 0; i < path.size(); i++) {
-            System.out.println("X:" + path.get(i).getX() + " Y:" + path.get(i).getY());
+            //System.out.println("X:" + path.get(i).getX() + " Y:" + path.get(i).getY());
             pathMatrix[path.get(i).getX()][path.get(i).getY()] = 1;
         }
 
@@ -133,9 +143,5 @@ public class SandboxOccupancyMatrix extends Thread{
             }
             System.out.println();
         }
-
-
     }
-
-
 }
