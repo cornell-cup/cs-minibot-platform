@@ -139,9 +139,9 @@ public class SandboxOccupancyMatrix extends Thread{
         }
         path.add(step);
         while (predecessors.get(step) != null) {
-            System.out.println("while get path");
+            //System.out.println("while get path");
             step = predecessors.get(step);
-            System.out.println("GOT NODE:  " + step.getX() + " " + step.getY());
+            //System.out.println("GOT NODE:  " + step.getX() + " " + step.getY());
             path.add(step);
             Thread.sleep(50);
 
@@ -173,7 +173,7 @@ public class SandboxOccupancyMatrix extends Thread{
             //path[currentNode.getX()][currentNode.getY()] = 1;
             unsettledNodes.remove(currentNode);
             settledNodes.add(currentNode);
-            System.out.println("PUT");
+            //System.out.println("PUT");
             curr = currentNode;
             processNeighbors(currentNode);
         }
@@ -225,7 +225,7 @@ public class SandboxOccupancyMatrix extends Thread{
 
         //dfdfdf
         BodyDef polygon=new BodyDef();
-        polygon.type=BodyType.DYNAMIC;
+        polygon.type=BodyType.STATIC;
         polygon.position.set(xPos,yPos); //
 
         PolygonShape poly =new PolygonShape();
@@ -242,11 +242,11 @@ public class SandboxOccupancyMatrix extends Thread{
 
         //CREATING CIRCLE
         BodyDef circlebd = new BodyDef();
-        circlebd.position.set(xPos - 6.0f, yPos - 6.0f);
-        circlebd.type = BodyType.DYNAMIC;
+        circlebd.position.set(xPos - 5.0f, yPos - 3.0f);
+        circlebd.type = BodyType.STATIC;
 
         CircleShape cs = new CircleShape();
-        cs.setRadius(4.5f);
+        cs.setRadius(8.5f);
 
         FixtureDef circlefd = new FixtureDef();
         circlefd.shape = cs;
@@ -255,14 +255,14 @@ public class SandboxOccupancyMatrix extends Thread{
 
         //WHAT
         BodyDef triangledef=new BodyDef();
-        triangledef.type=BodyType.DYNAMIC;
-        triangledef.position.set(0.0f,0.0f); //
+        triangledef.type=BodyType.KINEMATIC;
+        triangledef.position.set(-4.0f,-4.0f); //
 
         PolygonShape weirdPoly = new PolygonShape();
         Vec2 [] vertices = new Vec2[3];
-        vertices[0] = new Vec2(0.0f, 0.0f);
-        vertices[1] = new Vec2(6.0f, 0.0f);
-        vertices[2] = new Vec2(0.0f, 6.0f);
+        vertices[0] = new Vec2(-1.0f, -1.0f);
+        vertices[1] = new Vec2(5.0f, 0.0f);
+        vertices[2] = new Vec2(0.0f, 5.0f);
         weirdPoly.set(vertices, 3);
         FixtureDef weirdFixtureDef = new FixtureDef();
         weirdFixtureDef.shape = weirdPoly;
@@ -287,7 +287,7 @@ public class SandboxOccupancyMatrix extends Thread{
                         if(fixture.testPoint(middle)) {
                             occupancyMatrix[icopy+10][jcopy+10] = 1;
                         }
-                        return false;
+                        return true;
                     }
                 };
                 w.queryAABB(callback, currentSquare);
