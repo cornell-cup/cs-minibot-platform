@@ -4,24 +4,19 @@ from threading import Thread
 import time
 
 z = ZMQExchange()
-
-"""
-Sets up TCP connection between master and minions. Starts publisher-side 
-connection.
-"""
-z.setBroadcaster()
-z.setMediator()
-
-# the broadcastingQueue holds messages temporarily and then puts them
-# into the broadcaster
-
 threads = []
-mediateThread = Thread(target=z.mediate)
-mediateThread.start()
-threads.append(mediateThread)
-# commands for bot movement itself
 
 def run(bot):
+    # Sets up TCP connection between master and minions. Starts publisher-side 
+    # connection.
+    # always set the mediator first
+    z.setMediator()
+    z.setBroadcaster()
+    
+    mediateThread = Thread(target=z.mediate)
+    mediateThread.start()
+    threads.append(mediateThread)
+    # commands for bot movement itself
     try:
         while(True):
             # msg is a tuple of left motor and right motor, respectively.

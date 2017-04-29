@@ -3,6 +3,7 @@ import MiniBotFramework
 from threading import Thread
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
+from Queue import Queue
 
 # Constants
 CONFIG_LOCATION = "MiniBotConfig/config.json"
@@ -80,6 +81,7 @@ def parse_command(cmd, bot, p):
     elif key == "RUN":
         p = spawn_named_script_process(p, bot, value)
     else:
+        bot.extraCMD.put( (key, cmd) )
         print("Unknown key: " + key)
         print("Cmd: " + cmd)
     return None
@@ -97,6 +99,8 @@ def spawn_named_script_process(p,bot,name):
     if (p is not None and p.is_alive()):
         p.terminate()
     time.sleep(0.1)
+    if "minion" in name or "Minion" in name:
+
     p = Thread(target=run_script_with_name, args=[bot,name])
     p.start()
     # Return control to main after .1 seconds

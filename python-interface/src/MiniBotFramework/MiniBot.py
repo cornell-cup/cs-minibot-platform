@@ -5,6 +5,7 @@ try:
 except:
     GPIO = {}
 import MiniBotFramework
+from Queue import Queue
 
 class MiniBot:
     """
@@ -26,6 +27,8 @@ class MiniBot:
             else:
                 print("ERROR: Unknown actuator in config")
 
+        # queue for extra unrecognized commands by parser
+        self.extraCMD = Queue()
         # TODO: Sensor parsing
 
         # Meta actuator. TODO: Make configurable

@@ -2,27 +2,33 @@
 
 # =============================================================================
 # MasterBroadcast.py
-# Created by Celine Choo and Anmol Kabra
 # Project SwarmBot -> MiniBot SP17
 # Cornell Cup Robotics Team, Cornell University
 # =============================================================================
 # Connects to the Minions and broadcasts messages using ZeroMQ protocol
+# IMPORTANT: Always set the Mediator first
 # =============================================================================
 
 import sys, os, time, zmq
 from threading import Thread
 import random
 from Queue import Queue
+import socket
+import fcntl
+import struct
 
 class ZMQExchange:
     def __init__(self):
         """
         Initializes the ZMQ broadcaster
         """
-        # constants
-        self.__xpub_url = "tcp://192.168.4.53:5555"
-        self.__xsub_url = "tcp://192.168.4.53:5556"
-        # prefix to the message
+        # default constants
+        self.__xpub_port = "5555"
+        self.__xsub_port = "5556"
+        self.__xpub_url = "tcp://127.0.0.1:" + self.__xpub_port
+        self.__xsub_url = "tcp://127.0.0.1:" + self.__xsub_port
+
+        # prefix to the message, for security version
         self.messageTopic = "ccrt-minibot-swarmbot-master"
         
         # true depending on the type of device
@@ -33,10 +39,29 @@ class ZMQExchange:
         # initialize connection
         self.context = zmq.Context()
 
+    def getIP(self, ifname):
+        """
+        Returns the IP
+        """
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        return socket.inet_ntoa(fcntl.ioctl(
+            s.fileno(),
+            0x8915,  # SIOCGIFADDR
+            struct.pack('256s', ifname[:15])
+            )[20:24])
+
     def setMediator(self):
         """
         Initializes the Mediator
         """
+
+        # set the ip and xpub/xsub URLs
+        self.MEDIATOR_IP = self.getIP('wlan0')
+        self.__xpub_url = "tcp://" + self.MEDIATOR_IP + ":" + self.__xpub_port
+        self.__xsub_url = "tcp://" + self.MEDIATOR_IP + ":" + self.__xsub_port
+        print self.__xpub_url, self.__xsub_url
+
+        # set up the mediator
         self.xpub = self.context.socket(zmq.XPUB)
         self.xpub.bind(self.__xpub_url)
         self.xsub = self.context.socket(zmq.XSUB)

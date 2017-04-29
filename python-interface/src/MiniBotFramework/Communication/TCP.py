@@ -29,33 +29,35 @@ class TCP(object):
         self.command = ""
         return temp
 
-def run():
-    while TCP.tcp is None:
-        time.sleep(1)
-    while True:
-        print("Waiting for connection")
-        connectionSocket, addr = TCP.tcp.server_socket.accept()
-        connectionSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        print("Connection accepted")
-        active=True
-        while active:
-            command = ""
+    def requestIP(self, key, value):
+
+    def run(self):
+        while tcp is None:
+            time.sleep(1)
+        while True:
+            print("Waiting for connection")
+            self.connectionSocket, self.addr = self.server_socket.accept()
+            self.connectionSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            print("Connection accepted")
+            self.active=True
             while active:
-                try:
-                    lastLen = len(command)
-                    command += connectionSocket.recv(1024).decode()
-                    if lastLen == len(command):
+                command = ""
+                while self.active:
+                    try:
+                        lastLen = len(command)
+                        command += self.connectionSocket.recv(1024).decode()
+                        if lastLen == len(command):
+                            print("Connection Lost")
+                            self.active = False
+                            lastLen = -1
+                            break
+                    except socket.error as e:
                         print("Connection Lost")
-                        active = False
-                        lastLen = -1
+                        self.active = False
                         break
-                except socket.error as e:
-                    print("Connection Lost")
-                    active = False
-                    break
-                end_index = command.find(">>>>")
-                # In case of command overload
-                while end_index > 0:
-                    TCP.tcp.set_command(command[0:end_index+4])
-                    command = command[end_index+4:]
                     end_index = command.find(">>>>")
+                    # In case of command overload
+                    while end_index > 0:
+                        self.set_command(command[0:end_index+4])
+                        command = command[end_index+4:]
+                        end_index = command.find(">>>>")
