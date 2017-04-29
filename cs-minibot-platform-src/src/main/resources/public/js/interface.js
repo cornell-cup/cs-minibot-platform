@@ -9,7 +9,6 @@ Pages and functions:
 - bot configs
 	- addBot
 	- removeBot
-	- listBots
 - bot dynamics
 	- commandBot
 	- ...
@@ -235,7 +234,6 @@ $('#addScenario').click(function() {
 	of active bots will update accordingly (depending on the addition
 	or removal of a bot).
 */
-
 function updateDropdown(toAdd, text, val) {
 	// if adding to update
 	if(toAdd) { 
@@ -383,24 +381,15 @@ function redoDiscoverList(data){
                 updateDropdown(true, data, data);
             }
         });
-
-        //
-
         //Add to active_bots list
         active_bots.push(bot_ip);
-
         redoDiscoverList(discovered_bots);
     });
-}
-
-function listBots(){
-	// lists all the bots
 }
 
 updateDiscoveredBots();
 
 $(document).ready(function() {
-
 /*
  * Event listener for key inputs. Sends to selected bot.
  */

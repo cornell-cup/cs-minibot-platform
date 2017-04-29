@@ -155,10 +155,6 @@ public class PhysicalObject {
      */
     public Body getBody() { return body;}
 
-    //change all instances of rectangle to Rectangle2D/whichever allows for doubles
-
-
-
     /**
      *
      * @return a string of the PhysicalObject
