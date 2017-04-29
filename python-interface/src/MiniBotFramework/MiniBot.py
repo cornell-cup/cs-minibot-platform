@@ -1,6 +1,9 @@
 import os, time
 from os import sys, path
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except:
+    GPIO = {}
 import MiniBotFramework
 
 class MiniBot:

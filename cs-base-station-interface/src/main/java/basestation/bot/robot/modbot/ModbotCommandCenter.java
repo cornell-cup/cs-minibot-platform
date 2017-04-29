@@ -11,11 +11,20 @@ import basestation.vision.VisionCoordinate;
 public class ModbotCommandCenter extends ExtendedFourWheelMovement {
     private final MotorConnection connection;
     private final ModbotNavigator navigator;
+    public transient boolean record = false;
 
     public ModbotCommandCenter(MotorConnection connection, ModBot myBot) {
         super();
         this.navigator = new ModbotNavigator(myBot);
         this.connection = connection;
+    }
+
+    public void startLogging() {
+        this.record = true;
+    }
+
+    public boolean isLogging() {
+        return this.record;
     }
 
     /**

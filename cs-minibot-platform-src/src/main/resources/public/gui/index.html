@@ -1,252 +1,198 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+<html>
+<head>
+	<title>ModBot GUI</title>
+	<!-- IMPORTS -->
+	<link rel="stylesheet" href="../css/general.css"/>
+	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
+	<!-- END IMPORTS -->
+</head>
 
-    <title>Minibot: GUI</title>
+<body>
+	<header>
+		<h1>modbot gui v2.0</h1><br>
+		A GUI to control Cornell Cup's modbot.
+	</header>
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- BOT VIEW -->
+	<div class="box view">
+		<h3>VIEW
+			<!--<button id="zoom-out">scale view</button>
+			<button id="reset">reset</button>-->
+			<input type="checkbox" id="vision-poll"> Poll for Vision Data<br>
+			Scale (10-100%): <input id="scale" type="range" name="power" min="10" max="100" value="100">
+		</h3>
+		<table>
+			<tr>
+				<td>
+					Scale: <br>
+					&nbsp; &nbsp; x: [0,12]<br>
+					&nbsp; &nbsp; y: [0,12]<br>
+				</td>
+				<td>&nbsp; &nbsp; &nbsp; </td>
+				<td>
+					Interval: <br>
+					&nbsp; &nbsp; x spacing: <span id="x-int"></span><br>
+					&nbsp; &nbsp; y spacing: <span id="y-int"></span>
+				</td>
+			</tr>
+		</table>
+		<br><br>
+		<div id="view">
+		<!-- this is where the grid goes -->
+		</div>
+	</div>
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="../css/general2.css"/>
+	<!-- BOT CONTROLS -->
+	<div class="box">
+		<h4>Movement controls:</h4>
+		Choose bot:<br>
+		<select id="botlist" name="bots">
+			<option value="">-- Choose a bot --</option>
+			<option value="0">(DEBUG) Sim Bot</option>
+		</select>
 
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+		<button class="controls" id="removeBot">remove</button><br>
+		Power (0-100): <input id="power" type="range" name="power" min="0" max="100" value="50">
+		<br><br>
+		
+		<hr><br>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
+		<b>Directions:</b><br>
 
-  <body>
+		<table style="text-align:center;">
+			<tr>
+				<td><button class="dir" id="ccw">turn CCW</button></td>
+				<td><button class="dir" id="fwd">forward</button></td>
+				<td><button class="dir" id="cw">turn CW</button></td>
+			</tr>
+			<tr>
+				<td><button class="dir" id="lft">left</button></td>
+				<td><button class="dir" id="stop" style="background:red;">STOP</button></td>
+				<td><button class="dir" id="rt">right</button></td>
+			</tr>
+			<tr>
+				<td><button class="dir" id="log">log data</button></td>
+				<td><button class="dir" id="bck">backward</button></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<input type="checkbox" id="keyboard-controls"> Enable Keyboard Controls
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><button id="xbox-on">Start Xbox</td>
+				<td><button id="xbox-off">Stop Xbox</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><input type="text" id="kv_key" placeholder="Key (e.g. WHEELS)"></td>
+				<td><input type="text" id="kv_value" placeholder="Value (e.g. 10,10)"></td>
+				<td><button id="sendkv" onclick="sendKV()">Send KV</button></td>
+			</tr>
+		</table>
+	</div>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Cornell Cup MiniBot</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Help</a></li>
-          </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div>
-      </div>
-    </nav>
+	<!-- BOT CONFIGURATIONS -->
+	<div class="box">
+		<h4>Add a bot:</h4>
+		IP: <input type="text" name="ip" id="ip"><br/>
+		Port: <input type="text" name="port" id="port" value="10000"><br/>
+		Name: <input type="text" name="name" id="name"><br/>
+		Type:
+		<select id="bot-type" name="type">
+			<option value="minibot">minibot</option>
+			<option value="modbot">modbot</option>
+			<option value = "simulator.simbot">simulator.simbot</option>
+		</select>
+		<button id="addBot">add bot</button>
+		<button id = "updateLocs"> Run simulator </button>
+		<br><hr><br>
+		Scenario:
+		<textarea rows="4" cols="50" name="scenario" id="scenario">[{"type": "scenario_object", "position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]</textarea>
+		<button id="addScenario">add scenario</button>
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Configurations</a></li>
-            <li><a href="#">Coding</a></li>
-            <li><a href="#">Settings</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">Blockly</a></li>
-            <li><a href="">Download</a></li>
-            <li><a href="">One more nav</a></li>
-            <li><a href="">Another nav item</a></li>
-            <li><a href="">More navigation</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">Nav item again</a></li>
-            <li><a href="">One more nav</a></li>
-            <li><a href="">Another nav item</a></li>
-          </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
+	</div>
 
-          <div class="row placeholders">
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-            <div class="col-xs-6 col-sm-3 placeholder">
-              <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-              <h4>Label</h4>
-              <span class="text-muted">Something else</span>
-            </div>
-          </div>
+	<div class="box">
+		<h4>Add a discovered bot:</h4>
+		<div id="discovered"></div>
+	</div>
 
-          <h2 class="sub-header">Section title</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-                <tr>
-                  <td>1,005</td>
-                  <td>Nulla</td>
-                  <td>quis</td>
-                  <td>sem</td>
-                  <td>at</td>
-                </tr>
-                <tr>
-                  <td>1,006</td>
-                  <td>nibh</td>
-                  <td>elementum</td>
-                  <td>imperdiet</td>
-                  <td>Duis</td>
-                </tr>
-                <tr>
-                  <td>1,007</td>
-                  <td>sagittis</td>
-                  <td>ipsum</td>
-                  <td>Praesent</td>
-                  <td>mauris</td>
-                </tr>
-                <tr>
-                  <td>1,008</td>
-                  <td>Fusce</td>
-                  <td>nec</td>
-                  <td>tellus</td>
-                  <td>sed</td>
-                </tr>
-                <tr>
-                  <td>1,009</td>
-                  <td>augue</td>
-                  <td>semper</td>
-                  <td>porta</td>
-                  <td>Mauris</td>
-                </tr>
-                <tr>
-                  <td>1,010</td>
-                  <td>massa</td>
-                  <td>Vestibulum</td>
-                  <td>lacinia</td>
-                  <td>arcu</td>
-                </tr>
-                <tr>
-                  <td>1,011</td>
-                  <td>eget</td>
-                  <td>nulla</td>
-                  <td>Class</td>
-                  <td>aptent</td>
-                </tr>
-                <tr>
-                  <td>1,012</td>
-                  <td>taciti</td>
-                  <td>sociosqu</td>
-                  <td>ad</td>
-                  <td>litora</td>
-                </tr>
-                <tr>
-                  <td>1,013</td>
-                  <td>torquent</td>
-                  <td>per</td>
-                  <td>conubia</td>
-                  <td>nostra</td>
-                </tr>
-                <tr>
-                  <td>1,014</td>
-                  <td>per</td>
-                  <td>inceptos</td>
-                  <td>himenaeos</td>
-                  <td>Curabitur</td>
-                </tr>
-                <tr>
-                  <td>1,015</td>
-                  <td>sodales</td>
-                  <td>ligula</td>
-                  <td>in</td>
-                  <td>libero</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+	<!--<div class="box">-->
+		<!--<h4>Active bots:</h4>-->
+		<!--<div id="active"></div>-->
+	<!--</div>-->
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="../../assets/js/vendor/holder.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
+	<div class="box">
+
+	<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+
+	<!-- BEGINNING OF BLOCKLY CODE -->
+	<div class="box">
+		<!-- BLOCKLY TOOLBOX -->
+		<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+		<xml id="toolbox" style="display:none;">
+			<block type="controls_if"></block>
+			<block type="logic_compare"></block>
+			<block type="controls_repeat_ext"></block>
+			<block type="math_number"></block>
+			<block type="math_arithmetic"></block>
+			<block type="text"></block>
+			<block type="text_print"></block>
+
+			<!-- ADDING CUSTOM BLOCKS -->
+			<block type="move"></block>
+			<block type="turn"></block>
+			<block type="setwheelpower"></block>
+			<block type="wait"></block>
+		</xml>
+
+		<!-- SUBMIT/DOWNLOAD/UPLOAD FUNCTIONALITIES -->
+			<!-- download script-->
+		<form id="dwn" onsubmit="download(this['name'].value, this['text'].value)">
+			<input type="text" name="name" value="myBlocklyCode.py">
+			<textarea name="text" size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
+			<input type="submit" value="Download">
+		</form>
+
+			<!-- send script -->
+		<button id="send">run</button>
+		
+			<!-- upload script -->
+		<form type=POST>
+			<input 
+				type="file" 
+				id="upload" 
+				multipleSize="1" 
+				accept=".py"
+			/>
+		</form>
+	</div>
+	
+	<!-- basic imports -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="http://pixijs.download/release/pixi.min.js"></script>
+
+	<!-- blockly imports -->
+	<script src="../js/vendor/blockly/blockly_compressed.js"></script>
+	<script src="../js/vendor/blockly/javascript_compressed.js"></script>
+	<script src="../js/vendor/blockly/python_compressed.js"></script>
+	<script src="../js/vendor/blockly/blocks_compressed.js"></script>
+	<script src="../js/vendor/blockly/en.js"></script>
+	<script src="../js/vendor/prettify/prettify.js"></script>
+
+	<!-- IMPORT CUSTOM BLOCKS -->
+	<script type="text/javascript" src="../js/blocks/custom_blocks.js"></script>
+	<script type="text/javascript" src="../js/blocks/custom_json.js"></script>
+
+	<!-- manual scripts -->
+	<script src="../js/blockly.js"></script>	
+	<script src="../js/interface.js"></script>
+	<script src="../js/view.js"></script>
+</body>
 </html>

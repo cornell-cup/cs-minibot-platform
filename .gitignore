@@ -6,7 +6,9 @@ __pycache__/
 received.py
 temp.py
 *.iml
+*.csv
 META-INF/
+script.py
 *.pyc
 .DS_Store
 config.json

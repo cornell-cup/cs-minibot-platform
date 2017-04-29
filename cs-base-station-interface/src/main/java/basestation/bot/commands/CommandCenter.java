@@ -10,6 +10,17 @@ package basestation.bot.commands;
 public interface CommandCenter {
 
     /**
+     * Starts logging of data
+     */
+    void startLogging();
+
+    /**
+     * Returns whether or not data is currently being logged.
+     * @return True if the command center is currently logging data
+     */
+    boolean isLogging();
+
+    /**
      * Sends an arbitrary key and value over the associated bot's connection. Should only be used for quick prototyping,
      * with the goal of creating a method wrapper around sending the KV.
      * @param key A key to identify the type of command
