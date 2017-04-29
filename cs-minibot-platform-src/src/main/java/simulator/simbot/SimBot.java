@@ -19,7 +19,6 @@ public class SimBot extends Bot {
     /**
      * Currently minibots are implemented using a TCP connection
      */
-
     public SimBot(SimBotConnection sbc, String name, int id, World world,
                   float xSpeed, float ySpeed, float xPos, float yPos,
                   int angle, boolean isDynamic) {
@@ -40,6 +39,10 @@ public class SimBot extends Bot {
             e.printStackTrace();
         }
     }
+
+    /**
+     * @return the JBox2D physical object associated with this bot
+     */
     public PhysicalObject getMyPhysicalObject() {
         return myPhysicalObject;
     }

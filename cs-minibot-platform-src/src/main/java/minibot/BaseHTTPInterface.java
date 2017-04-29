@@ -50,12 +50,13 @@ public class BaseHTTPInterface {
     public static final boolean OVERHEAD_VISION = true;
     private static XboxControllerDriver xboxControllerDriver;
 
-
     public static void main(String[] args) {
         // Spark configuration
         port(8080);
         staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
+
+        //create new visionsystem and simulator instances
         SimulatorVisionSystem simvs;
         Simulator simulator = new Simulator();
         // Show exceptions
@@ -77,6 +78,7 @@ public class BaseHTTPInterface {
         }
 
         // Routes
+        /* add a new bot from the gui*/
         post("/addBot", (req,res) -> {
             String body = req.body();
             JsonObject addInfo = jsonParser.parse(body).getAsJsonObject(); // gets (ip, port) from js
@@ -113,6 +115,15 @@ public class BaseHTTPInterface {
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
 
+
+        /**
+         * POST /addScenario starts a simulation with the scenario from the
+         * scenario viewer in the gui
+         *
+         * @apiParam scenario a string representing a list of JSON scenario
+         * objects, which consist of obstacles and bot(s)
+         * @return the scenario json if it was successfully added
+         */
         post("/addScenario", (req,res) -> {
 
             String body = req.body();
@@ -167,7 +178,15 @@ public class BaseHTTPInterface {
             return addInfo;
         });
 
-        //saves a scenario as a file
+        /**
+         * POST /saveScenario saves the scenario currently loaded as a txt
+         * file with the specified name
+         *
+         * @apiParam scenario a string representing a list of JSON scenario
+         * objects, which consist of obstacles and bot(s)
+         * @apiParam name the name the new scenario txt file
+         * @return the name of the file if it was successfully saved
+         */
         post("/saveScenario", (req,res) -> {
 
             String body = req.body();
@@ -189,8 +208,18 @@ public class BaseHTTPInterface {
             return fileName;
         });
 
-        //loads a scenario from a file - input is the name of the scenario,
-        // without file extension
+        /*loads a scenario with the specified file name to the simulator
+        viewer in gui, but does not add it to the simulation
+         */
+
+        /**
+         * POST /loadScenario loads a scenario into the scenario viewer from a
+         * txt scenario file with the specified name; does not add scenario
+         * to the world or start a simulation
+         *
+         * @apiParam name the name the scenario txt file to load
+         * @return the JSON of the scenario if it was loaded successfully
+         */
         post("/loadScenario", (req,res) -> {
             String body = req.body();
             JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
@@ -212,6 +241,7 @@ public class BaseHTTPInterface {
             return scenarioData;
         });
 
+        /*send commands to the selected bot*/
         post("/commandBot", (req,res) -> {
             System.out.println("post to command bot called");
             String body = req.body();
@@ -231,6 +261,7 @@ public class BaseHTTPInterface {
             return fwmCommandCenter.setWheelPower(fl,fr,bl,br);
         });
 
+        /*remove the selected bot -  not sure if still functional*/
         post("/removeBot", (req,res) -> {
             String body = req.body();
             JsonObject removeInfo = jsonParser.parse(body).getAsJsonObject();

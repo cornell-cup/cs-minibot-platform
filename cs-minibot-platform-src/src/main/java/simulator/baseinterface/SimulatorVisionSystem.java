@@ -35,11 +35,18 @@ public class SimulatorVisionSystem extends VisionSystem {
         return instance;
     }
 
+    /**
+     * @return the set of all vision objects being tracked by the vision system
+     */
     @Override
     public Set<VisionObject> getAllObjects() {
         return visionObjectSet;
     }
 
+    /**
+     * called when the simulator is reset (when a new simulation is started
+     * based on a new scenario), this resets the set of vision objects
+     */
     public void resetWorld() {
         visionObjectSet = ConcurrentHashMap.newKeySet();
     }
@@ -47,6 +54,9 @@ public class SimulatorVisionSystem extends VisionSystem {
     /**
      * Updates the simulator vision system to display locs of objects after a
      * simulation step
+     *
+     * @param poSet the set of physical objects passed from the simulator,
+     *              representing the bots and obstacles in the world
      */
     public void updateVisionCoordinates(Set<PhysicalObject> poSet) {
         Set<VisionObject> newSet = ConcurrentHashMap.newKeySet();

@@ -169,7 +169,7 @@ $('#addBot').click(function() {
     });
 });
 
-//adding a scenario from the value in the text field
+//adding a scenario from the value in the scenario viewer
 $('#addScenario').click(function() {
     console.log("add scenario from interface.js")
     var scenario = $("#scenario").val();
@@ -179,9 +179,7 @@ $('#addScenario').click(function() {
         url: '/addScenario',
         dataType: 'text',
         data: JSON.stringify({
-            scenario: scenario.toString(),
-            ip: getIP(),
-            port: (getPort() || 10000)
+            scenario: scenario.toString()
         }),
         contentType: 'application/json; charset=utf-8',
         success: function (data){
@@ -190,7 +188,7 @@ $('#addScenario').click(function() {
     });
  });
 
- //saving a scenario
+ //saving a scenario to a txt file with the specified filename
  $('#saveScenario').click(function() {
      console.log("saving a scenario")
      var scenario = $("#scenario").val();

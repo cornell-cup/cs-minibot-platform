@@ -27,12 +27,26 @@ public class Simulator {
         sr.start();
     }
 
+    /**
+     * @return the vision system that is tied to the simulator
+     */
     public SimulatorVisionSystem getVisionSystem(){
         return visionsystem;
     }
 
+    /**
+     *
+     * @return the JBox2D world that the simulation is running in
+     */
     public World getWorld() { return world;}
 
+    /**
+     * This is called when a new scenario is added (starting a new simulation
+     * based on the scenario)
+     *
+     * Resets the simulation by creating a new world, resetting all physical
+     * objects and vision objcts, and starting a new simulation
+     */
     public void resetWorld() {
         world = new World(new Vec2(0f, 0f));
         poSet = ConcurrentHashMap.newKeySet();
@@ -42,6 +56,11 @@ public class Simulator {
         sr.start();
     }
 
+    /**
+     * A single step of the simulation- updates JBox2D world, updates all the
+     * physical objects in the world, and updates all the corresponding
+     * vision objects in the vision system
+     */
     public void stepSimulation() {
         long now = System.nanoTime();
         long delta = now - before;
@@ -56,6 +75,9 @@ public class Simulator {
         visionsystem.updateVisionCoordinates(poSet);
     }
 
+    /**
+     * Runs the simulations at the specified number of updates/second
+     */
     private class SimRunner extends Thread {
         @Override
         public void run() {

@@ -8,13 +8,16 @@ import simulator.physics.PhysicalObject;
  * Created by Administrator on 11/15/2016.
  */
 public class SimModBot extends PhysicalObject {
-    public static final double MAX_SPEED = 0.655; // 0.655 m/s
+    public static final double MAX_SPEED = 0.655;
+    // 0.655 m/s, the measured top speed (03/17)
+
     //The amount of radians a robot with radius 0.5 m changes by when rotating for an arc length of 1 m
     public static final double MAX_ANGULAR_SPEED = Math.PI;//4.18879;// 1 revolution every 2 seconds
 
     public SimModBot(String name, int id, World world, float xSpeed, float
             ySpeed, float xPos, float yPos, int angle, boolean isDynamic) {
-        super(name, id, world, xSpeed, ySpeed, 1f, 1f, angle, true);
+        //constructor just creates a physicalObject with the specified params
+        super(name, id, world, xSpeed, ySpeed, xPos, yPos, angle, true);
     }
 
     /**
