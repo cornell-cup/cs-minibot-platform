@@ -61,7 +61,7 @@ class ZMQExchange:
         """
 
         # set the ip and xpub/xsub URLs
-        self.setMediatorIP(self.getIP('wlan0'))
+        self.setMediatorIP(self.getIP('wlan1'))
         print self.__xpub_url, self.__xsub_url
 
         # set up the mediator
@@ -175,8 +175,7 @@ class ZMQExchange:
                         else:
                             #print "received ", info
                             pass
-                       oldData = data
-            
+                        oldData = data            
             except KeyboardInterrupt:
                 print "receiver stopping"
                 break

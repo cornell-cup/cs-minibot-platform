@@ -46,7 +46,7 @@ class TCP(object):
             print("send failed")
 
     def run(self):
-        while tcp is None:
+        while TCP.tcp is None:
             time.sleep(1)
         while True:
             print("Waiting for connection")

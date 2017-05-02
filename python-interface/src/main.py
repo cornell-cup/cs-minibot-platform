@@ -99,8 +99,6 @@ def spawn_named_script_process(p,bot,name):
     if (p is not None and p.is_alive()):
         p.terminate()
     time.sleep(0.1)
-    if "minion" in name or "Minion" in name:
-
     p = Thread(target=run_script_with_name, args=[bot,name])
     p.start()
     # Return control to main after .1 seconds
