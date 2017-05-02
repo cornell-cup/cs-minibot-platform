@@ -1,4 +1,5 @@
 from MiniBotFramework.Communication.ZMQ import ZMQExchange
+from MiniBotFramework.Communication.TCP import TCP
 from MiniBotFramework.Actuation.TwoWheelMovement import TwoWheelMovement
 from threading import Thread
 import time
@@ -13,6 +14,8 @@ def run(bot):
     z.setMediator()
     z.setBroadcaster()
     
+    TCP.tcp.send_to_basestation("PUT_IP", "SwarmMaster," + z.getIP("wlan0"))
+
     mediateThread = Thread(target=z.mediate)
     mediateThread.start()
     threads.append(mediateThread)

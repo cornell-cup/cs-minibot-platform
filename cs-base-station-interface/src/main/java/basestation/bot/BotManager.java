@@ -19,7 +19,7 @@ public class BotManager {
 
     private UDPConnectionListener udpConnection;
 
-    private HashMap<String, String> botIPMap;
+    private Map<String, String> botIPMap;   // only added IP on request from bot
 
     /**
      * Initializes the bot manager with a fresh map and counter
@@ -42,7 +42,6 @@ public class BotManager {
     public String addBot(Bot bot) throws Exception {
         if (bot.getConnection().connectionActive()) {
             botMap.put(bot.getName(), bot);
-            botIPMap.put(bot.getName(), bot.getCommandCenter().getConnection().getIP());
             return bot.getName();
         } else {
             throw new Exception("The connection was not active. Not adding the bot.");
@@ -66,7 +65,7 @@ public class BotManager {
      * @return An optional of the removed bot
      */
     public Optional<Bot> removeBotByName(String botName) {
-        botIPMap.remove(botName);
+        //botIPMap.remove(botName);
         return Optional.ofNullable(botMap.remove(botName));
     }
 
@@ -98,7 +97,17 @@ public class BotManager {
      *
      * @return String
      */
-    public String getBotIP (String name) {
-        return botIPMap.get(name);
+    public String getBotIP (String id) {
+        return botIPMap.get(id);
+    }
+
+    /**
+     * Add mapping from this bot's id to its ip
+     * @param id name specified on request from bot
+     * @param IP IP given by the bot
+     * @return true if operation was successful
+     */
+    public boolean setBotIPMap (String id, String IP) {
+        return botIPMap.put(id, IP) != null;
     }
 }

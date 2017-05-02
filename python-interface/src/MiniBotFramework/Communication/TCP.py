@@ -16,9 +16,10 @@ class TCP(object):
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind( (IP, PORT) )
         self.server_socket.listen(1)
-        self.thread_tcp = Thread(target = run)
+        self.thread_tcp = Thread(target = self.run)
         self.thread_tcp.start()
         self.command = ""
+        self.active = False
         TCP.tcp = self
 
     def set_command(self, command):
@@ -29,7 +30,20 @@ class TCP(object):
         self.command = ""
         return temp
 
-    def requestIP(self, key, value):
+    def send_to_basestation(self, key, value):
+        """
+        Sends information back to the basestation. can only execute if the
+        connection is active
+        """
+        if self.active:
+            # connection is active, send
+            try:
+                message = "<<<<" + key + ":" + value + ">>>>"
+                self.connectionSocket.send(message)
+            except socket.error as e:
+                print("send failed")
+        else:
+            print("send failed")
 
     def run(self):
         while tcp is None:
@@ -40,7 +54,7 @@ class TCP(object):
             self.connectionSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             print("Connection accepted")
             self.active=True
-            while active:
+            while self.active:
                 command = ""
                 while self.active:
                     try:

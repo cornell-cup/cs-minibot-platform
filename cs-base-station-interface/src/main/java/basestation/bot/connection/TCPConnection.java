@@ -39,7 +39,7 @@ public class TCPConnection extends Connection {
         }
     }
 
-    public boolean sendKV(String messageType, String message)  {
+    public synchronized boolean sendKV(String messageType, String message)  {
         String payload;
         payload = "<<<<" + messageType + "," + message + ">>>>";
         try {
@@ -55,5 +55,15 @@ public class TCPConnection extends Connection {
 
     public String getIP () {
         return this.ip;
+    }
+
+    public String receive() {
+        try {
+            return inFromServer.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            connectionNotRefused = false;
+            return null;
+        }
     }
 }

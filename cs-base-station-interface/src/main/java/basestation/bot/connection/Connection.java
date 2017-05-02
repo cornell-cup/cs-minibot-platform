@@ -16,7 +16,13 @@ public abstract class Connection {
     public abstract void destroy();
 
     /**
-     * @return Returns IP address of TCP Connection
+     * @return Returns IP address of Basestation Server
      */
     public abstract String getIP();
+
+    /**
+     * Listens to the server, and receives data
+     * @return String of received data
+     */
+    public abstract String receive();
 }

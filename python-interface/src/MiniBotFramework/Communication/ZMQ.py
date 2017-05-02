@@ -25,8 +25,9 @@ class ZMQExchange:
         # default constants
         self.__xpub_port = "5555"
         self.__xsub_port = "5556"
-        self.__xpub_url = "tcp://127.0.0.1:" + self.__xpub_port
-        self.__xsub_url = "tcp://127.0.0.1:" + self.__xsub_port
+
+        self.setMediatorIP("127.0.0.1")
+        print self.__xpub_url, self.__xsub_url
 
         # prefix to the message, for security version
         self.messageTopic = "ccrt-minibot-swarmbot-master"
@@ -41,7 +42,7 @@ class ZMQExchange:
 
     def getIP(self, ifname):
         """
-        Returns the IP
+        Returns the IP of the device
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         return socket.inet_ntoa(fcntl.ioctl(
@@ -50,15 +51,17 @@ class ZMQExchange:
             struct.pack('256s', ifname[:15])
             )[20:24])
 
+    def setMediatorIP(self, IP):
+        self.__xpub_url = "tcp://" + IP + ":" + self.__xpub_port
+        self.__xsub_url = "tcp://" + IP + ":" + self.__xsub_port
+
     def setMediator(self):
         """
         Initializes the Mediator
         """
 
         # set the ip and xpub/xsub URLs
-        self.MEDIATOR_IP = self.getIP('wlan0')
-        self.__xpub_url = "tcp://" + self.MEDIATOR_IP + ":" + self.__xpub_port
-        self.__xsub_url = "tcp://" + self.MEDIATOR_IP + ":" + self.__xsub_port
+        self.setMediatorIP(self.getIP('wlan0'))
         print self.__xpub_url, self.__xsub_url
 
         # set up the mediator
@@ -78,22 +81,26 @@ class ZMQExchange:
         """
         
         while True:
-            # poll the proxy URLs to see what messages are waiting
-            # if any, forward them
-            events = dict(self.poller.poll(1000))
-            #print "mediating..."
-
-            if self.xpub in events:
-                # message received from Minions on successful subscription
-                message = self.xpub.recv_multipart()
-                #print("%r" % message[0])
-                self.xsub.send_multipart(message)
-
-            if self.xsub in events:
-                # message from Master to be delivered to the Minions
-                message = self.xsub.recv_multipart()
-                #print("publishing message: %r" % message)
-                self.xpub.send_multipart(message)
+            try:
+                # poll the proxy URLs to see what messages are waiting
+                # if any, forward them
+                events = dict(self.poller.poll(1000))
+                #print "mediating..."
+    
+                if self.xpub in events:
+                    # message received from Minions on successful subscription
+                    message = self.xpub.recv_multipart()
+                    #print("%r" % message[0])
+                    self.xsub.send_multipart(message)
+    
+                if self.xsub in events:
+                    # message from Master to be delivered to the Minions
+                    message = self.xsub.recv_multipart()
+                    #print("publishing message: %r" % message)
+                    self.xpub.send_multipart(message)
+            except KeyboardInterrupt:
+                print "mediator ending"
+                break
 
     def setBroadcaster(self):
         """
@@ -119,10 +126,16 @@ class ZMQExchange:
         self.pub.send_multipart(msg)
         #print "broadcasted"
 
-    def setReceiver(self):
+    def setReceiver(self, mediatorIP = None):
         """
         Initializes the receiver
+        :param mediatorIP is the mediator's IP. The Minion should use mediatorIP
         """
+
+        if mediatorIP is not None:
+            self.setMediatorIP(mediatorIP)
+        
+        print self.__xpub_url, self.__xsub_url
         self.sub = self.context.socket(zmq.SUB)
         
         # receiver sub connects to the broadcaster pubs' proxy url
@@ -140,29 +153,34 @@ class ZMQExchange:
         """
         oldData = "empty"
         while True:
-            # wait infinitely to receive the message
-            if self.sub.poll(timeout=0):
-                data = self.sub.recv_multipart()
-                #print "received ", data
-                
-                if oldData != data:
-                    # parse the data into lWheel and rWheel and send it as a
-                    # tuple
-                    start = data[1].find("(")
-                    comma = data[1].find(",")
-                    end = data[1].find(")")
-                    lWheel = int(data[1][start + 1:comma])
-                    rWheel = int(data[1].strip()[comma + 1:end])
-                    info = (lWheel, rWheel)
-    
-                    # do something, send commands
-                    if receivedQueue is not None:
-                        receivedQueue.put(info)
-                    else:
-                        #print "received ", info
-                        pass
-                    oldData = data
+            try:
+                # wait infinitely to receive the message
+                if self.sub.poll(timeout=0):
+                    data = self.sub.recv_multipart()
+                    #print "received ", data
+                    
+                    if oldData != data:
+                        # parse the data into lWheel and rWheel and send it as a
+                        # tuple
+                        start = data[1].find("(")
+                        comma = data[1].find(",")
+                        end = data[1].find(")")
+                        lWheel = int(data[1][start + 1:comma])
+                        rWheel = int(data[1].strip()[comma + 1:end])
+                        info = (lWheel, rWheel)
         
+                        # do something, send commands
+                        if receivedQueue is not None:
+                            receivedQueue.put(info)
+                        else:
+                            #print "received ", info
+                            pass
+                       oldData = data
+            
+            except KeyboardInterrupt:
+                print "receiver stopping"
+                break
+
     def stopZMQExchange(self):
         """
         Stops the connection and closes the socket
