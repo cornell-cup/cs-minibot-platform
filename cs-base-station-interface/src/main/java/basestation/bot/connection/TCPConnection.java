@@ -52,4 +52,8 @@ public class TCPConnection extends Connection {
             return false;
         }
     }
+
+    public String getIP () {
+        return this.ip;
+    }
 }
