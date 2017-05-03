@@ -14,7 +14,7 @@ def run(bot):
     z.setMediator()
     z.setBroadcaster()
     
-    TCP.tcp.send_to_basestation("PUT_IP", "SwarmMaster," + z.getIP("wlan1"))
+    TCP.tcp.send_to_basestation("PUT_IP", "SwarmMaster," + z.getIP("wlan0"))
 
     mediateThread = Thread(target=z.mediate)
     mediateThread.start()
@@ -27,6 +27,10 @@ def run(bot):
             z.broadcast(msg)
             time.sleep(0.01)
 
+            if not TCP.tcp.isConnected():
+                print "zmq ending"
+                break
+
     finally:
         cleanup()
 
@@ -34,4 +38,4 @@ def cleanup():
     for t in threads:
         t.join(0.1)
 
-    z.stopZMQBroadcast()
+    z.stopZMQExchange()

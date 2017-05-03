@@ -61,7 +61,7 @@ class ZMQExchange:
         """
 
         # set the ip and xpub/xsub URLs
-        self.setMediatorIP(self.getIP('wlan1'))
+        self.setMediatorIP(self.getIP('wlan0'))
         print self.__xpub_url, self.__xsub_url
 
         # set up the mediator
@@ -101,7 +101,6 @@ class ZMQExchange:
             except KeyboardInterrupt:
                 print "mediator ending"
                 break
-
     def setBroadcaster(self):
         """
         Initializes the broadcaster
