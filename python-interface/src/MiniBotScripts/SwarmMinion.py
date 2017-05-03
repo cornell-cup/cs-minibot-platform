@@ -4,8 +4,6 @@ from Queue import Queue
 import time
 from threading import Thread
 
-z = ZMQExchange()
-
 threads = []
 
 def run(bot):
@@ -24,7 +22,7 @@ def run(bot):
 
     # Sets up ZMQ connection between master and minions. Starts subscriber-side 
     # connection
-    
+    z = ZMQExchange()
     z.setReceiver(MEDIATOR_IP)
     receivedQueue = Queue()
     
@@ -50,9 +48,9 @@ def run(bot):
                 break
 
     finally:
-        cleanup()
+        cleanup(z)
 
-def cleanup():
+def cleanup(z):
     for t in threads:
         t.join(1)
 

@@ -4,13 +4,13 @@ from MiniBotFramework.Actuation.TwoWheelMovement import TwoWheelMovement
 from threading import Thread
 import time
 
-z = ZMQExchange()
 threads = []
 
 def run(bot):
     # Sets up TCP connection between master and minions. Starts publisher-side 
     # connection.
     # always set the mediator first
+    z = ZMQExchange()
     z.setMediator()
     z.setBroadcaster()
     
@@ -32,9 +32,9 @@ def run(bot):
                 break
 
     finally:
-        cleanup()
+        cleanup(z)
 
-def cleanup():
+def cleanup(z):
     for t in threads:
         t.join(0.1)
 
