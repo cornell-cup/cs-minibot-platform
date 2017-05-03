@@ -195,6 +195,7 @@ class ZMQExchange:
             self.xsub.close()
         if self.isReceiver:
             self.sub.close()
+            self.isReceiver = False
         self.context.term()
 
 # =========================================================================
