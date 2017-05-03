@@ -19,8 +19,8 @@ def run(bot):
         # keep searching the queue
         (key, value) = bot.extraCMD.get()
 
-    assert key == "GET_IPSwarmMaster"
-    MEDIATOR_IP = value
+    if key == "GET_IPSwarmMaster":
+        MEDIATOR_IP = value
 
     # Sets up ZMQ connection between master and minions. Starts subscriber-side 
     # connection

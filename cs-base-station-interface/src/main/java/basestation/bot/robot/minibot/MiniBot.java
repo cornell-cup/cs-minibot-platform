@@ -57,8 +57,15 @@ public class MiniBot extends Bot{
             while (true) {
                 if (tcpConnection.connectionActive()) {
                     String message = tcpConnection.receive();
-                    if (message != null)
+                    if (message != null) {
+                        System.out.println(message);
                         parseIncoming(message);
+                    }
+                    try {
+                        sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

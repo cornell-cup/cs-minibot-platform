@@ -20,6 +20,7 @@ public class TCPConnection extends Connection {
             this.outToServer = new DataOutputStream(clientSocket.getOutputStream());
             this.inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             connectionNotRefused = true;
+            //this.clientSocket.setSoTimeout(500);
         } catch (IOException e) {
             System.err.println("Unable to establish connection! " + e);
             connectionNotRefused = false;
