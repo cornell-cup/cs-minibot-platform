@@ -65,7 +65,6 @@ public class BotManager {
      * @return An optional of the removed bot
      */
     public Optional<Bot> removeBotByName(String botName) {
-        //botIPMap.remove(botName);
         return Optional.ofNullable(botMap.remove(botName));
     }
 

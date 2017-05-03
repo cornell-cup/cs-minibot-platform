@@ -44,14 +44,12 @@ class TCP(object):
             # connection is active, send
             try:
                 message = "<<<<" + key + ":" + value + ">>>>"
-                print "trying to send"
                 # appending \n to the message as java reader socket blocks until new line is encountered
                 self.connectionSocket.send(message + "\n")
-                print "sent"
             except socket.error as e:
-                print("send failed")
+                print("Send failed")
         else:
-            print("send failed")
+            print("Send failed")
 
     def run(self):
         while TCP.tcp is None:

@@ -34,8 +34,6 @@ def run(bot):
         while True:
             if (not receivedQueue.empty()):
                 command = receivedQueue.get()
-
-                print("receiving: " + str(command))
                 
                 # react to commamd
                 bot.get_actuator_by_name("two_wheel_movement").move(command[0], command[1])
@@ -44,7 +42,6 @@ def run(bot):
             time.sleep(0.01)
 
             if not TCP.tcp.isConnected():
-                print "zmq ending"
                 break
 
     finally:

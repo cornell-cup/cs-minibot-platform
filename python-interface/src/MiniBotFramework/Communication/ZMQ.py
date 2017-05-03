@@ -61,7 +61,6 @@ class ZMQExchange:
 
         # set the ip and xpub/xsub URLs
         self.setMediatorIP(self.getIP('wlan0'))
-        print self.__xpub_url, self.__xsub_url
 
         # set up the mediator
         self.xpub = self.context.socket(zmq.XPUB)
@@ -137,7 +136,6 @@ class ZMQExchange:
         if mediatorIP is not None:
             self.setMediatorIP(mediatorIP)
         
-        print self.__xpub_url, self.__xsub_url
         self.sub = self.context.socket(zmq.SUB)
         
         # receiver sub connects to the broadcaster pubs' proxy url

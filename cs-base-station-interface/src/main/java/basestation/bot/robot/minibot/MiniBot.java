@@ -58,7 +58,6 @@ public class MiniBot extends Bot{
                 if (tcpConnection.connectionActive()) {
                     String message = tcpConnection.receive();
                     if (message != null) {
-                        System.out.println(message);
                         parseIncoming(message);
                     }
                     try {
@@ -70,7 +69,12 @@ public class MiniBot extends Bot{
             }
         }
 
-        public void parseIncoming(String data) {
+        /**
+         * Breaks the data into key and value
+         * @param data must start with "<<<<" and end with ">>>>". key-value
+         *             should be separated by ":"
+         */
+        private void parseIncoming(String data) {
             int start = data.indexOf("<<<<");
             int colon = data.indexOf(":");
             int end = data.indexOf(">>>>");
@@ -81,8 +85,12 @@ public class MiniBot extends Bot{
             }
         }
 
-
-        public void actOnIncoming(String key, String value) {
+        /**
+         * Acts based on key and value
+         * @param key Must be Instruction
+         * @param value Should qualify the instruction
+         */
+        private void actOnIncoming(String key, String value) {
             if (key.equals("PUT_IP")) {
                 int comma = value.indexOf(",");
                 String HashKey = value.substring(0, comma);

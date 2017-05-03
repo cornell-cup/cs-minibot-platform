@@ -28,7 +28,6 @@ def run(bot):
             time.sleep(0.1)
 
             if not TCP.tcp.isConnected():
-                print "zmq ending"
                 break
 
     finally:
