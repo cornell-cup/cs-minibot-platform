@@ -199,6 +199,7 @@ class ZMQExchange:
             self.isMediator = False
         if self.isReceiver:
             self.sub.close()
+            self.isReceiver = False
         self.context.term()
 
 # =========================================================================
