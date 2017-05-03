@@ -80,7 +80,7 @@ class ZMQExchange:
         """
         
         while True:
-            if self.isReceiver:
+            if self.isMediator:
                 try:
                     # poll the proxy URLs to see what messages are waiting
                     # if any, forward them
@@ -123,8 +123,10 @@ class ZMQExchange:
         
         # send the message
         if self.isBroadcaster:
+            #print "broadcasting", str(data)
             msg = [self.messageTopic, str(data)]
             self.pub.send_multipart(msg)
+            #print "broadcasted"
         
     def setReceiver(self, mediatorIP = None):
         """
@@ -190,9 +192,11 @@ class ZMQExchange:
         
         if self.isBroadcaster:
             self.pub.close()
+            self.isBroadcaster = False
         if self.isMediator:
             self.xpub.close()
             self.xsub.close()
+            self.isMediator = False
         if self.isReceiver:
             self.sub.close()
         self.context.term()

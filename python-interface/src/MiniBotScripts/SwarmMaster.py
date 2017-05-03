@@ -25,7 +25,7 @@ def run(bot):
             # msg is a tuple of left motor and right motor, respectively.
             msg = bot.get_actuator_by_name("two_wheel_movement").get_value()
             z.broadcast(msg)
-            time.sleep(0.01)
+            time.sleep(0.1)
 
             if not TCP.tcp.isConnected():
                 print "zmq ending"
