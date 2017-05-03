@@ -10,7 +10,7 @@ def run(bot):
     #     bot.turn_counter_clockwise(25)
     #     bot.wait(1)
 
-    while x in range(1,10):
+    for x in range(1,10):
         cs = bot.get_sensor_by_name("ColorSensor")
         print "RGB: " + str(cs.read())
         print "Color: " + str(cs.read_color())
