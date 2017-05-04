@@ -44,12 +44,12 @@ class ColorSensor(Sensor):
 
     def read_color(self):
         """ Returns string of color """
-        color_guess = ("", 99999999999999999999999999)
+        color_guess = ("", 99999999999999999999999999) #tuple of color, distance from color to input
         color_actual = self.read()
         for c in self.colors:
-            if(distance(self.colors[c],color_actual) == color_guess[1]):
-                return c
-            elif(distance(self.colors[c],color_actual) < color_guess[1]):
+            dist = distance(self.colors[c],color_actual)
+            print dist
+            if(dist < color_guess[1]):
                 color_guess = (c, self.colors[c])
         return color_guess[0]
 
