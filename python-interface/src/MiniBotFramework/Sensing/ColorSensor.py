@@ -21,12 +21,12 @@ class ColorSensor(Sensor):
         self.pin_number = pin_number
         self.color_sensor = CSensor()
         self.bus = smbus.SMBus(1)
-        bus.write_byte(0x29,0x80|0x12)
-        ver = bus.read_byte(0x29)
+        self.bus.write_byte(0x29,0x80|0x12)
+        ver = self.bus.read_byte(0x29)
 
     def read(self):
         """ Returns a 3-tuple of RGB value """
-        data = bus.read_i2c_block_data(0x29, 0)
+        data = self.bus.read_i2c_block_data(0x29, 0)
         # clear = clear = data[1] << 8 | data[0]
         red = data[3] << 8 | data[2]
         green = data[5] << 8 | data[4]
