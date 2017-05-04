@@ -6,15 +6,6 @@ class ColorSensor(Sensor):
     """ Pre-determined set of colors and corresponding RGB 3-tuples
     that are the basis of color inputs. Sensor inputs will be compared
     with values in this dict to see what "color" it is closest to. """
-    colors = {
-        "RED":(7885,2631,3034),
-        "GREEN":(4794,10432,8395),
-        "BLUE":(14162,7582,4268),
-        "ORANGE":(14162,7582,4268),
-        "VIOLET":(8263,7538,9303),
-        "YELLOW":(13772,12879,5783),
-        "PINK":(11483,7839,8267)
-    }
 
     def __init__(self, bot, name, pin_number):
         Sensor.__init__(self, bot, name)
@@ -23,6 +14,16 @@ class ColorSensor(Sensor):
         self.bus = smbus.SMBus(1)
         self.bus.write_byte(0x29,0x80|0x12)
         ver = self.bus.read_byte(0x29)
+
+        self.colors = {
+            "RED":(7885,2631,3034),
+            "GREEN":(4794,10432,8395),
+            "BLUE":(14162,7582,4268),
+            "ORANGE":(14162,7582,4268),
+            "VIOLET":(8263,7538,9303),
+            "YELLOW":(13772,12879,5783),
+            "PINK":(11483,7839,8267)
+        }
 
     def read(self):
         """ Returns a 3-tuple of RGB value """
@@ -39,11 +40,11 @@ class ColorSensor(Sensor):
         """ Returns string of color """
         color_guess = ("", 999)
         color_actual = self.read()
-        for c in colors:
-            if(distance(colors[c],color_actual) == color_guess[1]):
+        for c in self.colors:
+            if(distance(self.colors[c],color_actual) == color_guess[1]):
                 return c
-            elif(distance(colors[c],color_actual) < color_guess[1]):
-                color_guess = (c, colors[c])
+            elif(distance(self.colors[c],color_actual) < color_guess[1]):
+                color_guess = (c, self.colors[c])
         return color_guess[0]
 
     def distance(p1, p2):
