@@ -22,7 +22,7 @@
 import logging
 import subprocess
 
-import Adafruit_GPIO.Platform as Platform
+import Platform
 
 
 def reverseByteOrder(data):
