@@ -137,7 +137,7 @@ class TCS34725(object):
         """Initialize the TCS34725 sensor."""
         # Setup I2C interface for the device.
         if i2c is None:
-            import Adafruit_I2C.Adafruit_I2C as I2C
+            from MiniBotFramework.Lib.Adafruit_I2C import Adafruit_I2C as I2C
             i2c = I2C
         self._device = i2c.get_i2c_device(address, **kwargs)
         # Make sure we're connected to the sensor.
