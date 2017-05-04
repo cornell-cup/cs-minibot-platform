@@ -44,7 +44,7 @@ class ColorSensor(Sensor):
 
     def read_color(self):
         """ Returns string of color """
-        color_guess = ("", 999)
+        color_guess = ("", 99999999999999999999999999)
         color_actual = self.read()
         for c in self.colors:
             if(distance(self.colors[c],color_actual) == color_guess[1]):
