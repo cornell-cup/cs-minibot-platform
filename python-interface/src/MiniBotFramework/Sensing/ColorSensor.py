@@ -1,6 +1,7 @@
 from MiniBotFramework.Sensing.Sensor import Sensor
 from MiniBotFramework.Lib.TCS34725 import TCS34725 as CSensor
 import smbus
+import math
 
 def distance(p1, p2):
     """ Returns distance between two 3-tuples. 
