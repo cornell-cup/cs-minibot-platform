@@ -1,5 +1,8 @@
 package basestation.bot.commands;
 
+import basestation.bot.connection.TCPConnection;
+import basestation.bot.connection.Connection;
+
 /**
  * Class who's methods are all the commands that can be issued to a bot
  * <p>
@@ -28,4 +31,10 @@ public interface CommandCenter {
      * @return True if the command seems to have sent correctly
      */
     boolean sendKV(String key, String value);
+
+    /**
+     * Returns Connection object
+     * @return Connection
+     */
+    Connection getConnection();
 }

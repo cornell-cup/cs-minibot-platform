@@ -2,27 +2,33 @@
 
 # =============================================================================
 # MasterBroadcast.py
-# Created by Celine Choo and Anmol Kabra
 # Project SwarmBot -> MiniBot SP17
 # Cornell Cup Robotics Team, Cornell University
 # =============================================================================
 # Connects to the Minions and broadcasts messages using ZeroMQ protocol
+# IMPORTANT: Always set the Mediator first
 # =============================================================================
 
 import sys, os, time, zmq
 from threading import Thread
 import random
 from Queue import Queue
+import socket
+import fcntl
+import struct
 
 class ZMQExchange:
     def __init__(self):
         """
         Initializes the ZMQ broadcaster
         """
-        # constants
-        self.__xpub_url = "tcp://192.168.4.53:5555"
-        self.__xsub_url = "tcp://192.168.4.53:5556"
-        # prefix to the message
+        # default constants
+        self.__xpub_port = "5555"
+        self.__xsub_port = "5556"
+
+        self.setMediatorIP("127.0.0.1")
+
+        # prefix to the message, for security version
         self.messageTopic = "ccrt-minibot-swarmbot-master"
         
         # true depending on the type of device
@@ -33,10 +39,30 @@ class ZMQExchange:
         # initialize connection
         self.context = zmq.Context()
 
+    def getIP(self, ifname):
+        """
+        Returns the IP of the device
+        """
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        return socket.inet_ntoa(fcntl.ioctl(
+            s.fileno(),
+            0x8915,  # SIOCGIFADDR
+            struct.pack('256s', ifname[:15])
+            )[20:24])
+
+    def setMediatorIP(self, IP):
+        self.__xpub_url = "tcp://" + IP + ":" + self.__xpub_port
+        self.__xsub_url = "tcp://" + IP + ":" + self.__xsub_port
+
     def setMediator(self):
         """
         Initializes the Mediator
         """
+
+        # set the ip and xpub/xsub URLs
+        self.setMediatorIP(self.getIP('wlan0'))
+
+        # set up the mediator
         self.xpub = self.context.socket(zmq.XPUB)
         self.xpub.bind(self.__xpub_url)
         self.xsub = self.context.socket(zmq.XSUB)
@@ -53,23 +79,29 @@ class ZMQExchange:
         """
         
         while True:
-            # poll the proxy URLs to see what messages are waiting
-            # if any, forward them
-            events = dict(self.poller.poll(1000))
-            #print "mediating..."
-
-            if self.xpub in events:
-                # message received from Minions on successful subscription
-                message = self.xpub.recv_multipart()
-                #print("%r" % message[0])
-                self.xsub.send_multipart(message)
-
-            if self.xsub in events:
-                # message from Master to be delivered to the Minions
-                message = self.xsub.recv_multipart()
-                #print("publishing message: %r" % message)
-                self.xpub.send_multipart(message)
-
+            if self.isMediator:
+                try:
+                    # poll the proxy URLs to see what messages are waiting
+                    # if any, forward them
+                    events = dict(self.poller.poll(1000))
+                    #print "mediating..."
+        
+                    if self.xpub in events:
+                        # message received from Minions on successful subscription
+                        message = self.xpub.recv_multipart()
+                        #print("%r" % message[0])
+                        self.xsub.send_multipart(message)
+        
+                    if self.xsub in events:
+                        # message from Master to be delivered to the Minions
+                        message = self.xsub.recv_multipart()
+                        #print("publishing message: %r" % message)
+                        self.xpub.send_multipart(message)
+                except KeyboardInterrupt:
+                    print "mediator ending"
+                    break
+            else:
+                break
     def setBroadcaster(self):
         """
         Initializes the broadcaster
@@ -89,15 +121,21 @@ class ZMQExchange:
         """
         
         # send the message
-        #print "broadcasting " + str(data)
-        msg = [self.messageTopic, str(data)]
-        self.pub.send_multipart(msg)
-        #print "broadcasted"
-
-    def setReceiver(self):
+        if self.isBroadcaster:
+            #print "broadcasting", str(data)
+            msg = [self.messageTopic, str(data)]
+            self.pub.send_multipart(msg)
+            #print "broadcasted"
+        
+    def setReceiver(self, mediatorIP = None):
         """
         Initializes the receiver
+        :param mediatorIP is the mediator's IP. The Minion should use mediatorIP
         """
+
+        if mediatorIP is not None:
+            self.setMediatorIP(mediatorIP)
+        
         self.sub = self.context.socket(zmq.SUB)
         
         # receiver sub connects to the broadcaster pubs' proxy url
@@ -115,29 +153,36 @@ class ZMQExchange:
         """
         oldData = "empty"
         while True:
-            # wait infinitely to receive the message
-            if self.sub.poll(timeout=0):
-                data = self.sub.recv_multipart()
-                #print "received ", data
-                
-                if oldData != data:
-                    # parse the data into lWheel and rWheel and send it as a
-                    # tuple
-                    start = data[1].find("(")
-                    comma = data[1].find(",")
-                    end = data[1].find(")")
-                    lWheel = int(data[1][start + 1:comma])
-                    rWheel = int(data[1].strip()[comma + 1:end])
-                    info = (lWheel, rWheel)
-    
-                    # do something, send commands
-                    if receivedQueue is not None:
-                        receivedQueue.put(info)
-                    else:
-                        #print "received ", info
-                        pass
-                    oldData = data
-        
+            if self.isReceiver:
+                try:
+                    # wait infinitely to receive the message
+                    if self.sub.poll(timeout=0):
+                        data = self.sub.recv_multipart()
+                        #print "received ", data
+                        
+                        if oldData != data:
+                            # parse the data into lWheel and rWheel and send it as a
+                            # tuple
+                            start = data[1].find("(")
+                            comma = data[1].find(",")
+                            end = data[1].find(")")
+                            lWheel = int(data[1][start + 1:comma])
+                            rWheel = int(data[1].strip()[comma + 1:end])
+                            info = (lWheel, rWheel)
+            
+                            # do something, send commands
+                            if receivedQueue is not None:
+                                receivedQueue.put(info)
+                            else:
+                                #print "received ", info
+                                pass
+                            oldData = data            
+                except KeyboardInterrupt:
+                    print "receiver stopping"
+                    break
+            else:
+                break
+
     def stopZMQExchange(self):
         """
         Stops the connection and closes the socket
@@ -145,11 +190,14 @@ class ZMQExchange:
         
         if self.isBroadcaster:
             self.pub.close()
+            self.isBroadcaster = False
         if self.isMediator:
             self.xpub.close()
             self.xsub.close()
+            self.isMediator = False
         if self.isReceiver:
             self.sub.close()
+            self.isReceiver = False
         self.context.term()
 
 # =========================================================================

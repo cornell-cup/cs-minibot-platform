@@ -40,4 +40,9 @@ public class SimulatorModBotConnection extends MotorConnection {
             myBot.forward(0);
         }
     }
+
+    @Override
+    public String getIP() {
+        return "";
+    }
 }

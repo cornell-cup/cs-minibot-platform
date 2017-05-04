@@ -75,4 +75,8 @@ public class ModbotCommandCenter extends ExtendedFourWheelMovement {
         return false; // TODO
     }
 
+    public Connection getConnection() {
+        return this.connection;
+    }
+
 }

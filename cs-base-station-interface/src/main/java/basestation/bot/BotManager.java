@@ -3,10 +3,7 @@ package basestation.bot;
 import basestation.bot.connection.UDPConnectionListener;
 import basestation.bot.robot.Bot;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -22,6 +19,8 @@ public class BotManager {
 
     private UDPConnectionListener udpConnection;
 
+    private Map<String, String> botIPMap;   // only added IP on request from bot
+
     /**
      * Initializes the bot manager with a fresh map and counter
      */
@@ -30,6 +29,8 @@ public class BotManager {
         botMap = new ConcurrentHashMap<>();
         udpConnection = new UDPConnectionListener();
         udpConnection.start();
+        botIPMap = new HashMap<>();
+
     }
 
     /**
@@ -88,5 +89,24 @@ public class BotManager {
 
     public Set<String> getAllDiscoveredBots() {
         return udpConnection.getAddressSet();
+    }
+
+    /**
+     * Returns the IP associated with Bot IP Mapping
+     *
+     * @return String
+     */
+    public String getBotIP (String id) {
+        return botIPMap.get(id);
+    }
+
+    /**
+     * Add mapping from this bot's id to its ip
+     * @param id name specified on request from bot
+     * @param IP IP given by the bot
+     * @return true if operation was successful
+     */
+    public boolean setBotIPMap (String id, String IP) {
+        return botIPMap.put(id, IP) != null;
     }
 }
