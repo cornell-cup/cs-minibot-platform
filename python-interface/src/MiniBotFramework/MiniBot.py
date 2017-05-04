@@ -28,7 +28,7 @@ class MiniBot:
 
         for sensor in config["sensors"]:
             if sensor["type"] == "colorSensor":
-                print "ColorSensor detected!"
+                # print "ColorSensor detected!"
                 name = sensor["name"]
                 pin = sensor["pin"]
                 MiniBotFramework.Sensing.ColorSensor.ColorSensor(self, name, pin)
