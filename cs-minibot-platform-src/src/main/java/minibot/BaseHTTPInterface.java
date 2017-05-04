@@ -17,6 +17,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import org.jbox2d.dynamics.World;
+import simulator.Simulator;
 import simulator.physics.PhysicalObject;
 import simulator.simbot.*;
 import spark.route.RouteOverview;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Collection;
+import java.io.*;
 
 
 import simulator.baseinterface.SimulatorVisionSystem;
@@ -45,13 +48,15 @@ public class BaseHTTPInterface {
     public static final boolean OVERHEAD_VISION = true;
     private static XboxControllerDriver xboxControllerDriver;
 
-
     public static void main(String[] args) {
         // Spark configuration
         port(8080);
         staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
+
+        //create new visionsystem and simulator instances
         SimulatorVisionSystem simvs;
+        Simulator simulator = new Simulator();
         // Show exceptions
         exception(Exception.class, (exception,request,response) -> {
             exception.printStackTrace();
@@ -60,21 +65,21 @@ public class BaseHTTPInterface {
         });
 
         // Global objects
-        JsonParser jp = new JsonParser();
+        JsonParser jsonParser = new JsonParser();
         Gson gson = new Gson();
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(ovs);
-            simvs = SimulatorVisionSystem.getInstance();
+            simvs = simulator.getVisionSystem();
             BaseStation.getInstance().getVisionManager().addVisionSystem(simvs);
         }
 
         // Routes
-
+        /* add a new bot from the gui*/
         post("/addBot", (req,res) -> {
             String body = req.body();
-            JsonObject addInfo = jp.parse(body).getAsJsonObject(); // gets (ip, port) from js
+            JsonObject addInfo = jsonParser.parse(body).getAsJsonObject(); // gets (ip, port) from js
 
             /* storing json objects into actual variables */
             String ip = addInfo.get("ip").getAsString();
@@ -94,48 +99,149 @@ public class BaseHTTPInterface {
                else {
                 SimBotConnection sbc = new SimBotConnection();
                 SimBot simbot;
-                simbot = new SimBot(sbc, name, 50, simvs.getWorld(), 0.0f, 0.0f, 1f, 3.6f, true);
+                simbot = new SimBot(sbc, simulator, name, 50, simulator.getWorld
+                        (), 0.0f,
+                        0.0f, 1f, 3.6f, 0, true);
                 newBot = simbot;
 
-                simvs.importPhysicalObject(simbot.getMyPhysicalObject());
+                simulator.importPhysicalObject(simbot.getMyPhysicalObject());
 
                 // Color sensor TODO put somewhere nice
                 ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
                 ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
                 ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
             }
-
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
 
-        post("/addScenario", (req,res) -> {
-            String body = req.body();
 
-            JsonObject scenario = jp.parse(body).getAsJsonObject();
+        /**
+         * POST /addScenario starts a simulation with the scenario from the
+         * scenario viewer in the gui
+         *
+         * @apiParam scenario a string representing a list of JSON scenario
+         * objects, which consist of obstacles and bot(s)
+         * @return the scenario json if it was successfully added
+         */
+        post("/addScenario", (req,res) -> {
+
+            String body = req.body();
+            simulator.resetWorld();
+            Collection<String> botsnames = BaseStation.getInstance()
+                    .getBotManager()
+                    .getAllTrackedBotsNames();
+            for (String name :botsnames){
+                BaseStation.getInstance().getBotManager().removeBotByName(name);
+            }
+
+            JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
             String scenarioBody = scenario.get("scenario").getAsString();
-            JsonArray addInfo = jp.parse(scenarioBody).getAsJsonArray();
+            JsonArray addInfo = jsonParser.parse(scenarioBody).getAsJsonArray();
+
             for (JsonElement je : addInfo) {
                 String type = je.getAsJsonObject().get("type").getAsString();
-                int size = je.getAsJsonObject().get("size").getAsInt();
                 int angle = je.getAsJsonObject().get("angle").getAsInt();
                 int[] position = gson.fromJson(je.getAsJsonObject().get("position")
                         .getAsString(),int[].class);
-                String name = Integer.toString(size)+Integer.toString(angle)
+                String name = Integer.toString(angle)
                         + Arrays.toString(position);
-                PhysicalObject po = new PhysicalObject(name, 100,
-                        simvs.getWorld(), (float)position[0],
-                        (float)position[1], size, angle);
-                simvs.importPhysicalObject(po);
-            }
-            /* storing json objects into actual variables */
 
+                //for scenario obstacles
+                if (!type.equals("simulator.simbot")){
+                    int size = je.getAsJsonObject().get("size").getAsInt();
+                    PhysicalObject po = new PhysicalObject(name, 100,
+                            simulator.getWorld(), (float)position[0],
+                            (float)position[1], size, angle);
+                    simulator.importPhysicalObject(po);
+                }
+                //for bots listed in scenario
+                else {
+                    Bot newBot;
+                    name = "Simbot"+name;
+                    SimBotConnection sbc = new SimBotConnection();
+                    SimBot simbot;
+                    simbot = new SimBot(sbc, simulator, name, 50, simulator
+                            .getWorld(), 0.0f,
+                            0.0f, (float) position[0], (float)
+                            position[1], angle, true);
+                    newBot = simbot;
+
+                    simulator.importPhysicalObject(simbot.getMyPhysicalObject());
+
+                    // Color sensor TODO put somewhere nice
+//                    ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
+//                    ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
+//                    ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
+                    BaseStation.getInstance().getBotManager().addBot(newBot);
+                }
+            }
             return addInfo;
         });
 
+        /**
+         * POST /saveScenario saves the scenario currently loaded as a txt
+         * file with the specified name
+         *
+         * @apiParam scenario a string representing a list of JSON scenario
+         * objects, which consist of obstacles and bot(s)
+         * @apiParam name the name the new scenario txt file
+         * @return the name of the file if it was successfully saved
+         */
+        post("/saveScenario", (req,res) -> {
+
+            String body = req.body();
+            JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
+            String scenarioBody = scenario.get("scenario").getAsString();
+            String fileName = scenario.get("name").getAsString();
+
+            //writing new scenario file
+            File file = new File
+                    ("cs-minibot-platform-src/src/main/resources" +
+                            "/public/scenario/"+fileName+".txt");
+            OutputStream out = new FileOutputStream(file);
+
+            FileWriter writer = new FileWriter(file, false);
+            BufferedWriter bwriter = new BufferedWriter(writer);
+            bwriter.write(scenarioBody);
+            bwriter.close();
+            out.close();
+            return fileName;
+        });
+
+        /**
+         * POST /loadScenario loads a scenario into the scenario viewer from a
+         * txt scenario file with the specified name; does not add scenario
+         * to the world or start a simulation
+         *
+         * @apiParam name the name the scenario txt file to load
+         * @return the JSON of the scenario if it was loaded successfully
+         */
+        post("/loadScenario", (req,res) -> {
+            String body = req.body();
+            JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
+            String fileName = scenario.get("name").getAsString();
+            String scenarioData = "";
+
+            //loading scenario file
+            File file = new File
+                    ("cs-minibot-platform-src/src/main/resources" +
+                            "/public/scenario/"+fileName+".txt");
+            FileReader fr=	new	FileReader(file);
+            BufferedReader br=	new	BufferedReader(fr);
+            String line = br.readLine();
+            while (line!=null){
+                scenarioData+=line;
+                line = br.readLine();
+            }
+            br.close();
+            return scenarioData;
+        });
+
+        /*send commands to the selected bot*/
         post("/commandBot", (req,res) -> {
             System.out.println("post to command bot called");
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
             // gets (botID, fl, fr, bl, br) from json
             String botName = commandInfo.get("name").getAsString();
@@ -145,23 +251,23 @@ public class BaseHTTPInterface {
             String br = commandInfo.get("br").getAsString();
 
             // Forward the command to the bot
-            Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(botName).get();
+            Bot myBot = BaseStation.getInstance().getBotManager()
+                    .getBotByName(botName).get();
             CommandCenter cc =  myBot.getCommandCenter();
             return cc.sendKV("WHEELS", fl + "," + fr + "," + bl + "," + br);
         });
 
+        /*remove the selected bot -  not sure if still functional*/
         post("/removeBot", (req,res) -> {
             String body = req.body();
-            JsonObject removeInfo = jp.parse(body).getAsJsonObject();
-
+            JsonObject removeInfo = jsonParser.parse(body).getAsJsonObject();
             String name = removeInfo.get("name").getAsString();
-
             return BaseStation.getInstance().getBotManager().removeBotByName(name);
         });
 
         post( "/logdata", (req,res) -> {
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
             String name = commandInfo.get("name").getAsString();
             Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(name).get();
             CommandCenter cc = myBot.getCommandCenter();
@@ -179,7 +285,7 @@ public class BaseHTTPInterface {
          */
         post("/sendScript", (req,res) -> {
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
             /* storing json objects into actual variables */
             String name = commandInfo.get("name").getAsString();
@@ -245,11 +351,12 @@ public class BaseHTTPInterface {
          */
         post("/sendKV", (req,res) -> {
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
             String kv_key = commandInfo.get("key").getAsString();
             String kv_value = commandInfo.get("value").getAsString();
             String name = commandInfo.get("name").getAsString();
+            System.out.println(name);
 
             Bot receiver = BaseStation.getInstance()
                     .getBotManager()
@@ -275,7 +382,7 @@ public class BaseHTTPInterface {
 
         post("/runXbox", (req, res) -> {
             String body = req.body();
-            JsonObject commandInfo = jp.parse(body).getAsJsonObject();
+            JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
             /* storing json objects into actual variables */
             String name = commandInfo.get("name").getAsString();

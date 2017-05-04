@@ -21,7 +21,9 @@ public class PhysicalObject {
     private World world;
     private int size;
 
-    public PhysicalObject(String name, int id, World world, float xSpeed, float ySpeed, float xPos, float yPos, boolean isDynamic) {
+    public PhysicalObject(String name, int id, World world, float xSpeed,
+                          float ySpeed, float xPos, float yPos, int angle,
+                          boolean isDynamic) {
         this.name = name;
         this.id = id;
         this.size = 0;
@@ -31,6 +33,7 @@ public class PhysicalObject {
         testbody.type = BodyType.DYNAMIC;
         Vec2 testvec = new Vec2(xSpeed, ySpeed);
         testbody.linearVelocity = testvec;
+        testbody.angle=(float)(angle/180.0*Math.PI);
         //testbody.linearDamping = 0.5f;
 
         Vec2[] vertices = new Vec2[4];
@@ -154,10 +157,6 @@ public class PhysicalObject {
      * @return the object's JBox2D body
      */
     public Body getBody() { return body;}
-
-    //change all instances of rectangle to Rectangle2D/whichever allows for doubles
-
-
 
     /**
      *
