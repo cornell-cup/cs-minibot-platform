@@ -1,3 +1,5 @@
+import math
+
 def distance(p1, p2):
     """ Returns distance between two 3-tuples. 
     Used for evaluating color """
