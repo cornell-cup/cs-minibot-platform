@@ -2,6 +2,11 @@ from MiniBotFramework.Sensing.Sensor import Sensor
 from MiniBotFramework.Lib.TCS34725 import TCS34725 as CSensor
 import smbus
 
+def distance(p1, p2):
+    """ Returns distance between two 3-tuples. 
+    Used for evaluating color """
+    return math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2 + (p1[2]-p2[2])**2)
+
 class ColorSensor(Sensor):
     """ Pre-determined set of colors and corresponding RGB 3-tuples
     that are the basis of color inputs. Sensor inputs will be compared
@@ -46,9 +51,4 @@ class ColorSensor(Sensor):
             elif(distance(self.colors[c],color_actual) < color_guess[1]):
                 color_guess = (c, self.colors[c])
         return color_guess[0]
-
-    def distance(p1, p2):
-        """ Returns distance between two 3-tuples. 
-        Used for evaluating color """
-        return math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2 + (p1[2]-p2[2])**2)
 
