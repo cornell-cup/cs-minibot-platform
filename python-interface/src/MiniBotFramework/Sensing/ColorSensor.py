@@ -1,4 +1,5 @@
 from MiniBotFramework.Sensing.Sensor import Sensor
+from MiniBotFramework.Lib.TCS34725 import TCS34725 as CSensor
 
 class ColorSensor(Sensor):
     """ Pre-determined set of colors and corresponding RGB 3-tuples
