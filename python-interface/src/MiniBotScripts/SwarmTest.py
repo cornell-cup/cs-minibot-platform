@@ -19,7 +19,7 @@ def run(bot):
 
     print distance((0,0,0), (3,4,0))
 
-    for x in range(1,10):
+    while input("GO? Y/N:") == "Y":
         cs = bot.get_sensor_by_name("ColorSensor")
         print "RGB: " + str(cs.read())
         print "Color: " + str(cs.read_color())
