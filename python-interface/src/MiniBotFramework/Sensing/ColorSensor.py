@@ -36,7 +36,7 @@ class ColorSensor(Sensor):
             "GREEN":(160,357,286),
             "BLUE":(76,158,198),
             "ORANGE":(250,134,76),
-            "VIOLET":(137,128,156),j
+            "VIOLET":(137,128,156),
             "YELLOW":(245,229,103),
             "PINK":(236,165,172)
         }
