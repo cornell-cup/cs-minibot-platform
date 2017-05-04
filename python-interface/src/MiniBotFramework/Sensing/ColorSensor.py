@@ -50,7 +50,7 @@ class ColorSensor(Sensor):
             dist = distance(self.colors[c],color_actual)
             print "    dist: " + str(dist)
             if(dist < color_guess[1]):
-                color_guess = (c, self.colors[c])
+                color_guess = (c, dist)
                 print "    new guess is " + color_guess[0]
         return color_guess[0]
 
