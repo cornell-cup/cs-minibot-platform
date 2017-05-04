@@ -20,6 +20,9 @@ class ColorSensor(Sensor):
         self.bus = smbus.SMBus(1)
         self.bus.write_byte(0x29,0x80|0x12)
         ver = self.bus.read_byte(0x29)
+        self.bus.write_byte(0x29, 0x80|0x00) # 0x00 = ENABLE register
+        self.bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
+        self.bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
 
         self.colors = {
             # "RED":(7885,2631,3034),
@@ -33,7 +36,7 @@ class ColorSensor(Sensor):
             "GREEN":(160,357,286),
             "BLUE":(76,158,198),
             "ORANGE":(250,134,76),
-            "VIOLET":(137,128,156),
+            "VIOLET":(137,128,156),j
             "YELLOW":(245,229,103),
             "PINK":(236,165,172)
         }
