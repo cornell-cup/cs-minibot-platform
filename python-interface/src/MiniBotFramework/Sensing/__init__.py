@@ -2,4 +2,3 @@ import MiniBotFramework.Sensing.Sensor
 import MiniBotFramework.Sensing.ColorSensor
 import MiniBotFramework.Sensing.GPIOSensor
 import smbus
-import MiniBotFramework.Lib.Adafruit_I2C
