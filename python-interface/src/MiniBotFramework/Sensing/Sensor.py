@@ -2,6 +2,7 @@
 class Sensor:
     def __init__(self, bot, name):
         self.name = name
+        print "Sensor init called! Name: " + name
         bot.register_sensor(self)
 
     def read(self):

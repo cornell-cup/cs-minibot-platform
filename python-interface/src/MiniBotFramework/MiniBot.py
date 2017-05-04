@@ -28,6 +28,7 @@ class MiniBot:
 
         for sensor in config["sensors"]:
             if sensor["type"] == "colorSensor":
+                print "ColorSensor detected!"
                 name = sensor["name"]
                 pin = sensor["pin"]
                 MiniBotFramework.Sensing.ColorSensor.ColorSensor(self, name, pin)
@@ -124,6 +125,7 @@ class MiniBot:
         return data
 
     def register_sensor(self,sensor):
+        print "Sensor being registered: " + str(sensor.name)
         self.sensors[sensor.name] = sensor
 
     def register_actuator(self,actuator):
