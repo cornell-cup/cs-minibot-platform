@@ -21,12 +21,12 @@ class ColorSensor(Sensor):
         Sensor.__init__(self, bot, name)
         self.pin_number = pin_number
         self.color_sensor = CSensor()
-        self.bus = smbus.SMBus(1)
-        self.bus.write_byte(0x29,0x80|0x12)
-        ver = self.bus.read_byte(0x29)
-        self.bus.write_byte(0x29, 0x80|0x00) # 0x00 = ENABLE register
-        self.bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
-        self.bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
+        # self.bus = smbus.SMBus(1)
+        # self.bus.write_byte(0x29,0x80|0x12)
+        # ver = self.bus.read_byte(0x29)
+        # self.bus.write_byte(0x29, 0x80|0x00) # 0x00 = ENABLE register
+        # self.bus.write_byte(0x29, 0x01|0x02) # 0x01 = Power on, 0x02 RGB sensors enabled
+        # self.bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
 
         self.colors = {
             # TRIAL 1
@@ -71,7 +71,7 @@ class ColorSensor(Sensor):
         print "================== COLOR CALIBRATION =================="
         print """Before color-sensing, we must calibrate the colors. Please place
 the corresponding color under the color sensor at recommended distance
-(with wheels touching the ground before pressing enter."""
+(with wheels touching the ground) before pressing enter."""
 
         for color in self.colors:
             if len(raw_input("\nPlease place the " +color.lower() + " mat under the sensor and press enter."))>-1:
@@ -96,14 +96,17 @@ the corresponding color under the color sensor at recommended distance
 
     def read(self):
         """ Returns a NON-NORMALIZED 3-tuple of RGB value """
-        data = self.bus.read_i2c_block_data(0x29, 0)
-        # clear = clear = data[1] << 8 | data[0]
-        red = data[3] << 8 | data[2]
-        green = data[5] << 8 | data[4]
-        blue = data[7] << 8 | data[6]
+        # data = self.bus.read_i2c_block_data(0x29, 0)
+        # # clear = clear = data[1] << 8 | data[0]
+        # red = data[3] << 8 | data[2]
+        # green = data[5] << 8 | data[4]
+        # blue = data[7] << 8 | data[6]
 
-        rgb = (red, green, blue)
-        return rgb
+        # rgb = (red, green, blue)
+        # return rgb
+
+        rd = self.color_sensor.get_raw_data()
+        return (rd[0], rd[1],rd[2])
 
     def read_color(self):
         """ Returns string of color """
