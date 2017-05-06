@@ -66,7 +66,8 @@ class ColorSensor(Sensor):
             "RED":(171,76,78),
             "BLUE":(86,161,194),
             "GREEN":(98,210,173),
-            "YELLOW":(210,203,100)
+            "YELLOW":(210,203,100),
+            "VIOLET":(142,140,160)
         }
         
         # for color in self.colors:

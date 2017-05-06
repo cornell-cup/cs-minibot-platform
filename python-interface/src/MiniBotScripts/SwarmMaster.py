@@ -21,20 +21,32 @@ def run(bot):
     mediateThread.start()
     threads.append(mediateThread)
     
-    #echobot(bot,z)
-    colorbot(bot,z)
+    echobot(bot,z)
+    #colorbot(bot,z)
     
 def colorbot(bot,z):
-    speed = 30
+    speed = 10
     cs = bot.get_sensor_by_name("ColorSensor")
     cs.calibrate()
-    
+
     try:
         while(True):
-            if(cs.read_color()=="RED"):
+            c = cs.read_color()
+            if(c=="RED"):
+                # stop
                 z.broadcast((0,0))
-            else: #if(cs.read_color()=="GREEN"):
-                z.broadcast((30,30))
+            elif(c=="GREEN"):
+                # forwards
+                z.broadcast((speed,speed))
+            elif(c=="BLUE"):
+                # backwards
+                z.broadcast((-speed,-speed))
+            elif(c=="YELLOW"):
+                # turn left
+                z.broadcast((-speed,speed))
+            elif(c=="VIOLET"):
+                # turn right
+                z.broadcast((speed,-speed))
             time.sleep(0.2)
     finally:
         cleanup(z)
@@ -44,6 +56,7 @@ def echobot(bot,z):
         while(True):
             # msg is a tuple of left motor and right motor, respectively.
             msg = bot.get_actuator_by_name("two_wheel_movement").get_value()
+            print "MSG: " + msg
             z.broadcast(msg)
             time.sleep(0.1)
 
