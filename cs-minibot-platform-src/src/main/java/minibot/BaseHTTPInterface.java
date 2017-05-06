@@ -73,7 +73,7 @@ public class BaseHTTPInterface {
         ArrayList<VisionCoordinate> startAreaCoords = new ArrayList<>();
         ArrayList<VisionCoordinate> middleAreaCoords = new ArrayList<>();
         //HARD-CODED COORDINATES JUST FOR GUI
-        /*innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(3,2), new
+        innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(3,2), new
                 VisionCoordinate(2,2), new VisionCoordinate(2,3), new
                 VisionCoordinate(3,3)));
         outerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(1,1), new
@@ -84,7 +84,7 @@ public class BaseHTTPInterface {
                 VisionCoordinate(3,2.05)));
         middleAreaCoords.addAll(Arrays.asList(new VisionCoordinate(2,3), new
                 VisionCoordinate(2,2.95), new VisionCoordinate(1,2.95), new
-                VisionCoordinate(1,3)));*/
+                VisionCoordinate(1,3)));
         //HARD-CODED BASIC BOTFIELD TRACK
         /*innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate
                 (2.2065439453125, 1.5227012939453124), new
@@ -100,7 +100,8 @@ public class BaseHTTPInterface {
                 VisionCoordinate(1.398449951171875, 0.044775409698486326), new VisionCoordinate(1.08611669921875, 0.04974387359619141), new
                 VisionCoordinate(1.0802769775390626, 0.516857421875)));*/
         //HARD-CODED FOR CONVEX TRACK
-        innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(2.2361962890625, 1.49191650390625), new
+        /*innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate
+                (2.2361962890625, 1.49191650390625), new
                 VisionCoordinate(2.15298388671875, 0.4127757873535156), new VisionCoordinate(1.783540771484375, 0.4107144775390625), new
                 VisionCoordinate(1.7581005859375, 1.339592529296875),new VisionCoordinate(0.7094837036132813, 1.3833878173828125), new
                 VisionCoordinate(0.6379854125976563, 0.361425537109375), new VisionCoordinate(0.3548998107910156, 0.3943072814941406), new
@@ -116,7 +117,7 @@ public class BaseHTTPInterface {
                 VisionCoordinate(1.1252403564453124, 1.624544677734375)));
         middleAreaCoords.addAll(Arrays.asList(new VisionCoordinate(1.1123798828125, 0.7938690795898438), new
                 VisionCoordinate(0.5704920043945313, 0.825190185546875), new VisionCoordinate(0.6252758178710938, 0.54149462890625), new
-                VisionCoordinate(1.1291646728515625, 0.4859189453125)));
+                VisionCoordinate(1.1291646728515625, 0.4859189453125)));*/
         GoBot gb = new GoBot();
         Long timer = 0L;
 

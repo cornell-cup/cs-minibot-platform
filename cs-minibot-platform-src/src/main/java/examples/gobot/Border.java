@@ -7,9 +7,11 @@ import java.util.ArrayList;
 
 public class Border {
     private Path2D.Double boundary;
+    private ArrayList<VisionCoordinate> borderCoords;
 
     public Border(ArrayList<VisionCoordinate> coords){
         this.boundary = createPath(coords);
+        borderCoords = coords;
     }
 
     private Path2D.Double createPath(ArrayList<VisionCoordinate>coords){
@@ -23,10 +25,10 @@ public class Border {
     }
 
     public Boolean inPath(VisionCoordinate vc) {
-        if (this.boundary.contains(vc.x, vc.y)) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.boundary.contains(vc.x, vc.y);
+    }
+
+    public ArrayList<VisionCoordinate> returnCoords(){
+        return this.borderCoords;
     }
 }
