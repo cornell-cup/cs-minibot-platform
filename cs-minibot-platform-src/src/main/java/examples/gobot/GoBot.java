@@ -104,28 +104,6 @@ public class GoBot extends Thread {
         return sum/1000000000;
     }
 
-    /*public boolean finishedLap() {
-        VisionCoordinate vc = BaseStation.getInstance().getVisionManager()
-                .getAllLocationData().get(0).coord;
-        if(course.getStartArea().contains(vc.x,vc.y)) {
-            if(!crossedLapLine && !reachedMiddle) {
-                this.crossedLapLine = true;
-            } else if(crossedLapLine && reachedMiddle) {
-                this.lapsDone++;
-                this.reachedMiddle = false;
-                return true;
-            }
-            return false;
-        } else if(course.getMiddleArea().contains(vc.x,vc.y)) {
-            if(!reachedMiddle) {
-                this.reachedMiddle = true;
-            }
-            return false;
-        } else {
-            return false;
-        }
-    }*/
-
     public void setBotState(int state) {
         this.botState = state;
     }
@@ -182,7 +160,7 @@ public class GoBot extends Thread {
 
 
     //Find intersection between two equations
-    public Point  intersection(Equation e1, Equation e2){
+    public Point intersection(Equation e1, Equation e2){
         try{
             //two vertical lines cannot intersect each other (unless they are
             // the same, which should only occur if the car is driving on the
@@ -336,7 +314,11 @@ public class GoBot extends Thread {
                 .getAllLocationData();
         if (v1.size() != 0){
             VisionCoordinate pos = v1.get(0).coord;
+            System.out.println("Current pos: " + pos + "\n");
             ArrayList<Equation> sweepEquations = sweep(pos, numLines);
+            for(Equation f : sweepEquations){
+                System.out.println("Y=" + f.slope + "x + " + f.yIntercept );
+            }
             ArrayList<VisionCoordinate> inner = course.getInner().returnCoords();
             ArrayList<VisionCoordinate> outer = course.getOuter()
                     .returnCoords();
