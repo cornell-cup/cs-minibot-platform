@@ -56,7 +56,7 @@ def echobot(bot,z):
         while(True):
             # msg is a tuple of left motor and right motor, respectively.
             msg = bot.get_actuator_by_name("two_wheel_movement").get_value()
-            print "MSG: " + msg
+            print "MSG: " + str(msg)
             z.broadcast(msg)
             time.sleep(0.1)
 
