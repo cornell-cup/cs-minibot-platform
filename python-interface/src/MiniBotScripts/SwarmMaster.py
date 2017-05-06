@@ -14,7 +14,7 @@ def run(bot):
     z.setMediator()
     z.setBroadcaster()
     
-    TCP.tcp.send_to_basestation("PUT_IP", "SwarmMaster," + z.getIP("wlan0"))
+    TCP.tcp.send_to_basestation("SwarmIP", z.getIP("wlan0"))
 
     mediateThread = Thread(target=z.mediate)
     mediateThread.start()
