@@ -70,13 +70,13 @@ class ColorSensor(Sensor):
         green = data[5] << 8 | data[4]
         blue = data[7] << 8 | data[6]
 
-        rgb = (red, green, blue)
+        rgb = normalize((red, green, blue))
         return rgb
 
     def read_color(self):
         """ Returns string of color """
         color_guess = ("", 99999999999999999999999999) #tuple of (color, distance from color to input)
-        color_actual = normalize(self.read())
+        color_actual = self.read()
         for c in self.colors_normalized:
             dist = distance(self.colors_normalized[c],color_actual)
             print "    " + c+ " dist: " + str(dist)
