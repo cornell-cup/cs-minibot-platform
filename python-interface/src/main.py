@@ -3,6 +3,7 @@ import MiniBotFramework
 from threading import Thread
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
+from Queue import Queue
 
 # Constants
 CONFIG_LOCATION = "MiniBotConfig/config.json"
@@ -80,6 +81,7 @@ def parse_command(cmd, bot, p):
     elif key == "RUN":
         p = spawn_named_script_process(p, bot, value)
     else:
+        bot.extraCMD.put( (key, value) )
         print("Unknown key: " + key)
         print("Cmd: " + cmd)
     return None

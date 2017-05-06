@@ -20,6 +20,7 @@ public class TCPConnection extends Connection {
             this.outToServer = new DataOutputStream(clientSocket.getOutputStream());
             this.inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             connectionNotRefused = true;
+            //this.clientSocket.setSoTimeout(500);
         } catch (IOException e) {
             System.err.println("Unable to establish connection! " + e);
             connectionNotRefused = false;
@@ -39,7 +40,7 @@ public class TCPConnection extends Connection {
         }
     }
 
-    public boolean sendKV(String messageType, String message)  {
+    public synchronized boolean sendKV(String messageType, String message)  {
         String payload;
         payload = "<<<<" + messageType + "," + message + ">>>>";
         try {
@@ -50,6 +51,20 @@ public class TCPConnection extends Connection {
             e.printStackTrace();
             connectionNotRefused = false;
             return false;
+        }
+    }
+
+    public String getIP () {
+        return this.ip;
+    }
+
+    public String receive() {
+        try {
+            return inFromServer.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            connectionNotRefused = false;
+            return null;
         }
     }
 }

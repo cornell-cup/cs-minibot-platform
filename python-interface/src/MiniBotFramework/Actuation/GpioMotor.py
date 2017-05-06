@@ -10,6 +10,7 @@ class GpioMotor(Actuator):
         self.pin_pwm = pin_pwm
         self.pin_hl = pin_hl
         self.GPIO = GPIO
+        GPIO.setwarnings(False)
         GPIO.setup(self.pin_pwm, GPIO.OUT)
         GPIO.setup(self.pin_hl, GPIO.OUT)
 

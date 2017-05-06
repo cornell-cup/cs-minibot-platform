@@ -5,6 +5,7 @@ try:
 except:
     GPIO = {}
 import MiniBotFramework
+from Queue import Queue
 
 class MiniBot:
     """
@@ -26,6 +27,8 @@ class MiniBot:
             else:
                 print("ERROR: Unknown actuator in config")
 
+        # queue for extra unrecognized commands by parser
+        self.extraCMD = Queue()
         # TODO: Sensor parsing
 
         # Meta actuator. TODO: Make configurable
@@ -51,7 +54,7 @@ class MiniBot:
         :return True if the action is supported
         """
         print("MOVING FORWARD")
-        self.two_wheel_movement.move(power,power)
+        self.actuators["two_wheel_movement"].move(power,power)
 
     def move_backward(self, power):
         """
@@ -112,6 +115,10 @@ class MiniBot:
         for sensor in self.sensors:
             data[sensor] = self.sensors[sensor].read()
         return data
+
+    # def poll_location(self):
+    #     data = {}
+
 
     def register_sensor(self,sensor):
         self.sensors[sensor.name] = sensor

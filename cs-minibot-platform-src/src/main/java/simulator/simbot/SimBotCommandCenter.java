@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import basestation.bot.commands.FourWheelMovement;
+import basestation.bot.connection.Connection;
 import com.google.gson.JsonObject;
 import simulator.Simulator;
 import simulator.baseinterface.SimulatorVisionSystem;
@@ -212,5 +213,10 @@ public class SimBotCommandCenter implements FourWheelMovement {
 
         }
         return false;
+    }
+
+    @Override
+    public Connection getConnection() {
+        return null;
     }
 }
