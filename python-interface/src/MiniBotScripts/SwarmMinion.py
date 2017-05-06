@@ -9,15 +9,15 @@ threads = []
 def run(bot):
 
     # get the IP of the mediator (hosted on the master) from the basestation
-    TCP.tcp.send_to_basestation("GET_IP", "Swarm")
+    TCP.tcp.send_to_basestation("SwarmIP", "")
 
     # look in the queue for info
     (key, value) = bot.extraCMD.get()
-    while key != "GET_IPSwarmMaster":
+    while key != "SwarmIP":
         # keep searching the queue
         (key, value) = bot.extraCMD.get()
 
-    if key == "GET_IPSwarmMaster":
+    if key == "SwarmIP":
         MEDIATOR_IP = value
 
     # Sets up ZMQ connection between master and minions. Starts subscriber-side 

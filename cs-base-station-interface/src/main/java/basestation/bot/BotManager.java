@@ -19,7 +19,7 @@ public class BotManager {
 
     private UDPConnectionListener udpConnection;
 
-    private Map<String, String> botIPMap;   // only added IP on request from bot
+    private Map<String, String> botExchangeMap;   // only added IP on request from bot
 
     /**
      * Initializes the bot manager with a fresh map and counter
@@ -29,7 +29,7 @@ public class BotManager {
         botMap = new ConcurrentHashMap<>();
         udpConnection = new UDPConnectionListener();
         udpConnection.start();
-        botIPMap = new HashMap<>();
+        botExchangeMap = new HashMap<>();
 
     }
 
@@ -96,8 +96,8 @@ public class BotManager {
      *
      * @return String
      */
-    public String getBotIP (String id) {
-        return botIPMap.get(id);
+    public String getBotExchange (String id) {
+        return botExchangeMap.get(id);
     }
 
     /**
@@ -106,7 +106,8 @@ public class BotManager {
      * @param IP IP given by the bot
      * @return true if operation was successful
      */
-    public boolean setBotIPMap (String id, String IP) {
-        return botIPMap.put(id, IP) != null;
+    public boolean setBotExchangeMap (String id, String IP) {
+
+        return botExchangeMap.put(id, IP) != null;
     }
 }
