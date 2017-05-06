@@ -7,9 +7,11 @@ def distance(p1, p2):
 
 def run(bot):
 
-    print distance((0,0,0), (3,4,0))
+    cs = bot.get_sensor_by_name("ColorSensor")
+    cs.calibrate()
+
+    print "================== TESTING =================="
 
     while len(raw_input("GO?"))>0:
-        cs = bot.get_sensor_by_name("ColorSensor")
         print "RGB: " + str(cs.read())
         print "Color: " + str(cs.read_color())

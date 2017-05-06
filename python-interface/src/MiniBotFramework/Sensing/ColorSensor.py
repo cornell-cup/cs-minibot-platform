@@ -59,8 +59,22 @@ class ColorSensor(Sensor):
 
         self.colors_normalized = {}
         
+        # for color in self.colors:
+        #     self.colors_normalized[color] = normalize(self.colors[color])
+
+    def calibrate(self):
+        print "================== COLOR CALIBRATION =================="
+        print """Before color-sensing, we must calibrate the colors. Please place
+the corresponding color under the color sensor at recommended distance
+(with wheels touching the ground before pressing enter."""
+
         for color in self.colors:
-            self.colors_normalized[color] = normalize(self.colors[color])
+            if len(raw_input("\nPlease place the " +lowercase(color) + " mat under the sensor and press enter."))>-1:
+                self.colors_normalized[color] = normalize(self.read())
+                time.sleep(0.01)
+                print "Calibrated!"
+
+        print "Thank you! All of the colors have been calibrated."
 
     def read(self):
         """ Returns a 3-tuple of RGB value """
