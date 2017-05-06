@@ -144,6 +144,9 @@ function newBot(x, y, angle, id, size) {
     return bot;
 }
 
+function toDegrees(radians) {
+    return 180 * radians / Math.PI;
+}
 
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
@@ -153,7 +156,7 @@ function drawBot(b, scale, xOffset, yOffset) {
     	bot.beginFill(0x0EB530);
     	bot.drawRect(0, 0, size*2, size*2);
     	bot.pivot = new PIXI.Point(size, size);
-        bot.rotation = b.angle;
+        bot.rotation = -b.angle;
     	bot.endFill()
 
 
@@ -163,7 +166,7 @@ function drawBot(b, scale, xOffset, yOffset) {
 	bot.y = cy;
 
     	// draw bot coordinate text
-    	let botCoordText = new PIXI.Text('(' + b.x.toFixed(2) + ',' + b.y.toFixed(2) + ',' + b.angle.toFixed(2) + ')',{fontFamily : 'Arial', fontSize: 11, fill : 0xff1010, align : 'center'});
+    	let botCoordText = new PIXI.Text('(' + b.x.toFixed(2) + ',' + b.y.toFixed(2) + ',' + toDegrees(b.angle).toFixed(2) + ')',{fontFamily : 'Arial', fontSize: 11, fill : 0xff1010, align : 'center'});
     	botCoordText.x = cx;
     	botCoordText.y = cy + 14;
 

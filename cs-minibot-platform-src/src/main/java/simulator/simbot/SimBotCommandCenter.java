@@ -106,13 +106,13 @@ public class SimBotCommandCenter implements FourWheelMovement {
         //turning right
         else if(fl > 0 && fr < 0 && bl > 0 && br < 0) {
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
-            b.setAngularVelocity((float)(turningspeed*fl/100));
+            b.setAngularVelocity((float)(-turningspeed*fl/100));
         }
 
         //turning left
         else if(fl < 0 && fr > 0 && bl < 0 && br > 0) {
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
-            b.setAngularVelocity((float)(turningspeed*fl/100));
+            b.setAngularVelocity((float)(-turningspeed*fl/100));
         }
 
         else {
@@ -161,13 +161,13 @@ public class SimBotCommandCenter implements FourWheelMovement {
             //turning right
             else if(fl > 0 && fr < 0 && bl > 0 && br < 0) {
                 b.setLinearVelocity(new Vec2(0.0f, 0.0f));
-                b.setAngularVelocity((float)(turningspeed*fl/100));
+                b.setAngularVelocity((float)(-turningspeed*fl/100));
             }
 
             //turning left
             else if(fl < 0 && fr > 0 && bl < 0 && br > 0) {
                 b.setLinearVelocity(new Vec2(0.0f, 0.0f));
-                b.setAngularVelocity((float)(turningspeed*fl/100));
+                b.setAngularVelocity((float)(-turningspeed*fl/100));
             }
 
             else {
