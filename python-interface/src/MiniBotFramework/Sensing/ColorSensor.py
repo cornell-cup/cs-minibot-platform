@@ -57,10 +57,16 @@ class ColorSensor(Sensor):
             #"PINK":(187,150,150)
 
             # TRIAL 4 - calibration based
-            "RED":-1,
-            "BLUE":-1,
-            "YELLOW":-1,
-            "GREEN":-1
+            # "RED":-1,
+            # "BLUE":-1,
+            # "YELLOW":-1,
+            # "GREEN":-1
+
+            # TRIAL 5 - non-calibration
+            "RED":(171,76,78),
+            "BLUE":(86,161,194),
+            "GREEN":(98,210,173),
+            "YELLOW":(210,203,100)
         }
         
         # for color in self.colors:
@@ -68,18 +74,21 @@ class ColorSensor(Sensor):
 
     def calibrate(self):
         """ Calibrates colors. Takes 100 inputs per color, stores normalized average. """
-        print "================== COLOR CALIBRATION =================="
-        print """Before color-sensing, we must calibrate the colors. Please place
-the corresponding color under the color sensor at recommended distance
-(with wheels touching the ground) before pressing enter."""
+#         print "================== COLOR CALIBRATION =================="
+#         print """Before color-sensing, we must calibrate the colors. Please place
+# the corresponding color under the color sensor at recommended distance
+# (with wheels touching the ground) before pressing enter."""
 
-        for color in self.colors:
-            if len(raw_input("\nPlease place the " +color.lower() + " mat under the sensor and press enter."))>-1:
-                self.colors[color] = normalize(self.super_read(100))
-                time.sleep(0.01)
-                print "Calibrated!"
+#         for color in self.colors:
+#             if len(raw_input("\nPlease place the " +color.lower() + " mat under the sensor and press enter."))>-1:
+#                 self.colors[color] = normalize(self.super_read(100))
+#                 time.sleep(0.01)
+#                 print "Calibrated!"
 
-        print "Thank you! All of the colors have been calibrated.\n"
+#         print "Thank you! All of the colors have been calibrated.\n"
+
+        for c in self.colors:
+            self.colors[c] = normalize(self.colors[c])
 
     def super_read(self,n):
         """ Reads from the color sensor n times, and returns the non-normalized average. """
@@ -111,7 +120,7 @@ the corresponding color under the color sensor at recommended distance
     def read_color(self):
         """ Returns string of color """
         color_guess = ("", 99999999999999999999999999) #tuple of (color, distance from color to input)
-        color_actual = self.read()
+        color_actual = normalize(self.read())
         for c in self.colors:
             dist = distance(self.colors[c],color_actual)
             print "    " + c+ " dist: " + str(dist)
