@@ -44,7 +44,6 @@ def colorbot(bot,z):
                 count["R"]=0
             elif(c=="GREEN"):
                 # forwards
-                msg = (speed,speed)
                 count["F"]+=1
                 count["B"]=0
                 count["L"]=0
@@ -52,9 +51,9 @@ def colorbot(bot,z):
                 if(count["F"]>15):
                     count["F"]=0
                     speed = inc(speed,15)
+                msg = (speed,speed)
             elif(c=="BLUE"):
                 # backwards
-                msg = (-speed,-speed)
                 count["F"]=0
                 count["B"]+=1
                 count["L"]=0
@@ -62,9 +61,9 @@ def colorbot(bot,z):
                 if(count["B"]>15):
                     count["B"]=0
                     speed = inc(speed,15)
+                msg = (-speed,-speed)
             elif(c=="YELLOW"):
                 # turn left
-                msg = (-speed,speed)
                 count["F"]=0
                 count["B"]=0
                 count["L"]+=1
@@ -72,9 +71,9 @@ def colorbot(bot,z):
                 if(count["L"]>15):
                     count["L"]=0
                     speed = inc(speed,15)
+                msg = (-speed,speed)
             elif(c=="VIOLET"):
                 # turn right
-                msg = (speed,-speed)
                 count["F"]=0
                 count["B"]=0
                 count["L"]=0
@@ -82,6 +81,7 @@ def colorbot(bot,z):
                 if(count["R"]>15):
                     count["R"]=0
                     speed = inc(speed,15)
+                msg = (speed,-speed)
             # elif(c=="PINK"):
             #     # decrease speed
             #     orangeFirstTime = True
