@@ -21,8 +21,8 @@ def run(bot):
     mediateThread.start()
     threads.append(mediateThread)
     
-    echobot(bot,z)
-    #colorbot(bot,z)
+    #echobot(bot,z)
+    colorbot(bot,z)
     
 def colorbot(bot,z):
     speed = 10
