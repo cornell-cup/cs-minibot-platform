@@ -112,10 +112,16 @@
 		<button id="addBot">add bot</button>
 		<button id = "updateLocs"> Run simulator </button>
 		<br><hr><br>
-		Scenario:
-		<textarea rows="4" cols="50" name="scenario" id="scenario">[{"type": "scenario_object", "position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]</textarea>
-		<button id="addScenario">add scenario</button>
-
+		Scenarios - obstacles only, add bot separately
+		Scenario name:<input type="text" id="scenarioname"
+							 value="scenario1"><br>
+		Scenario viewer: <textarea rows="4" cols="100" name="scenario"
+					   id="scenario">[{"type":	"simulator.simbot",
+		"position":"[2,2]", "angle":0},{"type":	"scenario_object",
+		"position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]</textarea>
+		<button id="addScenario">add scenario to world</button>
+		<button id="loadScenario">load scenario from file</button>
+		<button id="saveScenario">save scenario to file</button>
 	</div>
 
 	<div class="box">

@@ -20,9 +20,7 @@ public class SimulatorModBotConnection extends MotorConnection {
     }
 
     @Override
-    public void destroy() {
-
-    }
+    public void destroy() {}
 
     @Override
     public void setMotorPower(double fl, double fr, double bl, double br) {

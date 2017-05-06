@@ -43,7 +43,7 @@ class TCP(object):
         if self.active:
             # connection is active, send
             try:
-                message = "<<<<" + key + ":" + value + ">>>>"
+                message = "<<<<" + key + "," + value + ">>>>"
                 # appending \n to the message as java reader socket blocks until new line is encountered
                 self.connectionSocket.send(message + "\n")
             except socket.error as e:

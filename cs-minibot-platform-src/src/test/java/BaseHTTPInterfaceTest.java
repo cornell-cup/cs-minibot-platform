@@ -93,7 +93,6 @@ public class BaseHTTPInterfaceTest {
 
         SimBotConnection sbc = new SimBotConnection();
         assertEquals(sbc.connectionActive(), true);
-        PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld(), 0.4f, 0.0f, 1f, 1f, true);
 
         // TODO Fix simbot tests
 //        SimBot smbot;
@@ -104,11 +103,14 @@ public class BaseHTTPInterfaceTest {
 //        pObjs.add(po);
 //        simvs.processPhysicalObjects(pObjs);
 
+        /*PhysicalObject po = new PhysicalObject("TESTBOT", 50, simvs.getWorld
+                (), 0.4f, 0.0f, 1f, 1f, true);*/
+
         assertEquals(BaseStation.getInstance().getBotManager().addBot(testMiniBot), "TestCaseMiniBot");
 //        assertEquals(BaseStation.getInstance().getBotManager().addBot(testSimBot), "TestCaseSimBot");
         assertTrue(BaseStation.getInstance().getBotManager().getBotByName("TestCaseMiniBot").isPresent());
 //        assertTrue(BaseStation.getInstance().getBotManager().getBotByName("TestCaseSimBot").isPresent());
-        assertEquals(simvs.getAllPhysicalObjects().size(), 0);
+//        assertEquals(simvs.getAllPhysicalObjects().size(), 0);
 
     }
     @Test

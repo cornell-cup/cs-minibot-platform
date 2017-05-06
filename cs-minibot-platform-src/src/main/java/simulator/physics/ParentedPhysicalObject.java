@@ -53,7 +53,6 @@ public class ParentedPhysicalObject {
         return this.toString().equals(o.toString());
     }
 
-
     /**
      *
      * @param name becomes the object's new name, assigns a new id corresponding to new name
@@ -150,11 +149,6 @@ public class ParentedPhysicalObject {
     public void setY(double y) {
         this.y = y;
     }
-
-    /**
-     *
-     * @return the Shape of the object
-     */
 
     /**
      *
