@@ -130,6 +130,6 @@ class ColorSensor(Sensor):
             if(dist < color_guess[1]):
                 color_guess = (c, dist)
                 # print "    new guess is " + color_guess[0]
-        print "COLOR: " + color_guess[0]
+        #print "COLOR: " + color_guess[0]
         return color_guess[0]
 

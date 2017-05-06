@@ -96,7 +96,8 @@ def colorbot(bot,z):
             #         orangeFirstTime = False
             #         speed += 5
             #         print "FASTER! (Speed: " + str(speed) + ")"
-            print str(msg)
+            
+            # print str(msg)
             z.broadcast(msg)
             speed = 10
             time.sleep(0.2)
@@ -106,6 +107,7 @@ def colorbot(bot,z):
 def inc(speed, i):
     if(speed<50):
         speed += i
+    print "Speed increased: " + str(speed)
     return speed
 
 def echobot(bot,z):
