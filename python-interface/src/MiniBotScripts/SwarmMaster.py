@@ -45,7 +45,7 @@ def colorbot(bot,z):
             elif(c=="GREEN"):
                 # forwards
                 msg = (speed,speed)
-                count["F"]++
+                count["F"]+=1
                 count["B"]=0
                 count["L"]=0
                 count["R"]=0
@@ -56,7 +56,7 @@ def colorbot(bot,z):
                 # backwards
                 msg = (-speed,-speed)
                 count["F"]=0
-                count["B"]++
+                count["B"]+=1
                 count["L"]=0
                 count["R"]=0
                 if(count["B"]>15):
@@ -67,7 +67,7 @@ def colorbot(bot,z):
                 msg = (-speed,speed)
                 count["F"]=0
                 count["B"]=0
-                count["L"]++
+                count["L"]+=1
                 count["R"]=0
                 if(count["L"]>15):
                     count["L"]=0
@@ -78,7 +78,7 @@ def colorbot(bot,z):
                 count["F"]=0
                 count["B"]=0
                 count["L"]=0
-                count["R"]++
+                count["R"]+=1
                 if(count["R"]>15):
                     count["R"]=0
                     speed = inc(speed,15)
