@@ -9,7 +9,6 @@ Pages and functions:
 - bot configs
 	- addBot
 	- removeBot
-	- listBots
 - bot dynamics
 	- commandBot
 	- ...
@@ -56,6 +55,18 @@ function sendMotors(fl, fr, bl, br) {
 	});
 }
 
+function startLogging() {
+	$.ajax({
+		method: "POST",
+		url: "/logdata",
+		data: JSON.stringify({
+			name: getBotID()
+		}),
+		processData: false,
+		contentType: 'application/json'
+	});
+}
+
 function sendScript() {
     $.ajax({
     		method: "POST",
@@ -77,7 +88,6 @@ $("#send").click(function(event) {
 $(".dir").click(function(event) {
 	var pow = getPower();
 	var target = $(event.target); //$target
-
 	if(target.is("#fwd")) {
 		sendMotors(pow, pow, pow, pow);
 	}
@@ -97,7 +107,11 @@ $(".dir").click(function(event) {
 		sendMotors(-pow, pow, -pow, pow);
 	}
 	else if(target.is("#stop")){
+	    console.log("stop");
 		sendMotors(0,0,0,0);
+	}
+	else if(target.is("#log")) {
+	    startLogging();
 	}
 	else {
 		console.error("Clicked on a direction button but nothing has been executed.");
@@ -170,7 +184,7 @@ $('#addBot').click(function() {
     });
 });
 
-//adding a scenario
+//adding a scenario from the value in the scenario viewer
 $('#addScenario').click(function() {
     console.log("add scenario from interface.js")
     var scenario = $("#scenario").val();
@@ -179,20 +193,64 @@ $('#addScenario').click(function() {
         method: "POST",
         url: '/addScenario',
         dataType: 'text',
-        data: JSON.stringify({'scenario': scenario.toString()}),
+        data: JSON.stringify({
+            scenario: scenario.toString()
+        }),
         contentType: 'application/json; charset=utf-8',
         success: function (data){
-            console.log("successfully added"+data);
+            console.log("successfully added scenario: "+data);
         }
     });
  });
+
+ //saving a scenario to a txt file with the specified filename
+ $('#saveScenario').click(function() {
+     console.log("saving a scenario")
+     var scenario = $("#scenario").val();
+     var filename = $("#scenarioname").val();
+
+     $.ajax({
+         method: "POST",
+         url: '/saveScenario',
+         dataType: 'text',
+         data: JSON.stringify({scenario: scenario.toString(),
+         name: filename.toString()}),
+         contentType: 'application/json; charset=utf-8',
+         success: function (data){
+             console.log("successfully saved scenario: "+data);
+         }
+     });
+  });
+
+  /**loading a scenario - just type in a name, no need for directory or file
+  extension*/
+  $('#loadScenario').click(function() {
+      active_bots = [];
+      discovered_bots = [];
+
+      var filename = $("#scenarioname").val();
+      console.log("loading scenario: "+filename.toString());
+      $.ajax({
+          method: "POST",
+          url: '/loadScenario',
+          dataType: 'text',
+          data: JSON.stringify({'name':filename.toString()}),
+          contentType: 'application/json; charset=utf-8',
+          success: function (data){
+              $("#scenario").val(data);
+              console.log("successfully loaded scenario: "+data);
+          },
+          error: function(data){
+              console.log("error: please enter the name of an existing scenario")
+          }
+      });
+   });
 
 /*
 	For any update to the list of active bots, the dropdown menu
 	of active bots will update accordingly (depending on the addition
 	or removal of a bot).
 */
-
 function updateDropdown(toAdd, text, val) {
 	// if adding to update
 	if(toAdd) { 
@@ -340,24 +398,15 @@ function redoDiscoverList(data){
                 updateDropdown(true, data, data);
             }
         });
-
-        //
-
         //Add to active_bots list
         active_bots.push(bot_ip);
-
         redoDiscoverList(discovered_bots);
     });
-}
-
-function listBots(){
-	// lists all the bots
 }
 
 updateDiscoveredBots();
 
 $(document).ready(function() {
-
 /*
  * Event listener for key inputs. Sends to selected bot.
  */
@@ -413,3 +462,21 @@ window.onkeyup = function (e) {
     }
 };
 });
+
+/*
+*   Send KV -- allows users to manually send key and value to bot (for debugging/testing
+    purposes)
+*/
+function sendKV(){
+    $.ajax({
+        method:'POST',
+        url:'/sendKV',
+        dataType: 'json',
+        data: JSON.stringify({
+            key:$("#kv_key").val(),
+            value:$("#kv_value").val(),
+            name:getBotID()
+        }),
+        contentType: 'application/json'
+    });
+}

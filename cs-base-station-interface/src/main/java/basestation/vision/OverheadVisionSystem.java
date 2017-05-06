@@ -32,7 +32,7 @@ public class OverheadVisionSystem extends VisionSystem {
         HashSet<VisionObject> newSet = new HashSet<>();
         for (Blob b : data) {
             VisionCoordinate vc = new VisionCoordinate(b.x, b.y, Math
-                    .toRadians(((((-b.orientation % (2 * Math.PI)) * 180 /
+                    .toRadians(((((b.orientation % (2 * Math.PI)) * 180 /
                             (Math.PI))) + 180) % 360));
             VisionObject vo = new VisionObject(this, b.botID, vc);
             newSet.add(vo);

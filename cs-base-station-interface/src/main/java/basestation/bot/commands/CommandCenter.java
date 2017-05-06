@@ -1,5 +1,10 @@
 package basestation.bot.commands;
 
+import basestation.bot.connection.TCPConnection;
+import basestation.bot.connection.Connection;
+import com.google.gson.JsonObject;
+
+
 /**
  * Class who's methods are all the commands that can be issued to a bot
  * <p>
@@ -10,6 +15,17 @@ package basestation.bot.commands;
 public interface CommandCenter {
 
     /**
+     * Starts logging of data
+     */
+    void startLogging();
+
+    /**
+     * Returns whether or not data is currently being logged.
+     * @return True if the command center is currently logging data
+     */
+    boolean isLogging();
+
+    /**
      * Sends an arbitrary key and value over the associated bot's connection. Should only be used for quick prototyping,
      * with the goal of creating a method wrapper around sending the KV.
      * @param key A key to identify the type of command
@@ -17,4 +33,13 @@ public interface CommandCenter {
      * @return True if the command seems to have sent correctly
      */
     boolean sendKV(String key, String value);
+
+    /**
+     * Returns Connection object
+     * @return Connection
+     */
+    Connection getConnection();
+
+    JsonObject getAllData();
+
 }

@@ -1,0 +1,25 @@
+{
+  "name": "replacename",
+  "startupScript": "",
+  "keepStartupRunning": true,
+  "discoverable": true,
+  "acceptTcp": true,
+  "acceptXbox": true,
+  "actuators": [
+    {
+      "type": "gpioMotor",
+      "name": "leftMotor",
+      "pinPWM": 13,
+      "pinHighLow": 20
+    },
+    {
+      "type": "gpioMotor",
+      "name": "rightMotor",
+      "pinPWM": 19,
+      "pinHighLow": 18
+    }
+  ],
+  "sensors": [
+
+  ]
+}

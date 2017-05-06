@@ -4,6 +4,7 @@ import basestation.bot.commands.ExtendedFourWheelMovement;
 import basestation.bot.connection.Connection;
 import basestation.bot.connection.MotorConnection;
 import basestation.vision.VisionCoordinate;
+import com.google.gson.JsonObject;
 
 /**
  * A CommandCenter for a ModBot
@@ -11,11 +12,20 @@ import basestation.vision.VisionCoordinate;
 public class ModbotCommandCenter extends ExtendedFourWheelMovement {
     private final MotorConnection connection;
     private final ModbotNavigator navigator;
+    public transient boolean record = false;
 
     public ModbotCommandCenter(MotorConnection connection, ModBot myBot) {
         super();
         this.navigator = new ModbotNavigator(myBot);
         this.connection = connection;
+    }
+
+    public void startLogging() {
+        this.record = true;
+    }
+
+    public boolean isLogging() {
+        return this.record;
     }
 
     /**
@@ -64,6 +74,14 @@ public class ModbotCommandCenter extends ExtendedFourWheelMovement {
 
     public boolean sendKV(String key, String value) {
         return false; // TODO
+    }
+
+    public Connection getConnection() {
+        return this.connection;
+    }
+    @Override
+    public JsonObject getAllData(){
+        return null;
     }
 
 }

@@ -65,4 +65,6 @@ public class IceConnection extends MotorConnection {
     public String toString() {
         return this.identity;
     }
+
+    public String getIP() { return ""; }
 }

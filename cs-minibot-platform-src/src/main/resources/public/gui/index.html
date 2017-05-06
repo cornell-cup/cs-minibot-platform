@@ -54,7 +54,7 @@
 		</select>
 
 		<button class="controls" id="removeBot">remove</button><br>
-		Power (0-100): <input id="power" type="range" name="power" min="0" max="100" value="100">
+		Power (0-100): <input id="power" type="range" name="power" min="0" max="100" value="50">
 		<br><br>
 		
 		<hr><br>
@@ -73,7 +73,7 @@
 				<td><button class="dir" id="rt">right</button></td>
 			</tr>
 			<tr>
-				<td></td>
+				<td><button class="dir" id="log">log data</button></td>
 				<td><button class="dir" id="bck">backward</button></td>
 				<td></td>
 			</tr>
@@ -88,6 +88,11 @@
 				<td><button id="xbox-on">Start Xbox</td>
 				<td><button id="xbox-off">Stop Xbox</td>
 				<td></td>
+			</tr>
+			<tr>
+				<td><input type="text" id="kv_key" placeholder="Key (e.g. WHEELS)"></td>
+				<td><input type="text" id="kv_value" placeholder="Value (e.g. 10,10)"></td>
+				<td><button id="sendkv" onclick="sendKV()">Send KV</button></td>
 			</tr>
 		</table>
 	</div>
@@ -107,10 +112,16 @@
 		<button id="addBot">add bot</button>
 		<button id = "updateLocs"> Run simulator </button>
 		<br><hr><br>
-		Scenario:
-		<textarea rows="4" cols="50" name="scenario" id="scenario">[{"type": "scenario_object", "position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]</textarea>
-		<button id="addScenario">add scenario</button>
-
+		Scenarios - obstacles only, add bot separately
+		Scenario name:<input type="text" id="scenarioname"
+							 value="scenario1"><br>
+		Scenario viewer: <textarea rows="4" cols="100" name="scenario"
+					   id="scenario">[{"type":	"simulator.simbot",
+		"position":"[2,2]", "angle":0},{"type":	"scenario_object",
+		"position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]</textarea>
+		<button id="addScenario">add scenario to world</button>
+		<button id="loadScenario">load scenario from file</button>
+		<button id="saveScenario">save scenario to file</button>
 	</div>
 
 	<div class="box">

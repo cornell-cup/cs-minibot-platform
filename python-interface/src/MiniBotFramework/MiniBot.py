@@ -1,7 +1,11 @@
-import os
+import os, time
 from os import sys, path
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except:
+    GPIO = {}
 import MiniBotFramework
+from Queue import Queue
 
 class MiniBot:
     """
@@ -13,10 +17,34 @@ class MiniBot:
         #GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
 
-        #TODO: Make less hardcoded by using config
-        self.right_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "left_motor", 13, 20, GPIO)
-        self.left_motor = MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, "right_motor", 19, 18, GPIO)
+        for actuator in config["actuators"]:
+            if actuator["type"] == "gpioMotor":
+                name = actuator["name"]
+                pinPWM = actuator["pinPWM"]
+                pinHighLow = actuator["pinHighLow"]
+                reversed = actuator["reversed"]
+                MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, name, pinPWM, pinHighLow, reversed, GPIO)
+            else:
+                print("ERROR: Unknown actuator in config")
+
+        # queue for extra unrecognized commands by parser
+        self.extraCMD = Queue()
+        # TODO: Sensor parsing
+
+        # Meta actuator. TODO: Make configurable
+        self.left_motor = self.actuators["leftMotor"]
+        self.right_motor = self.actuators["rightMotor"]
         self.two_wheel_movement = MiniBotFramework.Actuation.TwoWheelMovement.TwoWheelMovement(self, "two_wheel_movement", self.left_motor, self.right_motor)
+
+    def stop(self):
+        """
+        Moves the bot forward at a percentage of its full power
+
+        :param power The percentage of the bot's power to use from 0-100
+        :return True if the action is supported
+        """
+        print("STOPPING")
+        self.actuators["two_wheel_movement"].move(0,0)
 
     def move_forward(self, power):
         """
@@ -25,7 +53,8 @@ class MiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        print("Unimplemented: Moving forward "+str(power))
+        print("MOVING FORWARD")
+        self.actuators["two_wheel_movement"].move(power,power)
 
     def move_backward(self, power):
         """
@@ -34,7 +63,7 @@ class MiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        print("Unimplemented: Moving backward "+str(power))
+        self.actuators["two_wheel_movement"].move(-power,-power)
 
     def turn_clockwise(self, power):
         """
@@ -43,7 +72,7 @@ class MiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        print("Unimplemented: Turning clockwise "+str(power))
+        self.actuators["two_wheel_movement"].move(power,-power)
 
     def turn_counter_clockwise(self, power):
         """
@@ -52,7 +81,7 @@ class MiniBot:
         :param power The percentage of the bot's power to use from 0-100
         :return True if the action is supported
         """
-        print("Unimplemented: Turning counter clockwise "+str(power))
+        self.actuators["two_wheel_movement"].move(-power,power)
 
     def set_wheel_power(self, left, right):
         """
@@ -65,7 +94,7 @@ class MiniBot:
         :param back_right power to deliver to the back_right wheel
         :return True if the action is supported
         """
-        print("Unimplemented: Setting wheel power to %d,%d,%d,%d" % (left, right))
+        self.actuators["two_wheel_movement"].move(left,right)
 
     def wait(self, t):
         """
@@ -87,6 +116,10 @@ class MiniBot:
             data[sensor] = self.sensors[sensor].read()
         return data
 
+    # def poll_location(self):
+    #     data = {}
+
+
     def register_sensor(self,sensor):
         self.sensors[sensor.name] = sensor
 
@@ -95,3 +128,6 @@ class MiniBot:
 
     def get_actuator_by_name(self, name):
         return self.actuators[name]
+
+    def get_all_actuators(self):
+        return self.actuators.values()
