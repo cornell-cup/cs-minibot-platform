@@ -60,17 +60,19 @@ def colorbot(bot,z):
                 pinkFirstTime = True
                 orangeFirstTime = True
             elif(c=="PINK"):
-                # increase speed
-                orangeFirstTime = True
-                if (pinkFirstTime && speed < 50):
-                    pinkFirstTime = False
-                    speed += 5
-            elif(c=="ORANGE"):
                 # decrease speed
-                pinkFirstTime = True
-                if (orangeFirstTime && speed > 10):
-                    orangeFirstTime = False
+                orangeFirstTime = True
+                if (pinkFirstTime && speed > 10):
+                    pinkFirstTime = False
                     speed -= 5
+                    print "SLOWER! (Speed: " + str(speed) + ")"
+            elif(c=="ORANGE"):
+                # increase speed
+                pinkFirstTime = True
+                if (orangeFirstTime && speed < 50):
+                    orangeFirstTime = False
+                    speed += 5
+                    print "FASTER! (Speed: " + str(speed) + ")"
             print str(msg)
             z.broadcast(msg)
             time.sleep(0.2)
