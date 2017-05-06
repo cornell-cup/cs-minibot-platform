@@ -7,9 +7,13 @@ def run(bot):
 
     print "================== TESTING =================="
 
-    try:
-        while len(raw_input("GO?"))>-1:
-            print "RGB: " + str(cs.read())
-            print "Color: " + str(cs.read_color())
-    finally:
-        cs.cleanup()
+    while len(raw_input("GO?"))>-1:
+        print "RGB: " + str(cs.read())
+        color = str(cs.read_color())
+        print "Color: " + color
+
+        if(color=="RED"):
+            # stop
+        else:
+            # go
+

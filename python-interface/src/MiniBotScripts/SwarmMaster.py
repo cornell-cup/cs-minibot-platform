@@ -32,7 +32,7 @@ def colorbot():
         while(True):
             if(cs.read_color()=="RED"):
                 z.broadcast((0,0))
-            elif(cs.read_color()=="GREEN"):
+            else: #if(cs.read_color()=="GREEN"):
                 z.broadcast((30,30))
             time.sleep(0.05)
     finally:
