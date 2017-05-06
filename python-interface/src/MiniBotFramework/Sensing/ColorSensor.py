@@ -25,6 +25,7 @@ class ColorSensor(Sensor):
         self.bus.write_byte(0x29, 0x80|0x14) # Reading results start register 14, LSB then MSB
 
         self.colors = {
+            # TRIAL 1
             # "RED":(7885,2631,3034),
             # "GREEN":(4794,10432,8395),
             # "BLUE":(14162,7582,4268),
@@ -32,13 +33,24 @@ class ColorSensor(Sensor):
             # "VIOLET":(8263,7538,9303),
             # "YELLOW":(13772,12879,5783),
             # "PINK":(11483,7839,8267)
-            "RED":(151,49,58),
-            "GREEN":(160,357,286),
-            "BLUE":(76,158,198),
-            "ORANGE":(250,134,76),
-            "VIOLET":(137,128,156),
-            "YELLOW":(245,229,103),
-            "PINK":(236,165,172)
+
+            # TRIAL 2 - rugged side of color mat, stationary bot, 100 avg
+            # "RED":(151,49,58),
+            # "GREEN":(160,357,286),
+            # "BLUE":(76,158,198),
+            # "ORANGE":(250,134,76),
+            # "VIOLET":(137,128,156),
+            # "YELLOW":(245,229,103),
+            # "PINK":(236,165,172)
+
+            # TRIAL 3 - flat side of color mat, moving bot, 100 avg
+            "RED":(155,68,70),
+            "GREEN":(81,170,139),
+            "BLUE":(73,139,167),
+            "ORANGE":(231,138,83),
+            "VIOLET":(140,138,158),
+            "YELLOW":(241,234,113),
+            "PINK":(187,150,150)
         }
 
     def read(self):
