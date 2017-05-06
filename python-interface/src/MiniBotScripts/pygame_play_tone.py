@@ -37,6 +37,6 @@ if __name__ == "__main__":
     pm.pre_init(44100, -16, 1, 1024)
     pm.init()
     test = Note(440)
-    print (str(test.get_volume()))
+    # print (str(test.get_volume()))
     test.play(-1)
     sleep(5)
