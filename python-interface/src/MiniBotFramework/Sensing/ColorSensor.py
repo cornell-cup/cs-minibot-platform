@@ -79,7 +79,7 @@ the corresponding color under the color sensor at recommended distance
     def super_read(self,n):
         color_data = {"R":0,"G":0,"B":0}
         for i in range(n):
-            read = self.raw_read()
+            read = self.read()
             color_data["R"] += read[0]
             color_data["G"] += read[1]
             color_data["B"] += read[2]
