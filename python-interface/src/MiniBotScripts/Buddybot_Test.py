@@ -44,6 +44,9 @@ def showAnger(bot):
     pass
 
 def run(bot):
+    # pre_init(44100, -16, 1, 1024)
+    # pygame.init()
+    # bot.wait(1)
     bot.move_forward(20)
     bot.wait(3)
     bot.stop()
