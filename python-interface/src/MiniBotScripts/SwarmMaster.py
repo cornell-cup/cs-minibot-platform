@@ -34,19 +34,22 @@ def colorbot(bot,z):
             c = cs.read_color()
             if(c=="RED"):
                 # stop
-                z.broadcast((0,0))
+                msg = (0,0)
             elif(c=="GREEN"):
                 # forwards
-                z.broadcast((speed,speed))
+                msg = (speed,speed)
             elif(c=="BLUE"):
                 # backwards
-                z.broadcast((-speed,-speed))
+                msg = (-speed,-speed)
             elif(c=="YELLOW"):
                 # turn left
-                z.broadcast((-speed,speed))
+                msg = (-speed,speed)
             elif(c=="VIOLET"):
                 # turn right
-                z.broadcast((speed,-speed))
+                msg = (speed,-speed)
+            
+            print str(msg)
+            z.broadcast(msg)
             time.sleep(0.2)
     finally:
         cleanup(z)
@@ -56,7 +59,7 @@ def echobot(bot,z):
         while(True):
             # msg is a tuple of left motor and right motor, respectively.
             msg = bot.get_actuator_by_name("two_wheel_movement").get_value()
-            print "MSG: " + msg
+            print "MSG: " + Mmsg
             z.broadcast(msg)
             time.sleep(0.1)
 
