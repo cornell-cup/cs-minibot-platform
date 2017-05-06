@@ -66,8 +66,10 @@ class ColorSensor(Sensor):
             "RED":(171,76,78),
             "BLUE":(86,161,194),
             "GREEN":(98,210,173),
-            "YELLOW":(210,203,100),
-            "VIOLET":(142,140,160)
+            "YELLOW":(210,203,100)#,
+            # "VIOLET":(142,140,160),
+            # "PINK":(195,157,156),
+            # "ORANGE":(140,83,51)
         }
         
         # for color in self.colors:
@@ -128,6 +130,6 @@ class ColorSensor(Sensor):
             if(dist < color_guess[1]):
                 color_guess = (c, dist)
                 # print "    new guess is " + color_guess[0]
-        print "COLOR: " + color_guess[0]
+        #print "COLOR: " + color_guess[0]
         return color_guess[0]
 
