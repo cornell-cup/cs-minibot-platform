@@ -8,6 +8,10 @@ def distance(p1, p2):
     Used for evaluating color """
     return math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2 + (p1[2]-p2[2])**2)
 
+def normalize(vector):
+    sum = vector[0] + vector[1] + vector[2]
+    return (vector[0]/sum, vector[1]/sum, vector[2]/sum)
+
 class ColorSensor(Sensor):
     """ Pre-determined set of colors and corresponding RGB 3-tuples
     that are the basis of color inputs. Sensor inputs will be compared
@@ -53,14 +57,10 @@ class ColorSensor(Sensor):
             "PINK":(187,150,150)
         }
 
-        self.colors_normalized = self.normalize(self.colors)
-
-    def normalize(self, color_dict):
-        norm = {}
-        for color in color_dict:
-            sum = color_dict[color][0]+color_dict[color][1]+color_dict[color][2]
-            norm[color] = (color_dict[color][0]/sum,color_dict[color][1]/sum,color_dict[color][2]/sum)
-        return norm
+        self.colors_normalized = {}
+        
+        for color in self.colors:
+            colors_normalized[color] = normalize(self.colors[color])
 
     def read(self):
         """ Returns a 3-tuple of RGB value """
@@ -76,7 +76,7 @@ class ColorSensor(Sensor):
     def read_color(self):
         """ Returns string of color """
         color_guess = ("", 99999999999999999999999999) #tuple of (color, distance from color to input)
-        color_actual = self.read()
+        color_actual = normalize(self.read())
         for c in self.colors_normalized:
             dist = distance(self.colors_normalized[c],color_actual)
             print "    " + c+ " dist: " + str(dist)
