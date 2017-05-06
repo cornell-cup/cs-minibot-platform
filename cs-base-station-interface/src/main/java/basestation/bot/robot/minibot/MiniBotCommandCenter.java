@@ -2,7 +2,10 @@ package basestation.bot.robot.minibot;
 
 import basestation.bot.commands.CommandCenter;
 import basestation.bot.commands.FourWheelMovement;
+
 import basestation.bot.connection.*;
+import com.google.gson.JsonObject;
+
 
 /**
  * Class who's methods are all the commands that can be issued to a bot
@@ -29,6 +32,11 @@ public class MiniBotCommandCenter implements FourWheelMovement {
     @Override
     public boolean sendKV(String type, String payload) {
         return connection.sendKV(type, payload);
+    }
+
+    @Override
+    public JsonObject getAllData() {
+        return null;
     }
 
     @Override

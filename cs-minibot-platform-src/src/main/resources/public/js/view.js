@@ -156,10 +156,16 @@ function drawBot(b, scale, xOffset, yOffset) {
         bot.rotation = b.angle;
     	bot.endFill()
 
+
     var cx = (b.x)*x_int+xOffset;
-    var cy = (b.y)*y_int+yOffset;
+    var cy = (START_SCALE-b.y)*y_int+yOffset;
 	bot.x = cx;
 	bot.y = cy;
+
+    	// draw bot coordinate text
+    	let botCoordText = new PIXI.Text('(' + b.x.toFixed(2) + ',' + b.y.toFixed(2) + ',' + b.angle.toFixed(2) + ')',{fontFamily : 'Arial', fontSize: 11, fill : 0xff1010, align : 'center'});
+    	botCoordText.x = cx;
+    	botCoordText.y = cy + 14;
 
     var circle2 = new PIXI.Graphics();
     circle2.beginFill(0xFF0000);
@@ -175,15 +181,16 @@ function drawBot(b, scale, xOffset, yOffset) {
         circle3.endFill();
 
     circle2.x = cx+size*Math.cos(b.angle+Math.PI/6);
-    circle2.y = cy+size*Math.sin(b.angle+Math.PI/6);
+    circle2.y = START_SCALE-cy+size*Math.sin(b.angle+Math.PI/6);
 
     circle3.x = cx+size*Math.cos(b.angle-Math.PI/6);
-    circle3.y = cy+size*Math.sin(b.angle-Math.PI/6);
+    circle3.y = START_SCALE-cy+size*Math.sin(b.angle-Math.PI/6);
 
 
 	botContainer.addChild(bot);
 	botContainer.addChild(circle2);
 	botContainer.addChild(circle3);
+	botContainer.addChild(botCoordText);
 }
 
 function drawScenarioObject(b, scale, xOffset, yOffset) {
@@ -197,7 +204,7 @@ function drawScenarioObject(b, scale, xOffset, yOffset) {
 	scenarioObject.endFill();
 
     var cx = (b.x)*x_int;
-    var cy = (b.y)*y_int;
+    var cy = (START_SCALE-b.y)*y_int;
     scenarioObject.x = cx+xOffset;
     scenarioObject.y = cy+yOffset;
 

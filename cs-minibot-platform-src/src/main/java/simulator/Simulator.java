@@ -68,7 +68,6 @@ public class Simulator {
         float timeStep = (float)(delta / 10e8);
         int velocityIterations = 6;
         int positionIterations = 4;
-
         for(PhysicalObject po: poSet) {
             po.getWorld().step(timeStep, velocityIterations, positionIterations);
         }
