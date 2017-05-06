@@ -53,6 +53,15 @@ class ColorSensor(Sensor):
             "PINK":(187,150,150)
         }
 
+        self.colors_normalized = self.normalize(self.colors)
+
+    def normalize(self, color_dict):
+        norm = {}
+        for color in color_dict:
+            sum = color_dict[color][0]+color_dict[color][1]+color_dict[color][2]
+            norm[color] = (color_dict[color][0]/sum,color_dict[color][1]/sum,color_dict[color][2]/sum)
+        return norm
+
     def read(self):
         """ Returns a 3-tuple of RGB value """
         data = self.bus.read_i2c_block_data(0x29, 0)
@@ -66,10 +75,10 @@ class ColorSensor(Sensor):
 
     def read_color(self):
         """ Returns string of color """
-        color_guess = ("", 99999999999999999999999999) #tuple of color, distance from color to input
+        color_guess = ("", 99999999999999999999999999) #tuple of (color, distance from color to input)
         color_actual = self.read()
-        for c in self.colors:
-            dist = distance(self.colors[c],color_actual)
+        for c in self.colors_normalized:
+            dist = distance(self.colors_normalized[c],color_actual)
             print "    " + c+ " dist: " + str(dist)
             if(dist < color_guess[1]):
                 color_guess = (c, dist)
