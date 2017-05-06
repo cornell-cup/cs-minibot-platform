@@ -1,12 +1,12 @@
 import Note_Library
-from pygame_play_tone import Note as nt
+from pygame_play_tone import Note
 
 def happySong():
-    nt.Note(16.35).play(0)
+    Note(16.35).play(0)
     bot.wait(1)
-    nt.Note(20.6).play(0)
+    Note(20.6).play(0)
     bot.wait(1)
-    nt.Note(24.5).play(0)
+    Note(24.5).play(0)
     bot.wait(2)
     # nt.Note(Note_Library.NOTE_C0).play(0)
     # bot.wait(1)
