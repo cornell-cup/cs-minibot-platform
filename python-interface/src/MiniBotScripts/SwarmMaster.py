@@ -28,6 +28,8 @@ def colorbot(bot,z):
     speed = 10
     cs = bot.get_sensor_by_name("ColorSensor")
     cs.calibrate()
+    pinkFirstTime = True
+    orangeFirstTime = True
 
     try:
         while(True):
@@ -35,19 +37,40 @@ def colorbot(bot,z):
             if(c=="RED"):
                 # stop
                 msg = (0,0)
+                pinkFirstTime = True
+                orangeFirstTime = True
             elif(c=="GREEN"):
                 # forwards
                 msg = (speed,speed)
+                pinkFirstTime = True
+                orangeFirstTime = True
             elif(c=="BLUE"):
                 # backwards
                 msg = (-speed,-speed)
+                pinkFirstTime = True
+                orangeFirstTime = True
             elif(c=="YELLOW"):
                 # turn left
                 msg = (-speed,speed)
+                pinkFirstTime = True
+                orangeFirstTime = True
             elif(c=="VIOLET"):
                 # turn right
                 msg = (speed,-speed)
-            
+                pinkFirstTime = True
+                orangeFirstTime = True
+            elif(c=="PINK"):
+                # increase speed
+                orangeFirstTime = True
+                if (pinkFirstTime && speed < 50):
+                    pinkFirstTime = False
+                    speed += 5
+            elif(c=="ORANGE"):
+                # decrease speed
+                pinkFirstTime = True
+                if (orangeFirstTime && speed > 10):
+                    orangeFirstTime = False
+                    speed -= 5
             print str(msg)
             z.broadcast(msg)
             time.sleep(0.2)
