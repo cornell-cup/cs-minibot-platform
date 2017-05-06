@@ -27,7 +27,6 @@ class MiniBot:
             else:
                 print("ERROR: Unknown actuator in config")
 
-<<<<<<< HEAD
         for sensor in config["sensors"]:
             if sensor["type"] == "colorSensor":
                 # print "ColorSensor detected!"
@@ -40,11 +39,10 @@ class MiniBot:
                 MiniBotFramework.Sensing.GPIOSensor.GPIOSensor(self, name, pin)
             else:
                 print("ERROR: Unknown sensor in config")
-=======
+                
         # queue for extra unrecognized commands by parser
         self.extraCMD = Queue()
         # TODO: Sensor parsing
->>>>>>> origin/request-feature
 
         # Meta actuator. TODO: Make configurable
         self.left_motor = self.actuators["leftMotor"]

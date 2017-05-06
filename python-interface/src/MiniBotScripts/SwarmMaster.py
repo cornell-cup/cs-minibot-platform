@@ -20,7 +20,25 @@ def run(bot):
     mediateThread = Thread(target=z.mediate)
     mediateThread.start()
     threads.append(mediateThread)
-    # commands for bot movement itself
+    # echobot()
+
+    colorbot()
+    
+def colorbot():
+    speed = 30
+    cs = bot.get_sensor_by_name("ColorSensor")
+
+    try:
+        while(True):
+            if(cs.read_color()=="RED"):
+                z.broadcast((0,0))
+            elif(cs.read_color()=="GREEN"):
+                z.broadcast((30,30))
+            time.sleep(0.05)
+    finally:
+        cleanup(z)
+
+def echobot():
     try:
         while(True):
             # msg is a tuple of left motor and right motor, respectively.
