@@ -69,7 +69,7 @@ the corresponding color under the color sensor at recommended distance
 (with wheels touching the ground before pressing enter."""
 
         for color in self.colors:
-            if len(raw_input("\nPlease place the " +lowercase(color) + " mat under the sensor and press enter."))>-1:
+            if len(raw_input("\nPlease place the " +color.lower() + " mat under the sensor and press enter."))>-1:
                 self.colors_normalized[color] = normalize(self.read())
                 time.sleep(0.01)
                 print "Calibrated!"
