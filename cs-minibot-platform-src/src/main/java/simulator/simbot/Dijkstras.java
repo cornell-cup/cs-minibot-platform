@@ -130,7 +130,6 @@ public class Dijkstras {
         while (predecessors.get(step) != null) {
             step = predecessors.get(step);
             path.add(step);
-            Thread.sleep(50);
 
 
         }
@@ -138,8 +137,6 @@ public class Dijkstras {
         Collections.reverse(path);
         return path;
     }
-
-
 
     public static int execute(Node[][] maze) {
         Node sourceNode = maze[1][1];

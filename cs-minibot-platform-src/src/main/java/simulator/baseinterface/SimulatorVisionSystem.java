@@ -4,7 +4,10 @@ package simulator.baseinterface;
 import basestation.vision.VisionCoordinate;
 import basestation.vision.VisionObject;
 import basestation.vision.VisionSystem;
+import org.jbox2d.callbacks.QueryCallback;
+import org.jbox2d.collision.AABB;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Fixture;
 import simulator.physics.PhysicalObject;
 
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ public class SimulatorVisionSystem extends VisionSystem {
     private Set<PhysicalObject> poSet;
     private World world;
     private long before;
+    private int[][] occupancyMatrix;
 
     public static final float UPDATES_PER_SECOND = 30;
 
@@ -92,6 +96,40 @@ public class SimulatorVisionSystem extends VisionSystem {
 
     public Set<PhysicalObject> getAllPhysicalObjects() {
         return poSet;
+    }
+
+    public int[][] getOccupancyMatrix() {
+        return occupancyMatrix;
+    }
+
+    public void setOccupancyMatrix(int[][] om) {
+        occupancyMatrix = om;
+    }
+
+    public void generateOccupancyMatrix(int occupancyMatrixHeight, int occupancyMatrixWidth, float occupancyMatrixBoxSize) {
+        int[][] om = new int[occupancyMatrixHeight][occupancyMatrixWidth];
+
+        for(int i = 0; i < occupancyMatrixHeight; i++){
+            for(int j = 0; j < occupancyMatrixWidth; j++) {
+                Vec2 lowerVertex = new Vec2((float)(i), (float)(j));
+                Vec2 upperVertex = new Vec2((float)(i+occupancyMatrixBoxSize), (float)(j+occupancyMatrixBoxSize));
+                AABB currentSquare = new AABB(lowerVertex, upperVertex);
+                final Vec2 middle = new Vec2(i , j );
+                final int icopy = i;
+                final int jcopy = j;
+                QueryCallback callback = new QueryCallback() {
+                    @Override
+                    public boolean reportFixture(Fixture fixture) {
+                        if(fixture.testPoint(middle)) {
+                            om[icopy][jcopy] = 1;
+                        }
+                        return true;
+                    }
+                };
+                world.queryAABB(callback, currentSquare);
+            }
+        }
+        setOccupancyMatrix(om);
     }
 
     private class SimRunner extends Thread {

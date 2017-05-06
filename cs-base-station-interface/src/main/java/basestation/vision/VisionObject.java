@@ -21,8 +21,13 @@ public class VisionObject {
      */
     public final VisionCoordinate coord;
 
-    public final float size;
+    public float size;
 
+    private float width, height;
+
+    public enum Shape { CIRCLE, RECTANGLE, POLYGON, DEFAULT}
+
+    Shape shape;
     /**
      * Creates a visionobject
      * @param vs The VisionSystem this object belongs to
@@ -49,6 +54,15 @@ public class VisionObject {
         this.vid = old.vid;
         this.coord = newCoord;
         this.size = old.size;
+    }
+
+    public VisionObject(VisionSystem vs, int vid, VisionCoordinate myCoord, Shape shape, int width, int height) {
+        this.vs = vs;
+        this.vid = vid;
+        this.coord = myCoord;
+        this.shape = shape;
+        this.width = width;
+        this.height = height;
     }
 
     @Override

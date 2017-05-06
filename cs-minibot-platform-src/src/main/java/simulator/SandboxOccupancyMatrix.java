@@ -17,6 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SandboxOccupancyMatrix extends Thread{
 
+    public final static float occupancyMatrixBoxSize = 0.50f; //Size of box in meters
+    public static int occupancyMatrixWidth = 40; //Number of boxes
+    public static int occupancyMatrixHeight = 40; // Number of boxes
 
     public static void main(String[] args) throws Exception{
         float xSpeed = 0.0f, ySpeed = 0.0f;
@@ -46,11 +49,11 @@ public class SandboxOccupancyMatrix extends Thread{
 
         //CREATING CIRCLE
         BodyDef circlebd = new BodyDef();
-        circlebd.position.set(xPos + 3.0f, yPos - 2.5f);
+        circlebd.position.set(4.0f, 8.0f);
         circlebd.type = BodyType.STATIC;
 
         CircleShape cs = new CircleShape();
-        cs.setRadius(6.5f);
+        cs.setRadius(6.2f);
 
         FixtureDef circlefd = new FixtureDef();
         circlefd.shape = cs;
@@ -60,27 +63,43 @@ public class SandboxOccupancyMatrix extends Thread{
         //WHAT
         BodyDef triangledef=new BodyDef();
         triangledef.type=BodyType.STATIC;
-        triangledef.position.set(-4.0f,-4.0f); //
+        triangledef.position.set(15.0f,20.0f); //
 
         PolygonShape weirdPoly = new PolygonShape();
         Vec2 [] vertices = new Vec2[3];
-        vertices[0] = new Vec2(-1.0f, -1.0f);
-        vertices[1] = new Vec2(5.0f, 0.0f);
-        vertices[2] = new Vec2(0.0f, 5.0f);
+        vertices[0] = new Vec2(1.0f, 1.0f);
+        vertices[1] = new Vec2(15.0f, 0.0f);
+        vertices[2] = new Vec2(0.0f, 20.0f);
         weirdPoly.set(vertices, 3);
         FixtureDef weirdFixtureDef = new FixtureDef();
         weirdFixtureDef.shape = weirdPoly;
-//        Body trianglebody = w.createBody(triangledef);
-//        trianglebody.createFixture(weirdFixtureDef);
+        Body trianglebody = w.createBody(triangledef);
+        trianglebody.createFixture(weirdFixtureDef);
+
+
+        BodyDef triangledef2=new BodyDef();
+        triangledef2.type=BodyType.STATIC;
+        triangledef2.position.set(16.0f,-2.0f); //
+
+        PolygonShape weirdPoly2 = new PolygonShape();
+        Vec2 [] vertices2 = new Vec2[3];
+        vertices2[0] = new Vec2(3.0f, -2.0f);
+        vertices2[1] = new Vec2(18.0f, -1.0f);
+        vertices2[2] = new Vec2(0.0f, 15.0f);
+        weirdPoly2.set(vertices2, 3);
+        FixtureDef weirdFixtureDef2 = new FixtureDef();
+        weirdFixtureDef2.shape = weirdPoly2;
+        Body trianglebody2 = w.createBody(triangledef2);
+        trianglebody2.createFixture(weirdFixtureDef2);
 
 
 
-        final int[][] occupancyMatrix = new int[20][20];
+        final int[][] occupancyMatrix = new int[occupancyMatrixHeight][occupancyMatrixWidth];
 
-        for(int i = -10; i < 9; i++){
-            for(int j = -10; j < 9; j++) {
+        for(int i = 0; i < occupancyMatrixHeight; i++){
+            for(int j = 0; j < occupancyMatrixWidth; j++) {
                 Vec2 lowerVertex = new Vec2((float)(i), (float)(j));
-                Vec2 upperVertex = new Vec2((float)(i+1), (float)(j+1));
+                Vec2 upperVertex = new Vec2((float)(i+occupancyMatrixBoxSize), (float)(j+occupancyMatrixBoxSize));
                 AABB currentSquare = new AABB(lowerVertex, upperVertex);
                 final Vec2 middle = new Vec2(i , j );
                 final int icopy = i;
@@ -89,7 +108,7 @@ public class SandboxOccupancyMatrix extends Thread{
                     @Override
                     public boolean reportFixture(Fixture fixture) {
                         if(fixture.testPoint(middle)) {
-                            occupancyMatrix[icopy+11][jcopy+11] = 1;
+                            occupancyMatrix[icopy][jcopy] = 1;
                         }
                         return true;
                     }
@@ -130,7 +149,7 @@ public class SandboxOccupancyMatrix extends Thread{
         Node targetNode = Dijkstras.targetNode;
 
         LinkedList<Node> path = Dijkstras.getPath(targetNode);
-        int[][] pathMatrix = new int[occupancyMatrix.length+4][occupancyMatrix[0].length+4];
+        int[][] pathMatrix = new int[occupancyMatrix.length+1][occupancyMatrix[0].length+1];
 
 
         for(int i = 0; i < path.size(); i++) {

@@ -207,11 +207,11 @@ function drawScenarioObject(b, scale, xOffset, yOffset) {
 /* Displays all bots given an array of bots */
 function displayBots(botArray, scale, xOffset, yOffset) {
 	for(var b=0; b<botArray.length;b++) {
-	if (botArray[b].type=='bot'){
-	    drawBot(botArray[b], scale, xOffset, yOffset);
-	} else {
-	    drawScenarioObject(botArray[b], scale, xOffset, yOffset);
-	}
+        if (botArray[b].type=='bot'){
+            drawBot(botArray[b], scale, xOffset, yOffset);
+        } else {
+            drawScenarioObject(botArray[b], scale, xOffset, yOffset);
+        }
 	}
 }
 
@@ -233,7 +233,8 @@ function setupGridLines(scale, xOffset, yOffset) {
 
     for(var i=0; i<40; i=i+1){
         lines_y[i] = new PIXI.Graphics();
-        lines_y[i].lineStyle(1, 0x0000FF, 1);
+        //lines_y[i].lineStyle(1, 0x0000FF, 1);
+        lines_y[i].lineStyle(1, 0x000000, 1);
 
         lines_y[i].moveTo(0,i*65*scale/100);
         lines_y[i].lineTo(VIEW_WIDTH,i*65*scale/100);
@@ -345,5 +346,29 @@ window.addEventListener("keydown", function(e) {
         e.preventDefault();
     }
 }, false);
+
+function displayOccupancyMatrix(int height, int width, float size) {
+
+    $.ajax({
+        method: "POST",
+        url: '/getOccupancyMatrix',
+        dataType: 'json',
+        data: JSON.stringify({
+            height:height,
+            width: width,
+            size: size}),
+        contentType: 'application/json',
+        success: function(data) {
+            console.log("printing occupancymatrix");
+            console.log(data);
+            }
+
+    });
+};
+
+$("#showOccupancyMatrix").click( function() {
+        console.log("Hello");
+        displayOccupancyMatrix();
+});
 
 main();

@@ -273,6 +273,18 @@ public class BaseHTTPInterface {
             return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
         });
 
+        post("/getOccupancyMatrix", (req, res) -> {
+            String body = req.body();
+            JsonObject settings = jp.parse(body).getAsJsonObject();
+            String height = settings.get("height").getAsString();
+            String width = settings.get("width").getAsString();
+            String size = settings.get("size").getAsString();
+            System.out.println(height + ", " + width + ", " + size);
+            simvs.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
+            System.out.println("getOccupancyMatrix");
+            return gson.toJson(simvs.getOccupancyMatrix());
+                });
+
         post("/runXbox", (req, res) -> {
             String body = req.body();
             JsonObject commandInfo = jp.parse(body).getAsJsonObject();
