@@ -42,6 +42,7 @@ def colorbot(bot,z):
                 count["B"]=0
                 count["L"]=0
                 count["R"]=0
+                speed = 10
             elif(c=="GREEN"):
                 # forwards
                 count["F"]+=1
@@ -99,7 +100,6 @@ def colorbot(bot,z):
             
             # print str(msg)
             z.broadcast(msg)
-            speed = 10
             time.sleep(0.2)
     finally:
         cleanup(z)
