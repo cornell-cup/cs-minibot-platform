@@ -1,18 +1,18 @@
 import Note_Library
-from pygame_play_tone import Sound as sd
+from pygame_play_tone import Note as nt
 
 def happySong():
-    sd.Note(16.35).play(0)
+    nt.Note(16.35).play(0)
     bot.wait(1)
-    sd.Note(20.6).play(0)
+    nt.Note(20.6).play(0)
     bot.wait(1)
-    sd.Note(24.5).play(0)
+    nt.Note(24.5).play(0)
     bot.wait(2)
-    # sd.Note(Note_Library.NOTE_C0).play(0)
+    # nt.Note(Note_Library.NOTE_C0).play(0)
     # bot.wait(1)
-    # sd.Note(Note_Library.NOTE_E0).play(0)
+    # nt.Note(Note_Library.NOTE_E0).play(0)
     # bot.wait(1)
-    # sd.Note(Note_Library.NOTE_G0).play(0)
+    # nt.Note(Note_Library.NOTE_G0).play(0)
     # bot.wait(2)
 
 def showHappy(bot):
