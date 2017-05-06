@@ -1,6 +1,6 @@
 from MiniBotFramework.Sensing.Sensor import Sensor
 from MiniBotFramework.Lib.TCS34725 import TCS34725 as CSensor
-import MinibotFramework.Lib.minibot_tools.*
+import MinibotFramework.Lib.minibot_tools
 import smbus, math, time
 
 class ColorSensor(Sensor):
