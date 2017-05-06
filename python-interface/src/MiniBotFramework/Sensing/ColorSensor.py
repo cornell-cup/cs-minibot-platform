@@ -70,16 +70,15 @@ the corresponding color under the color sensor at recommended distance
 
         for color in self.colors:
             if len(raw_input("\nPlease place the " +color.lower() + " mat under the sensor and press enter."))>-1:
-                self.colors_normalized[color] = normalize(self.read())
+                self.colors_normalized[color] = normalize(self.super_read(100))
                 time.sleep(0.01)
                 print "Calibrated!"
 
         print "Thank you! All of the colors have been calibrated."
 
-    def read(self):
-        """Returns (R,G,B) average of 20 inputs."""
+    def super_read(self,n):
         color_data = {"R":0,"G":0,"B":0}
-        for i in range(20):
+        for i in range(n):
             read = self.raw_read()
             color_data["R"] += read[0]
             color_data["G"] += read[1]
@@ -89,7 +88,7 @@ the corresponding color under the color sensor at recommended distance
         color_data["B"] = color_data["B"]/20.0
         return (color_data["R"],color_data["G"],color_data["B"])
 
-    def raw_read(self):
+    def read(self):
         """ Returns a NON-NORMALIZED 3-tuple of RGB value """
         data = self.bus.read_i2c_block_data(0x29, 0)
         # clear = clear = data[1] << 8 | data[0]
