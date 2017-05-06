@@ -21,13 +21,14 @@ def run(bot):
     mediateThread.start()
     threads.append(mediateThread)
     
-    echobot(bot,z)
-    #colorbot(bot,z)
+    #echobot(bot,z)
+    colorbot(bot,z)
     
 def colorbot(bot,z):
     speed = 30
     cs = bot.get_sensor_by_name("ColorSensor")
-
+    cs.calibrate()
+    
     try:
         while(True):
             if(cs.read_color()=="RED"):
