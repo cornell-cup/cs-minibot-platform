@@ -34,7 +34,7 @@ def colorbot(bot,z):
                 z.broadcast((0,0))
             else: #if(cs.read_color()=="GREEN"):
                 z.broadcast((30,30))
-            time.sleep(0.07)
+            time.sleep(0.2)
     finally:
         cleanup(z)
 
