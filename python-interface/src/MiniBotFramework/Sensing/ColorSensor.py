@@ -77,14 +77,14 @@ the corresponding color under the color sensor at recommended distance
         print "Thank you! All of the colors have been calibrated."
 
     def read(self):
-        """ Returns a 3-tuple of RGB value """
+        """ Returns a NON-NORMALIZED 3-tuple of RGB value """
         data = self.bus.read_i2c_block_data(0x29, 0)
         # clear = clear = data[1] << 8 | data[0]
         red = data[3] << 8 | data[2]
         green = data[5] << 8 | data[4]
         blue = data[7] << 8 | data[6]
 
-        rgb = normalize((red, green, blue))
+        rgb = (red, green, blue)
         return rgb
 
     def read_color(self):
