@@ -109,8 +109,8 @@ the corresponding color under the color sensor at recommended distance
         """ Returns string of color """
         color_guess = ("", 99999999999999999999999999) #tuple of (color, distance from color to input)
         color_actual = self.read()
-        for c in self.colors_normalized:
-            dist = distance(self.colors_normalized[c],color_actual)
+        for c in self.colors:
+            dist = distance(self.colors[c],color_actual)
             print "    " + c+ " dist: " + str(dist)
             if(dist < color_guess[1]):
                 color_guess = (c, dist)
