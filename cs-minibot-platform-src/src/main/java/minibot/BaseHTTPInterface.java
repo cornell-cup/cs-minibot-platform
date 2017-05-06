@@ -148,7 +148,7 @@ public class BaseHTTPInterface {
 
                 //for scenario obstacles
                 if (!type.equals("simulator.simbot")){
-                    int size = je.getAsJsonObject().get("size").getAsInt();
+                    float size = je.getAsJsonObject().get("size").getAsFloat();
                     PhysicalObject po = new PhysicalObject(name, 100,
                             simulator.getWorld(), (float)position[0],
                             (float)position[1], size, angle);
@@ -165,7 +165,6 @@ public class BaseHTTPInterface {
                             0.0f, (float) position[0], (float)
                             position[1], angle, true);
                     newBot = simbot;
-
                     simulator.importPhysicalObject(simbot.getMyPhysicalObject());
 
                     // Color sensor TODO put somewhere nice

@@ -19,14 +19,16 @@ public class PhysicalObject {
     private Body body;
     private int id;
     private World world;
-    private int size;
+    private float size;
 
+    //this constructor is for bots, no size is passed in, the default bot size is 0.15m, or 6 inches
     public PhysicalObject(String name, int id, World world, float xSpeed,
                           float ySpeed, float xPos, float yPos, int angle,
                           boolean isDynamic) {
         this.name = name;
         this.id = id;
-        this.size = 0;
+        float bot_size = 0.15f;
+        this.size = bot_size;
 
         BodyDef testbody = new BodyDef();
         testbody.position.set(new Vec2(xPos, yPos));
@@ -36,14 +38,8 @@ public class PhysicalObject {
         testbody.angle=(float)(angle/180.0*Math.PI);
         //testbody.linearDamping = 0.5f;
 
-        Vec2[] vertices = new Vec2[4];
-        vertices[0] = new Vec2(-4/16.0f,-4/16.0f);
-        vertices[1] = new Vec2(4/16.0f,-4/16.0f);
-        vertices[2] = new Vec2(4/16.0f,4/16.0f);
-        vertices[3] = new Vec2(-4/16.0f,4/16.0f);
-
         PolygonShape ps = new PolygonShape();
-        ps.setAsBox(5/16.0f, 5/16.0f, new Vec2(0.0f,0.0f), 0.0f);
+        ps.setAsBox(bot_size/2.0f, bot_size/2.0f, new Vec2(0.0f,0.0f), 0.0f);
 
         FixtureDef testFixture = new FixtureDef();
         testFixture.shape = ps;
@@ -58,7 +54,7 @@ public class PhysicalObject {
     }
 //this one is for scenario objects
     public PhysicalObject(String name, int id, World world, float xPos, float
-            yPos, int size, int angle) {
+            yPos, float size, int angle) {
         this.name = name;
         this.id = id;
         this.size = size;
@@ -69,11 +65,6 @@ public class PhysicalObject {
         testbody.type = BodyType.STATIC;
         testbody.linearVelocity = new Vec2(0.0f, 0.0f);;
 
-        Vec2[] vertices = new Vec2[4];
-        vertices[0] = new Vec2(-size/2.0f,-size/2.0f);
-        vertices[1] = new Vec2(size/2.0f,-size/2.0f);
-        vertices[2] = new Vec2(size/2.0f,size/2.0f);
-        vertices[3] = new Vec2(-size/2.0f,size/2.0f);
 
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(size/2.0f, size/2.0f, new Vec2(0.0f,0.0f), 0.0f);
@@ -120,7 +111,7 @@ public class PhysicalObject {
         return speed.x;
     }
 
-    public int getSize()
+    public float getSize()
     {
         return size;
     }

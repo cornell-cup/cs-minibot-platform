@@ -52,8 +52,7 @@ $('#scale').on('change',function(){
 });
 
 /* for moving the viewport */
-window.onkeydown = function (e) {
-
+document.onkeydown = function (e) {
     let code = e.keyCode ? e.keyCode : e.which;
 
     if (code === 37) {
@@ -137,7 +136,7 @@ function newBot(x, y, angle, id, size) {
         id: id,
         size: size
     };
-    if (size==0){
+    if (size==0.15){
     bot.type = 'bot';}
     else{
     bot.type = 'scenario_obj';}
@@ -151,14 +150,14 @@ function toDegrees(radians) {
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
 function drawBot(b, scale, xOffset, yOffset) {
-    var size = scale/4
+    var size = b.size*x_int;
+    console.log(b.size);
     var bot = new PIXI.Graphics();
     	bot.beginFill(0x0EB530);
-    	bot.drawRect(0, 0, size*2, size*2);
-    	bot.pivot = new PIXI.Point(size, size);
+    	bot.drawRect(0, 0, size, size);
+    	bot.pivot = new PIXI.Point(size/2, size/2);
         bot.rotation = -b.angle;
-    	bot.endFill()
-
+    	bot.endFill();
 
     var cx = (b.x)*x_int+xOffset;
     var cy = (START_SCALE-b.y)*y_int+yOffset;
@@ -172,22 +171,19 @@ function drawBot(b, scale, xOffset, yOffset) {
 
     var circle2 = new PIXI.Graphics();
     circle2.beginFill(0xFF0000);
-
-    circle2.drawCircle(0, 0, scale/10);
-
+    circle2.drawCircle(0, 0, size/10);
     circle2.endFill();
 
     var circle3 = new PIXI.Graphics();
         circle3.beginFill(0xFF0000);
-
-        circle3.drawCircle(0, 0, scale/10);
+        circle3.drawCircle(0, 0, size/10);
         circle3.endFill();
 
-    circle2.x = cx+size*Math.cos(b.angle+Math.PI/6);
-    circle2.y = START_SCALE-cy+size*Math.sin(b.angle+Math.PI/6);
+    circle2.x = cx+size/2*Math.cos(b.angle+Math.PI/6);
+    circle2.y = cy-size/2*Math.sin(b.angle+Math.PI/6);
 
-    circle3.x = cx+size*Math.cos(b.angle-Math.PI/6);
-    circle3.y = START_SCALE-cy+size*Math.sin(b.angle-Math.PI/6);
+    circle3.x = cx+size/2*Math.cos(b.angle-Math.PI/6);
+    circle3.y = cy-size/2*Math.sin(b.angle-Math.PI/6);
 
 
 	botContainer.addChild(bot);
