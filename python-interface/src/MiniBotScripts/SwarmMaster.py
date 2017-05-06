@@ -49,8 +49,9 @@ def colorbot(bot,z):
                 count["B"]=0
                 count["L"]=0
                 count["R"]=0
-                if(count["F"]>25):
-                    speed = inc(speed,5)
+                if(count["F"]>15):
+                    count["F"]=0
+                    speed = inc(speed,15)
             elif(c=="BLUE"):
                 # backwards
                 msg = (-speed,-speed)
@@ -58,8 +59,9 @@ def colorbot(bot,z):
                 count["B"]++
                 count["L"]=0
                 count["R"]=0
-                if(count["B"]>25):
-                    speed = inc(speed,5)
+                if(count["B"]>15):
+                    count["B"]=0
+                    speed = inc(speed,15)
             elif(c=="YELLOW"):
                 # turn left
                 msg = (-speed,speed)
@@ -67,8 +69,9 @@ def colorbot(bot,z):
                 count["B"]=0
                 count["L"]++
                 count["R"]=0
-                if(count["L"]>25):
-                    speed = inc(speed,5)
+                if(count["L"]>15):
+                    count["L"]=0
+                    speed = inc(speed,15)
             elif(c=="VIOLET"):
                 # turn right
                 msg = (speed,-speed)
@@ -76,8 +79,9 @@ def colorbot(bot,z):
                 count["B"]=0
                 count["L"]=0
                 count["R"]++
-                if(count["R"]>25):
-                    speed = inc(speed,5)
+                if(count["R"]>15):
+                    count["R"]=0
+                    speed = inc(speed,15)
             # elif(c=="PINK"):
             #     # decrease speed
             #     orangeFirstTime = True
@@ -94,6 +98,7 @@ def colorbot(bot,z):
             #         print "FASTER! (Speed: " + str(speed) + ")"
             print str(msg)
             z.broadcast(msg)
+            speed = 10
             time.sleep(0.2)
     finally:
         cleanup(z)
@@ -101,6 +106,7 @@ def colorbot(bot,z):
 def inc(speed, i):
     if(speed<50):
         speed += i
+    return speed
 
 def echobot(bot,z):
     try:
