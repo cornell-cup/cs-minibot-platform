@@ -1,15 +1,7 @@
 from MiniBotFramework.Sensing.Sensor import Sensor
 from MiniBotFramework.Lib.TCS34725 import TCS34725 as CSensor
+from MinibotFramework.Lib.minibot_tools import *
 import smbus, math, time
-
-def distance(p1, p2):
-    """ Returns distance between two 3-tuples. 
-    Used for evaluating color """
-    return math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2 + (p1[2]-p2[2])**2)
-
-def normalize(vector):
-    sum = vector[0] + vector[1] + vector[2]
-    return (vector[0]/(sum+0.0), vector[1]/(sum+0.0), vector[2]/(sum+0.0))
 
 class ColorSensor(Sensor):
     """ Pre-determined set of colors and corresponding RGB 3-tuples
@@ -50,10 +42,10 @@ class ColorSensor(Sensor):
             "RED":(155,68,70),
             "GREEN":(81,170,139),
             "BLUE":(73,139,167),
-            "ORANGE":(231,138,83),
-            "VIOLET":(140,138,158),
-            "YELLOW":(241,234,113),
-            "PINK":(187,150,150)
+            #"ORANGE":(231,138,83),
+            "VIOLET":(140,138,158) #,
+            #"YELLOW":(241,234,113),
+            #"PINK":(187,150,150)
         }
 
         self.colors_normalized = {}
@@ -76,6 +68,19 @@ the corresponding color under the color sensor at recommended distance
         print "Thank you! All of the colors have been calibrated."
 
     def read(self):
+        """Returns (R,G,B) average of 20 inputs."""
+        color_data = {"R":0,"G":0,"B":0}
+        for i in range(20):
+            read = self.raw_read()
+            color_data["R"] += read[0]
+            color_data["G"] += read[1]
+            color_data["B"] += read[2]
+        color_data["R"] = color_data["R"]/20.0
+        color_data["G"] = color_data["G"]/20.0
+        color_data["B"] = color_data["B"]/20.0
+        return (color_data["R"],color_data["G"],color_data["B"])
+
+    def raw_read(self):
         """ Returns a NON-NORMALIZED 3-tuple of RGB value """
         data = self.bus.read_i2c_block_data(0x29, 0)
         # clear = clear = data[1] << 8 | data[0]
