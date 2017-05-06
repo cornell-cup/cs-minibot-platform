@@ -1,12 +1,21 @@
 import Note_Library
 from pygame_play_tone import Note
 
-def happySong():
-    Note(16.35).play(0)
+import pygame
+from pygame.mixer import Sound, get_init, pre_init
+
+def happySong(bot):
+    print("First note")
+    test = Note(440)
+    test.play(0)
     bot.wait(1)
-    Note(20.6).play(0)
+    print("Second note")
+    test2 = Note(523)
+    test2.play(0)
     bot.wait(1)
-    Note(24.5).play(0)
+    print("Third note")
+    test3 = Note(659)
+    test3.play(0)
     bot.wait(2)
     # nt.Note(Note_Library.NOTE_C0).play(0)
     # bot.wait(1)
@@ -16,7 +25,7 @@ def happySong():
     # bot.wait(2)
 
 def showHappy(bot):
-    happySong()
+    happySong(bot)
     bot.move_forward(25)
     bot.wait(3)
     bot.stop()
@@ -44,14 +53,16 @@ def showAnger(bot):
     pass
 
 def run(bot):
-    bot.move_forward(20)
-    bot.wait(3)
-    bot.stop()
+    pre_init(44100,-16,1,1024)
+    pygame.init()
+    #bot.move_forward(20)
+    #bot.wait(3)
+    #bot.stop()
     # bot.wait(3)
-    print("Done FD")
-    bot.move_backward(20)
-    bot.wait(3)
-    bot.stop()
+    #print("Done FD")
+    #bot.move_backward(20)
+    #bot.wait(3)
+    #bot.stop()
     # bot.wait(3)
     print("Done BK")
 

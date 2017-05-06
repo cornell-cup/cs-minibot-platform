@@ -16,10 +16,10 @@ from pygame.mixer import Sound, get_init, pre_init
 
 class Note(Sound):
 
-    def __init__(self, frequency, volume=.1):
+    def __init__(self, frequency, volume=0.5):
         self.frequency = frequency
-        # Sound.__init__(self, self.build_samples())
-        pygame.mixer.Sound.init(self, buffer=self.build_samples())
+        Sound.__init__(self,buffer= self.build_samples())
+        #pygame.mixer.Sound.init(self,buffer=self.build_samples())
         self.set_volume(volume)
 
     def build_samples(self):
