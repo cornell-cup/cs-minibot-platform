@@ -17,6 +17,9 @@ import socket
 import fcntl
 import struct
 
+# ============================================================================
+# start Class ZMQExchange
+# ============================================================================
 class ZMQExchange:
     def __init__(self):
         """
@@ -71,7 +74,7 @@ class ZMQExchange:
         self.poller.register(self.xsub, zmq.POLLIN)
         self.poller.register(self.xpub, zmq.POLLIN)
         self.isMediator = True
-        print "successfully set up mediator"
+        print "Successfully set up mediator"
 
     def mediate(self):
         """
@@ -98,7 +101,7 @@ class ZMQExchange:
                         #print("publishing message: %r" % message)
                         self.xpub.send_multipart(message)
                 except KeyboardInterrupt:
-                    print "mediator ending"
+                    print "Mediator ending"
                     break
             else:
                 break
@@ -178,7 +181,7 @@ class ZMQExchange:
                                 pass
                             oldData = data            
                 except KeyboardInterrupt:
-                    print "receiver stopping"
+                    print "Receiver stopping"
                     break
             else:
                 break
@@ -203,44 +206,3 @@ class ZMQExchange:
 # =========================================================================
 # end Class ZMQExchange
 # =========================================================================
-
-def testBroadcast():
-    """
-    for testing purposes
-    """
-    z = ZMQExchange()
-    z.setBroadcaster()
-    try:
-        while True:
-            r = random.randint(0, 3)
-            z.broadcast(r)
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print "bye bye"
-    finally:
-        z.stopZMQExchange()
-
-def testMediator():
-    z = ZMQExchange()
-    z.setMediator()
-    try:
-        z.mediate()
-    finally:
-        z.stopZMQExchange()
-
-def testReceive():
-    z = ZMQExchange()
-    z.setReceiver()
-    try:
-        z.receive()
-    finally:
-        z.stopZMQExchange()
-
-if __name__ == "__main__":
-    inp = int(input("[TEST] Enter 1 for broadcast, 2 for mediator, 3 for receive: "))
-    if (inp == 1):
-        testBroadcast()
-    elif (inp == 2):
-        testMediator()
-    elif (inp == 3):
-        testReceive()
