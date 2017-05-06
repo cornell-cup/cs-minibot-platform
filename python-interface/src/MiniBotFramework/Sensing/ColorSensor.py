@@ -60,7 +60,7 @@ class ColorSensor(Sensor):
         self.colors_normalized = {}
         
         for color in self.colors:
-            colors_normalized[color] = normalize(self.colors[color])
+            self.colors_normalized[color] = normalize(self.colors[color])
 
     def read(self):
         """ Returns a 3-tuple of RGB value """
