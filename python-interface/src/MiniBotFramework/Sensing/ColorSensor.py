@@ -9,7 +9,7 @@ def distance(p1, p2):
 
 def normalize(vector):
     sum = vector[0] + vector[1] + vector[2]
-    return (vector[0]/sum, vector[1]/sum, vector[2]/sum)
+    return (vector[0]/(sum+0.0), vector[1]/(sum+0.0), vector[2]/(sum+0.0))
 
 class ColorSensor(Sensor):
     """ Pre-determined set of colors and corresponding RGB 3-tuples
