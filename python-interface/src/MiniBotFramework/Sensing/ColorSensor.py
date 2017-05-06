@@ -48,21 +48,26 @@ class ColorSensor(Sensor):
             # "PINK":(236,165,172)
 
             # TRIAL 3 - flat side of color mat, moving bot, 100 avg
-            "RED":(155,68,70),
-            "GREEN":(81,170,139),
-            "BLUE":(73,139,167),
+            # "RED":(155,68,70),
+            # "GREEN":(81,170,139),
+            # "BLUE":(73,139,167),
             #"ORANGE":(231,138,83),
-            "VIOLET":(140,138,158) #,
-            #"YELLOW":(241,234,113),
+            #"VIOLET":(140,138,158),
+            # "YELLOW":(241,234,113)#,
             #"PINK":(187,150,150)
-        }
 
-        self.colors_normalized = {}
+            # TRIAL 4 - calibration based
+            "RED":-1,
+            "BLUE":-1,
+            "YELLOW":-1,
+            "GREEN":-1
+        }
         
         # for color in self.colors:
         #     self.colors_normalized[color] = normalize(self.colors[color])
 
     def calibrate(self):
+        """ Calibrates colors. Takes 100 inputs per color, stores normalized average. """
         print "================== COLOR CALIBRATION =================="
         print """Before color-sensing, we must calibrate the colors. Please place
 the corresponding color under the color sensor at recommended distance
@@ -70,22 +75,23 @@ the corresponding color under the color sensor at recommended distance
 
         for color in self.colors:
             if len(raw_input("\nPlease place the " +color.lower() + " mat under the sensor and press enter."))>-1:
-                self.colors_normalized[color] = normalize(self.super_read(100))
+                self.colors[color] = normalize(self.super_read(100))
                 time.sleep(0.01)
                 print "Calibrated!"
 
-        print "Thank you! All of the colors have been calibrated."
+        print "Thank you! All of the colors have been calibrated.\n"
 
     def super_read(self,n):
+        """ Reads from the color sensor n times, and returns the non-normalized average. """
         color_data = {"R":0,"G":0,"B":0}
         for i in range(n):
             read = self.read()
             color_data["R"] += read[0]
             color_data["G"] += read[1]
             color_data["B"] += read[2]
-        color_data["R"] = color_data["R"]/20.0
-        color_data["G"] = color_data["G"]/20.0
-        color_data["B"] = color_data["B"]/20.0
+        color_data["R"] = color_data["R"]/n
+        color_data["G"] = color_data["G"]/n
+        color_data["B"] = color_data["B"]/n
         return (color_data["R"],color_data["G"],color_data["B"])
 
     def read(self):
