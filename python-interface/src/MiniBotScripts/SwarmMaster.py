@@ -20,11 +20,11 @@ def run(bot):
     mediateThread = Thread(target=z.mediate)
     mediateThread.start()
     threads.append(mediateThread)
-    # echobot(bot)
+    # echobot(bot,z)
 
-    colorbot(bot)
+    colorbot(bot,z)
     
-def colorbot(bot):
+def colorbot(bot,z):
     speed = 30
     cs = bot.get_sensor_by_name("ColorSensor")
 
@@ -38,7 +38,7 @@ def colorbot(bot):
     finally:
         cleanup(z)
 
-def echobot(bot):
+def echobot(bot,z):
     try:
         while(True):
             # msg is a tuple of left motor and right motor, respectively.
