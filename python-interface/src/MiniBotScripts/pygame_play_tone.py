@@ -12,20 +12,20 @@ from array import array
 from time import sleep
 
 import pygame
-from pygame.mixer import Sound, get_init, pre_init
+import pygame.mixer as pm
+from pygame.mixer import Sound
 
 class Note(Sound):
 
-    def __init__(self, frequency, volume=.1):
+    def __init__(self, frequency, volume=0.1):
         self.frequency = frequency
-        # Sound.__init__(self, self.build_samples())
-        pygame.mixer.Sound.init(self, buffer=self.build_samples())
-        self.set_volume(volume)
+        Sound.__init__(self, buffer=self.build_samples())
+        self.set_volume(volume)    
 
     def build_samples(self):
-        period = int(round(get_init()[0] / self.frequency))
+        period = int(round(pm.get_init()[0] / self.frequency))
         samples = array("h", [0] * period)
-        amplitude = 2 ** (abs(get_init()[1]) - 1) - 1
+        amplitude = 2 ** (abs(pm.get_init()[1]) - 1) - 1
         for time in range(period): #Originally xrange
             if time < period / 2:
                 samples[time] = amplitude
@@ -34,7 +34,9 @@ class Note(Sound):
         return samples
 
 if __name__ == "__main__":
-    pre_init(44100, -16, 1, 1024)
-    pygame.init()
-    Note(440).play(-1)
+    pm.pre_init(44100, -16, 1, 1024)
+    pm.init()
+    test = Note(440)
+    print (str(test.get_volume()))
+    test.play(-1)
     sleep(5)
