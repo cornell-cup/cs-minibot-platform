@@ -30,6 +30,7 @@ def colorbot(bot,z):
     cs.calibrate()
     pinkFirstTime = True
     orangeFirstTime = True
+    count = {"F":0,"B":0,"L":0,"R":0}
 
     try:
         while(True):
@@ -37,54 +38,76 @@ def colorbot(bot,z):
             if(c=="RED"):
                 # stop
                 msg = (0,0)
-                pinkFirstTime = True
-                orangeFirstTime = True
+                count["F"]=0
+                count["B"]=0
+                count["L"]=0
+                count["R"]=0
             elif(c=="GREEN"):
                 # forwards
                 msg = (speed,speed)
-                pinkFirstTime = True
-                orangeFirstTime = True
+                count["F"]++
+                count["B"]=0
+                count["L"]=0
+                count["R"]=0
+                if(count["F"]>25):
+                    speed = inc(speed,5)
             elif(c=="BLUE"):
                 # backwards
                 msg = (-speed,-speed)
-                pinkFirstTime = True
-                orangeFirstTime = True
+                count["F"]=0
+                count["B"]++
+                count["L"]=0
+                count["R"]=0
+                if(count["B"]>25):
+                    speed = inc(speed,5)
             elif(c=="YELLOW"):
                 # turn left
                 msg = (-speed,speed)
-                pinkFirstTime = True
-                orangeFirstTime = True
+                count["F"]=0
+                count["B"]=0
+                count["L"]++
+                count["R"]=0
+                if(count["L"]>25):
+                    speed = inc(speed,5)
             elif(c=="VIOLET"):
                 # turn right
                 msg = (speed,-speed)
-                pinkFirstTime = True
-                orangeFirstTime = True
-            elif(c=="PINK"):
-                # decrease speed
-                orangeFirstTime = True
-                if (pinkFirstTime && speed > 10):
-                    pinkFirstTime = False
-                    speed -= 5
-                    print "SLOWER! (Speed: " + str(speed) + ")"
-            elif(c=="ORANGE"):
-                # increase speed
-                pinkFirstTime = True
-                if (orangeFirstTime && speed < 50):
-                    orangeFirstTime = False
-                    speed += 5
-                    print "FASTER! (Speed: " + str(speed) + ")"
+                count["F"]=0
+                count["B"]=0
+                count["L"]=0
+                count["R"]++
+                if(count["R"]>25):
+                    speed = inc(speed,5)
+            # elif(c=="PINK"):
+            #     # decrease speed
+            #     orangeFirstTime = True
+            #     if (pinkFirstTime && speed > 10):
+            #         pinkFirstTime = False
+            #         speed -= 5
+            #         print "SLOWER! (Speed: " + str(speed) + ")"
+            # elif(c=="ORANGE"):
+            #     # increase speed
+            #     pinkFirstTime = True
+            #     if (orangeFirstTime && speed < 50):
+            #         orangeFirstTime = False
+            #         speed += 5
+            #         print "FASTER! (Speed: " + str(speed) + ")"
             print str(msg)
             z.broadcast(msg)
             time.sleep(0.2)
     finally:
         cleanup(z)
 
+def inc(speed, i):
+    if(speed<50):
+        speed += i
+
 def echobot(bot,z):
     try:
         while(True):
             # msg is a tuple of left motor and right motor, respectively.
             msg = bot.get_actuator_by_name("two_wheel_movement").get_value()
-            print "MSG: " + Mmsg
+            print "MSG: " + msg
             z.broadcast(msg)
             time.sleep(0.1)
 
