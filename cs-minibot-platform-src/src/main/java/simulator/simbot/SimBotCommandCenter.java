@@ -182,7 +182,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
 
             try{
                 BufferedReader reader =
-                        new BufferedReader(new FileReader("src/main/java/simulator/simbot/ScriptHeader.py"));
+                        new BufferedReader(new FileReader("cs-minibot-platform-src/src/main/java/simulator/simbot/ScriptHeader.py"));
                 String header = "";
                 String sCurrentLine;
                 while ((sCurrentLine = reader.readLine()) != null) {
