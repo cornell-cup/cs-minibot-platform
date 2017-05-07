@@ -92,5 +92,11 @@
             <artifactId>cs-base-station-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.ejml</groupId>
+            <artifactId>all</artifactId>
+            <version>0.30</version>
+        </dependency>
     </dependencies>
 </project>

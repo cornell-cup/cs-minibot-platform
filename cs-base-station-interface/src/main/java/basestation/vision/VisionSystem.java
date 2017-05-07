@@ -19,6 +19,7 @@ public abstract class VisionSystem {
     private final double scalingFactor;
     private final VisionCoordinate origin;
     private Map<Bot, Integer> botMap;
+    private boolean kalmanFilterOn;
 
     /**
      * Sets up a VisionSystem with o as its origin
@@ -29,6 +30,7 @@ public abstract class VisionSystem {
         this.origin = o;
         this.scalingFactor = 1.0;
         this.botMap = new HashMap<>();
+        this.kalmanFilterOn = false;
     }
 
     /**
@@ -98,5 +100,10 @@ public abstract class VisionSystem {
     @Override
     public boolean equals(Object other) {
         return other instanceof VisionSystem && this.hashCode() == other.hashCode();
+    }
+
+    public boolean toggleFilter() {
+        this.kalmanFilterOn = !kalmanFilterOn;
+        return this.kalmanFilterOn;
     }
 }

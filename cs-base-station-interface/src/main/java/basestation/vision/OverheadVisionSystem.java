@@ -6,6 +6,8 @@ import VisionModule._BaseInterfaceDisp;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.HashMap;
+import org.ejml.simple.*;
 
 /**
  * Adapter for the OverheadVision Ice communication.
@@ -15,12 +17,16 @@ import java.util.Set;
 public class OverheadVisionSystem extends VisionSystem {
 
     private volatile HashSet<VisionObject> trackedObjectSet;
+    private volatile HashMap<Integer, VisionObject> trackedObjectMapKalman;
+    private volatile long prevTime;
 
     public OverheadVisionSystem() {
-        super(new VisionCoordinate(0, 0, 0));
+        super(new VisionCoordinate(0, 0, 0, 0,0));
         VisionListenServerThread vlst = new VisionListenServerThread(this);
         vlst.start();
         trackedObjectSet = new HashSet<VisionObject>();
+        trackedObjectMapKalman = new HashMap();
+        prevTime = System.currentTimeMillis();
     }
 
     /**
@@ -31,14 +37,66 @@ public class OverheadVisionSystem extends VisionSystem {
     private void processBlobs(Blob[] data) {
         HashSet<VisionObject> newSet = new HashSet<>();
         for (Blob b : data) {
-            VisionCoordinate vc = new VisionCoordinate(b.x, b.y, ((((b.orientation % (2 * Math.PI)) * 180 / (Math.PI))) + 180) % 360);
+            VisionCoordinate vc = new VisionCoordinate(b.x, b.y, b.velocityx, b.velocityy, ((((b.orientation % (2 * Math.PI)) * 180 / (Math.PI))) + 180) % 360);
             VisionObject vo = new VisionObject(this, b.botID, vc);
             newSet.add(vo);
-        }
 
+            if (this.trackedObjectMapKalman.containsKey(b.botID)) {
+                VisionCoordinate vck = kalmanFilter(vo, this.trackedObjectMapKalman.get(b.botID));
+                VisionObject vok = new VisionObject(this, b.botID, vck);
+                this.trackedObjectMapKalman.put(b.botID, vok);
+            } else {
+                this.trackedObjectMapKalman.put(b.botID, vo);
+            }
+        }
         this.trackedObjectSet = newSet;
     }
 
+    public VisionCoordinate kalmanFilter (VisionObject current_vo, VisionObject prev_vo) {
+        long dt = System.currentTimeMillis() - this.prevTime;
+
+        double[][] H_matrix = {{1, 0, dt, 0},{0, 1, 0, dt},{0, 0, 1, 0},{0, 0, 0, 1}};
+        double[][] R_matrix = {{0.1, 0, 0, 0},{0, 0.1, 0, 0},{0, 0, 0.1, 0},{0, 0, 0, 0.1}};
+        double[][] x_vector = {{prev_vo.coord.getX()},
+                               {prev_vo.coord.getY()},
+                               {prev_vo.coord.getVelocityX()},
+                               {prev_vo.coord.getVelocityY()}};
+        double[][] z_vector = {{current_vo.coord.getX()},
+                        {current_vo.coord.getY()},
+                        {current_vo.coord.getVelocityX()},
+                        {current_vo.coord.getVelocityY()}};
+
+        SimpleMatrix H = new SimpleMatrix(H_matrix);
+        SimpleMatrix R = new SimpleMatrix(R_matrix);
+        SimpleMatrix P = new SimpleMatrix(prev_vo.coord.getP());
+        SimpleMatrix x = new SimpleMatrix(x_vector);
+        SimpleMatrix z = new SimpleMatrix(z_vector);
+
+        // y = z - H x
+        SimpleMatrix y = z.minus(H.mult(x));
+
+        // S = H P H' + R
+        SimpleMatrix S = H.mult(P).mult(H.transpose()).plus(R);
+
+        // K = PH'S^(-1)
+        SimpleMatrix K = P.mult(H.transpose().mult(S.invert()));
+
+        // x = x + Ky
+        x = x.plus(K.mult(y));
+
+        // P = (I-kH)P = P - KHP
+        P = P.minus(K.mult(H).mult(P));
+
+        VisionCoordinate vc = new VisionCoordinate(x.get(0,0), x.get(0,1), x.get(0,2), x.get(0,3));
+        double[][] P_matrix = {{P.get(0,0),P.get(1,0),P.get(2,0),P.get(3,0)},
+                               {P.get(0,1),P.get(1,1),P.get(2,1),P.get(3,1)},
+                               {P.get(0,2),P.get(1,2),P.get(2,2),P.get(3,2)},
+                               {P.get(0,3),P.get(1,3),P.get(2,3),P.get(3,3)}};
+        vc.setP(P_matrix);
+
+        this.prevTime = System.currentTimeMillis();
+        return vc;
+    }
 
     @Override
     public Set<VisionObject> getAllObjects() {
