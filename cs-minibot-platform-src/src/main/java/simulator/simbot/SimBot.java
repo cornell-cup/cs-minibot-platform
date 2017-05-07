@@ -257,13 +257,13 @@ public class SimBot extends Bot {
                                     commandCenter.sendKV("WHEELS", value + "," + value + "," + value + "," + value);
                                     break;
                                 case "BACKWARD":
-                                    commandCenter.sendKV("WHEELS", value + ",-" + value + ",-" + value + ",-" + value);
+                                    commandCenter.sendKV("WHEELS", "-" + value + ",-" + value + ",-" + value + ",-" + value);
                                     break;
                                 case "RIGHT":
                                     commandCenter.sendKV("WHEELS", value + ",-" + value + "," + value + ",-" + value);
                                     break;
                                 case "LEFT":
-                                    commandCenter.sendKV("WHEELS", value + "," + value + ",-" + value + "," + value);
+                                    commandCenter.sendKV("WHEELS", "-" + value + "," + value + ",-" + value + "," + value);
                                     break;
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");

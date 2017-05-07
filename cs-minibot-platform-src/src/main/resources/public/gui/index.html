@@ -136,14 +136,16 @@
 
 	<div class="box">
 
-	<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+	<div id="blocklyDiv" style="margin:0; margin-left:3.5%; height: 60vh; width: 80vw;"></div>
 
 	<!-- BEGINNING OF BLOCKLY CODE -->
-	<div class="box">
+	<div class="box" style = "padding: 0; margin-top: 0">
 		<!-- BLOCKLY TOOLBOX -->
-		<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+		<!--<div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>-->
 		<xml id="toolbox" style="display:none;">
 			<block type="controls_if"></block>
+            <block type="variables_set"></block>
+            <block type="variables_get"></block>
 			<block type="logic_compare"></block>
 			<block type="controls_repeat_ext"></block>
 			<block type="math_number"></block>
@@ -168,13 +170,13 @@
 
 			<!-- send script -->
 		<button id="send">run</button>
-		
+
 			<!-- upload script -->
 		<form type=POST>
-			<input 
-				type="file" 
-				id="upload" 
-				multipleSize="1" 
+			<input
+				type="file"
+				id="upload"
+				multipleSize="1"
 				accept=".py"
 			/>
 		</form>
