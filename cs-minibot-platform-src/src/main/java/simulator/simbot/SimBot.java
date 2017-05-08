@@ -46,7 +46,13 @@ public class SimBot extends Bot {
 
         try {
             if (this.runningThread != null && this.runningThread.isAlive()) {
-                this.resetServer();
+                try {
+                    if (this.runningThread.isAlive()) {
+                        this.runningThread.stopStream();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             //starts thread for tcp server
             Thread t = new TCPServer(IPADDRESS, this, commandCenter, this.sensorCenter);
@@ -60,12 +66,6 @@ public class SimBot extends Bot {
             loggingThread = (DataLog) log;
             loggingThread.start();
 
-//            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-//                public void run() {
-//                    runningThread.stopStream();
-//                    loggingThread.stopLogging();
-//                }
-//            }));
         }catch(IOException e) {
             e.printStackTrace();
         }
@@ -91,7 +91,7 @@ public class SimBot extends Bot {
     public void resetServer() {
         try {
             if (this.runningThread.isAlive()) {
-                this.runningThread.stopStream();
+                this.runningThread.stopRead();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -232,6 +232,7 @@ public class SimBot extends Bot {
         private final transient SimBotCommandCenter commandCenter;
         private final transient SimBotSensorCenter sensorCenter;
         private volatile boolean exit = false;
+        private volatile boolean runRead = true;
 //        private final static int TIMEOUT = 100000;
 
         public TCPServer(int port, SimBot simbot, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException {
@@ -251,10 +252,13 @@ public class SimBot extends Bot {
             }
         }
 
+        public void stopRead() {
+            runRead = false;
+        }
+
         public void run() {
             while (!exit) {
                 try {
-                    boolean run = true;
                     System.out.println("Waiting for client on port " +
                             serverSocket.getLocalPort() + "...");
                     Socket server = serverSocket.accept();
@@ -265,10 +269,8 @@ public class SimBot extends Bot {
                     BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
                     PrintWriter out = new PrintWriter(server.getOutputStream(), true);
 
-                    while (run && !exit) {
-                        if (serverSocket.isClosed()) {
-                            System.out.print("a");
-                        }
+                    runRead = true;
+                    while (runRead && !exit) {
                         content = in.readLine();
 
                         if (content != null) {
@@ -297,7 +299,7 @@ public class SimBot extends Bot {
                                     commandCenter.sendKV("WHEELS", "0,0,0,0");
                                     break;
                                 case "KILL":
-                                    run = false;
+                                    runRead = false;
                                     System.out.println("Exiting\n");
                                     break;
                                 case "GET":

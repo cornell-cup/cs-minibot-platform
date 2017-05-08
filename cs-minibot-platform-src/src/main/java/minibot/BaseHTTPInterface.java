@@ -292,18 +292,17 @@ public class BaseHTTPInterface {
             String name = commandInfo.get("name").getAsString();
             String script = commandInfo.get("script").getAsString();
 
-//            Bot receiver = BaseStation.getInstance()
-//                    .getBotManager()
-//                    .getBotByName(name)
-//                    .orElseThrow(NoSuchElementException::new);
+            Bot receiver = BaseStation.getInstance()
+                    .getBotManager()
+                    .getBotByName(name)
+                    .orElseThrow(NoSuchElementException::new);
 
-//            if (receiver instanceof SimBot)
-//                ((SimBot)BaseStation.getInstance()
-//                        .getBotManager()
-//                        .getBotByName(name)
-//                        .orElseThrow(NoSuchElementException::new)).resetServer();
+            if (receiver instanceof SimBot)
+                ((SimBot)BaseStation.getInstance()
+                        .getBotManager()
+                        .getBotByName(name)
+                        .orElseThrow(NoSuchElementException::new)).resetServer();
 
-            System.out.println("Sending script");
             return BaseStation.getInstance()
                     .getBotManager()
                     .getBotByName(name)

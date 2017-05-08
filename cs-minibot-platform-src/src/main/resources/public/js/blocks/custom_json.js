@@ -36,8 +36,6 @@ move: {
       "max": 100
     }
     ],
-    "previousStatement": null,
-    "nextStatement": null,
     "output": "Boolean",
     "colour": 230,
     "tooltip": "",
@@ -71,8 +69,6 @@ turn: {
       "max": 100
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
   "output": null,
   "colour": 230,
   "tooltip": "",

@@ -80,7 +80,7 @@ def wait(t):
     time.sleep(t)
     return
 
-def stop(self):
+def stop():
     """
     Waits for a duration in seconds.
     :param t The duration in seconds
