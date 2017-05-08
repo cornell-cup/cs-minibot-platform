@@ -172,6 +172,7 @@ public class BaseHTTPInterface {
 //                    ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
 //                    ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
 //                    ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
+
                     BaseStation.getInstance().getBotManager().addBot(newBot);
                 }
             }
@@ -291,17 +292,18 @@ public class BaseHTTPInterface {
             String name = commandInfo.get("name").getAsString();
             String script = commandInfo.get("script").getAsString();
 
-            Bot receiver = BaseStation.getInstance()
-                    .getBotManager()
-                    .getBotByName(name)
-                    .orElseThrow(NoSuchElementException::new);
+//            Bot receiver = BaseStation.getInstance()
+//                    .getBotManager()
+//                    .getBotByName(name)
+//                    .orElseThrow(NoSuchElementException::new);
 
-            if (receiver instanceof SimBot)
-                ((SimBot)BaseStation.getInstance()
-                        .getBotManager()
-                        .getBotByName(name)
-                        .orElseThrow(NoSuchElementException::new)).resetServer();
+//            if (receiver instanceof SimBot)
+//                ((SimBot)BaseStation.getInstance()
+//                        .getBotManager()
+//                        .getBotByName(name)
+//                        .orElseThrow(NoSuchElementException::new)).resetServer();
 
+            System.out.println("Sending script");
             return BaseStation.getInstance()
                     .getBotManager()
                     .getBotByName(name)

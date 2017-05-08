@@ -20,7 +20,7 @@ public class SimBot extends Bot {
 
     private final transient SimBotCommandCenter commandCenter;
     private final transient SimBotSensorCenter sensorCenter;
-    public transient TCPServer runningThread;
+    public static transient TCPServer runningThread;
     public transient DataLog loggingThread;
     public transient PhysicalObject myPhysicalObject;
     public static int IPADDRESS = 11111;
@@ -45,6 +45,9 @@ public class SimBot extends Bot {
                 .myPhysicalObject.getBody(), simulator);
 
         try {
+            if (this.runningThread != null && this.runningThread.isAlive()) {
+                this.resetServer();
+            }
             //starts thread for tcp server
             Thread t = new TCPServer(IPADDRESS, this, commandCenter, this.sensorCenter);
             runningThread = (TCPServer) t;
@@ -56,6 +59,13 @@ public class SimBot extends Bot {
             Thread log = new DataLog(df.format(dateObj).substring(9) + "-log.csv", commandCenter, this.sensorCenter);
             loggingThread = (DataLog) log;
             loggingThread.start();
+
+//            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+//                public void run() {
+//                    runningThread.stopStream();
+//                    loggingThread.stopLogging();
+//                }
+//            }));
         }catch(IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +88,15 @@ public class SimBot extends Bot {
         return sensorCenter;
     }
 
-    public void resetServer() { runningThread.stopStream(); }
+    public void resetServer() {
+        try {
+            if (this.runningThread.isAlive()) {
+                this.runningThread.stopStream();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Datalog thread logs data for (Sim)bot <-- once command center is updated, change to bot in general
@@ -226,10 +244,15 @@ public class SimBot extends Bot {
 
         public void stopStream() {
             exit = true;
+            try {
+                serverSocket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         public void run() {
-            while (true) {
+            while (!exit) {
                 try {
                     boolean run = true;
                     System.out.println("Waiting for client on port " +
@@ -241,9 +264,11 @@ public class SimBot extends Bot {
                     String content;
                     BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
                     PrintWriter out = new PrintWriter(server.getOutputStream(), true);
-                    exit = false;
 
                     while (run && !exit) {
+                        if (serverSocket.isClosed()) {
+                            System.out.print("a");
+                        }
                         content = in.readLine();
 
                         if (content != null) {

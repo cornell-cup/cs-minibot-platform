@@ -180,7 +180,6 @@ public class SimBotCommandCenter implements FourWheelMovement {
             return true;
 
         } else {
-
             try{
                 BufferedReader reader =
                         new BufferedReader(new FileReader("cs-minibot-platform-src/src/main/java/simulator/simbot/ScriptHeader.py"));
