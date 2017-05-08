@@ -130,7 +130,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
             double fr = Double.parseDouble(wheelCommands[1]);
             double bl = Double.parseDouble(wheelCommands[2]);
             double br = Double.parseDouble(wheelCommands[3]);
-            
+
 
             Body b = bot.getMyPhysicalObject().getBody();
 

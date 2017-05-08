@@ -214,14 +214,14 @@ public class SimBot extends Bot {
         private final transient SimBotCommandCenter commandCenter;
         private final transient SimBotSensorCenter sensorCenter;
         private volatile boolean exit = false;
-        private final static int TIMEOUT = 100000;
+//        private final static int TIMEOUT = 100000;
 
         public TCPServer(int port, SimBot simbot, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException {
             sim = simbot;
             this.commandCenter = commandCenter;
             this.sensorCenter = sensorCenter;
             serverSocket = new ServerSocket(port);
-            serverSocket.setSoTimeout(TIMEOUT);
+//            serverSocket.setSoTimeout(TIMEOUT);
         }
 
         public void stopStream() {
