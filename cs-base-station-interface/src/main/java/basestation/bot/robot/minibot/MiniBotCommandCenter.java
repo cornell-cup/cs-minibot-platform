@@ -18,7 +18,7 @@ public class MiniBotCommandCenter implements FourWheelMovement {
         this.connection = connection;
     }
 
-    public void startLogging() {
+    public void toggleLogging() {
         this.record = true;
     }
 

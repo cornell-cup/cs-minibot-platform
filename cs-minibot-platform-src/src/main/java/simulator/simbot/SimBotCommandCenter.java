@@ -29,8 +29,8 @@ public class SimBotCommandCenter implements FourWheelMovement {
     /**
      * Does not record data until start is called
      */
-    public void startLogging() {
-        this.record = true;
+    public void toggleLogging() {
+        this.record = !this.record;
     }
 
     public boolean isLogging() {

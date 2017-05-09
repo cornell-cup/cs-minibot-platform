@@ -272,8 +272,12 @@ public class BaseHTTPInterface {
             String name = commandInfo.get("name").getAsString();
             Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(name).get();
             CommandCenter cc = myBot.getCommandCenter();
-            System.out.println("Start Logging Data...");
-            cc.startLogging();
+            if (!cc.isLogging()) {
+                System.out.println("Start Logging");
+            } else {
+                System.out.println("Stop Logging");
+            }
+            cc.toggleLogging();
             return true;
         });
 
