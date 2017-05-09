@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Collection;
 import java.io.*;
+import java.util.stream.Collectors;
 
 
 import simulator.baseinterface.SimulatorVisionSystem;
@@ -126,56 +127,13 @@ public class BaseHTTPInterface {
         post("/addScenario", (req,res) -> {
 
             String body = req.body();
-            simulator.resetWorld();
-            Collection<String> botsnames = BaseStation.getInstance()
-                    .getBotManager()
-                    .getAllTrackedBotsNames();
-            for (String name :botsnames){
+            for (String name : BaseStation.getInstance().getBotManager().getAllTrackedBots().stream().map(Bot::getName).collect(Collectors.toList())){
                 BaseStation.getInstance().getBotManager().removeBotByName(name);
             }
 
-            JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
-            String scenarioBody = scenario.get("scenario").getAsString();
-            JsonArray addInfo = jsonParser.parse(scenarioBody).getAsJsonArray();
 
-            for (JsonElement je : addInfo) {
-                String type = je.getAsJsonObject().get("type").getAsString();
-                int angle = je.getAsJsonObject().get("angle").getAsInt();
-                float[] position = gson.fromJson(je.getAsJsonObject().get("position")
-                        .getAsString(),float[].class);
-                String name = Integer.toString(angle)
-                        + Arrays.toString(position);
+            return simulator.importScenario(gson, jsonParser, jsonParser.parse(body).getAsJsonObject());
 
-                //for scenario obstacles
-                if (!type.equals("simulator.simbot")){
-                    float size = je.getAsJsonObject().get("size").getAsFloat();
-                    PhysicalObject po = new PhysicalObject(name, 100,
-                            simulator.getWorld(), (float)position[0],
-                            (float)position[1], size, angle);
-                    simulator.importPhysicalObject(po);
-                }
-                //for bots listed in scenario
-                else {
-                    Bot newBot;
-                    name = "Simbot"+name;
-                    SimBotConnection sbc = new SimBotConnection();
-                    SimBot simbot;
-                    simbot = new SimBot(sbc, simulator, name, 50, simulator
-                            .getWorld(), 0.0f,
-                            0.0f, (float) position[0], (float)
-                            position[1], angle, true);
-                    newBot = simbot;
-
-                    simulator.importPhysicalObject(simbot.getMyPhysicalObject());
-
-                    // Color sensor TODO put somewhere nice
-//                    ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
-//                    ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
-//                    ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
-                    BaseStation.getInstance().getBotManager().addBot(newBot);
-                }
-            }
-            return addInfo;
         });
 
         /**
@@ -271,8 +229,12 @@ public class BaseHTTPInterface {
             String name = commandInfo.get("name").getAsString();
             Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(name).get();
             CommandCenter cc = myBot.getCommandCenter();
-            System.out.println("Start Logging Data...");
-            cc.startLogging();
+            if (!cc.isLogging()) {
+                System.out.println("Start Logging");
+            } else {
+                System.out.println("Stop Logging");
+            }
+            cc.toggleLogging();
             return true;
         });
 
@@ -381,17 +343,28 @@ public class BaseHTTPInterface {
         });
 
         post("/getOccupancyMatrix", (req, res) -> {
+            //Thread.sleep(5000);
             String body = req.body();
             JsonObject settings = jsonParser.parse(body).getAsJsonObject();
             String height = settings.get("height").getAsString();
             String width = settings.get("width").getAsString();
             String size = settings.get("size").getAsString();
-            //System.out.println(height + ", " + width + ", " + size);
+            System.out.println(height + ", " + width + ", " + size);
             simulator.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
             int[][] path = simulator.getDijkstras();
+                    for (int j = 1; j < path.length; j++) {
+            for (int i = 1; i < path[j].length; i++) {
+                System.out.print(path[i][j] + " ");
+            }
+            System.out.println();
+        }
             //System.out.println("getOccupancyMatrix");
             return gson.toJson(simulator.getOccupancyMatrix());
-                });
+        });
+
+        post( "/getDijkstras", (req, res) -> {
+            return gson.toJson(simulator.getDijkstras());
+        });
 
         post("/runXbox", (req, res) -> {
             String body = req.body();

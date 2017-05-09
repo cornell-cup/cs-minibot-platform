@@ -18,12 +18,14 @@ public class PhysicalObject {
     private final String name;
     private Body body;
     private int id;
-    private World world;
     private float size;
+
+
 
     public PhysicalObject(String name, int id, World world, float xSpeed,
                           float ySpeed, float xPos, float yPos, int angle,
                           boolean isDynamic) {
+        // TODO: COMBINE CONSTRUCTORS
         this.name = name;
         this.id = id;
         this.size = 0;
@@ -49,7 +51,6 @@ public class PhysicalObject {
         testFixture.shape = ps;
         testFixture.density = 0.5f;
 
-        this.world = world;
         Body b = world.createBody(testbody);
         b.createFixture(testFixture);
         Vec2 gravity = new Vec2(0.0f, 0.0f);
@@ -82,7 +83,6 @@ public class PhysicalObject {
         testFixture.shape = polygonShape;
         testFixture.density = 1000.0f;
 
-        this.world = world;
         Body b = world.createBody(testbody);
         b.createFixture(testFixture);
         this.body = b;
@@ -129,9 +129,7 @@ public class PhysicalObject {
         return speed.y;
     }
 
-    public World getWorld() {
-        return world;
-    }
+
     public void setSpeed(float x, float y) {
         this.body.setLinearVelocity(new Vec2(x,y));
     }

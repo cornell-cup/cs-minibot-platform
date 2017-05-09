@@ -33,6 +33,8 @@ var imageLoader;
 
 var listBots = [];
 var occupancyMatrix = null;
+var path = null;
+var foundPath = false;
 
 var backgroundSprite;
 
@@ -52,7 +54,7 @@ $('#scale').on('change',function(){
     stage.addChild(gridContainer);
     if(occupancyMatrix != null) {
         displayOccupancyMatrix(40, 40, 1.0);
-        fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+        fillOccupancyMatrix(scale, xOffset, yOffset);
     }
 
     displayBots(bots,scale, xOffset, yOffset);
@@ -86,7 +88,7 @@ window.onkeydown = function (e) {
     botContainer.removeChildren();
     setupGridLines(scale, xOffset, yOffset);
     displayOccupancyMatrix(40, 40, 1.0);
-        fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+    fillOccupancyMatrix(scale, xOffset, yOffset);
     displayBots(bots, scale, xOffset, yOffset);
 
     grid.render(stage);
@@ -269,7 +271,23 @@ function setupGridLines(scale, xOffset, yOffset) {
 function fillOccupancyMatrix(scale, xOffset, yOffset) {
     for(var i = 0; i < occupancyMatrix.length; i++) {
         for(var j = 0; j < occupancyMatrix[0].length; j++) {
-                if(occupancyMatrix[i][j] == 1) {
+
+                if(path[i][j] == 1) {
+
+                    var scenarioObject = new PIXI.Graphics();
+
+                    scenarioObject.beginFill(0x8822A4);
+                    scenarioObject.drawRect(0, 0, x_int, y_int);
+                    scenarioObject.endFill();
+
+                    var cx = i*x_int;
+                    var cy = j*y_int;
+                    scenarioObject.x = cx+xOffset;
+                    scenarioObject.y = cy+yOffset;
+                    botContainer.addChild(scenarioObject);
+                }
+
+                else if(occupancyMatrix[i][j] == 1) {
                     var size = 65;
                     var scenarioObject = new PIXI.Graphics();
 
@@ -336,7 +354,7 @@ function getNewVisionData() {
                     stage.addChild(gridContainer);
                     if(occupancyMatrix != null) {
                         displayOccupancyMatrix(40, 40, 1.0);
-                        fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+                        fillOccupancyMatrix(scale, xOffset, yOffset);
                     }
                     displayBots(bots,scale, xOffset, yOffset);
 
@@ -418,13 +436,25 @@ function displayOccupancyMatrix(height, width, size) {
                 //console.log(occupancyMatrix[i]);
             }
 
-             fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
 //             grid.render(stage);
+
+            $.ajax({
+                method: "POST",
+                url: '/getDijkstras',
+                dataType: 'json',
+                data: '',
+                contentType: 'application/json',
+                success: function(data) {
+                    path = data;
+                    fillOccupancyMatrix(scale, xOffset, yOffset);
+                }
+            });
 
         }
 
     });
 }
+
 
 function padOccupancyMatrix() {
 
@@ -472,7 +502,7 @@ $("#showOccupancyMatrix").click( function() {
         console.log("Hello");
         displayOccupancyMatrix(40, 40, 1.0);
         setTimeout(function(){
-            fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+            fillOccupancyMatrix(scale, xOffset, yOffset);
             displayBots(bots,scale, xOffset, yOffset);
             grid.render(stage);
         }, 3000);

@@ -69,7 +69,8 @@ def parse_command(cmd, bot, p):
         try:
             values = value.split(",")
             bot.get_actuator_by_name("two_wheel_movement").move(int(float(values[0])),int(float(values[1])))
-        except:
+        except Exception as e:
+            print(e)
             print("oh no!")
             pass
     elif key == "SCRIPT":

@@ -1,0 +1,27 @@
+{
+  "name": "GoBotPCB",
+  "startupScript": "",
+  "keepStartupRunning": true,
+  "discoverable": true,
+  "acceptTcp": true,
+  "acceptXbox": false,
+  "actuators": [
+    {
+      "type": "I2CMotor",
+      "name": "leftMotor",
+        "reversed": false,
+      "address": 28,
+      "number": 2 
+    },
+    {
+      "type": "I2CMotor",
+      "name": "rightMotor",
+        "reversed": true,
+      "address": 28,
+      "number": 1
+    }
+  ],
+  "sensors": [
+
+  ]
+}

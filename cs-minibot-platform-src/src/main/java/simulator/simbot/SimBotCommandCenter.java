@@ -30,8 +30,8 @@ public class SimBotCommandCenter implements FourWheelMovement {
     /**
      * Does not record data until start is called
      */
-    public void startLogging() {
-        this.record = true;
+    public void toggleLogging() {
+        this.record = !this.record;
     }
 
     public boolean isLogging() {
@@ -128,9 +128,9 @@ public class SimBotCommandCenter implements FourWheelMovement {
             String[] wheelCommands = value.split(",");
 
             double fl = Double.parseDouble(wheelCommands[0]);
-            double fr = Double.parseDouble(wheelCommands[1]);;
-            double bl = Double.parseDouble(wheelCommands[2]);;
-            double br = Double.parseDouble(wheelCommands[3]);;
+            double fr = Double.parseDouble(wheelCommands[1]);
+            double bl = Double.parseDouble(wheelCommands[2]);
+            double br = Double.parseDouble(wheelCommands[3]);
 
             Body b = bot.getMyPhysicalObject().getBody();
 
@@ -180,10 +180,9 @@ public class SimBotCommandCenter implements FourWheelMovement {
             return true;
 
         } else {
-
             try{
                 BufferedReader reader =
-                        new BufferedReader(new FileReader("src/main/java/simulator/simbot/ScriptHeader.py"));
+                        new BufferedReader(new FileReader("cs-minibot-platform-src/src/main/java/simulator/simbot/ScriptHeader.py"));
                 String header = "";
                 String sCurrentLine;
                 while ((sCurrentLine = reader.readLine()) != null) {
