@@ -456,10 +456,10 @@ function padOccupancyMatrix() {
                 if(j+1 < occupancyMatrix[0].length && i+1 < occupancyMatrix.length) {
                     temp[i+1][j+1] = 1;
                 }
-                if(j+1 < occupancyMatrix[0].length && i-1 < occupancyMatrix.length) {
+                if(j+1 < occupancyMatrix[0].length && i-1 > 0) {
                     temp[i-1][j+1] = 1;
                 }
-                if(j-1 < occupancyMatrix[0].length && i+1 < occupancyMatrix.length) {
+                if(j-1 > 0 && i+1 < occupancyMatrix.length) {
                     temp[i+1][j-1] = 1;
                 }
             }
