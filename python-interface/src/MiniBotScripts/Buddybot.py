@@ -39,19 +39,19 @@ def showHappy(bot):
     happySong()
     bot.move_forward(25)
     bot.wait(3)
-    bot.stop()
+    # bot.stop()
     # bot.wait(1)
     bot.move_backward(25)
     bot.wait(3)
-    bot.stop()
+    # bot.stop()
     # bot.wait(1)
     bot.turn_clockwise(25)
     bot.wait(5)
-    bot.stop()
+    # bot.stop()
     # bot.wait(1)
     bot.turn_counter_clockwise(25)
     bot.wait(5)
-    bot.stop()
+    # bot.stop()
     # bot.wait(1)
 
 def sadSong():
@@ -64,7 +64,7 @@ def showSad(bot):
     sadSong()
     bot.move_backward(10)
     bot.wait(5)
-    bot.stop()
+    # bot.stop()
 
 def surpriseSong():
     nl.playNote(nl.B6,0.10)
@@ -74,9 +74,15 @@ def surpriseSong():
 
 def showSurprise(bot):
     surpriseSong()
-    bot.move_backward(100)
+    bot.move_backward(80)
     bot.wait(0.75)
-    bot.stop()
+    #bot.stop()
+    bot.move_backward(80)
+    bot.wait(0.75)
+    #bot.stop()
+    bot.move_backward(80)
+    bot.wait(0.75)
+    #bot.stop()
 
 def angerSong():
     nl.playNote(nl.G3,0.10)
@@ -87,7 +93,18 @@ def angerSong():
     nl.playNote(nl.G1,0.5)
 
 def showAnger(bot):
-    pass
+    bot.move_forward(80)
+    bot.wait(1)
+    bot.move_backward(80)
+    bot.wait(0.75)
+    bot.move_forward(80)
+    bot.wait(1)
+    bot.move_backward(80)
+    bot.wait(0.75)
+    bot.move_forward(80)
+    bot.wait(1)
+    bot.move_backward(80)
+    bot.wait(0.75)
 
 def emotionUpdate(bot):
     event_trigger = False
@@ -125,6 +142,7 @@ def emotionUpdate(bot):
 
 
 def run(bot):
+    nl.prepPlaying()
     bot.move_forward(20)
     bot.wait(3)
     bot.stop()
