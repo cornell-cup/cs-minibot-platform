@@ -376,7 +376,13 @@ function displayOccupancyMatrix(height, width, size) {
 
 function padOccupancyMatrix(occupancyMatrix) {
 
-    var temp = occupancyMatrix.slice();
+    var temp = [];
+    for(var i = 0; i < occupancyMatrix.length; i++) {
+        temp.push([]);
+        for(var j = 0; j < occupancyMatrix[0].length; j++) {
+            temp[i].push(occupancyMatrix[i][j]);
+        }
+    }
     for(var i = 0; i < occupancyMatrix.length; i++) {
         for(var j = 0; j < occupancyMatrix.length; j++) {
             if(occupancyMatrix[i][j] === 1) {
