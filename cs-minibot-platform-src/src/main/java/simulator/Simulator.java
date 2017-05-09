@@ -116,7 +116,7 @@ public class Simulator {
 
     public void generateOccupancyMatrix(int occupancyMatrixHeight, int occupancyMatrixWidth, float occupancyMatrixBoxSize) {
         int[][] om = new int[occupancyMatrixHeight][occupancyMatrixWidth];
-        System.out.println("The occupancy matrix box size is " + occupancyMatrixBoxSize);
+        //System.out.println("The occupancy matrix box size is " + occupancyMatrixBoxSize);
         for(int i = 0; i < occupancyMatrixHeight; i++){
             for(int j = 0; j < occupancyMatrixWidth; j++) {
                 float lower_x = (float)(i*occupancyMatrixBoxSize);

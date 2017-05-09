@@ -32,7 +32,7 @@ var grid;
 var imageLoader;
 
 var listBots = [];
-var occupancyMatrix;
+var occupancyMatrix = null;
 
 var backgroundSprite;
 
@@ -43,15 +43,19 @@ $('#scale').on('change',function(){
     y_int = VIEW_WIDTH/START_SCALE*val/100;
     updateInfo(x_int, y_int);
 
+
     stage.removeChild(gridContainer);
     gridContainer = new PIXI.Container();
     botContainer.removeChildren();
     setupGridLines(scale, xOffset, yOffset);
-    stage.addChild(gridContainer);
-    displayOccupancyMatrix(40, 40, 1.0)
-    fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
-    displayBots(bots,scale, xOffset, yOffset);
 
+    stage.addChild(gridContainer);
+    if(occupancyMatrix != null) {
+        displayOccupancyMatrix(40, 40, 1.0);
+        fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+    }
+
+    displayBots(bots,scale, xOffset, yOffset);
     grid.render(stage);
 });
 
@@ -77,11 +81,12 @@ window.onkeydown = function (e) {
     } else {
         return;
     }
-    displayOccupancyMatrix(40, 40, 1.0);
-    fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+
     gridContainer.removeChildren();
     botContainer.removeChildren();
     setupGridLines(scale, xOffset, yOffset);
+    displayOccupancyMatrix(40, 40, 1.0);
+        fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
     displayBots(bots, scale, xOffset, yOffset);
 
     grid.render(stage);
@@ -269,7 +274,7 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     var scenarioObject = new PIXI.Graphics();
 
                     scenarioObject.beginFill(0x123212);
-                    scenarioObject.drawRect(0, 0, size, size);
+                    scenarioObject.drawRect(0, 0, x_int, y_int);
                     scenarioObject.endFill();
 
                     var cx = i*x_int;
@@ -320,6 +325,20 @@ function getNewVisionData() {
                         bots.push(newBot(bot.x, bot.y, bot.angle, bot.id, bot
                         .size));
                     }
+
+
+                    stage.removeChild(gridContainer);
+                    gridContainer = new PIXI.Container();
+                    botContainer.removeChildren();
+
+                    setupGridLines(scale, xOffset, yOffset);
+
+                    stage.addChild(gridContainer);
+                    if(occupancyMatrix != null) {
+                        displayOccupancyMatrix(40, 40, 1.0);
+                        fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+                    }
+                    displayBots(bots,scale, xOffset, yOffset);
 
                     displayBots(bots, scale, xOffset, yOffset);
                     grid.render(stage);
@@ -387,20 +406,20 @@ function displayOccupancyMatrix(height, width, size) {
             size: size}),
         contentType: 'application/json',
         success: function(data) {
-            console.log("printing occupancymatrix");
+            //console.log("printing occupancymatrix");
             //console.log(data);
             for(var i = 0; i < data.length; i++) {
-                console.log(data[i]);
+                //console.log(data[i]);
                 //TODO code to shade in pixi container
             }
             occupancyMatrix = data;
             occupancyMatrix = padOccupancyMatrix();
             for(var i = 0; i < data.length; i++) {
-                console.log(occupancyMatrix[i]);
+                //console.log(occupancyMatrix[i]);
             }
 
              fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
-             grid.render(stage);
+//             grid.render(stage);
 
         }
 
@@ -440,6 +459,9 @@ function padOccupancyMatrix() {
                 if(j+1 < occupancyMatrix[0].length && i-1 < occupancyMatrix.length) {
                     temp[i-1][j+1] = 1;
                 }
+                if(j-1 < occupancyMatrix[0].length && i+1 < occupancyMatrix.length) {
+                    temp[i+1][j-1] = 1;
+                }
             }
         }
     }
@@ -449,6 +471,12 @@ function padOccupancyMatrix() {
 $("#showOccupancyMatrix").click( function() {
         console.log("Hello");
         displayOccupancyMatrix(40, 40, 1.0);
+        setTimeout(function(){
+            fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+            displayBots(bots,scale, xOffset, yOffset);
+            grid.render(stage);
+        }, 3000);
+
 });
 
 main();

@@ -386,9 +386,9 @@ public class BaseHTTPInterface {
             String height = settings.get("height").getAsString();
             String width = settings.get("width").getAsString();
             String size = settings.get("size").getAsString();
-            System.out.println(height + ", " + width + ", " + size);
+            //System.out.println(height + ", " + width + ", " + size);
             simulator.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
-            System.out.println("getOccupancyMatrix");
+            //System.out.println("getOccupancyMatrix");
             return gson.toJson(simulator.getOccupancyMatrix());
                 });
 
