@@ -21,7 +21,7 @@ def showSurprise():
 	nl.playNote(nl.B6,0.10)
 	nl.playNote(nl.B6,0.10)
 
-def showAnger():	
+def showAnger():
 	nl.playNote(nl.G3,0.10)
 	nl.playNote(nl.G6,0.10)
 	nl.playNote(nl.G1,0.5)

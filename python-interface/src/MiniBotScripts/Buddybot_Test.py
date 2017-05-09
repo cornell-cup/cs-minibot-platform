@@ -1,31 +1,21 @@
-import Note_Library
-from pygame_play_tone import Note
+import Note_Library as nl
+#import pygame
+import sample_audio as sa
 
-import pygame
-from pygame.mixer import Sound, get_init, pre_init
+TEST_EMOTION = 3;
 
-def happySong(bot):
-    print("First note")
-    test = Note(440)
-    test.play(0)
-    bot.wait(1)
+def happySong():
+    print("First note")        
+    nl.playNote(nl.G6,0.15)
     print("Second note")
-    test2 = Note(523)
-    test2.play(0)
-    bot.wait(1)
+    nl.playNote(nl.A6,0.15)
     print("Third note")
-    test3 = Note(659)
-    test3.play(0)
-    bot.wait(2)
-    # nt.Note(Note_Library.NOTE_C0).play(0)
-    # bot.wait(1)
-    # nt.Note(Note_Library.NOTE_E0).play(0)
-    # bot.wait(1)
-    # nt.Note(Note_Library.NOTE_G0).play(0)
-    # bot.wait(2)
+    nl.playNote(nl.G6,0.15)
+    nl.playNote(nl.A6,0.15)
+    nl.playNote(nl.B6,0.25)
 
 def showHappy(bot):
-    happySong(bot)
+    happySong()
     bot.move_forward(25)
     bot.wait(3)
     bot.stop()
@@ -43,19 +33,36 @@ def showHappy(bot):
     bot.stop()
     # bot.wait(1)
 
+def sadSong():
+    nl.playNote(nl.G6,0.25)
+    nl.playNote(nl.D6_SHARP,0.25)
+    nl.playNote(nl.G3,0.5)
+    nl.playNote(nl.G2,1)
+
 def showSad(bot):
     pass
 
+def surpriseSong():
+    nl.playNote(nl.B6,0.10)
+    nl.playNote(nl.B6,0.10)
+    nl.playNote(nl.B6,0.10)
+    nl.playNote(nl.B6,0.10)
+
 def showSurprise(bot):
     pass
+
+def angerSong():
+    nl.playNote(nl.G3,0.10)
+    nl.playNote(nl.G6,0.10)
+    nl.playNote(nl.G1,0.5)
+    nl.playNote(nl.G3,0.10)
+    nl.playNote(nl.G6,0.10)
+    nl.playNote(nl.G1,0.5)
 
 def showAnger(bot):
     pass
 
 def run(bot):
-    # pre_init(44100, -16, 1, 1024)
-    # pygame.init()
-    # bot.wait(1)
     bot.move_forward(20)
     bot.wait(3)
     bot.stop()
@@ -65,20 +72,19 @@ def run(bot):
     #bot.wait(3)
     #bot.stop()
     # bot.wait(3)
-    print("Done BK")
+    # print("Done BK")
 
-    test_emotion = 0
-
-    if test_emotion == 0:
+    print("Emotion Time")
+    if TEST_EMOTION == 0:
         print("Happy")
         showHappy(bot)
-    elif test_emotion == 1:
+    elif TEST_EMOTION == 1:
         print("Sad")
         showSad(bot)
-    elif test_emotion == 2:
+    elif TEST_EMOTION == 2:
         print("Surprise")
         showSurprise(bot)
-    elif test_emotion == 3:
+    elif TEST_EMOTION == 3:
         print("Anger")
         showAnger(bot)
 

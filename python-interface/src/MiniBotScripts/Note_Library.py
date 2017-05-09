@@ -108,3 +108,15 @@ def playNote(note,time,volume=DEFAULT_VOLUME):
 	sound.stop()
 
 
+def blurNote(note,time,volume=DEFAULT_VOLUME,last_note=False):
+	''' Same as playNote, but will continue to play with other notes
+		that are not specified to stop. In order to stop blurring a 
+		selection of notes together, have the last note be a playNote or
+		specify the last parameter [last_note] as True'''
+	sound = Note(note,volume)
+	sound.play(-1)
+	sleep(time)
+	if(last_note):
+		sound.stop()
+
+
