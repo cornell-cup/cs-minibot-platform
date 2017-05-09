@@ -1,5 +1,6 @@
 import Note_Library as nl
 import sample_audio as sa
+import random
 
 TEST_EMOTION = 0;
 
@@ -18,6 +19,9 @@ bot_happy = 0
 bot_sad = 0
 bot_surprised = 0
 bot_angry = 0
+
+def randomEmotion():
+    return random.randint(0,3)
 
 def neutralNoise():
     nl.playNote(nl.G5,0.15)
@@ -154,21 +158,26 @@ def run(bot):
     # bot.wait(3)
     # print("Done BK")
 
-    print("Emotion Time")
-    if TEST_EMOTION == 0:
-        print("Happy")
-        showHappy(bot)
-    elif TEST_EMOTION == 1:
-        print("Sad")
-        showSad(bot)
-    elif TEST_EMOTION == 2:
-        print("Surprise")
-        showSurprise(bot)
-    elif TEST_EMOTION == 3:
-        print("Anger")
-        showAnger(bot)
+    while True:
 
-    bot.stop()
+        bot.wait(5)
+        TEST_EMOTION = randomEmotion()
+
+        print("Emotion Time")
+        if TEST_EMOTION == 0:
+            print("Happy")
+            showHappy(bot)
+        elif TEST_EMOTION == 1:
+            print("Sad")
+            showSad(bot)
+        elif TEST_EMOTION == 2:
+            print("Surprise")
+            showSurprise(bot)
+        elif TEST_EMOTION == 3:
+            print("Anger")
+            showAnger(bot)
+
+        bot.stop()
 
     # while True:
     #     # Get audio input
@@ -183,3 +192,7 @@ def run(bot):
     #         bot_happy+=1
 
     #     emotionUpdate()
+
+
+# if __name__ == "__main__":
+#     print(randomEmotion())
