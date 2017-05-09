@@ -83,22 +83,6 @@ def colorbot(bot,z):
                     count["R"]=0
                     speed = inc(speed,15)
                 msg = (speed,-speed)
-            # elif(c=="PINK"):
-            #     # decrease speed
-            #     orangeFirstTime = True
-            #     if (pinkFirstTime && speed > 10):
-            #         pinkFirstTime = False
-            #         speed -= 5
-            #         print "SLOWER! (Speed: " + str(speed) + ")"
-            # elif(c=="ORANGE"):
-            #     # increase speed
-            #     pinkFirstTime = True
-            #     if (orangeFirstTime && speed < 50):
-            #         orangeFirstTime = False
-            #         speed += 5
-            #         print "FASTER! (Speed: " + str(speed) + ")"
-            
-            # print str(msg)
             z.broadcast(msg)
             time.sleep(0.2)
     finally:
