@@ -27,6 +27,8 @@ public class GoBot extends Thread {
     public static final int WAITING = 0;
     public static final int HUMAN_PLAYING = 1;
     public static final int BOT_PLAYING = 2;
+    public double driveAngle_prev = 0;
+    public double driveAngle_prevp = 0;
 
 
     private final Navigator navigator;
@@ -165,7 +167,7 @@ public class GoBot extends Thread {
                     lapTimes.clear();
                     lapsDone = 0;
                     printState();
-                } else {
+                } /*else {
                     List<VisionObject> vl =  BaseStation.getInstance().getVisionManager()
                             .getAllLocationData();
                     if (vl.size() != 0) {
@@ -199,7 +201,9 @@ public class GoBot extends Thread {
                                 this.reachedMiddle = true;
                             }
                         }
-                    }
+                    }*/
+                    else{
+                        navigator.run();
                 }
 
             } else {
@@ -248,10 +252,10 @@ public class GoBot extends Thread {
         }
 
         public void calcRoute(){
-            if (destinationReached()) return;
+         /*   if (destinationReached()) return;
             if(destination == null){
                 return;
-            }
+            }*/
 
             VisionCoordinate vc;
             List<VisionObject> locs = BaseStation.getInstance()
@@ -268,32 +272,38 @@ public class GoBot extends Thread {
                 //System.out.println(vc);
             }
 
-            double spectheta = vc.getThetaOrZero();
+   /*         double spectheta = vc.getThetaOrZero();
             double toAngle = vc.getAngleTo(destination);
             double angle = mod((toAngle - spectheta + Math.PI), 2*Math.PI);
             double dist = vc.getDistanceTo(destination);
-            System.out.println("ang: " + angle + ", toAngle:" + toAngle);
-            if (!false) {
-                return;
-            }
-
+            System.out.println("ang: " + angle + ", toAngle:" + toAngle); */
+           // if (false) {
+           //     return;
+            //}
             // driver
 
             //if (!inTrack) return;
-            if (false) {
+            if (true) {
+                System.out.println("hi");
                 double driveAngle = ai.calculateDriveAngle();
                 double MIDDLE = Math.PI / 2;
                 double QUARTER = MIDDLE - MIDDLE * .1;
                 double THREEQUARTER = MIDDLE + MIDDLE * .1;
                 int POWER = 70;
-                if (driveAngle < QUARTER) {
+                if (driveAngle_prev - driveAngle_prevp < 0.001  && driveAngle_prev - driveAngle < 0.001){
+                    System.out.println("same");
+                    fwm.setWheelPower(POWER,POWER,70,70);
+                }
+                else if (driveAngle < QUARTER) {
                     fwm.setWheelPower(POWER,-POWER,POWER,-POWER);
                 } else if (driveAngle < THREEQUARTER) {
                     fwm.setWheelPower(POWER,POWER,POWER,POWER);
                 } else {
                     fwm.setWheelPower(-POWER,POWER,-POWER,POWER);
                 }
-            } else {
+                driveAngle_prevp = driveAngle_prev;
+                driveAngle_prev = driveAngle;
+            } /*else {
                 if (dist > DISTANCE_THRESHOLD) {
                     if (Math.abs(angle) > ANGLE_THRESHOLD) {
                         // Need to rotate to face destination
@@ -344,7 +354,7 @@ public class GoBot extends Thread {
                     fwm.setWheelPower(0,0,0,0);
                     destinationReached = true;
                 }
-            }
+            }*/
         }
     }
 }

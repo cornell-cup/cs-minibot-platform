@@ -71,17 +71,22 @@ public class Equation{
     public boolean inDomain(Point test) {
         //if vertical line check that the intersection is between the
         // starting and ending y coordinates
-        if (vertical || startx == endx) {
-            return test.ycor >= starty && test.ycor <= endy;
+        if (test!= null) {
+            if (vertical || startx == endx) {
+                return test.ycor >= starty && test.ycor <= endy;
+            }
+            //horizontal lines
+            else if (starty == endy) {
+                return test.xcor >= startx && test.xcor <= endx;
+            }
+            //everything else
+            else {
+                return test.xcor >= startx && test.xcor <= endx
+                        && test.ycor >= starty && test.ycor <= endy;
+            }
         }
-        //horizontal lines
-        else if (starty == endy){
-            return test.xcor >= startx && test.xcor <= endx;
-        }
-        //everything else
-        else{
-            return test.xcor >= startx && test.xcor <= endx
-                    && test.ycor >= starty && test.ycor <= endy;
+        else {
+            return false;
         }
     }
 

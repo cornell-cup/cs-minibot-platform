@@ -160,10 +160,26 @@ public class AIUtil {
         }
     }
 
+    public boolean isZeroAngle(VisionCoordinate vc, Point p){
+      if (vc.getThetaOrZero() == 0){
+          return p.ycor <= vc.y;
+      }
+      else if (vc.getThetaOrZero() == Math.PI){
+          return p.ycor >= vc.y;
+      }
+      else if (vc.getThetaOrZero() < Math.PI){
+          return p.xcor >= vc.x;
+      }
+      else{
+          return p.xcor <= vc.x;
+      }
+    }
 
     public ArrayList<Double> calculateRayDistances(ArrayList<Equation> allLines,
                                                    ArrayList<Equation> sweepLines,
-                                                   VisionCoordinate botCoordinate){
+                                                   VisionCoordinate botCoordinate,
+                                                   ArrayList<Equation> inner,
+                                                   ArrayList<Equation> outer){
         ArrayList<Double> distances = new ArrayList<>();
         for (int i = 1; i < sweepLines.size() - 1; i++){
             double minDist = Double.MAX_VALUE / 100f;
@@ -195,22 +211,38 @@ public class AIUtil {
         }
         double least = Double.MAX_VALUE;
         double nextLeast = Double.MAX_VALUE;
+        Point leastP = null;
+        Point nextLeastP = null;
         for(Point intersectionP: findIntersection(allLines, sweepLines.get(0))){
             double dist = distanceBetween(botCoordinate, intersectionP);
             if (dist < least && dist < nextLeast){
                 nextLeast = least;
+                nextLeastP = leastP;
                 least = dist;
+                leastP = intersectionP;
             }
             else if (dist < nextLeast){
                 nextLeast = dist;
+                nextLeastP = intersectionP;
             }
         }
-        distances.add(least);
-        distances.add(nextLeast);
-        for(double d: distances){
-            System.out.print(d + " ");
+
+        if (isZeroAngle(botCoordinate, leastP)){
+            System.out.println("inner" + leastP);
+            System.out.println("outer" + nextLeastP);
+            distances.add(0, least);
+          distances.add(nextLeast);
         }
-        System.out.println();
+        else{
+            System.out.println("outer" + leastP);
+            System.out.println("innter" + nextLeastP);
+            distances.add(least);
+            distances.add(0, nextLeast);
+        }
+//        for(double d: distances){
+//            System.out.print(d + " ");
+//        }
+//        System.out.println();
         return distances;
     }
 
@@ -219,7 +251,7 @@ public class AIUtil {
                 .getAllLocationData();
         if (v1.size() != 0){
             VisionCoordinate pos = v1.get(0).coord;
-//            System.out.println("Current pos: " + pos + "\n");
+            System.out.println("Current pos: " + pos + "\n");
             ArrayList<Equation> sweepEquations = sweep(pos, numLines);
  //           for(Equation f : sweepEquations){
  //              System.out.println("Y=" + f.slope + "x + " + f.yIntercept );
@@ -228,13 +260,14 @@ public class AIUtil {
             ArrayList<VisionCoordinate> outer = course.getOuter()
                     .returnCoords();
             ArrayList<Equation> innerEqs = findEquations(inner);
+            ArrayList<Equation> moreInner = innerEqs;
             ArrayList<Equation> outerEqs = findEquations(outer);
             innerEqs.addAll(outerEqs);
 //            for(Equation f : innerEqs){
 //                System.out.println(f);
 //            }
             ArrayList<Double> important = calculateRayDistances(innerEqs, sweepEquations,
-                    pos);
+                    pos, moreInner, outerEqs);
 //            important.forEach(System.out::println);
             double sumDistances = 0;
             for(double d: important){
@@ -245,7 +278,7 @@ public class AIUtil {
             for(int i = 0; i < numLines; i++){
                 out += theta/(numLines-1)*i*(important.get(i))/(sumDistances);
             }
-//            System.out.println("Angle: " + (out+(Math.PI-theta)/2));
+            System.out.println("Angle: " + (out+(Math.PI-theta)/2));
             return out + (Math.PI - theta)/2;
 
         }
