@@ -1,5 +1,5 @@
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import pyaudio as pa
 import wave
 from time import sleep
@@ -77,6 +77,8 @@ def getAvgFreq(wav_file):
 
 
 
+
+
 	# #Open wav file for analysis and get sampling frequency
 	# sample_freq, sound_sample = wv.read(wav_file)
 
@@ -91,6 +93,13 @@ def getAvgFreq(wav_file):
 
 	#Get bins/thresholds for frequencies
 	freqbins = np.fft.fftfreq(CHUNK,1.0/sample_freq)
+
+	x = np.linspace(0.0,1.0,1024)
+
+	# TODO Remove when done testing
+	# plt.plot(freqbins[:16],amplitude[:16])
+	plt.plot(converted_val)
+	plt.show()
 
 	#Get the range that the max amplitude falls in. This represents the loudest noise
 	loudest = np.argmax(amplitude) #Shouldn't have to specify axis
@@ -109,5 +118,6 @@ if __name__ == "__main__":
 	sampleAudio(OUTPUT_FILE)
 	print("Stop recording")
 
-	print(getAvgFreq(OUTPUT_FILE))
+	# print(getAvgFreq(OUTPUT_FILE))
+	print(getAvgFreq("sample2.wav"))
 
