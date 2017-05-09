@@ -16,8 +16,8 @@ public class AIUtil {
 
     public AIUtil() {
         this.numLines = 5;
-        this.min = 0+.01;
-        this.max = Math.PI-0.01;
+        this.min = 0;
+        this.max = Math.PI;
     }
 
     //Find intersection between two equations
@@ -70,17 +70,15 @@ public class AIUtil {
     public ArrayList<Point> findIntersection(ArrayList<Equation> e, Equation target){
         int size = e.size();
         ArrayList<Point> pts = new ArrayList<Point>();
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             Point interPoint = intersection(e.get(i), target);
-            if (interPoint != null && e.get(i).inDomain(interPoint)){
+  //          System.out.println(interPoint + "isValid: " + e.get(i).inDomain
+  //                  (interPoint));
+            if (e.get(i) != null && e.get(i).inDomain(interPoint)){
                 pts.add(interPoint);
             }
         }
-        for(int i = 0; i < pts.size(); i++){
-//            System.out.println("pt "+ pts.get(i).xcor + ", " + pts.get(i).ycor);
-        }
         return pts;
-
     }
 
     //Find distance between current location of bot and an intersection point
@@ -134,10 +132,32 @@ public class AIUtil {
 
     //return if point is valid
     public boolean isValid(double pAngle, VisionCoordinate vc, double
-            sweepTotalAngle, double
-                                   sweepAngle){
+            sweepTotalAngle, double sweepAngle){
+//        System.out.println(pAngle);
+//        System.out.println(pAngle - (vc.getThetaOrZero() - (sweepTotalAngle/2) +
+//                sweepAngle));
         return Math.abs(pAngle - (vc.getThetaOrZero() - (sweepTotalAngle/2) +
                 sweepAngle)) < 0.1; // TODO MAGIC ### -t revor
+    }
+
+
+    public boolean isValid2(Equation eq, VisionCoordinate vc, double x,
+                            double y){
+        if (vc.getThetaOrZero() == 0){
+            return x >= vc.x;
+        }
+        else if (vc.getThetaOrZero() == Math.PI){
+            return x <= vc.x;
+        }
+        else if (vc.getThetaOrZero() < Math.PI){
+            double ycor = x * eq.slope + eq.yIntercept;
+    //        System.out.println("y is:" + y + " line expects:" + ycor);
+            return y >= ycor;
+        }
+        else{
+            double ycor = x * eq.slope + eq.yIntercept;
+            return y <= ycor;
+        }
     }
 
 
@@ -145,26 +165,52 @@ public class AIUtil {
                                                    ArrayList<Equation> sweepLines,
                                                    VisionCoordinate botCoordinate){
         ArrayList<Double> distances = new ArrayList<>();
-        for (int i = 0; i < sweepLines.size(); i++){
+        for (int i = 1; i < sweepLines.size() - 1; i++){
             double minDist = Double.MAX_VALUE / 100f;
+//            System.out.println(" All Intersections of: " + sweepLines.get(i));
+//            for(Point p : findIntersection(allLines, sweepLines.get(i))){
+//                System.out.println(p);
+//            }
+//            System.out.println(" Valid: " + sweepLines.get(i));
+//            for(Point p : findIntersection(allLines, sweepLines.get(i))){
+//                if (isValid2(sweepLines.get(0), botCoordinate, p.xcor, p.ycor
+//                )) System.out
+//                        .println(p);
+//            }
             for (Point intersectionPoint: findIntersection(allLines, sweepLines.get(i))){
-                if (isValid(pointAngle(botCoordinate, intersectionPoint), botCoordinate, max - min, i*intervalAngle()
-                )) {
+                if (isValid2(sweepLines.get(0), botCoordinate,
+                        intersectionPoint.xcor, intersectionPoint.ycor)) {
                     double dist = distanceBetween(botCoordinate, intersectionPoint);
                     if (dist < minDist) {
                         minDist = dist;
-                        if (i == 2) {
-                            System.out.println(intersectionPoint);
-                        }
                     }
-                } else {
-                    System.err.println("INVALID" + intersectionPoint);
-                    System.err.println("INVALID" + pointAngle(botCoordinate,
-                            intersectionPoint));
                 }
+//                else {
+ //                   System.err.println("INVALID" + intersectionPoint);
+ //                   System.err.println("INVALID" + pointAngle(botCoordinate,
+//                            intersectionPoint));
+//                }
             }
             distances.add(minDist);
         }
+        double least = Double.MAX_VALUE;
+        double nextLeast = Double.MAX_VALUE;
+        for(Point intersectionP: findIntersection(allLines, sweepLines.get(0))){
+            double dist = distanceBetween(botCoordinate, intersectionP);
+            if (dist < least && dist < nextLeast){
+                nextLeast = least;
+                least = dist;
+            }
+            else if (dist < nextLeast){
+                nextLeast = dist;
+            }
+        }
+        distances.add(least);
+        distances.add(nextLeast);
+        for(double d: distances){
+            System.out.print(d + " ");
+        }
+        System.out.println();
         return distances;
     }
 
@@ -175,15 +221,18 @@ public class AIUtil {
             VisionCoordinate pos = v1.get(0).coord;
 //            System.out.println("Current pos: " + pos + "\n");
             ArrayList<Equation> sweepEquations = sweep(pos, numLines);
-            for(Equation f : sweepEquations){
-//                System.out.println("Y=" + f.slope + "x + " + f.yIntercept );
-            }
+ //           for(Equation f : sweepEquations){
+ //              System.out.println("Y=" + f.slope + "x + " + f.yIntercept );
+ //           }
             ArrayList<VisionCoordinate> inner = course.getInner().returnCoords();
             ArrayList<VisionCoordinate> outer = course.getOuter()
                     .returnCoords();
             ArrayList<Equation> innerEqs = findEquations(inner);
             ArrayList<Equation> outerEqs = findEquations(outer);
             innerEqs.addAll(outerEqs);
+//            for(Equation f : innerEqs){
+//                System.out.println(f);
+//            }
             ArrayList<Double> important = calculateRayDistances(innerEqs, sweepEquations,
                     pos);
 //            important.forEach(System.out::println);
@@ -196,7 +245,7 @@ public class AIUtil {
             for(int i = 0; i < numLines; i++){
                 out += theta/(numLines-1)*i*(important.get(i))/(sumDistances);
             }
-            System.out.println("Angle: " + (out+(Math.PI-theta)/2));
+//            System.out.println("Angle: " + (out+(Math.PI-theta)/2));
             return out + (Math.PI - theta)/2;
 
         }

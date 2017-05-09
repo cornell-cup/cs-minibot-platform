@@ -54,6 +54,7 @@ public class BaseHTTPInterface {
     private static XboxControllerDriver xboxControllerDriver;
     public static ArrayList<VisionCoordinate> patrolPoints;
     public static ArrayList<VisionCoordinate> innerTrackCoords;
+    public static ArrayList<VisionCoordinate> advancedAI;
 
     public static void main(String[] args) {
         // Spark configuration
@@ -80,25 +81,27 @@ public class BaseHTTPInterface {
         innerTrackCoords = new ArrayList<>();
         ArrayList<VisionCoordinate> startAreaCoords = new ArrayList<>();
         ArrayList<VisionCoordinate> middleAreaCoords = new ArrayList<>();
+        advancedAI = new ArrayList<>();
         //HARD-CODED COORDINATES JUST FOR GUI
-        innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(3,2), new
-                VisionCoordinate(2,2), new VisionCoordinate(2,3), new
-                VisionCoordinate(3,3)));
-        outerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(1,1), new
-                VisionCoordinate(4,1), new VisionCoordinate(4,4), new
-                VisionCoordinate(1,4)));
+        /*innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(3,2), new
+                VisionCoordinate(2,2), new VisionCoordinate(2,1), new
+                VisionCoordinate(3,1)));
+        outerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(1,3), new
+                VisionCoordinate(1,0), new VisionCoordinate(4,0), new
+                VisionCoordinate(4,3)));
         startAreaCoords.addAll(Arrays.asList(new VisionCoordinate(3,2), new
-                VisionCoordinate(4,2), new VisionCoordinate(4,2.05), new
-                VisionCoordinate(3,2.05)));
-        middleAreaCoords.addAll(Arrays.asList(new VisionCoordinate(2,3), new
-                VisionCoordinate(2,2.95), new VisionCoordinate(1,2.95), new
-                VisionCoordinate(1,3)));
+                VisionCoordinate(4,2), new VisionCoordinate(4,1.95), new
+                VisionCoordinate(3,1.95)));
+        middleAreaCoords.addAll(Arrays.asList(new VisionCoordinate(2,2), new
+                VisionCoordinate(2,1.95), new VisionCoordinate(1,1.95), new
+                VisionCoordinate(1,2)));*/
         //HARD-CODED BASIC BOTFIELD TRACK
         /*innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate
                 (2.2065439453125, 1.5227012939453124), new
                 VisionCoordinate(2.147612060546875, 0.38956390380859374), new VisionCoordinate(0.3778320007324219, 0.38749581909179687), new
                 VisionCoordinate(0.3561910400390625, 1.5385802001953126)));
-        outerTrackCoords.addAll(Arrays.asList(new VisionCoordinate(0.08017002868652344, 1.8366173095703124), new
+        outerTrackCoords.addAll(Aarrays.asList(new VisionCoordinate
+        (0.08017002868652344, 1.8366173095703124), new
                 VisionCoordinate(2.492609619140625, 1.811468017578125), new VisionCoordinate(2.402284423828125, 0.17503025817871093), new
                 VisionCoordinate(0.17684439086914064, 0.09049703216552735)));
         startAreaCoords.addAll(Arrays.asList(new VisionCoordinate(1.1758720703125, 1.860831787109375), new
@@ -108,7 +111,18 @@ public class BaseHTTPInterface {
                 VisionCoordinate(1.398449951171875, 0.044775409698486326), new VisionCoordinate(1.08611669921875, 0.04974387359619141), new
                 VisionCoordinate(1.0802769775390626, 0.516857421875)));*/
         //HARD-CODED FOR CONVEX TRACK
-        /*innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate
+        advancedAI.addAll(Arrays.asList(new VisionCoordinate(2.23133984375, 1.67338818359375), new VisionCoordinate(2.3830263671875, 1.4941776123046875),
+                new VisionCoordinate(2.404982666015625, 0.4286590576171875), new VisionCoordinate(2.2979462890625, 0.28613916015625),
+                new VisionCoordinate(1.9067784423828125, 0.27084918212890624), new VisionCoordinate(1.6620274658203125, 0.2908943176269531),
+                new VisionCoordinate(1.585668701171875, 0.8443804321289062), new VisionCoordinate(1.57882666015625, 0.9999115600585937),
+                new VisionCoordinate(1.42708349609375, 1.145732177734375), new VisionCoordinate(1.1258839111328125, 1.1726514892578126),
+                new VisionCoordinate(0.9635026245117188, 1.1342779541015624), new VisionCoordinate(0.9021660766601562, 0.8597421264648437),
+                new VisionCoordinate(0.8367010498046875, 0.40710394287109375), new VisionCoordinate(0.7722755126953125, 0.2491551513671875),
+                new VisionCoordinate(0.69308349609375, 0.18451251220703124), new VisionCoordinate(0.38101016235351565, 0.2346041259765625),
+                new VisionCoordinate(0.26720782470703125, 0.3347433471679688), new VisionCoordinate(0.20580989074707032, 0.5475873413085938),
+                new VisionCoordinate(0.21279461669921876, 1.552355224609375), new VisionCoordinate(0.3068707275390625, 1.6739039306640624),
+                new VisionCoordinate(0.894802490234375, 1.787567138671875), new VisionCoordinate(1.4014271240234375, 1.7195748291015625)));
+        innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate
                 (2.2361962890625, 1.49191650390625), new
                 VisionCoordinate(2.15298388671875, 0.4127757873535156), new VisionCoordinate(1.783540771484375, 0.4107144775390625), new
                 VisionCoordinate(1.7581005859375, 1.339592529296875),new VisionCoordinate(0.7094837036132813, 1.3833878173828125), new
@@ -125,7 +139,7 @@ public class BaseHTTPInterface {
                 VisionCoordinate(1.1252403564453124, 1.624544677734375)));
         middleAreaCoords.addAll(Arrays.asList(new VisionCoordinate(1.1123798828125, 0.7938690795898438), new
                 VisionCoordinate(0.5704920043945313, 0.825190185546875), new VisionCoordinate(0.6252758178710938, 0.54149462890625), new
-                VisionCoordinate(1.1291646728515625, 0.4859189453125)));*/
+                VisionCoordinate(1.1291646728515625, 0.4859189453125)));
         GoBot gb = new GoBot();
         Long timer = 0L;
 
@@ -559,6 +573,10 @@ public class BaseHTTPInterface {
         get("/example/GoBot/isBotInside", (req, res) -> course.isInsideTrack(BaseStation.getInstance().getVisionManager()
                 .getAllLocationData().get(0).coord));
 
+        get("/example/GoBot/getLoc", (req, res) -> "" + BaseStation.getInstance().getVisionManager()
+                .getAllLocationData().get(0).coord.x + ", " + BaseStation
+                .getInstance().getVisionManager()
+                .getAllLocationData().get(0).coord.y);
         /*get("/example/GoBot/didBotFinishALap", (req, res) -> {
             if (gb.finishedLap()) {
                 gb.addLapTime(System.nanoTime());

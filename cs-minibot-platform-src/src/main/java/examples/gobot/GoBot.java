@@ -143,7 +143,6 @@ public class GoBot extends Thread {
                                     this.lapsDone++;
                                     this.reachedMiddle = false;
                                     this.lapTimes.add(System.nanoTime());
-                                    System.out.println(lapTimes());
                                 }
                             } else if (course.getMiddleArea().contains(vc.x, vc.y)) {
                                 if (!reachedMiddle) {
@@ -173,10 +172,16 @@ public class GoBot extends Thread {
                         VisionCoordinate vc = vl.get(0).coord;
                         inTrack = this.course.isInsideTrack(vc);
                         if (navigator.destinationReached()) {
-                            int max = BaseHTTPInterface.innerTrackCoords.size();
+                            //int max = BaseHTTPInterface.innerTrackCoords
+                            // .size(); for tracing inner track
+                            int max = BaseHTTPInterface.advancedAI.size();
                             if (max != 0) {
-                                navigator.goToDestination(BaseHTTPInterface.innerTrackCoords.get
-                                        (index));
+                                //navigator.goToDestination(BaseHTTPInterface
+                                // .innerTrackCoords.get(index)); for tracing
+                                // inner track
+                                navigator.goToDestination(BaseHTTPInterface
+                                        .advancedAI.get(index));
+                                System.out.println(navigator.destination);
                                 index = (index + 1) % max;
                             }
                         }
@@ -222,7 +227,7 @@ public class GoBot extends Thread {
             while (true) {
                 calcRoute();
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -257,7 +262,6 @@ public class GoBot extends Thread {
                 vc = null;
                 fwm.setWheelPower(0,0,0,0);
                 return;
-
             }
             else {
                 vc = locs.get(0).coord;
@@ -266,24 +270,28 @@ public class GoBot extends Thread {
 
             double spectheta = vc.getThetaOrZero();
             double toAngle = vc.getAngleTo(destination);
-            double angle = mod((toAngle - spectheta + Math.PI), 2*Math.PI) -
-                    Math.PI;
+            double angle = mod((toAngle - spectheta + Math.PI), 2*Math.PI);
             double dist = vc.getDistanceTo(destination);
+            System.out.println("ang: " + angle + ", toAngle:" + toAngle);
+            if (!false) {
+                return;
+            }
 
             // driver
 
-            if (!inTrack) return;
-            if (true) {
+            //if (!inTrack) return;
+            if (false) {
                 double driveAngle = ai.calculateDriveAngle();
                 double MIDDLE = Math.PI / 2;
-                double QUARTER = MIDDLE - MIDDLE * .5;
-                double THREEQUARTER = MIDDLE + MIDDLE * .5;
+                double QUARTER = MIDDLE - MIDDLE * .1;
+                double THREEQUARTER = MIDDLE + MIDDLE * .1;
+                int POWER = 70;
                 if (driveAngle < QUARTER) {
-                    fwm.setWheelPower(100,-100,100,-100);
+                    fwm.setWheelPower(POWER,-POWER,POWER,-POWER);
                 } else if (driveAngle < THREEQUARTER) {
-                    fwm.setWheelPower(100,100,100,100);
+                    fwm.setWheelPower(POWER,POWER,POWER,POWER);
                 } else {
-                    fwm.setWheelPower(-100,100,-100,100);
+                    fwm.setWheelPower(-POWER,POWER,-POWER,POWER);
                 }
             } else {
                 if (dist > DISTANCE_THRESHOLD) {
@@ -302,13 +310,14 @@ public class GoBot extends Thread {
 
                         // Rotate in proper direction
                         if (angle < 0) {
-                            fwm.setWheelPower(-angSpeed,
-                                    angSpeed,-angSpeed,angSpeed);
+                            fwm.setWheelPower(angSpeed,
+                                    -angSpeed,angSpeed,-angSpeed);
                             //System.out.println("turn CCW");
 
                         } else {
-                            fwm.setWheelPower(angSpeed,
-                                    -angSpeed,angSpeed,-angSpeed);
+                            fwm.setWheelPower(-angSpeed,
+                                    angSpeed,-angSpeed,angSpeed);
+
                             //System.out.println("turn CW");
                         }
                     } else {
