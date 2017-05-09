@@ -67,10 +67,10 @@ def getAvgFreq(wav_file):
 	converted_val = []
 
 	for i in range(0,len(audio_frames),2):
-		if audio_frames[i+1]>127:
-			converted_val.append(-(audio_frames[i]+(256*(255-audio_frames[i+1]))))
+		if ord(audio_frames[i+1])>127:
+			converted_val.append(-(ord(audio_frames[i])+(256*(255-ord(audio_frames[i+1])))))
 		else:
-			converted_val.append(audio_frames[i]+(256*audio_frames[i+1]))
+			converted_val.append(ord(audio_frames[i])+(256*ord(audio_frames[i+1])))
 
 	# freq_per_frame = np.empty([1,len(audio_frames)])
 	freq_per_frame = np.array(converted_val)
@@ -95,7 +95,7 @@ def getAvgFreq(wav_file):
 	#Get the range that the max amplitude falls in. This represents the loudest noise
 	loudest = np.argmax(amplitude) #Shouldn't have to specify axis
 	lower_thres = freqbins[loudest]
-	upper_thres = (freqbins[1]-freqbins[1])+lower_thres
+	upper_thres = (freqbins[1]-freqbins[0])+lower_thres
 	
 	sound_sample.close()
 
