@@ -347,7 +347,7 @@ window.addEventListener("keydown", function(e) {
     }
 }, false);
 
-function displayOccupancyMatrix(int height, int width, float size) {
+function displayOccupancyMatrix(height, width, size) {
 
     $.ajax({
         method: "POST",
@@ -360,15 +360,53 @@ function displayOccupancyMatrix(int height, int width, float size) {
         contentType: 'application/json',
         success: function(data) {
             console.log("printing occupancymatrix");
-            console.log(data);
+            //console.log(data);
+            for(var i = 0; i < data.length; i++) {
+                console.log(data[i]);
+                //TODO code to shade in pixi container
             }
+            var occupancyMatrix = padOccupancyMatrix(data);
+            for(var i = 0; i < data.length; i++) {
+                console.log(occupancyMatrix[i]);
+            }
+        }
 
     });
-};
+}
+
+function padOccupancyMatrix(occupancyMatrix) {
+
+    var temp = occupancyMatrix.slice();
+    for(var i = 0; i < occupancyMatrix.length; i++) {
+        for(var j = 0; j < occupancyMatrix.length; j++) {
+            if(occupancyMatrix[i][j] === 1) {
+                if(i-1 >= 0) {
+                    temp[i-1][j] = 1;
+                }
+                if(i+1 < occupancyMatrix.length) {
+                    temp[i+1][j] = 1;
+                }
+                if(j-1 >= 0) {
+                    temp[i][j-1] = 1;
+                }
+                if(j+1 < occupancyMatrix[0].length) {
+                    temp[i][j+1] = 1;
+                }
+                if(j-1 >= 0 && i-1 >= 0) {
+                    temp[i-1][j-1] = 1;
+                }
+                if(j+1 < occupancyMatrix[0].length && i+1 < occupancyMatrix.length) {
+                    temp[i+1][j+1] = 1;
+                }
+            }
+        }
+    }
+    return temp;
+}
 
 $("#showOccupancyMatrix").click( function() {
         console.log("Hello");
-        displayOccupancyMatrix();
+        displayOccupancyMatrix(40, 40, 1.0);
 });
 
 main();

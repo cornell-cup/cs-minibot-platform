@@ -4,20 +4,27 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import basestation.bot.commands.FourWheelMovement;
+import basestation.bot.connection.Connection;
 import com.google.gson.JsonObject;
+import simulator.Simulator;
 import simulator.baseinterface.SimulatorVisionSystem;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.common.Vec2;
 
 public class SimBotCommandCenter implements FourWheelMovement {
     private SimBot bot;
+    private Simulator simulator;
     public final float topspeed = 0.655f; //top speed of minibot in meters/second
     public final float turningspeed = (float) Math.PI;
     public transient boolean record = false;
+
+
     Map<String,String> commandsLog = new ConcurrentHashMap<>();
 
-    public SimBotCommandCenter(SimBot myBot, Body obj_body) {
+    public SimBotCommandCenter(SimBot myBot, Body obj_body, Simulator
+            mySimulator) {
         bot = myBot;
+        simulator = mySimulator;
     }
 
     /**
@@ -125,7 +132,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
             double bl = Double.parseDouble(wheelCommands[2]);;
             double br = Double.parseDouble(wheelCommands[3]);;
 
-            Body b = SimulatorVisionSystem.getInstance().getWorld().getBodyList();
+            Body b = bot.getMyPhysicalObject().getBody();
 
             //forwards
             if(fl > 0 && fr > 0 && bl >0 && br>0) {
@@ -206,5 +213,10 @@ public class SimBotCommandCenter implements FourWheelMovement {
 
         }
         return false;
+    }
+
+    @Override
+    public Connection getConnection() {
+        return null;
     }
 }

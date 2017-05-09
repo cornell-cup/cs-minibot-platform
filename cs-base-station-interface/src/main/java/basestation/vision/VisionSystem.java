@@ -96,14 +96,7 @@ public abstract class VisionSystem {
         return "[Vision System|" + this.getClass().getSimpleName() + "]";
     }
 
-    public int[][] getOccupancyMatrix() {
-        return occupancyMatrix;
-    }
 
-    public int[][] generateOccupancyMatrix() {
-        //TODO
-        return new int[1][1];
-    }
 
     @Override
     public boolean equals(Object other) {

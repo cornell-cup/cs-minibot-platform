@@ -1,5 +1,6 @@
 package simulator.simbot;
 
+import basestation.bot.connection.Connection;
 import basestation.bot.connection.MotorConnection;
 import simulator.SimModBot;
 
@@ -22,5 +23,10 @@ public class SimBotConnection extends MotorConnection {
     @Override
     public void setMotorPower(double fl, double fr, double bl, double br) {
         throw new Error("unsupported");
+    }
+
+    @Override
+    public String getIP() {
+        return "";
     }
 }

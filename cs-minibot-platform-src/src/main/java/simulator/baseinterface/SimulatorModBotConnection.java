@@ -20,9 +20,7 @@ public class SimulatorModBotConnection extends MotorConnection {
     }
 
     @Override
-    public void destroy() {
-
-    }
+    public void destroy() {}
 
     @Override
     public void setMotorPower(double fl, double fr, double bl, double br) {
@@ -39,5 +37,10 @@ public class SimulatorModBotConnection extends MotorConnection {
             System.err.println("INVALID SIM COMMAND");
             myBot.forward(0);
         }
+    }
+
+    @Override
+    public String getIP() {
+        return "";
     }
 }

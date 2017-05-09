@@ -42,7 +42,7 @@ public class VisionObject {
     }
 
     public VisionObject(VisionSystem vs, int vid, VisionCoordinate myCoord,
-                        int size) {
+                        float size) {
         this.vs = vs;
         this.vid = vid;
         this.coord = myCoord;
