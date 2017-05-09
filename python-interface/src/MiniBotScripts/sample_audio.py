@@ -3,7 +3,7 @@ import numpy as np
 import pyaudio as pa
 import wave
 from time import sleep
-from scipy.io import wavfile as wv
+# from scipy.io import wavfile as wv
 
 #Constants used for sampling audio
 CHUNK = 1024
@@ -54,23 +54,39 @@ def getAvgFreq(wav_file):
 	   Basic procedure of processing audio taken from: 
 	   < http://samcarcagno.altervista.org/blog/basic-sound-processing-python/ >"""
 	
-	# #Open wav file for analysis
-	# sound_sample = wave.open(wav_file, "rb")
+	#Open wav file for analysis
+	sound_sample = wave.open(wav_file, "rb")
 
-	# #Get sampling frequency
-	# sample_freq = sound_sample.getframerate()
+	#Get sampling frequency
+	sample_freq = sound_sample.getframerate()
 
-	# #Extract audio frames to be analyzed
+	#Extract audio frames to be analyzed
 	# audio_frames = sound_sample.readframes(sound_sample.getnframes())
+	audio_frames = sound_sample.readframes(1024)
 
-	#Open wav file for analysis and get sampling frequency
-	sample_freq, sound_sample = wv.read(wav_file)
+	converted_val = []
 
-	#Extract sound frame values to be analyzed
-	floating_samples = sound_sample/(2.**15)
+	for i in range(0,len(audio_frames),2):
+		if audio_frames[i+1]>127:
+			converted_val.append(-(audio_frames[i]+(256*(255-audio_frames[i+1]))))
+		else:
+			converted_val.append(audio_frames[i]+(256*audio_frames[i+1]))
+
+	# freq_per_frame = np.empty([1,len(audio_frames)])
+	freq_per_frame = np.array(converted_val)
+
+
+
+	# #Open wav file for analysis and get sampling frequency
+	# sample_freq, sound_sample = wv.read(wav_file)
+
+	# #Extract sound frame values to be analyzed
+	# floating_samples = sound_sample/(2.**15)
 
 	# Get amplitude of soundwave section
-	freq = np.fft.fft(floating_samples)	
+	# freq = np.fft.fft(audio_frames)	
+	#freq = np.fft.fft(floating_samples)
+	freq = np.fft.fft(freq_per_frame)
 	amplitude = np.abs(freq)
 
 	#Get bins/thresholds for frequencies
