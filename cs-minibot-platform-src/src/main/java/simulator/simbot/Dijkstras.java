@@ -119,7 +119,7 @@ public class Dijkstras {
             }
         }
     }
-    public static LinkedList<Node> getPath(Node target) throws InterruptedException {
+    public static LinkedList<Node> getPath(Node target) {
         LinkedList<Node> path = new LinkedList<Node>();
         Node step = target;
         // check if a path exists

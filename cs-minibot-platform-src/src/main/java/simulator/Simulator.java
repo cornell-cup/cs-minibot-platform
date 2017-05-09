@@ -7,7 +7,9 @@ import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import simulator.baseinterface.SimulatorVisionSystem;
 import simulator.physics.PhysicalObject;
+import simulator.simbot.Dijkstras;
 
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -146,6 +148,36 @@ public class Simulator {
             }
         }
         setOccupancyMatrix(om);
+    }
+
+    public int[][] getDijkstras() {
+        System.out.println(Dijkstras.answer(occupancyMatrix));
+
+//        for (int j = 0; j < path.length; j++) {
+//            for (int i = 0; i < path[j].length; i++) {
+//                System.out.print(path[i][j] + " ");
+//            }
+//            System.out.println();
+//        }
+
+        Dijkstras.Node targetNode = Dijkstras.targetNode;
+
+        LinkedList<Dijkstras.Node> path = Dijkstras.getPath(targetNode);
+        int[][] pathMatrix = new int[occupancyMatrix.length+1][occupancyMatrix[0].length+1];
+
+
+        for(int i = 0; i < path.size(); i++) {
+            //System.out.println("X:" + path.get(i).getX() + " Y:" + path.get(i).getY());
+            pathMatrix[path.get(i).getX()][path.get(i).getY()] = 1;
+        }
+
+        for (int j = 1; j < pathMatrix.length; j++) {
+            for (int i = 1; i < pathMatrix[j].length; i++) {
+                System.out.print(pathMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+        return pathMatrix;
     }
 
 }

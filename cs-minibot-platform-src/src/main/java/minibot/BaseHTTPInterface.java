@@ -388,6 +388,7 @@ public class BaseHTTPInterface {
             String size = settings.get("size").getAsString();
             //System.out.println(height + ", " + width + ", " + size);
             simulator.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
+            int[][] path = simulator.getDijkstras();
             //System.out.println("getOccupancyMatrix");
             return gson.toJson(simulator.getOccupancyMatrix());
                 });
