@@ -119,7 +119,6 @@ public class Simulator {
         System.out.println("The occupancy matrix box size is " + occupancyMatrixBoxSize);
         for(int i = 0; i < occupancyMatrixHeight; i++){
             for(int j = 0; j < occupancyMatrixWidth; j++) {
-                System.out.println("i: " + i + "   i+size: " + (float)(i + occupancyMatrixBoxSize));
                 float lower_x = (float)(i*occupancyMatrixBoxSize);
                 float lower_y = (float)(j*occupancyMatrixBoxSize);
                 Vec2 lowerVertex = new Vec2(lower_x, lower_y);
@@ -130,7 +129,6 @@ public class Simulator {
                 final Vec2 testpoint3 = new Vec2(lower_x + 3*occupancyMatrixBoxSize/4, lower_y + 3*occupancyMatrixBoxSize/4);
                 final Vec2 testpoint4 = new Vec2(lower_x + occupancyMatrixBoxSize/4, lower_y + 3*occupancyMatrixBoxSize/4);
                 final Vec2 testpoint5 = new Vec2(lower_x + 3*occupancyMatrixBoxSize/4, lower_y + occupancyMatrixBoxSize/4);
-
 
 
                 final int icopy = i;

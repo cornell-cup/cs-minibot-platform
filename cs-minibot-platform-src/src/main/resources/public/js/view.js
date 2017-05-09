@@ -32,6 +32,7 @@ var grid;
 var imageLoader;
 
 var listBots = [];
+var occupancyMatrix;
 
 var backgroundSprite;
 
@@ -47,7 +48,10 @@ $('#scale').on('change',function(){
     botContainer.removeChildren();
     setupGridLines(scale, xOffset, yOffset);
     stage.addChild(gridContainer);
+    displayOccupancyMatrix(40, 40, 1.0)
+    fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
     displayBots(bots,scale, xOffset, yOffset);
+
     grid.render(stage);
 });
 
@@ -73,10 +77,13 @@ window.onkeydown = function (e) {
     } else {
         return;
     }
+    displayOccupancyMatrix(40, 40, 1.0);
+    fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
     gridContainer.removeChildren();
     botContainer.removeChildren();
     setupGridLines(scale, xOffset, yOffset);
     displayBots(bots, scale, xOffset, yOffset);
+
     grid.render(stage);
 };
 
@@ -254,6 +261,27 @@ function setupGridLines(scale, xOffset, yOffset) {
         gridContainer.addChild(lines_x[i]);
     }
 }
+function fillOccupancyMatrix(scale, xOffset, yOffset) {
+    for(var i = 0; i < occupancyMatrix.length; i++) {
+        for(var j = 0; j < occupancyMatrix[0].length; j++) {
+                if(occupancyMatrix[i][j] == 1) {
+                    var size = 65;
+                    var scenarioObject = new PIXI.Graphics();
+
+                    scenarioObject.beginFill(0x123212);
+                    scenarioObject.drawRect(0, 0, size, size);
+                    scenarioObject.endFill();
+
+                    var cx = i*x_int;
+                    var cy = j*y_int;
+                    scenarioObject.x = cx+xOffset;
+                    scenarioObject.y = cy+yOffset;
+                    botContainer.addChild(scenarioObject);
+                }
+
+        }
+    }
+}
 
 /*
 	Updating location of bots on grid.
@@ -365,16 +393,21 @@ function displayOccupancyMatrix(height, width, size) {
                 console.log(data[i]);
                 //TODO code to shade in pixi container
             }
-            var occupancyMatrix = padOccupancyMatrix(data);
+            occupancyMatrix = data;
+            occupancyMatrix = padOccupancyMatrix();
             for(var i = 0; i < data.length; i++) {
                 console.log(occupancyMatrix[i]);
             }
+
+             fillOccupancyMatrix(scale, xOffset, yOffset, occupancyMatrix);
+             grid.render(stage);
+
         }
 
     });
 }
 
-function padOccupancyMatrix(occupancyMatrix) {
+function padOccupancyMatrix() {
 
     var temp = [];
     for(var i = 0; i < occupancyMatrix.length; i++) {
@@ -403,6 +436,9 @@ function padOccupancyMatrix(occupancyMatrix) {
                 }
                 if(j+1 < occupancyMatrix[0].length && i+1 < occupancyMatrix.length) {
                     temp[i+1][j+1] = 1;
+                }
+                if(j+1 < occupancyMatrix[0].length && i-1 < occupancyMatrix.length) {
+                    temp[i-1][j+1] = 1;
                 }
             }
         }
