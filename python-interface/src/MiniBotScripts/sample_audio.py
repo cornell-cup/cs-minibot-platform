@@ -98,17 +98,18 @@ def getAvgFreq(wav_file):
 
 	# TODO Remove when done testing
 	# plt.plot(freqbins[:16],amplitude[:16])
-	plt.plot(converted_val)
-	plt.show()
+	# plt.plot(converted_val)
+	# plt.show()
 
 	#Get the range that the max amplitude falls in. This represents the loudest noise
-	loudest = np.argmax(amplitude) #Shouldn't have to specify axis
+	magnitude = np.amax(amplitude) 
+	loudest = np.argmax(amplitude) 
 	lower_thres = freqbins[loudest]
 	upper_thres = (freqbins[1]-freqbins[0])+lower_thres
 	
 	sound_sample.close()
 
-	return lower_thres, upper_thres
+	return magnitude, lower_thres, upper_thres
 
 
 if __name__ == "__main__":
