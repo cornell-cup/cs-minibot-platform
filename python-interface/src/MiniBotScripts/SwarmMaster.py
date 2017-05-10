@@ -49,9 +49,7 @@ def colorbot(bot,z):
                 count["B"]=0
                 count["L"]=0
                 count["R"]=0
-                if(count["F"]>15):
-                    count["F"]=0
-                    speed = inc(speed,15)
+                speed = increment_speed("F",3,speed,15)
                 msg = (speed,speed)
             elif(c=="BLUE"):
                 # backwards
@@ -59,9 +57,7 @@ def colorbot(bot,z):
                 count["B"]+=1
                 count["L"]=0
                 count["R"]=0
-                if(count["B"]>15):
-                    count["B"]=0
-                    speed = inc(speed,15)
+                speed = increment_speed("B",3,speed,15)
                 msg = (-speed,-speed)
             elif(c=="YELLOW"):
                 # turn left
@@ -69,9 +65,7 @@ def colorbot(bot,z):
                 count["B"]=0
                 count["L"]+=1
                 count["R"]=0
-                if(count["L"]>15):
-                    count["L"]=0
-                    speed = inc(speed,15)
+                speed = increment_speed("L",3,speed,15)
                 msg = (-speed,speed)
             elif(c=="VIOLET"):
                 # turn right
@@ -79,19 +73,22 @@ def colorbot(bot,z):
                 count["B"]=0
                 count["L"]=0
                 count["R"]+=1
-                if(count["R"]>15):
-                    count["R"]=0
-                    speed = inc(speed,15)
+                speed = increment_speed("R",3,speed,15)
                 msg = (speed,-speed)
             z.broadcast(msg)
             time.sleep(0.2)
     finally:
         cleanup(z)
 
-def inc(speed, i):
-    if(speed<50):
-        speed += i
-    print "Speed increased: " + str(speed)
+def increment_speed(direction, inc_time, speed, inc_amt):
+    """ Given a direction, increments the speed after inc_time amount of seconds by
+    inc_amt increase of power to the motors. 
+    """
+    if(count[direction]>(inc_time*5)):
+        count[direction] = 0
+        if(speed<50):
+            speed += inc_amt
+        print "Speed increased: " + str(speed)
     return speed
 
 def echobot(bot,z):

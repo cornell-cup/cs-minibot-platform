@@ -2,8 +2,8 @@
 class Sensor:
     def __init__(self, bot, name):
         self.name = name
-        # print "Sensor init called! Name: " + name
         bot.register_sensor(self)
+        print "Sensor being registered: " + str(self.name)
 
     def read(self):
         return "Invalid: Abstract Sensor Class Reading"

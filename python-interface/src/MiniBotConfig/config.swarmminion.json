@@ -7,14 +7,14 @@
   "acceptXbox": false,
   "actuators": [
     {
-      "type": "gpioMotor",
+      "type": "GpioMotor",
       "name": "rightMotor",
       "pinPWM": 13,
       "pinHighLow": 20,
       "reversed": true
     },
     {
-      "type": "gpioMotor",
+      "type": "GpioMotor",
       "name": "leftMotor",
       "pinPWM": 19,
       "pinHighLow": 18,

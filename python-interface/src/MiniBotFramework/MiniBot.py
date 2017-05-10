@@ -18,7 +18,7 @@ class MiniBot:
         GPIO.setmode(GPIO.BCM)
 
         for actuator in config["actuators"]:
-            if actuator["type"] == "gpioMotor":
+            if actuator["type"] == "GpioMotor":
                 name = actuator["name"]
                 pinPWM = actuator["pinPWM"]
                 pinHighLow = actuator["pinHighLow"]
@@ -28,12 +28,12 @@ class MiniBot:
                 print("ERROR: Unknown actuator in config")
 
         for sensor in config["sensors"]:
-            if sensor["type"] == "colorSensor":
+            if sensor["type"] == "ColorSensor":
                 # print "ColorSensor detected!"
                 name = sensor["name"]
                 pin = sensor["pin"]
                 MiniBotFramework.Sensing.ColorSensor.ColorSensor(self, name, pin)
-            elif sensor["type"] == "gpioSensor":
+            elif sensor["type"] == "GpioSensor":
                 name = sensor["name"]
                 pin = sensor["pin"]
                 MiniBotFramework.Sensing.GPIOSensor.GPIOSensor(self, name, pin)
@@ -134,7 +134,6 @@ class MiniBot:
 
 
     def register_sensor(self,sensor):
-        print "Sensor being registered: " + str(sensor.name)
         self.sensors[sensor.name] = sensor
 
     def register_actuator(self,actuator):
