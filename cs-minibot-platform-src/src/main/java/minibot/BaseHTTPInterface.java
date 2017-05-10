@@ -194,7 +194,6 @@ public class BaseHTTPInterface {
 
         /*send commands to the selected bot*/
         post("/commandBot", (req,res) -> {
-            System.out.println("post to command bot called");
             String body = req.body();
             JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
@@ -346,16 +345,8 @@ public class BaseHTTPInterface {
             String height = settings.get("height").getAsString();
             String width = settings.get("width").getAsString();
             String size = settings.get("size").getAsString();
-            System.out.println(height + ", " + width + ", " + size);
             simulator.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
             int[][] path = simulator.getDijkstras();
-                    for (int j = 1; j < path.length; j++) {
-            for (int i = 1; i < path[j].length; i++) {
-                System.out.print(path[i][j] + " ");
-            }
-            System.out.println();
-        }
-            //System.out.println("getOccupancyMatrix");
             return gson.toJson(simulator.getOccupancyMatrix());
         });
 
@@ -372,14 +363,6 @@ public class BaseHTTPInterface {
                 total.add(child);
             }
             int[][] om = new int[total.size()][total.get(0).size()];
-            for(int i = 0; i < total.size(); i++) {
-                for(int j = 0; j < total.get(0).size(); j++) {
-                    om[i][j] = total.get(i).get(j);
-                    System.out.print(om[i][j]);
-                }
-                System.out.println("");
-            }
-
             simulator.setOccupancyMatrix(om);
             Thread.sleep(700);
             return gson.toJson(simulator.getDijkstras());

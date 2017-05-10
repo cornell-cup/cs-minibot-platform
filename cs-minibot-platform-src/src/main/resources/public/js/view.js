@@ -424,19 +424,9 @@ function displayOccupancyMatrix(height, width, size) {
             size: size}),
         contentType: 'application/json',
         success: function(data) {
-            //console.log("printing occupancymatrix");
-            //console.log(data);
-            for(var i = 0; i < data.length; i++) {
-                //console.log(data[i]);
-                //TODO code to shade in pixi container
-            }
+
             occupancyMatrix = data;
             occupancyMatrix = padOccupancyMatrix();
-            for(var i = 0; i < data.length; i++) {
-                //console.log(occupancyMatrix[i]);
-            }
-
-//             grid.render(stage);
 
             $.ajax({
                 method: "POST",
@@ -500,7 +490,6 @@ function padOccupancyMatrix() {
 }
 
 $("#showOccupancyMatrix").click( function() {
-        console.log("Hello");
         displayOccupancyMatrix(40, 40, 1.0);
         setTimeout(function(){
             fillOccupancyMatrix(scale, xOffset, yOffset);
