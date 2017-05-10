@@ -1,3 +1,4 @@
 import MiniBotFramework.Actuation.Actuator
 import MiniBotFramework.Actuation.GpioMotor
 import MiniBotFramework.Actuation.TwoWheelMovement
+import MiniBotFramework.Actuation.I2CMotor

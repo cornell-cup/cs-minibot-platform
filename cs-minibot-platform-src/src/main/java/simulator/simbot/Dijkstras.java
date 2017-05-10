@@ -159,7 +159,7 @@ public class Dijkstras {
             curr = currentNode;
             processNeighbors(currentNode);
         }
-        System.out.println("LAST CURRENTNODE " + currentNode.getX() + " " + currentNode.getY());
+        //System.out.println("LAST CURRENTNODE " + currentNode.getX() + " " + currentNode.getY());
 
         int width = maze.length;
         int height = maze[0].length;
