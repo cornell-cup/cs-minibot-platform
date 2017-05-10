@@ -363,15 +363,6 @@ public class BaseHTTPInterface {
             String body = req.body();
             JsonObject matrix = jsonParser.parse(body).getAsJsonObject();
             JsonArray parentJsonArray = matrix.get("matrix").getAsJsonArray();
-//            JsonArray i = matrix.getAsJsonArray();
-//            ArrayList<String> list = new ArrayList<String>();
-//            if (i != null) {
-//                int len = i.size();
-//                for (int j=0;j<len;j++){
-//                    list.add(i.get(j).toString());
-//                }
-//            }
-
             ArrayList<ArrayList<Integer>> total = new ArrayList<ArrayList<Integer>>();
             for (int i=0; i<parentJsonArray.size(); i++){
                 ArrayList<Integer> child = new ArrayList<Integer>();

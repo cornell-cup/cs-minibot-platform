@@ -441,7 +441,7 @@ function displayOccupancyMatrix(height, width, size) {
             $.ajax({
                 method: "POST",
                 url: '/getDijkstras',
-                dataType: 'json',
+                dataType: 'json',<<<<<<<
                 data: JSON.stringify({
                 matrix: occupancyMatrix}),
                 contentType: 'application/json',

@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/518/trunk/matlabcontrol/src/matlabcontrol
+END
+MatlabConnector.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/MatlabConnector.java
+END
+MatlabClassLoaderHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/MatlabClassLoaderHelper.java
+END
+RequestReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/RequestReceiver.java
+END
+LocalMatlabProxy.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/LocalMatlabProxy.java
+END
+RemoteMatlabProxy.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/RemoteMatlabProxy.java
+END
+JMIWrapperRemoteImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/JMIWrapperRemoteImpl.java
+END
+JMIWrapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/479/trunk/matlabcontrol/src/matlabcontrol/JMIWrapper.java
+END
+package-info.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/330/trunk/matlabcontrol/src/matlabcontrol/package-info.java
+END
+JMIValidator.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/485/trunk/matlabcontrol/src/matlabcontrol/JMIValidator.java
+END
+MatlabSessionImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/MatlabSessionImpl.java
+END
+ThrowableWrapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/ThrowableWrapper.java
+END
+MatlabProxyFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/501/trunk/matlabcontrol/src/matlabcontrol/MatlabProxyFactory.java
+END
+JMIWrapperRemote.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/JMIWrapperRemote.java
+END
+MatlabConnectionException.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/MatlabConnectionException.java
+END
+LocalHostRMIHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/LocalHostRMIHelper.java
+END
+MatlabProxy.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/499/trunk/matlabcontrol/src/matlabcontrol/MatlabProxy.java
+END
+MatlabOperations.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/MatlabOperations.java
+END
+MatlabSession.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/MatlabSession.java
+END
+LocalMatlabProxyFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/LocalMatlabProxyFactory.java
+END
+RemoteMatlabProxyFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/488/trunk/matlabcontrol/src/matlabcontrol/RemoteMatlabProxyFactory.java
+END
+MatlabProxyFactoryOptions.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/488/trunk/matlabcontrol/src/matlabcontrol/MatlabProxyFactoryOptions.java
+END
+Configuration.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/490/trunk/matlabcontrol/src/matlabcontrol/Configuration.java
+END
+PermissiveSecurityManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/PermissiveSecurityManager.java
+END
+MatlabInvocationException.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/MatlabInvocationException.java
+END
+ProxyFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/ProxyFactory.java
+END
+LoggingMatlabProxy.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/475/trunk/matlabcontrol/src/matlabcontrol/LoggingMatlabProxy.java
+END
+MatlabBroadcaster.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/MatlabBroadcaster.java
+END
