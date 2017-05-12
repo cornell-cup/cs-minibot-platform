@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ModBot GUI</title>
+    <!-- IMPORTS -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/general.css"/>
+    <link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
+    <!-- END IMPORTS -->
+</head>
+
+<body>
+    <header>
+        <h1>modbot gui v2.0</h1><br>
+        A GUI to control Cornell Cup's modbot.
+    </header>
+
+    <ul class="nav nav-tabs">
+        <li><span style="margin-left:40px;">&nbsp;</span></li>
+        <li class="active"><a href="#view" id="tab-view">View</a></li>
+        <li><a href="#code" id="tab-code">Code</a></li>
+        <li><a href="#editor" id="tab-editor">Editor</a></li>
+    </ul>
+
+    <!-- BOT VIEW -->
+    <div class="box view">
+        <h3>VIEW</h3>
+            <!--<button id="zoom-out">scale view</button>
+            <button id="reset">reset</button>-->
+            <input type="checkbox" id="vision-poll"> Poll for Vision Data<br>
+            Scale (10-100%): <input id="scale" type="range" name="power" min="10" max="100" value="100">
+        <table>
+            <tr>
+                <td>
+                    Scale: <br>
+                    &nbsp; &nbsp; x: [0,12]<br>
+                    &nbsp; &nbsp; y: [0,12]<br>
+                </td>
+                <td>&nbsp; &nbsp; &nbsp; </td>
+                <td>
+                    Interval: <br>
+                    &nbsp; &nbsp; x spacing: <span id="x-int"></span><br>
+                    &nbsp; &nbsp; y spacing: <span id="y-int"></span>
+                </td>
+            </tr>
+        </table>
+        <br><br>
+        <div id="view">
+        <!-- this is where the grid goes -->
+        </div>
+    </div>
+
+
+    <!-- BOT CONTROLS -->
+    <div class="box">
+        <h4>Movement controls:</h4>
+        Choose bot:<br>
+        <select id="botlist" name="bots">
+            <option value="">-- Choose a bot --</option>
+            <option value="0">(DEBUG) Sim Bot</option>
+        </select>
+
+        <button class="controls" id="removeBot">remove</button><br>
+        Power (0-100): <input id="power" type="range" name="power" min="0" max="100" value="50">
+        <br><br>
+        
+        <hr><br>
+
+        <b>Directions:</b><br>
+
+        <table style="text-align:center;">
+            <tr>
+                <td><button class="dir" id="ccw">turn CCW</button></td>
+                <td><button class="dir" id="fwd">forward</button></td>
+                <td><button class="dir" id="cw">turn CW</button></td>
+            </tr>
+            <tr>
+                <td><button class="dir" id="lft">left</button></td>
+                <td><button class="dir" id="stop" style="background:red;">STOP</button></td>
+                <td><button class="dir" id="rt">right</button></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button class="dir" id="bck">backward</button></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="checkbox" id="keyboard-controls"> Enable Keyboard Controls
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><button id="xbox-on">Start Xbox</td>
+                <td><button id="xbox-off">Stop Xbox</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="kv_key" placeholder="Key (e.g. WHEELS)"></td>
+                <td><input type="text" id="kv_value" placeholder="Value (e.g. 10,10)"></td>
+                <td><button id="sendkv" onclick="sendKV()">Send KV</button></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- BOT CONFIGURATIONS -->
+    <div class="box">
+        <h4>Add a bot:</h4>
+        IP: <input type="text" name="ip" id="ip"><br/>
+        Port: <input type="text" name="port" id="port" value="10000"><br/>
+        Name: <input type="text" name="name" id="name"><br/>
+        Type:
+        <select id="bot-type" name="type">
+            <option value="minibot">minibot</option>
+            <option value="modbot">modbot</option>
+            <option value = "simulator.simbot">simulator.simbot</option>
+        </select>
+        <button id="addBot">add bot</button>
+        <button id = "updateLocs"> Run simulator </button>
+        <br><hr><br>
+        Scenario:
+        <textarea rows="4" cols="50" name="scenario" id="scenario">[{"type": "scenario_object", "position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]</textarea>
+        <button id="addScenario">add scenario</button>
+
+    </div>
+
+    <div class="box">
+        <h4>Add a discovered bot:</h4>
+        <div id="discovered"></div>
+    </div>
+
+    <!--<div class="box">-->
+        <!--<h4>Active bots:</h4>-->
+        <!--<div id="active"></div>-->
+    <!--</div>-->
+
+    <!-- BEGINNING OF BLOCKLY CODE -->
+    <div class="box">
+        <!-- BLOCKLY TOOLBOX -->
+        <div id="blocklyDiv" style="margin:0; height: 60vh; width: 80vw;"></div>
+        <xml id="toolbox" style="display:none;">
+            <block type="controls_if"></block>
+            <block type="logic_compare"></block>
+            <block type="controls_repeat_ext"></block>
+            <block type="math_number"></block>
+            <block type="math_arithmetic"></block>
+            <block type="text"></block>
+            <block type="text_print"></block>
+
+            <!-- ADDING CUSTOM BLOCKS -->
+            <block type="move"></block>
+            <block type="turn"></block>
+            <block type="setwheelpower"></block>
+            <block type="wait"></block>
+        </xml>
+
+        <!-- SUBMIT/DOWNLOAD/UPLOAD FUNCTIONALITIES -->
+            <!-- download script-->
+        <form id="dwn" onsubmit="download(this['name'].value, this['text'].value)">
+            <input type="text" name="name" value="myBlocklyCode.py">
+            <textarea name="text" size="100" cols="100" rows="10" name="data" id="data"></textarea><br/>
+            <input type="submit" value="Download">
+        </form>
+
+            <!-- send script -->
+        <button id="send">run</button>
+        
+            <!-- upload script -->
+        <form type=POST>
+            <input 
+                type="file" 
+                id="upload" 
+                multipleSize="1" 
+                accept=".py"
+            />
+        </form>
+    </div>
+    
+    <!-- basic imports -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://pixijs.download/release/pixi.min.js"></script>
+
+    <!-- blockly imports -->
+    <script src="../js/vendor/blockly/blockly_compressed.js"></script>
+    <script src="../js/vendor/blockly/javascript_compressed.js"></script>
+    <script src="../js/vendor/blockly/python_compressed.js"></script>
+    <script src="../js/vendor/blockly/blocks_compressed.js"></script>
+    <script src="../js/vendor/blockly/en.js"></script>
+    <script src="../js/vendor/prettify/prettify.js"></script>
+
+    <!-- IMPORT CUSTOM BLOCKS -->
+    <script type="text/javascript" src="../js/blocks/custom_blocks.js"></script>
+    <script type="text/javascript" src="../js/blocks/custom_json.js"></script>
+
+    <!-- manual scripts -->
+    <script src="../js/blockly.js"></script>    
+    <script src="../js/interface.js"></script>
+    <script src="../js/view.js"></script>
+    <script src="../js/response.js"></script>
+</body>
+</html>
