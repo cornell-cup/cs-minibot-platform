@@ -13,6 +13,7 @@ public abstract class SensorCenter {
     public abstract String getAllDataJson();
 
     public JsonObject getAllDataGson() {
+        //TODO: implement
         return null;
     }
 }
