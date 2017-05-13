@@ -24,6 +24,12 @@ class MiniBot:
                 pinHighLow = actuator["pinHighLow"]
                 reversed = actuator["reversed"]
                 MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, name, pinPWM, pinHighLow, reversed, GPIO)
+            elif actuator["type"] == "I2CMotor":
+                name = actuator["name"]
+                address = actuator["address"]
+                number = actuator["number"]
+                reversed = actuator["reversed"]
+                MiniBotFramework.Actuation.I2CMotor.I2CMotor(self, name, address, number, reversed)
             else:
                 print("ERROR: Unknown actuator in config")
 

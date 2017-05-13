@@ -44,10 +44,10 @@ print Install xboxdrv
 sudo apt-get install xboxdrv
 
 print Clone Cornell Cup Core Repo
-git clone https://github.com/cornell-cup/cs-core.git ~/core
+git clone https://github.com/cornell-cup/cs-core.git ~/cs-core
 
 print Run Core Setup
-(cd ~/core && ~/core/setup.sh)
+(cd ~/cs-core && ~/cs-core/setup.sh)
 
 # https://confluence.cornell.edu/pages/viewpage.action?spaceKey=CCRT&title=SB+Getting+Started+with+Raspberry+Pi+Zero
 print Removing junk
@@ -62,6 +62,12 @@ sudo apt-get -y install lsof
 
 print Install freeport
 sudo pip install freeport
+
+print Install tmux
+sudo apt-get -y install tmux
+
+print Install nmap
+sudo apt-get -y install nmap
 
 print Install ZMQ 
 sudo apt-get install libtool pkg-config build-essential autoconf automake uuid-dev python-dev

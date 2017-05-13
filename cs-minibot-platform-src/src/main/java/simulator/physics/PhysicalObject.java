@@ -22,10 +22,12 @@ public class PhysicalObject {
     private float size;
     public static final float BOT_SIZE = 0.15f;
 
+
     //this constructor is for bots, no size is passed in, the default bot size is 0.15m, or 6 inches
     public PhysicalObject(String name, int id, World world, float xSpeed,
                           float ySpeed, float xPos, float yPos, int angle,
                           boolean isDynamic) {
+        // TODO: COMBINE CONSTRUCTORS
         this.name = name;
         this.id = id;
         this.size = BOT_SIZE;
@@ -45,7 +47,6 @@ public class PhysicalObject {
         testFixture.shape = ps;
         testFixture.density = 0.5f;
 
-        this.world = world;
         Body b = world.createBody(testbody);
         b.createFixture(testFixture);
         Vec2 gravity = new Vec2(0.0f, 0.0f);
@@ -73,7 +74,6 @@ public class PhysicalObject {
         testFixture.shape = polygonShape;
         testFixture.density = 1000.0f;
 
-        this.world = world;
         Body b = world.createBody(testbody);
         b.createFixture(testFixture);
         this.body = b;
@@ -120,9 +120,7 @@ public class PhysicalObject {
         return speed.y;
     }
 
-    public World getWorld() {
-        return world;
-    }
+
     public void setSpeed(float x, float y) {
         this.body.setLinearVelocity(new Vec2(x,y));
     }
