@@ -136,6 +136,7 @@ function newBot(x, y, angle, id, size) {
         id: id,
         size: size
     };
+    /*in the future add something to identify bots vs objects*/
     if (size==0.15){
     bot.type = 'bot';}
     else{
@@ -151,12 +152,11 @@ function toDegrees(radians) {
 	where (0,0) is top left */
 function drawBot(b, scale, xOffset, yOffset) {
     var size = b.size*x_int;
-    console.log(b.size);
     var bot = new PIXI.Graphics();
     	bot.beginFill(0x0EB530);
     	bot.drawRect(0, 0, size, size);
     	bot.pivot = new PIXI.Point(size/2, size/2);
-        bot.rotation = -b.angle;
+    	bot.rotation = -b.angle;
     	bot.endFill();
 
     var cx = (b.x)*x_int+xOffset;
