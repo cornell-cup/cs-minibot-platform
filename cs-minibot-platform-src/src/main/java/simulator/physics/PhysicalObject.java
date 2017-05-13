@@ -20,6 +20,7 @@ public class PhysicalObject {
     private int id;
     private World world;
     private float size;
+    public static final float BOT_SIZE = 0.15f;
 
     //this constructor is for bots, no size is passed in, the default bot size is 0.15m, or 6 inches
     public PhysicalObject(String name, int id, World world, float xSpeed,
@@ -27,8 +28,7 @@ public class PhysicalObject {
                           boolean isDynamic) {
         this.name = name;
         this.id = id;
-        float bot_size = 0.15f;
-        this.size = bot_size;
+        this.size = BOT_SIZE;
 
         BodyDef testbody = new BodyDef();
         testbody.position.set(new Vec2(xPos, yPos));
@@ -39,7 +39,7 @@ public class PhysicalObject {
         //testbody.linearDamping = 0.5f;
 
         PolygonShape ps = new PolygonShape();
-        ps.setAsBox(bot_size/2.0f, bot_size/2.0f, new Vec2(0.0f,0.0f), 0.0f);
+        ps.setAsBox(BOT_SIZE/2.0f, BOT_SIZE/2.0f, new Vec2(0.0f,0.0f), 0.0f);
 
         FixtureDef testFixture = new FixtureDef();
         testFixture.shape = ps;
