@@ -3,6 +3,7 @@ class Actuator(object):
     def __init__(self, bot, name):
         self.name = name
         bot.register_actuator(self)
+        print "Actuator being registered: " + str(self.name)
 
     def read(self):
         return "Invalid: Abstract Class"

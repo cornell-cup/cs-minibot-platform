@@ -87,27 +87,23 @@ public class BaseHTTPInterface {
 
             /* new modbot is created to add */
             Bot newBot;
-            if(type.equals("modbot")) {
-                IceConnection ice = new IceConnection(ip, port);
-                newBot = new ModBot(ice, name);
-            } else if(type.equals("minibot")) {
-                TCPConnection c = new TCPConnection(ip, port);
-                newBot = new MiniBot(c, name);
-            }
-               else {
-                SimBotConnection sbc = new SimBotConnection();
-                SimBot simbot;
-                simbot = new SimBot(sbc, simulator, name, 50, simulator.getWorld
-                        (), 0.0f,
-                        0.0f, 1f, 3.6f, 0, true);
-                newBot = simbot;
-
-                simulator.importPhysicalObject(simbot.getMyPhysicalObject());
-
-                // Color sensor TODO put somewhere nice
-                ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
-                ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
-                ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
+            String mangledName;
+            switch (type) {
+                case "modbot":
+                    IceConnection ice = new IceConnection(ip, port);
+                    newBot = new ModBot(ice, name);
+                    mangledName = BaseStation.getInstance().getBotManager().addBot(newBot);
+                    break;
+                case "minibot":
+                    TCPConnection c = new TCPConnection(ip, port);
+                    newBot = new MiniBot(c, name);
+                    mangledName = BaseStation.getInstance().getBotManager()
+                            .addBot(newBot);
+                    break;
+                default:
+                    newBot = simulator.addSimBot(name, 0f, 0f, 0);
+                    mangledName = newBot.getName();
+                    break;
             }
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });

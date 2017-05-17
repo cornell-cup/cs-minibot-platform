@@ -18,17 +18,19 @@ public class PhysicalObject {
     private final String name;
     private Body body;
     private int id;
+
+    private World world;
     private float size;
+    public static final float BOT_SIZE = 0.15f;
 
-
-
+    //this constructor is for bots, no size is passed in, the default bot size is 0.15m, or 6 inches
     public PhysicalObject(String name, int id, World world, float xSpeed,
-                          float ySpeed, float xPos, float yPos, int angle,
+                          float ySpeed, float xPos, float yPos, float angle,
                           boolean isDynamic) {
         // TODO: COMBINE CONSTRUCTORS
         this.name = name;
         this.id = id;
-        this.size = 0;
+        this.size = BOT_SIZE;
 
         BodyDef testbody = new BodyDef();
         testbody.position.set(new Vec2(xPos, yPos));
@@ -38,14 +40,8 @@ public class PhysicalObject {
         testbody.angle=(float)(angle/180.0*Math.PI);
         //testbody.linearDamping = 0.5f;
 
-        Vec2[] vertices = new Vec2[4];
-        vertices[0] = new Vec2(-4/16.0f,-4/16.0f);
-        vertices[1] = new Vec2(4/16.0f,-4/16.0f);
-        vertices[2] = new Vec2(4/16.0f,4/16.0f);
-        vertices[3] = new Vec2(-4/16.0f,4/16.0f);
-
         PolygonShape ps = new PolygonShape();
-        ps.setAsBox(5/16.0f, 5/16.0f, new Vec2(0.0f,0.0f), 0.0f);
+        ps.setAsBox(BOT_SIZE/2.0f, BOT_SIZE/2.0f, new Vec2(0.0f,0.0f), 0.0f);
 
         FixtureDef testFixture = new FixtureDef();
         testFixture.shape = ps;
@@ -70,11 +66,6 @@ public class PhysicalObject {
         testbody.type = BodyType.STATIC;
         testbody.linearVelocity = new Vec2(0.0f, 0.0f);;
 
-        Vec2[] vertices = new Vec2[4];
-        vertices[0] = new Vec2(-size/2.0f,-size/2.0f);
-        vertices[1] = new Vec2(size/2.0f,-size/2.0f);
-        vertices[2] = new Vec2(size/2.0f,size/2.0f);
-        vertices[3] = new Vec2(-size/2.0f,size/2.0f);
 
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(size/2.0f, size/2.0f, new Vec2(0.0f,0.0f), 0.0f);

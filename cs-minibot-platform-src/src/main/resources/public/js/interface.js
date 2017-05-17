@@ -347,8 +347,6 @@ function redoDiscoverList(data){
     discovered_bots = [];
 
     for (let i = 0; i < data.length; i++) {
-        //Create elements for the site
-
         //Trim the forward-slash
         var ip_address = data[i].substring(1);
 

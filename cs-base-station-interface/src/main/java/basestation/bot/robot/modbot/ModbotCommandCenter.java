@@ -4,6 +4,7 @@ import basestation.bot.commands.ExtendedFourWheelMovement;
 import basestation.bot.connection.Connection;
 import basestation.bot.connection.MotorConnection;
 import basestation.vision.VisionCoordinate;
+import com.google.gson.JsonObject;
 
 /**
  * A CommandCenter for a ModBot
@@ -77,6 +78,11 @@ public class ModbotCommandCenter extends ExtendedFourWheelMovement {
 
     public Connection getConnection() {
         return this.connection;
+    }
+    @Override
+    public JsonObject getAllData(){
+        //TODO: implement
+        return null;
     }
 
 }
