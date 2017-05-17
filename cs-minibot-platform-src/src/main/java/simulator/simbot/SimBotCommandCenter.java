@@ -114,9 +114,24 @@ public class SimBotCommandCenter implements FourWheelMovement {
             b.setLinearVelocity(new Vec2(0.0f, 0.0f));
             b.setAngularVelocity((float)(-turningspeed*fl/100));
         }
-
         else {
-            System.out.println("Invalid wheel power command!");
+            float angle = b.getAngle();
+            float floatL = (float) fl;
+            float floatR = (float) fr;
+            float linearMagnitude = topspeed * (floatL + floatR) / (float)Math
+                    .sqrt
+                    (floatL*floatL + floatR*floatR);
+            if (linearMagnitude < 1f) {
+                b.setLinearVelocity(new Vec2(0.0f, 0.0f));
+                b.setAngularVelocity(0.0f);
+            }
+            float angularSpeed = turningspeed * ((floatR-floatL) / (float)Math
+                    .sqrt(100*100 +
+                    100*100));
+            b.setLinearVelocity(new Vec2(linearMagnitude*(float)Math.cos(angle),
+                    linearMagnitude*(float)Math.sin(angle)));
+            b.setAngularVelocity(angularSpeed);
+
         }
 
         return true;
