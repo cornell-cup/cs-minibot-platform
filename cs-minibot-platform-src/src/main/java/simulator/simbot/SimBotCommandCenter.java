@@ -131,7 +131,6 @@ public class SimBotCommandCenter implements FourWheelMovement {
             b.setLinearVelocity(new Vec2(linearMagnitude*(float)Math.cos(angle),
                     linearMagnitude*(float)Math.sin(angle)));
             b.setAngularVelocity(angularSpeed);
-
         }
 
         return true;
@@ -139,7 +138,7 @@ public class SimBotCommandCenter implements FourWheelMovement {
 
     @Override
     public boolean sendKV(String key, String value) {
-        if (key == "WHEELS") {
+        if (key.equals("WHEELS")) {
             String[] wheelCommands = value.split(",");
 
             double fl = Double.parseDouble(wheelCommands[0]);
