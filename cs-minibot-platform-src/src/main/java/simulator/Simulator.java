@@ -97,7 +97,6 @@ public class Simulator {
         float timeStep = (float)(delta / 10e8);
         int velocityIterations = 6;
         int positionIterations = 4;
-
         world.step(timeStep, velocityIterations, positionIterations);
 
         visionSystem.updateVisionCoordinates(physicalObjectSet);

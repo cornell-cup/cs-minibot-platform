@@ -52,8 +52,7 @@ $('#scale').on('change',function(){
 });
 
 /* for moving the viewport */
-window.onkeydown = function (e) {
-
+document.onkeydown = function (e) {
     let code = e.keyCode ? e.keyCode : e.which;
 
     if (code === 37) {
@@ -137,53 +136,60 @@ function newBot(x, y, angle, id, size) {
         id: id,
         size: size
     };
-    if (size==0){
+    /*in the future add something to identify bots vs objects*/
+    if (size==0.15){
     bot.type = 'bot';}
     else{
     bot.type = 'scenario_obj';}
     return bot;
 }
 
+function toDegrees(radians) {
+    return 180 * radians / Math.PI;
+}
 
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
 function drawBot(b, scale, xOffset, yOffset) {
-    var size = scale/4
+    var size = b.size*x_int;
     var bot = new PIXI.Graphics();
     	bot.beginFill(0x0EB530);
-    	bot.drawRect(0, 0, size*2, size*2);
-    	bot.pivot = new PIXI.Point(size, size);
-        bot.rotation = b.angle;
-    	bot.endFill()
+    	bot.drawRect(0, 0, size, size);
+    	bot.pivot = new PIXI.Point(size/2, size/2);
+    	bot.rotation = -b.angle;
+    	bot.endFill();
 
     var cx = (b.x)*x_int+xOffset;
-    var cy = (b.y)*y_int+yOffset;
+    var cy = (START_SCALE-b.y)*y_int+yOffset;
 	bot.x = cx;
 	bot.y = cy;
 
+    	// draw bot coordinate text
+    	let botCoordText = new PIXI.Text('(' + b.x.toFixed(2) + ',' + b.y.toFixed(2) + ',' + toDegrees(b.angle).toFixed(2) + ')',{fontFamily : 'Arial', fontSize: 11, fill : 0xff1010, align : 'center'});
+    	botCoordText.x = cx;
+    	botCoordText.y = cy + 14;
+
     var circle2 = new PIXI.Graphics();
     circle2.beginFill(0xFF0000);
-
-    circle2.drawCircle(0, 0, scale/10);
-
+    circle2.drawCircle(0, 0, size/10);
     circle2.endFill();
 
     var circle3 = new PIXI.Graphics();
         circle3.beginFill(0xFF0000);
-
-        circle3.drawCircle(0, 0, scale/10);
+        circle3.drawCircle(0, 0, size/10);
         circle3.endFill();
 
-    circle2.x = cx+size*Math.cos(b.angle+Math.PI/6);
-    circle2.y = cy+size*Math.sin(b.angle+Math.PI/6);
+    circle2.x = cx+size/2*Math.cos(b.angle+Math.PI/6);
+    circle2.y = cy-size/2*Math.sin(b.angle+Math.PI/6);
 
-    circle3.x = cx+size*Math.cos(b.angle-Math.PI/6);
-    circle3.y = cy+size*Math.sin(b.angle-Math.PI/6);
+    circle3.x = cx+size/2*Math.cos(b.angle-Math.PI/6);
+    circle3.y = cy-size/2*Math.sin(b.angle-Math.PI/6);
 
 
 	botContainer.addChild(bot);
 	botContainer.addChild(circle2);
 	botContainer.addChild(circle3);
+	botContainer.addChild(botCoordText);
 }
 
 function drawScenarioObject(b, scale, xOffset, yOffset) {
@@ -197,7 +203,7 @@ function drawScenarioObject(b, scale, xOffset, yOffset) {
 	scenarioObject.endFill();
 
     var cx = (b.x)*x_int;
-    var cy = (b.y)*y_int;
+    var cy = (START_SCALE-b.y)*y_int;
     scenarioObject.x = cx+xOffset;
     scenarioObject.y = cy+yOffset;
 
