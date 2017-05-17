@@ -25,7 +25,7 @@ public class PhysicalObject {
 
     //this constructor is for bots, no size is passed in, the default bot size is 0.15m, or 6 inches
     public PhysicalObject(String name, int id, World world, float xSpeed,
-                          float ySpeed, float xPos, float yPos, int angle,
+                          float ySpeed, float xPos, float yPos, float angle,
                           boolean isDynamic) {
         // TODO: COMBINE CONSTRUCTORS
         this.name = name;

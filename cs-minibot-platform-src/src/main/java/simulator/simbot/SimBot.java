@@ -32,15 +32,13 @@ public class SimBot extends Bot {
             id,
                   World world,
                   float xSpeed, float ySpeed, float xPos, float yPos,
-                  int angle, boolean isDynamic) {
+                  float angle, boolean isDynamic) {
         super(sbc, name);
 
         sensorCenter = new SimBotSensorCenter();
 
-        PhysicalObject po = new PhysicalObject(name, id, world, xSpeed, ySpeed,
+        this.myPhysicalObject = new PhysicalObject(name, id, world, xSpeed, ySpeed,
                 xPos, yPos, angle, isDynamic);
-
-        this.myPhysicalObject = po;
         this.commandCenter = new SimBotCommandCenter(this, this
                 .myPhysicalObject.getBody(), simulator);
 

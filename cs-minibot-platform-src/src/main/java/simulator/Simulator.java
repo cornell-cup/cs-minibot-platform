@@ -1,7 +1,6 @@
 package simulator;
 
 import basestation.BaseStation;
-import basestation.bot.robot.Bot;
 import com.google.gson.*;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -13,7 +12,6 @@ import simulator.simbot.SimBotConnection;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
 
 
 public class Simulator {
@@ -24,6 +22,8 @@ public class Simulator {
     private World world;
     private SimulatorVisionSystem visionSystem;
     private SimRunner simRunner;
+    /** For protecting the world */
+    private final Object worldLock = new Object();
 
     private long lastUpdateTime;
 
@@ -60,8 +60,10 @@ public class Simulator {
     public void resetWorld() {
         // cleanup previous state
         if (world != null) {
-            for (PhysicalObject physicalObject : physicalObjectSet) {
-                world.destroyBody(physicalObject.getBody());
+            synchronized (worldLock) {
+                for (PhysicalObject physicalObject : physicalObjectSet) {
+                    world.destroyBody(physicalObject.getBody());
+                }
             }
         }
         if (simRunner != null) {
@@ -91,13 +93,15 @@ public class Simulator {
      * vision objects in the vision system
      */
     public void stepSimulation() {
-        long now = System.nanoTime();
-        long delta = now - lastUpdateTime;
-        lastUpdateTime = now;
-        float timeStep = (float)(delta / 10e8);
-        int velocityIterations = 6;
-        int positionIterations = 4;
-        world.step(timeStep, velocityIterations, positionIterations);
+        synchronized (worldLock) {
+            long now = System.nanoTime();
+            long delta = now - lastUpdateTime;
+            lastUpdateTime = now;
+            float timeStep = (float)(delta / 10e8);
+            int velocityIterations = 6;
+            int positionIterations = 4;
+            world.step(timeStep, velocityIterations, positionIterations);
+        }
 
         visionSystem.updateVisionCoordinates(physicalObjectSet);
     }
@@ -108,49 +112,56 @@ public class Simulator {
         String scenarioBody = scenario.get("scenario").getAsString();
         JsonArray addInfo = jsonParser.parse(scenarioBody).getAsJsonArray();
 
-        for (JsonElement je : addInfo) {
-            String type = je.getAsJsonObject().get("type").getAsString();
-            int angle = je.getAsJsonObject().get("angle").getAsInt();
-            int[] position = gson.fromJson(je.getAsJsonObject().get("position")
-                    .getAsString(), int[].class);
-            String name = Integer.toString(angle)
-                    + Arrays.toString(position);
+        synchronized (worldLock) {
+            for (JsonElement je : addInfo) {
+                String type = je.getAsJsonObject().get("type").getAsString();
+                int angle = je.getAsJsonObject().get("angle").getAsInt();
+                int[] position = gson.fromJson(je.getAsJsonObject().get("position")
+                        .getAsString(), int[].class);
+                String name = Integer.toString(angle)
+                        + Arrays.toString(position);
 
-            //for scenario obstacles
-            PhysicalObject physicalObject;
-            if (!type.equals("simulator.simbot")) {
-                int size = je.getAsJsonObject().get("size").getAsInt();
-                physicalObject = new PhysicalObject(name, 100,
-                        world, (float) position[0],
-                        (float) position[1], size, angle);
-                importPhysicalObject(physicalObject);
-            }
-            //for bots listed in scenario
-            else {
-                name = "Simbot" + name;
-                SimBotConnection sbc = new SimBotConnection();
-                SimBot simbot;
-                simbot = new SimBot(sbc, this, name, 50, world, 0.0f,
-                        0.0f, (float) position[0], (float)
-                        position[1], angle, true);
-
-                physicalObject = simbot.getMyPhysicalObject();
-                importPhysicalObject(physicalObject);
-
-                // Color sensor TODO put somewhere nice
-//                    ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
-//                    ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
-//                    ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
-
-                try {
-                    BaseStation.getInstance().getBotManager().addBot(simbot);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return false;
+                //for scenario obstacles
+                PhysicalObject physicalObject;
+                if (!type.equals("simulator.simbot")) {
+                    int size = je.getAsJsonObject().get("size").getAsInt();
+                    physicalObject = new PhysicalObject(name, 100,
+                            world, (float) position[0],
+                            (float) position[1], size, angle);
+                    importPhysicalObject(physicalObject);
+                }
+                //for bots listed in scenario
+                else {
+                    if (addSimBot("Simbot" + name,position[0], position[1],
+                            angle) == null) {
+                        return false;
+                    }
                 }
             }
         }
+
         return true;
+    }
+
+    public SimBot addSimBot(String name, float x, float y, float angle) {
+        synchronized (worldLock) {
+            SimBotConnection sbc = new SimBotConnection();
+            SimBot simBot = new SimBot(sbc, this, name, 50, world, 0.0f,
+                    0.0f,  x,
+                    y, angle, true);
+
+            PhysicalObject physicalObject = simBot.getMyPhysicalObject();
+            importPhysicalObject(physicalObject);
+
+            try {
+                BaseStation.getInstance().getBotManager().addBot(simBot);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return simBot;
+        }
     }
 
     /**
