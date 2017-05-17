@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import minibot.example.avoidance.Avoidance;
 import org.jbox2d.dynamics.World;
 import simulator.Simulator;
 import simulator.physics.PhysicalObject;
@@ -418,6 +419,12 @@ public class BaseHTTPInterface {
                 // error encountered
                 return false;
             }
+        });
+
+        get("/algo", (req,res) -> {
+            Avoidance a = new Avoidance();
+            a.start();
+            return true;
         });
     }
 
