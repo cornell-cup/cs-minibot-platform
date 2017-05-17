@@ -151,6 +151,7 @@ function toDegrees(radians) {
 /* Setting up a single modbot at (x, y) 
 	where (0,0) is top left */
 function drawBot(b, scale, xOffset, yOffset) {
+    if (b.size == 0) b.size = 10;
     var size = b.size*x_int;
     var bot = new PIXI.Graphics();
     	bot.beginFill(0x0EB530);
@@ -293,6 +294,8 @@ function getNewVisionData() {
                         var botY = bot.y;
                         var botAngle = bot.angle;
                         var botSize = bot.size;
+                        if (!botSize) bot.size = 0.15; // TODO: Fix this
+                        // really bad hack
                         var botId = bot.id;
                         bots.push(newBot(bot.x, bot.y, bot.angle, bot.id, bot
                         .size));
