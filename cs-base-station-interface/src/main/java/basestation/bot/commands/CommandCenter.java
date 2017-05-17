@@ -2,6 +2,8 @@ package basestation.bot.commands;
 
 import basestation.bot.connection.TCPConnection;
 import basestation.bot.connection.Connection;
+import com.google.gson.JsonObject;
+
 
 /**
  * Class who's methods are all the commands that can be issued to a bot
@@ -37,4 +39,7 @@ public interface CommandCenter {
      * @return Connection
      */
     Connection getConnection();
+
+    JsonObject getAllData();
+
 }

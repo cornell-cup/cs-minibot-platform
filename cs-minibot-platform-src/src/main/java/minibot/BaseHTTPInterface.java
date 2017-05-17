@@ -24,10 +24,7 @@ import simulator.physics.PhysicalObject;
 import simulator.simbot.*;
 import spark.route.RouteOverview;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
-import java.util.Collection;
+import java.util.*;
 import java.io.*;
 import java.util.stream.Collectors;
 
@@ -91,27 +88,23 @@ public class BaseHTTPInterface {
 
             /* new modbot is created to add */
             Bot newBot;
-            if(type.equals("modbot")) {
-                IceConnection ice = new IceConnection(ip, port);
-                newBot = new ModBot(ice, name);
-            } else if(type.equals("minibot")) {
-                TCPConnection c = new TCPConnection(ip, port);
-                newBot = new MiniBot(c, name);
-            }
-               else {
-                SimBotConnection sbc = new SimBotConnection();
-                SimBot simbot;
-                simbot = new SimBot(sbc, simulator, name, 50, simulator.getWorld
-                        (), 0.0f,
-                        0.0f, 1f, 3.6f, 0, true);
-                newBot = simbot;
-
-                simulator.importPhysicalObject(simbot.getMyPhysicalObject());
-
-                // Color sensor TODO put somewhere nice
-                ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
-                ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
-                ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
+            String mangledName;
+            switch (type) {
+                case "modbot":
+                    IceConnection ice = new IceConnection(ip, port);
+                    newBot = new ModBot(ice, name);
+                    mangledName = BaseStation.getInstance().getBotManager().addBot(newBot);
+                    break;
+                case "minibot":
+                    TCPConnection c = new TCPConnection(ip, port);
+                    newBot = new MiniBot(c, name);
+                    mangledName = BaseStation.getInstance().getBotManager()
+                            .addBot(newBot);
+                    break;
+                default:
+                    newBot = simulator.addSimBot(name, 0f, 0f, 0);
+                    mangledName = newBot.getName();
+                    break;
             }
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
@@ -198,7 +191,6 @@ public class BaseHTTPInterface {
 
         /*send commands to the selected bot*/
         post("/commandBot", (req,res) -> {
-            System.out.println("post to command bot called");
             String body = req.body();
             JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
@@ -350,20 +342,26 @@ public class BaseHTTPInterface {
             String height = settings.get("height").getAsString();
             String width = settings.get("width").getAsString();
             String size = settings.get("size").getAsString();
-            System.out.println(height + ", " + width + ", " + size);
             simulator.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
             int[][] path = simulator.getDijkstras();
-                    for (int j = 1; j < path.length; j++) {
-            for (int i = 1; i < path[j].length; i++) {
-                System.out.print(path[i][j] + " ");
-            }
-            System.out.println();
-        }
-            //System.out.println("getOccupancyMatrix");
             return gson.toJson(simulator.getOccupancyMatrix());
         });
 
         post( "/getDijkstras", (req, res) -> {
+            String body = req.body();
+            JsonObject matrix = jsonParser.parse(body).getAsJsonObject();
+            JsonArray parentJsonArray = matrix.get("matrix").getAsJsonArray();
+            ArrayList<ArrayList<Integer>> total = new ArrayList<ArrayList<Integer>>();
+            for (int i=0; i<parentJsonArray.size(); i++){
+                ArrayList<Integer> child = new ArrayList<Integer>();
+                for (int j =0; j<parentJsonArray.get(0).getAsJsonArray().size(); j++){
+                    child.add(parentJsonArray.get(i).getAsJsonArray().get(j).getAsInt());
+                }
+                total.add(child);
+            }
+            int[][] om = new int[total.size()][total.get(0).size()];
+            simulator.setOccupancyMatrix(om);
+            Thread.sleep(700);
             return gson.toJson(simulator.getDijkstras());
         });
 

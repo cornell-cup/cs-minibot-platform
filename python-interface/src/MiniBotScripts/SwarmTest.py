@@ -1,11 +1,19 @@
+import math
+
 def run(bot):
-    while True:
-        print(bot.get_actuator_by_name("two_wheel_movement").get_value())
-        bot.move_forward(25)
-        bot.wait(1)
-        bot.turn_clockwise(25)
-        bot.wait(1)
-        bot.move_backward(25)
-        bot.wait(1)
-        bot.turn_counter_clockwise(25)
-        bot.wait(1)
+
+    cs = bot.get_sensor_by_name("ColorSensor")
+    cs.calibrate()
+
+    print "================== TESTING =================="
+
+    while len(raw_input("GO?"))>-1:
+        print "RGB: " + str(cs.read())
+        color = str(cs.read_color())
+        print "Color: " + color
+
+        if(color=="RED"):
+            # stop
+        else:
+            # go
+

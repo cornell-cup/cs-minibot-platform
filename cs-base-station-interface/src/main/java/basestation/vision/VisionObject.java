@@ -46,7 +46,7 @@ public class VisionObject {
         this.vs = vs;
         this.vid = vid;
         this.coord = myCoord;
-        this.size = (float) size;
+        this.size = size;
     }
 
     public VisionObject(VisionObject old, VisionCoordinate newCoord) {
