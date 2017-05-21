@@ -95,12 +95,13 @@ public class BaseHTTPInterface {
         middleAreaCoords.addAll(Arrays.asList(new VisionCoordinate(2,2), new
                 VisionCoordinate(2,1.95), new VisionCoordinate(1,1.95), new
                 VisionCoordinate(1,2)));
+
         //HARD-CODED BASIC BOTFIELD TRACK
-        /*innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate
+      /* innerTrackCoords.addAll(Arrays.asList(new VisionCoordinate
                 (2.2065439453125, 1.5227012939453124), new
                 VisionCoordinate(2.147612060546875, 0.38956390380859374), new VisionCoordinate(0.3778320007324219, 0.38749581909179687), new
                 VisionCoordinate(0.3561910400390625, 1.5385802001953126)));
-        outerTrackCoords.addAll(Aarrays.asList(new VisionCoordinate
+        outerTrackCoords.addAll(Arrays.asList(new VisionCoordinate
         (0.08017002868652344, 1.8366173095703124), new
                 VisionCoordinate(2.492609619140625, 1.811468017578125), new VisionCoordinate(2.402284423828125, 0.17503025817871093), new
                 VisionCoordinate(0.17684439086914064, 0.09049703216552735)));
@@ -109,7 +110,7 @@ public class BaseHTTPInterface {
                 VisionCoordinate(1.1327845458984376, 1.6148818359375)));
         middleAreaCoords.addAll(Arrays.asList(new VisionCoordinate(1.3594305419921875, 0.5128773803710938), new
                 VisionCoordinate(1.398449951171875, 0.044775409698486326), new VisionCoordinate(1.08611669921875, 0.04974387359619141), new
-                VisionCoordinate(1.0802769775390626, 0.516857421875)));*/
+                VisionCoordinate(1.0802769775390626, 0.516857421875)));  */
         //HARD-CODED FOR CONVEX TRACK
         /*advancedAI.addAll(Arrays.asList(new VisionCoordinate(2.23133984375, 1.67338818359375), new VisionCoordinate(2.3830263671875, 1.4941776123046875),
                 new VisionCoordinate(2.404982666015625, 0.4286590576171875), new VisionCoordinate(2.2979462890625, 0.28613916015625),

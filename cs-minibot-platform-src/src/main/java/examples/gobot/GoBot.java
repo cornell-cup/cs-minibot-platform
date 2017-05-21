@@ -284,14 +284,12 @@ public class GoBot extends Thread {
 
             //if (!inTrack) return;
             if (true) {
-                System.out.println("hi");
                 double driveAngle = ai.calculateDriveAngle();
                 double MIDDLE = Math.PI / 2;
                 double QUARTER = MIDDLE - MIDDLE * .1;
                 double THREEQUARTER = MIDDLE + MIDDLE * .1;
                 int POWER = 70;
                 if (driveAngle_prev - driveAngle_prevp < 0.001  && driveAngle_prev - driveAngle < 0.001){
-                    System.out.println("same");
                     fwm.setWheelPower(POWER,POWER,70,70);
                 }
                 else if (driveAngle < QUARTER) {
