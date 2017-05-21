@@ -209,14 +209,10 @@ public class AIUtil {
         }
 
         if (isZeroAngle(botCoordinate, leastP)){
-            System.out.println("inner" + leastP);
-            System.out.println("outer" + nextLeastP);
             distances.add(0, least);
           distances.add(nextLeast);
         }
         else{
-            System.out.println("outer" + leastP);
-            System.out.println("innter" + nextLeastP);
             distances.add(least);
             distances.add(0, nextLeast);
         }
@@ -228,7 +224,6 @@ public class AIUtil {
                 .getAllLocationData();
         if (v1.size() != 0){
             VisionCoordinate pos = v1.get(0).coord;
-            System.out.println("Current pos: " + pos + "\n");
             ArrayList<Equation> sweepEquations = sweep(pos, numLines);
             ArrayList<VisionCoordinate> inner = course.getInner().returnCoords();
             ArrayList<VisionCoordinate> outer = course.getOuter()
