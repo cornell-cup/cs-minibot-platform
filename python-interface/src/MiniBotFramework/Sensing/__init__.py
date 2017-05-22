@@ -1,2 +1,4 @@
 import MiniBotFramework.Sensing.Sensor
+import MiniBotFramework.Sensing.ColorSensor
 import MiniBotFramework.Sensing.GPIOSensor
+import smbus

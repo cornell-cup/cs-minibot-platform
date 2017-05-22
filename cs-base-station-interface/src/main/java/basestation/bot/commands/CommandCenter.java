@@ -15,9 +15,9 @@ import com.google.gson.JsonObject;
 public interface CommandCenter {
 
     /**
-     * Starts logging of data
+     * toggle logging of data
      */
-    void startLogging();
+    void toggleLogging();
 
     /**
      * Returns whether or not data is currently being logged.

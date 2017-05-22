@@ -18,15 +18,34 @@ class MiniBot:
         GPIO.setmode(GPIO.BCM)
 
         for actuator in config["actuators"]:
-            if actuator["type"] == "gpioMotor":
+            if actuator["type"] == "GpioMotor":
                 name = actuator["name"]
                 pinPWM = actuator["pinPWM"]
                 pinHighLow = actuator["pinHighLow"]
                 reversed = actuator["reversed"]
                 MiniBotFramework.Actuation.GpioMotor.GpioMotor(self, name, pinPWM, pinHighLow, reversed, GPIO)
+            elif actuator["type"] == "I2CMotor":
+                name = actuator["name"]
+                address = actuator["address"]
+                number = actuator["number"]
+                reversed = actuator["reversed"]
+                MiniBotFramework.Actuation.I2CMotor.I2CMotor(self, name, address, number, reversed)
             else:
                 print("ERROR: Unknown actuator in config")
 
+        for sensor in config["sensors"]:
+            if sensor["type"] == "ColorSensor":
+                # print "ColorSensor detected!"
+                name = sensor["name"]
+                pin = sensor["pin"]
+                MiniBotFramework.Sensing.ColorSensor.ColorSensor(self, name, pin)
+            elif sensor["type"] == "GpioSensor":
+                name = sensor["name"]
+                pin = sensor["pin"]
+                MiniBotFramework.Sensing.GPIOSensor.GPIOSensor(self, name, pin)
+            else:
+                print("ERROR: Unknown sensor in config")
+                
         # queue for extra unrecognized commands by parser
         self.extraCMD = Queue()
         # TODO: Sensor parsing

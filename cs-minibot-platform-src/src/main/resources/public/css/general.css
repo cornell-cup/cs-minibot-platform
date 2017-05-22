@@ -12,7 +12,6 @@ h1,h2,h3,h4 {margin:0;padding:0;}
 
 header {
 	padding:40px;
-	background:#C9C9C9;
 	width:100vw;
 }
 .box {
@@ -24,7 +23,7 @@ header {
 	font-size:13px;
 }
 .box.view {
-	width:550px;
+	width:560px;
 	padding-bottom:550px;
 }
 h4 {

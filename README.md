@@ -1,22 +1,18 @@
 # cs-minibot-platform ![If this does not say passing, someone really messed up](https://travis-ci.org/cornell-cup/cs-minibot-platform.svg?branch=develop)
 
 
-The shared software for the MiniBot platform. Includes a web server running over the base station and python scripts to run on the minibot. Works for Python 3.6, not Python 2.7. 
+The shared software for the MiniBot platform. Includes a web server running over the base station and python scripts to run on the minibot.
 
 # Setup
 
 ## Base Station Web Server
 
-Clone this repository with its submodules:
+Clone this repository:
 
 ```
-git clone --recursive  https://github.com/cornell-cup/cs-minibot-platform.git
+git clone https://github.com/cornell-cup/cs-minibot-platform.git
 ```
 
-If you have already cloned the repository, then you can use the following command to initialize the dependencies:
-```
-git submodule update --init
-```
 Because this is a maven project, you should import it in the following way:
 - Open intellij idea and select import project
 - Select the pom.xml under cs-minibot-platform (the repo you just cloned)
@@ -25,18 +21,11 @@ Because this is a maven project, you should import it in the following way:
 
 ## How to run python interface:
 
-Console printout- input commands into testcommand.py
+If you are setting up a MiniBot for the first time, navigate to python-interface and run install_bot.sh.
 
-In the first terminal window, navigate to directory and run
-```
-python tcp.py
-```
-Open a second terminal window, navigate to directory and run
-```
-python tcpclient.py
-```
+Ensure that you have a proper config.json under python-interface/src/MiniBogConfig/config.json.
 
-For controlling the Cozmo, connect to the Cozmo and activate SDK, follow instructions as above, except input commands into testcommand2.py and run tcp_cozmo.py and tcpclient_cozmo.py
+Run python-interface/src/init_python.sh to start the interface.
 
 # Testing
 To test, run 

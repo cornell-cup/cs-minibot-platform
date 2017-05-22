@@ -21,7 +21,7 @@ public class MiniBotCommandCenter implements FourWheelMovement {
         this.connection = connection;
     }
 
-    public void startLogging() {
+    public void toggleLogging() {
         this.record = true;
     }
 
@@ -36,6 +36,7 @@ public class MiniBotCommandCenter implements FourWheelMovement {
 
     @Override
     public JsonObject getAllData() {
+        //TODO: implement
         return null;
     }
 

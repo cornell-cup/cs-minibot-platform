@@ -20,7 +20,7 @@ public class SimBot extends Bot {
 
     private final transient SimBotCommandCenter commandCenter;
     private final transient SimBotSensorCenter sensorCenter;
-    public transient TCPServer runningThread;
+    public static transient TCPServer runningThread;
     public transient DataLog loggingThread;
     public transient PhysicalObject myPhysicalObject;
     public static int IPADDRESS = 11111;
@@ -32,19 +32,26 @@ public class SimBot extends Bot {
             id,
                   World world,
                   float xSpeed, float ySpeed, float xPos, float yPos,
-                  int angle, boolean isDynamic) {
+                  float angle, boolean isDynamic) {
         super(sbc, name);
 
         sensorCenter = new SimBotSensorCenter();
 
-        PhysicalObject po = new PhysicalObject(name, id, world, xSpeed, ySpeed,
+        this.myPhysicalObject = new PhysicalObject(name, id, world, xSpeed, ySpeed,
                 xPos, yPos, angle, isDynamic);
-
-        this.myPhysicalObject = po;
         this.commandCenter = new SimBotCommandCenter(this, this
                 .myPhysicalObject.getBody(), simulator);
 
         try {
+            if (this.runningThread != null && this.runningThread.isAlive()) {
+                try {
+                    if (this.runningThread.isAlive()) {
+                        this.runningThread.stopStream();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             //starts thread for tcp server
             Thread t = new TCPServer(IPADDRESS, this, commandCenter, this.sensorCenter);
             runningThread = (TCPServer) t;
@@ -56,6 +63,7 @@ public class SimBot extends Bot {
             Thread log = new DataLog(df.format(dateObj).substring(9) + "-log.csv", commandCenter, this.sensorCenter);
             loggingThread = (DataLog) log;
             loggingThread.start();
+
         }catch(IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +86,15 @@ public class SimBot extends Bot {
         return sensorCenter;
     }
 
-    public void resetServer() { runningThread.stopStream(); }
+    public void resetServer() {
+        try {
+            if (this.runningThread.isAlive()) {
+                this.runningThread.stopRead();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Datalog thread logs data for (Sim)bot <-- once command center is updated, change to bot in general
@@ -214,24 +230,33 @@ public class SimBot extends Bot {
         private final transient SimBotCommandCenter commandCenter;
         private final transient SimBotSensorCenter sensorCenter;
         private volatile boolean exit = false;
-        private final static int TIMEOUT = 100000;
+        private volatile boolean runRead = true;
+//        private final static int TIMEOUT = 100000;
 
         public TCPServer(int port, SimBot simbot, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException {
             sim = simbot;
             this.commandCenter = commandCenter;
             this.sensorCenter = sensorCenter;
             serverSocket = new ServerSocket(port);
-            serverSocket.setSoTimeout(TIMEOUT);
+//            serverSocket.setSoTimeout(TIMEOUT);
         }
 
         public void stopStream() {
             exit = true;
+            try {
+                serverSocket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void stopRead() {
+            runRead = false;
         }
 
         public void run() {
-            while (true) {
+            while (!exit) {
                 try {
-                    boolean run = true;
                     System.out.println("Waiting for client on port " +
                             serverSocket.getLocalPort() + "...");
                     Socket server = serverSocket.accept();
@@ -241,9 +266,9 @@ public class SimBot extends Bot {
                     String content;
                     BufferedReader in = new BufferedReader(new InputStreamReader(server.getInputStream()));
                     PrintWriter out = new PrintWriter(server.getOutputStream(), true);
-                    exit = false;
 
-                    while (run && !exit) {
+                    runRead = true;
+                    while (runRead && !exit) {
                         content = in.readLine();
 
                         if (content != null) {
@@ -257,13 +282,13 @@ public class SimBot extends Bot {
                                     commandCenter.sendKV("WHEELS", value + "," + value + "," + value + "," + value);
                                     break;
                                 case "BACKWARD":
-                                    commandCenter.sendKV("WHEELS", value + ",-" + value + ",-" + value + ",-" + value);
+                                    commandCenter.sendKV("WHEELS", "-" + value + ",-" + value + ",-" + value + ",-" + value);
                                     break;
                                 case "RIGHT":
                                     commandCenter.sendKV("WHEELS", value + ",-" + value + "," + value + ",-" + value);
                                     break;
                                 case "LEFT":
-                                    commandCenter.sendKV("WHEELS", value + "," + value + ",-" + value + "," + value);
+                                    commandCenter.sendKV("WHEELS", "-" + value + "," + value + ",-" + value + "," + value);
                                     break;
                                 case "WAIT":
                                     System.out.println("WAITING FOR " + value + " SECONDS");
@@ -272,7 +297,7 @@ public class SimBot extends Bot {
                                     commandCenter.sendKV("WHEELS", "0,0,0,0");
                                     break;
                                 case "KILL":
-                                    run = false;
+                                    runRead = false;
                                     System.out.println("Exiting\n");
                                     break;
                                 case "GET":

@@ -20,7 +20,7 @@ public class ModbotCommandCenter extends ExtendedFourWheelMovement {
         this.connection = connection;
     }
 
-    public void startLogging() {
+    public void toggleLogging() {
         this.record = true;
     }
 
@@ -81,6 +81,7 @@ public class ModbotCommandCenter extends ExtendedFourWheelMovement {
     }
     @Override
     public JsonObject getAllData(){
+        //TODO: implement
         return null;
     }
 

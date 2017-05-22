@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Collection;
 import java.io.*;
+import java.util.stream.Collectors;
 
 
 import simulator.baseinterface.SimulatorVisionSystem;
@@ -170,27 +171,23 @@ public class BaseHTTPInterface {
 
             /* new modbot is created to add */
             Bot newBot;
-            if(type.equals("modbot")) {
-                IceConnection ice = new IceConnection(ip, port);
-                newBot = new ModBot(ice, name);
-            } else if(type.equals("minibot")) {
-                TCPConnection c = new TCPConnection(ip, port);
-                newBot = new MiniBot(c, name);
-            }
-               else {
-                SimBotConnection sbc = new SimBotConnection();
-                SimBot simbot;
-                simbot = new SimBot(sbc, simulator, name, 50, simulator.getWorld
-                        (), 0.0f,
-                        0.0f, 1f, 3.6f, 0, true);
-                newBot = simbot;
-
-                simulator.importPhysicalObject(simbot.getMyPhysicalObject());
-
-                // Color sensor TODO put somewhere nice
-                ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
-                ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
-                ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
+            String mangledName;
+            switch (type) {
+                case "modbot":
+                    IceConnection ice = new IceConnection(ip, port);
+                    newBot = new ModBot(ice, name);
+                    mangledName = BaseStation.getInstance().getBotManager().addBot(newBot);
+                    break;
+                case "minibot":
+                    TCPConnection c = new TCPConnection(ip, port);
+                    newBot = new MiniBot(c, name);
+                    mangledName = BaseStation.getInstance().getBotManager()
+                            .addBot(newBot);
+                    break;
+                default:
+                    newBot = simulator.addSimBot(name, 0f, 0f, 0);
+                    mangledName = newBot.getName();
+                    break;
             }
             return BaseStation.getInstance().getBotManager().addBot(newBot);
         });
@@ -207,56 +204,11 @@ public class BaseHTTPInterface {
         post("/addScenario", (req,res) -> {
 
             String body = req.body();
-            simulator.resetWorld();
-            Collection<String> botsnames = BaseStation.getInstance()
-                    .getBotManager()
-                    .getAllTrackedBotsNames();
-            for (String name :botsnames){
+            for (String name : BaseStation.getInstance().getBotManager().getAllTrackedBots().stream().map(Bot::getName).collect(Collectors.toList())){
                 BaseStation.getInstance().getBotManager().removeBotByName(name);
             }
 
-            JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
-            String scenarioBody = scenario.get("scenario").getAsString();
-            JsonArray addInfo = jsonParser.parse(scenarioBody).getAsJsonArray();
-
-            for (JsonElement je : addInfo) {
-                String type = je.getAsJsonObject().get("type").getAsString();
-                int angle = je.getAsJsonObject().get("angle").getAsInt();
-                int[] position = gson.fromJson(je.getAsJsonObject().get("position")
-                        .getAsString(),int[].class);
-                String name = Integer.toString(angle)
-                        + Arrays.toString(position);
-
-                //for scenario obstacles
-                if (!type.equals("simulator.simbot")){
-                    int size = je.getAsJsonObject().get("size").getAsInt();
-                    PhysicalObject po = new PhysicalObject(name, 100,
-                            simulator.getWorld(), (float)position[0],
-                            (float)position[1], size, angle);
-                    simulator.importPhysicalObject(po);
-                }
-                //for bots listed in scenario
-                else {
-                    Bot newBot;
-                    name = "Simbot"+name;
-                    SimBotConnection sbc = new SimBotConnection();
-                    SimBot simbot;
-                    simbot = new SimBot(sbc, simulator, name, 50, simulator
-                            .getWorld(), 0.0f,
-                            0.0f, (float) position[0], (float)
-                            position[1], angle, true);
-                    newBot = simbot;
-
-                    simulator.importPhysicalObject(simbot.getMyPhysicalObject());
-
-                    // Color sensor TODO put somewhere nice
-//                    ColorIntensitySensor colorSensorL = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"right",simbot, 5);
-//                    ColorIntensitySensor colorSensorR = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"left",simbot, -5);
-//                    ColorIntensitySensor colorSensorM = new ColorIntensitySensor((SimBotSensorCenter) simbot.getSensorCenter(),"center",simbot, 0);
-                    BaseStation.getInstance().getBotManager().addBot(newBot);
-                }
-            }
-            return addInfo;
+            return simulator.importScenario(gson, jsonParser, jsonParser.parse(body).getAsJsonObject());
         });
 
         /**
@@ -352,8 +304,12 @@ public class BaseHTTPInterface {
             String name = commandInfo.get("name").getAsString();
             Bot myBot = BaseStation.getInstance().getBotManager().getBotByName(name).get();
             CommandCenter cc = myBot.getCommandCenter();
-            System.out.println("Start Logging Data...");
-            cc.startLogging();
+            if (!cc.isLogging()) {
+                System.out.println("Start Logging");
+            } else {
+                System.out.println("Stop Logging");
+            }
+            cc.toggleLogging();
             return true;
         });
 
