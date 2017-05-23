@@ -193,6 +193,9 @@ public class AIUtil {
      */
     public boolean isValid2(Equation eq, VisionCoordinate vc, double x,
                             double y){
+        if (!isValid(pointAngle(vc, new Point(x,y)), vc, max - min, intervalAngle())){
+            return false;
+        }
         if (vc.getThetaOrZero() == 0){
             return x >= vc.x;
         }
