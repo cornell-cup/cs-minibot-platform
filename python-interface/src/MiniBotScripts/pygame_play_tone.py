@@ -1,5 +1,8 @@
-# Used for Buddybot
+# Allows for Note objects to initialized via a given frequency and volume
+# Imported for use in the module Note_Library.py
 # Taken from < https://gist.github.com/ohsqueezy/6540433 >
+
+##############################################################
 
 # Generate a 440 Hz square waveform in Pygame by building an array of samples and play
 # it for 5 seconds.  Change the hard-coded 440 to another value to generate a different
@@ -33,10 +36,10 @@ class Note(Sound):
                 samples[time] = -amplitude
         return samples
 
+#An example of the Note object being used
 if __name__ == "__main__":
-    pm.pre_init(44100, -16, 1, 1024)
-    pm.init()
+    pm.pre_init(44100, -16, 1, 1024) #Required init for Windows 10
+    # pm.init() #Required init for other OS's? #TODO Research this further to confirm
     test = Note(440)
-    # print (str(test.get_volume()))
     test.play(-1)
     sleep(5)

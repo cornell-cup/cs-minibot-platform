@@ -1,18 +1,19 @@
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt #Used for graphing audio tests
 import pyaudio as pa
 import wave
 from time import sleep
-# from scipy.io import wavfile as wv
 
 #Constants used for sampling audio
 CHUNK = 1024
 FORMAT = pa.paInt16
 CHANNELS = 1
-RATE = 44100 #DOUBLE CHECK ACTUAL MIC
-RECORD_TIMEFRAME = 1.0 # 0.5 #Time in seconds
+RATE = 44100 # Must match rate at which mic actually samples sound
+RECORD_TIMEFRAME = 1.0 #Time in seconds
 OUTPUT_FILE = "sample.wav"
 
+#Flag for plotting sound input waves for debugging and implementation purposes
+TESTING_GRAPHS = False
 
 def sampleAudio(wav_name):
 	"""Samples audio from the microphone for a given period of time. 
@@ -38,7 +39,7 @@ def sampleAudio(wav_name):
 	stream.close()
 	rec_session.terminate()
 
-	#Create the wav file
+	#Create the wav file for analysis
 	output_wav = wave.open(wav_name,"wb")
 	output_wav.setnchannels(CHANNELS)
 	output_wav.setsampwidth(rec_session.get_sample_size(FORMAT))
@@ -66,40 +67,44 @@ def getAvgFreq(wav_file):
 
 	converted_val = []
 
+	#COnvert byte objects into frequency values per frame
 	for i in range(0,len(audio_frames),2):
 		if ord(audio_frames[i+1])>127:
 			converted_val.append(-(ord(audio_frames[i])+(256*(255-ord(audio_frames[i+1])))))
 		else:
 			converted_val.append(ord(audio_frames[i])+(256*ord(audio_frames[i+1])))
-
-	# freq_per_frame = np.empty([1,len(audio_frames)])
+	
+	#Fit into numpy array for FFT analysis
 	freq_per_frame = np.array(converted_val)
 
 
-
-
-
-	# #Open wav file for analysis and get sampling frequency
-	# sample_freq, sound_sample = wv.read(wav_file)
-
-	# #Extract sound frame values to be analyzed
-	# floating_samples = sound_sample/(2.**15)
-
 	# Get amplitude of soundwave section
-	# freq = np.fft.fft(audio_frames)	
-	#freq = np.fft.fft(floating_samples)
 	freq = np.fft.fft(freq_per_frame)
 	amplitude = np.abs(freq)
+	amplitude = amplitude/float(len(freq_per_frame))
+	amplitude = amplitude**2
 
 	#Get bins/thresholds for frequencies
 	freqbins = np.fft.fftfreq(CHUNK,1.0/sample_freq)
 
 	x = np.linspace(0.0,1.0,1024)
 
-	# TODO Remove when done testing
-	# plt.plot(freqbins[:16],amplitude[:16])
-	# plt.plot(converted_val)
-	# plt.show()
+	# Plot data if need visualization
+	if(TESTING_GRAPHS):
+		#Plot raw data
+		plt.plot(converted_val)
+		plt.title("Raw Data")
+		plt.xlabel("Time (ms)")
+		plt.ylabel("Frequency (Hz)")
+		plt.show()
+
+		#Plot frequency histogram
+		plt.plot(freqbins[:16],amplitude[:16])
+		plt.title("Processed Data")
+		plt.xlabel("Frequency Bins")
+		plt.ylabel("Magnitude")
+		plt.show()
+	
 
 	#Get the range that the max amplitude falls in. This represents the loudest noise
 	magnitude = np.amax(amplitude) 
@@ -107,18 +112,22 @@ def getAvgFreq(wav_file):
 	lower_thres = freqbins[loudest]
 	upper_thres = (freqbins[1]-freqbins[0])+lower_thres
 	
+	#Close wav file 
 	sound_sample.close()
 
+	#Return the magnitude of the sound wave and its frequency threshold for analysis
 	return magnitude, lower_thres, upper_thres
 
-
+#Use for testing microphone input
 if __name__ == "__main__":
-	# print("Wait to start...")
-	# sleep(3)
+	print("Wait 3 seconds to start...")
+	sleep(3)
 	print("Recording!")
 	sampleAudio(OUTPUT_FILE)
-	print("Stop recording")
-
-	# print(getAvgFreq(OUTPUT_FILE))
-	print(getAvgFreq("sample2.wav"))
+	print("Stop recording!")
+	print("Analyzing...")
+	mag, lower, upper = getAvgFreq(OUTPUT_FILE)
+	print("Magnitude is "+str(mag))
+	print("Lower bin threshold is "+str(lower))
+	print("Upper bin threshold is "+str(upper))
 

@@ -1,11 +1,11 @@
 import pygame.mixer as pm
 from pygame_play_tone import Note
 from time import sleep
-# from pygame import init
 
+#Default volume for Notes
 DEFAULT_VOLUME=0.2
 
-# Notes that can be called on, where C4 is middle C (I think)
+# Notes that can be called on, where C4 is middle C
 C0 = 16.35
 C0_SHARP = 17.32
 D0 = 18.35
@@ -95,7 +95,7 @@ def prepPlaying():
 	''' Initializes environment to play pygame noises '''
 	pm.pre_init(44100, -16, 1, 1024)
 	# pygame.init()
-	# init() #Only works for non-Windows?
+	# pm.init() #Only works for non-Windows? #TODO Research this further to confirm
 	pm.init()
 
 def playNote(note,time,volume=DEFAULT_VOLUME):

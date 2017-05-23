@@ -1,10 +1,12 @@
 import Note_Library as nl
-import sample_audio as sa
+import live_audio_sample as las
 import random
 
-TEST_EMOTION = 0;
+#Used for individual emotion testing 
+TEST_EMOTION = 0; #TODO remove once emotions finalized
 
-SHOUT_THRESHOLD = 450
+#Noise frequency thresholds #TODO check if correct
+SHOUT_THRESHOLD = 850
 SPEAK_THRESHOLD = 450
 
 # Should change at most by factor of 1 every second
@@ -15,6 +17,7 @@ ANGER_FACTOR = 50 #Currently not implemented
 
 SAMPLE_FILE = "sample.wav"
 
+#Global emotion counters
 bot_happy = 0
 bot_sad = 0
 bot_surprised = 0
@@ -43,20 +46,12 @@ def showHappy(bot):
     happySong()
     bot.move_forward(25)
     bot.wait(3)
-    # bot.stop()
-    # bot.wait(1)
     bot.move_backward(25)
     bot.wait(3)
-    # bot.stop()
-    # bot.wait(1)
     bot.turn_clockwise(25)
     bot.wait(5)
-    # bot.stop()
-    # bot.wait(1)
     bot.turn_counter_clockwise(25)
-    bot.wait(5)
-    # bot.stop()
-    # bot.wait(1)
+    bot.wait(5)    
 
 def sadSong():
     nl.playNote(nl.G6,0.25)
@@ -68,7 +63,6 @@ def showSad(bot):
     sadSong()
     bot.move_backward(10)
     bot.wait(5)
-    # bot.stop()
 
 def surpriseSong():
     nl.playNote(nl.B6,0.10)
@@ -80,13 +74,10 @@ def showSurprise(bot):
     surpriseSong()
     bot.move_backward(80)
     bot.wait(0.75)
-    #bot.stop()
     bot.move_backward(80)
     bot.wait(0.75)
-    #bot.stop()
     bot.move_backward(80)
     bot.wait(0.75)
-    #bot.stop()
 
 def angerSong():
     nl.playNote(nl.G3,0.10)
@@ -146,18 +137,20 @@ def emotionUpdate(bot):
 
 
 def run(bot):
+    global bot_happy
+    global bot_sad
+    global bot_surprised
+    global bot_angry
+
+    #Allow for Buddybot to make noise
     nl.prepPlaying()
+
+    #Test movement
     bot.move_forward(20)
     bot.wait(3)
-    bot.stop()
-    # bot.wait(3)
-    #print("Done FD")
-    #bot.move_backward(20)
-    #bot.wait(3)
-    #bot.stop()
-    # bot.wait(3)
-    # print("Done BK")
+    bot.stop()    
 
+    #Test the given emotion #TODO Remove when done testing
     while True:
 
         bot.wait(5)
@@ -179,9 +172,10 @@ def run(bot):
 
         bot.stop()
 
+    #TODO Fully integrate audio code below with emotions
     # while True:
     #     # Get audio input
-    #     sa.sampleAudio(SAMPLE_FILE)
+    #     las.sampleAudio(SAMPLE_FILE)
     #     magnitude, lower_thres, upper_thres = getAvgFreq(SAMPLE_FILE)
 
     #     if magnitude>SHOUT_THRESHOLD:
@@ -191,8 +185,6 @@ def run(bot):
     #     elif upper_thres <= 255 && lower_thres >= 85 && magnitude > SPEAK_THRESHOLD:
     #         bot_happy+=1
 
+    #TODO Replace TEST_EMOTION with this
     #     emotionUpdate()
 
-
-# if __name__ == "__main__":
-#     print(randomEmotion())
