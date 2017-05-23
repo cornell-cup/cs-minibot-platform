@@ -9,6 +9,10 @@ public class Border {
     private Path2D.Double boundary;
     private ArrayList<VisionCoordinate> borderCoords;
 
+    /**
+     *
+     * @param coords represents the list of VisionCoordinates that will be used to create a Border
+     */
     public Border(ArrayList<VisionCoordinate> coords){
         this.boundary = createPath(coords);
         borderCoords = coords;
