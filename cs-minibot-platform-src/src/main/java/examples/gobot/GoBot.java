@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GoBot extends Thread {
 
-    private final int NUM_LAPS = 1;
+    private int numLaps;
     private final AIUtil ai;
     private Course course;
     private int lapsDone;
@@ -24,6 +24,7 @@ public class GoBot extends Thread {
     private int lastBotState;
     private float humanTime;
     private float botTime;
+    private int aiType;
     public static final int WAITING = 0;
     public static final int HUMAN_PLAYING = 1;
     public static final int BOT_PLAYING = 2;
@@ -31,11 +32,13 @@ public class GoBot extends Thread {
     public double driveAngle_prevp = 0;
 
 
+
     private final Navigator navigator;
     FourWheelMovement fwm;
     int index;
 
-    public GoBot() {
+    public GoBot(){
+        this.numLaps = 1;
         this.lapsDone = 0;
         this.crossedLapLine = false;
         this.reachedMiddle = false;
@@ -45,11 +48,29 @@ public class GoBot extends Thread {
         this.course = new Course();
         this.botState = WAITING; //waiting state
         this.lastBotState = -1;
-
         this.ai = new AIUtil(5, 0, Math.PI);
-
         this.fwm = fwm;
         this.navigator = new Navigator();
+        this.aiType = 0;
+        navigator.start();
+    }
+
+    //ai type = 0 (simple), 1 (advanced)
+    public GoBot(int numLaps, int aiType) {
+        this.numLaps = numLaps;
+        this.lapsDone = 0;
+        this.crossedLapLine = false;
+        this.reachedMiddle = false;
+        this.startTime = 0L;
+        this.inTrack = true;
+        this.lapTimes = new ArrayList<>();
+        this.course = new Course();
+        this.botState = WAITING; //waiting state
+        this.lastBotState = -1;
+        this.ai = new AIUtil(5, 0, Math.PI);
+        this.fwm = fwm;
+        this.navigator = new Navigator();
+        this.aiType = aiType;
         navigator.start();
     }
 
@@ -124,7 +145,7 @@ public class GoBot extends Thread {
             }
             lastBotState = botState;
             if (botState == HUMAN_PLAYING) {
-                if (lapsDone >= NUM_LAPS) {
+                if (lapsDone >= numLaps) {
                     // Finished!
                     botState = WAITING;
                     humanTime = totalTime();
@@ -152,22 +173,22 @@ public class GoBot extends Thread {
                                 }
                             }
                         } else {
-                            //do stuff with timer later to tell to get back
-                            System.out.println("go back inside pls");
+                            System.out.println("Out of bounds");
                             inTrack = false;
                         }
                     }
                 }
             }
             else if (botState == BOT_PLAYING) { //ASSUMING CCL TRACK
-                if (lapsDone >= NUM_LAPS) {
+                if (lapsDone >= numLaps) {
                     // Finished!
                     botState = WAITING;
                     botTime = totalTime();
                     lapTimes.clear();
                     lapsDone = 0;
                     printState();
-                } /*else {
+                }
+                else if (aiType == 0){
                     List<VisionObject> vl =  BaseStation.getInstance().getVisionManager()
                             .getAllLocationData();
                     if (vl.size() != 0) {
@@ -201,13 +222,15 @@ public class GoBot extends Thread {
                                 this.reachedMiddle = true;
                             }
                         }
-                    }*/
-                    else{
-                        navigator.run();
+                    }
+                }
+                else{
+                    navigator.run();
                 }
 
-            } else {
-                //System.err.println("UNKNOWN STATE");
+            }
+            else {
+                return;
             }
             try {
                 Thread.sleep(1);
@@ -252,11 +275,6 @@ public class GoBot extends Thread {
         }
 
         public void calcRoute(){
-         /*   if (destinationReached()) return;
-            if(destination == null){
-                return;
-            }*/
-
             VisionCoordinate vc;
             List<VisionObject> locs = BaseStation.getInstance()
                     .getVisionManager
@@ -269,21 +287,71 @@ public class GoBot extends Thread {
             }
             else {
                 vc = locs.get(0).coord;
-                //System.out.println(vc);
             }
 
-   /*         double spectheta = vc.getThetaOrZero();
-            double toAngle = vc.getAngleTo(destination);
-            double angle = mod((toAngle - spectheta + Math.PI), 2*Math.PI);
-            double dist = vc.getDistanceTo(destination);
-            System.out.println("ang: " + angle + ", toAngle:" + toAngle); */
-           // if (false) {
-           //     return;
-            //}
-            // driver
+            if (aiType == 0){
+                if (destinationReached()) return;
+                if(destination == null) {return;}
+                double spectheta = vc.getThetaOrZero();
+                double toAngle = vc.getAngleTo(destination);
+                double angle = mod((toAngle - spectheta + Math.PI), 2*Math.PI);
+                double dist = vc.getDistanceTo(destination);
+                System.out.println("ang: " + angle + ", toAngle:" + toAngle);
+                if (false) {return;}
+                if (!inTrack) return;
+                else {
+                    if (dist > DISTANCE_THRESHOLD) {
+                        if (Math.abs(angle) > ANGLE_THRESHOLD) {
+                            // Need to rotate to face destination
 
-            //if (!inTrack) return;
-            if (true) {
+                            // Calculate angular speed
+                            double angSpeed = MIN_SPEED;
+                            if (Math.abs(angle) > Math.toRadians(20)) {
+                                angSpeed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) *
+                                        (Math.abs(angle) - Math.toRadians(20)) /
+                                        Math.toRadians(160.);
+                            }
+
+                            if (angSpeed > MAX_SPEED) angSpeed = MAX_SPEED;
+
+                            // Rotate in proper direction
+                            if (angle < 0) {
+                                //turn CCW
+                                fwm.setWheelPower(angSpeed,
+                                        -angSpeed,angSpeed,-angSpeed);
+                            } else {
+                                //turn CW
+                                fwm.setWheelPower(-angSpeed,
+                                        angSpeed,-angSpeed,angSpeed);
+                            }
+                        } else {
+                            if (dist > DISTANCE_THRESHOLD) {
+                                // Facing destination, need to move forward
+
+                                // Calculate Forward speed
+                                double speed = MIN_SPEED;
+                                if (dist > 0.2) {
+                                    speed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * (dist - 0.2) * 3;
+                                }
+
+                                if (speed > MAX_SPEED) speed = MAX_SPEED;
+
+                                // Move forward
+                                fwm.setWheelPower(speed, speed,
+                                        speed, speed);
+                            } else {
+                                fwm.setWheelPower(0,0,0,0);
+                                destinationReached = true;
+                            }
+                        }
+                    } else {
+                        fwm.setWheelPower(0,0,0,0);
+                        destinationReached = true;
+                    }
+                }
+            }
+
+            else {
                 double driveAngle = ai.calculateDriveAngle();
                 double MIDDLE = Math.PI / 2;
                 double QUARTER = MIDDLE - MIDDLE * .1;
@@ -301,58 +369,7 @@ public class GoBot extends Thread {
                 }
                 driveAngle_prevp = driveAngle_prev;
                 driveAngle_prev = driveAngle;
-            } /*else {
-                if (dist > DISTANCE_THRESHOLD) {
-                    if (Math.abs(angle) > ANGLE_THRESHOLD) {
-                        // Need to rotate to face destination
-
-                        // Calculate angular speed
-                        double angSpeed = MIN_SPEED;
-                        if (Math.abs(angle) > Math.toRadians(20)) {
-                            angSpeed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) *
-                                    (Math.abs(angle) - Math.toRadians(20)) /
-                                    Math.toRadians(160.);
-                        }
-
-                        if (angSpeed > MAX_SPEED) angSpeed = MAX_SPEED;
-
-                        // Rotate in proper direction
-                        if (angle < 0) {
-                            fwm.setWheelPower(angSpeed,
-                                    -angSpeed,angSpeed,-angSpeed);
-                            //System.out.println("turn CCW");
-
-                        } else {
-                            fwm.setWheelPower(-angSpeed,
-                                    angSpeed,-angSpeed,angSpeed);
-
-                            //System.out.println("turn CW");
-                        }
-                    } else {
-                        if (dist > DISTANCE_THRESHOLD) {
-                            // Facing destination, need to move forward
-
-                            // Calculate Forward speed
-                            double speed = MIN_SPEED;
-                            if (dist > 0.2) {
-                                speed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * (dist - 0.2) * 3;
-                            }
-
-                            if (speed > MAX_SPEED) speed = MAX_SPEED;
-
-                            // Move forward
-                            fwm.setWheelPower(speed, speed,
-                                    speed, speed);
-                        } else {
-                            fwm.setWheelPower(0,0,0,0);
-                            destinationReached = true;
-                        }
-                    }
-                } else {
-                    fwm.setWheelPower(0,0,0,0);
-                    destinationReached = true;
-                }
-            }*/
+            }
         }
     }
 }

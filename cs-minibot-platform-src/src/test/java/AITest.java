@@ -10,7 +10,7 @@ public class AITest {
 
     @Test
     public void helpMe() {
-        AIUtil ai = new AIUtil();
+        AIUtil ai = new AIUtil(5, 0, Math.PI);
         VisionCoordinate whereBot = new VisionCoordinate(2.5,0.5,Math.PI/2);
         Equation verticalBot = new Equation(whereBot,Math.PI/2);
         Equation topLine = new Equation(new VisionCoordinate(0,3), new VisionCoordinate(3, 3));
