@@ -5,6 +5,9 @@ import basestation.vision.VisionCoordinate;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
+/**
+ * The Border class will represent the tracks (inner and outer) for the Course the goBot races on
+ */
 public class Border {
     private Path2D.Double boundary;
     private ArrayList<VisionCoordinate> borderCoords;
