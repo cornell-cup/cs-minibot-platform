@@ -46,7 +46,7 @@ public class GoBot extends Thread {
         this.botState = WAITING; //waiting state
         this.lastBotState = -1;
 
-        this.ai = new AIUtil();
+        this.ai = new AIUtil(5, 0, Math.PI);
 
         this.fwm = fwm;
         this.navigator = new Navigator();

@@ -14,18 +14,24 @@ public class AIUtil {
     private final double max;
     Course course;
 
-    public AIUtil() {
-        this.numLines = 5;
-        this.min = 0;
-        this.max = Math.PI;
+    public AIUtil(int numLines, double min, double max) {
+        this.numLines = numLines;
+        this.min = min;
+        this.max = max;
     }
 
-    //Find intersection between two equations
+    /**
+     *
+     * @param e1 Equation one
+     * @param e2 Equation two
+     * @return Point representing the intersection between e1 and e2
+     */
     public Point intersection(Equation e1, Equation e2){
         try{
-            //two vertical lines cannot intersect each other (unless they are
-            // the same, which should only occur if the car is driving on the
-            // boundary
+            /*
+            Two vertical lines should not intersection each other
+            unless they are the same line
+             */
             if (e1.vertical && e2.vertical){
                 return null;
             }
@@ -50,13 +56,18 @@ public class AIUtil {
         }
 
         //no intersection
-        catch (Exception alan) {
-            alan.printStackTrace();
+        catch (Exception noIntersection) {
+            noIntersection.printStackTrace();
         }
         return null;
     }
 
-    //Find all equations between points in order
+    /**
+     *
+     * @param cors arraylist of VisionCoordinates of the track
+     * @return arraylist of all equations found between each pair of
+     * consecutive boundary coordinates
+     */
     public ArrayList<Equation> findEquations(ArrayList<VisionCoordinate> cors){
         int size = cors.size();
         ArrayList<Equation> eqs = new ArrayList<Equation>();
@@ -66,29 +77,44 @@ public class AIUtil {
         return eqs;
     }
 
-    //find intersections to target equation
-    public ArrayList<Point> findIntersection(ArrayList<Equation> e, Equation target){
-        int size = e.size();
+
+    /**
+     *
+     * @param AllEqs Arraylist of equations
+     * @param target Equation to find intersections with
+     * @return arraylist of all intersection points between target and the equations
+     * in e
+     */
+    public ArrayList<Point> findIntersection(ArrayList<Equation> AllEqs, Equation target){
+        int size = AllEqs.size();
         ArrayList<Point> pts = new ArrayList<Point>();
         for (int i = 0; i < size; i++) {
-            Point interPoint = intersection(e.get(i), target);
-  //          System.out.println(interPoint + "isValid: " + e.get(i).inDomain
-  //                  (interPoint));
-            if (e.get(i) != null && e.get(i).inDomain(interPoint)){
+            Point interPoint = intersection(AllEqs.get(i), target);
+            if (AllEqs.get(i) != null && AllEqs.get(i).inDomain(interPoint)){
                 pts.add(interPoint);
             }
         }
         return pts;
     }
 
-    //Find distance between current location of bot and an intersection point
+    /**
+     *
+     * @param vc VisionCoordinate representing one location
+     * @param p Point two representing another location
+     * @return distance between the two locations
+     */
     public double distanceBetween(VisionCoordinate vc, Point p){
         double dx = vc.x - p.xcor;
         double dy = vc.y - p.ycor;
         return Math.sqrt(dx*dx + dy*dy);
     }
 
-    //return a list of all equations to sweep across
+    /**
+     *
+     * @param vc VisionCoordinate representing the bot's current location
+     * @param numLines number of sweep lines
+     * @return Arraylist of all equations of the sweep lines
+     */
     public ArrayList<Equation> sweep(VisionCoordinate vc, int numLines){
         ArrayList<Equation> sweepLines = new ArrayList<>();
         for (int i =0; i < numLines; i ++){
@@ -98,11 +124,19 @@ public class AIUtil {
         return sweepLines;
     }
 
-    //return the angle between sweep lines
+    /**
+     *
+     * @return the angle between each pair of consecutive sweep lines
+     */
     public double intervalAngle(){
         return (max - min)/(numLines - 1);
     }
 
+    /**
+     *
+     * @return arraylist consisting of all the angles at which a sweep line should be
+     *  determined
+     */
     public ArrayList<Double> allAngles(){
         ArrayList<Double> angles = new ArrayList<>();
         for(int i = 0; i < numLines; i++){
@@ -111,9 +145,13 @@ public class AIUtil {
         return angles;
     }
 
-    //determine angle between positive x axis to point
+    /**
+     *
+     * @param origin VisionCoordinate representing one point
+     * @param target Point representing the destination point
+     * @return angle that the vector from origin to target forms with the positive x axis
+     */
     public double pointAngle(VisionCoordinate origin, Point target){
-//        double botAngle = origin.getThetaOrZero();
         boolean isVertical = origin.x - target.xcor == 0;
         if (!isVertical){
             double deltaY = target.ycor - origin.y;
@@ -130,14 +168,29 @@ public class AIUtil {
         }
     }
 
-    //return if point is valid
+    /**
+     *
+     * @param pAngle angle sweep line makes with the positive x-axis
+     * @param vc VisionCoordinate representing current position
+     * @param sweepTotalAngle total angle to sweep over
+     * @param sweepAngle angle between sweep lines
+     * @return if the point is in front of the bot
+     */
     public boolean isValid(double pAngle, VisionCoordinate vc, double
             sweepTotalAngle, double sweepAngle){
         return Math.abs(pAngle - (vc.getThetaOrZero() - (sweepTotalAngle/2) +
                 sweepAngle)) < 0.1;
     }
 
-
+    /**
+     *
+     * @param eq equation of boundary line
+     * @param vc VisionCoordinate representing current position
+     * @param x x coordinate of the intersection point
+     * @param y y coordinate of the intersection point
+     * @return true if the intersection point is between the bounds on the line, i.e.
+     * return true if the intersection point is actually on the boundary
+     */
     public boolean isValid2(Equation eq, VisionCoordinate vc, double x,
                             double y){
         if (vc.getThetaOrZero() == 0){
@@ -156,6 +209,15 @@ public class AIUtil {
         }
     }
 
+    /**
+     *
+     * @param vc VisionCoordinate representing current location
+     * @param p intersection point
+     * @return true if the intersection point corresponds with the sweep line at 0 and 180 degrees.
+     * When sweeping across from 0 to 180 degrees, the sweep lines have the same equations, so two
+     * two intersection points must be determined from the same line. This method is used to determine
+     * if a point corresponds to the 0 angle sweep line intersection point
+     */
     public boolean isZeroAngle(VisionCoordinate vc, Point p){
       if (vc.getThetaOrZero() == 0){
           return p.ycor <= vc.y;
@@ -171,54 +233,103 @@ public class AIUtil {
       }
     }
 
+    /**
+     *
+     * @param allLines arraylist of equations for the boundary lines
+     * @param sweepLines arraylist of equations for the sweep lines
+     * @param botCoordinate VisionCoordinate representing the bot's current location
+     * @param inner arraylist of equations for inner track
+     * @param outer arraylist of equations for outer track
+     * @return arraylist of doubles representing the minimum distances calculated for each sweep line
+     */
     public ArrayList<Double> calculateRayDistances(ArrayList<Equation> allLines,
                                                    ArrayList<Equation> sweepLines,
                                                    VisionCoordinate botCoordinate,
                                                    ArrayList<Equation> inner,
                                                    ArrayList<Equation> outer){
         ArrayList<Double> distances = new ArrayList<>();
-        for (int i = 1; i < sweepLines.size() - 1; i++){
-            double minDist = Double.MAX_VALUE / 100f;
-            for (Point intersectionPoint: findIntersection(allLines, sweepLines.get(i))){
-                if (isValid2(sweepLines.get(0), botCoordinate,
-                        intersectionPoint.xcor, intersectionPoint.ycor)) {
-                    double dist = distanceBetween(botCoordinate, intersectionPoint);
-                    if (dist < minDist) {
-                        minDist = dist;
+
+        /*if the angle is 180 degrees, the first and last sweep lines have the same equation, so
+        they should only be counted once
+        */
+        if ((this.max - this.min) == Math.PI){
+            for (int i = 1; i < sweepLines.size() - 1; i++) {
+                double minDist = Double.MAX_VALUE / 100f;
+                for (Point intersectionPoint : findIntersection(allLines, sweepLines.get(i))) {
+                    if (isValid2(sweepLines.get(0), botCoordinate,
+                            intersectionPoint.xcor, intersectionPoint.ycor)) {
+                        double dist = distanceBetween(botCoordinate, intersectionPoint);
+                        if (dist < minDist) {
+                            minDist = dist;
+                        }
                     }
                 }
+                distances.add(minDist);
             }
-            distances.add(minDist);
-        }
-        double least = Double.MAX_VALUE;
-        double nextLeast = Double.MAX_VALUE;
-        Point leastP = null;
-        Point nextLeastP = null;
-        for(Point intersectionP: findIntersection(allLines, sweepLines.get(0))){
-            double dist = distanceBetween(botCoordinate, intersectionP);
-            if (dist < least && dist < nextLeast){
-                nextLeast = least;
-                nextLeastP = leastP;
-                least = dist;
-                leastP = intersectionP;
-            }
-            else if (dist < nextLeast){
-                nextLeast = dist;
-                nextLeastP = intersectionP;
-            }
-        }
 
-        if (isZeroAngle(botCoordinate, leastP)){
-            distances.add(0, least);
-          distances.add(nextLeast);
+            /*for the other equations, the equations are unique, so intersection points can
+            be calculated for each equation. When sweeping across 180 degrees, since the 0 degree and
+            180 degree sweep lines have the same equation, only one equation is used. Two intersection points
+            are needed, however, so the two minimum intersection points are calculated for these sweeplines.
+             */
+            double least = Double.MAX_VALUE;
+            double nextLeast = Double.MAX_VALUE;
+            Point leastP = null;
+            Point nextLeastP = null;
+            /**
+             * Find the least and next least intersection point distances for this sweepline
+             */
+            for(Point intersectionP: findIntersection(allLines, sweepLines.get(0))){
+                double dist = distanceBetween(botCoordinate, intersectionP);
+                if (dist < least && dist < nextLeast){
+                    nextLeast = least;
+                    nextLeastP = leastP;
+                    least = dist;
+                    leastP = intersectionP;
+                }
+                else if (dist < nextLeast){
+                    nextLeast = dist;
+                    nextLeastP = intersectionP;
+                }
+            }
+
+            /**
+             * The method isZeroAngle determines if a point corresponds to the point
+             * at the zero sweep line, if not then it must correspond to the point
+             * at the 180 sweepline. Essentially, the 0 angle intersection point should always
+             * be along the outer boundary track
+             */
+            if (isZeroAngle(botCoordinate, leastP)){
+                distances.add(0, least);
+                distances.add(nextLeast);
+            }
+            else{
+                distances.add(least);
+                distances.add(0, nextLeast);
+            }
         }
         else{
-            distances.add(least);
-            distances.add(0, nextLeast);
+            for (int i = 0; i < sweepLines.size() - 1; i++){
+                double minDist = Double.MAX_VALUE / 100f;
+                for (Point intersectionPoint: findIntersection(allLines, sweepLines.get(i))){
+                    if (isValid2(sweepLines.get(0), botCoordinate,
+                            intersectionPoint.xcor, intersectionPoint.ycor)) {
+                        double dist = distanceBetween(botCoordinate, intersectionPoint);
+                        if (dist < minDist) {
+                            minDist = dist;
+                        }
+                    }
+                }
+                distances.add(minDist);
+            }
         }
         return distances;
     }
 
+    /**
+     *
+     * @return the angle the bot should move in next
+     */
     public double calculateDriveAngle(){
         List<VisionObject> v1 = BaseStation.getInstance().getVisionManager()
                 .getAllLocationData();
@@ -229,11 +340,12 @@ public class AIUtil {
             ArrayList<VisionCoordinate> outer = course.getOuter()
                     .returnCoords();
             ArrayList<Equation> innerEqs = findEquations(inner);
-            ArrayList<Equation> moreInner = innerEqs;
             ArrayList<Equation> outerEqs = findEquations(outer);
-            innerEqs.addAll(outerEqs);
-            ArrayList<Double> important = calculateRayDistances(innerEqs, sweepEquations,
-                    pos, moreInner, outerEqs);
+            ArrayList<Equation> totalEqs = new ArrayList<>();
+            totalEqs.addAll(innerEqs);
+            totalEqs.addAll(outerEqs);
+            ArrayList<Double> important = calculateRayDistances(totalEqs, sweepEquations,
+                    pos, innerEqs, outerEqs);
             double sumDistances = 0;
             for(double d: important){
                 sumDistances += d;
