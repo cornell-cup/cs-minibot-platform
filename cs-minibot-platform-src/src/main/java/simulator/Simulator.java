@@ -11,7 +11,7 @@ import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import simulator.baseinterface.SimulatorVisionSystem;
 import simulator.physics.PhysicalObject;
-import simulator.simbot.Dijkstras;
+import simulator.simbot.ShortestPathGenerator;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -235,15 +235,27 @@ public class Simulator {
         physicalObjectSet.add(pObj);
     }
 
-
+    /**
+     *
+     * @returns 2D occupancy matrix of the simulator
+     */
     public int[][] getOccupancyMatrix() {
         return occupancyMatrix;
     }
 
+    /**
+     * Sets the simulator's occupancy matrix
+     * @param om, a 2D occupancy matrix
+     */
     public void setOccupancyMatrix(int[][] om) {
         occupancyMatrix = om;
     }
 
+    /**
+     * Returns the corner points of a path. In other words, where the path turns
+     * @param om, the path of a 2d occupancy matrix
+     * @returns an ArrayList of points
+     */
     public ArrayList<ArrayList<Integer>> getWayPoints(int[][]om) {
         ArrayList<ArrayList<Integer>> points = new ArrayList<ArrayList<Integer>>();
         for(int i = 1; i < om.length-1; i++) {
@@ -259,7 +271,13 @@ public class Simulator {
         return points;
     }
 
-
+    /**
+     * Queries the JBox2D world of the simulator, looking for squares in which a body is present.
+     * A cel is a 1 if an object is present and 0 otherwise. Set the simulator occupancy matrix to be the result.
+     * @param occupancyMatrixHeight, the height of the resulting occupancy matrix
+     * @param occupancyMatrixWidth, the width of the resulting occupancy
+     * @param occupancyMatrixBoxSize, the size of the querying window
+     */
     public void generateOccupancyMatrix(int occupancyMatrixHeight, int occupancyMatrixWidth, float occupancyMatrixBoxSize) {
         int[][] om = new int[occupancyMatrixHeight][occupancyMatrixWidth];
         //System.out.println("The occupancy matrix box size is " + occupancyMatrixBoxSize);
@@ -294,33 +312,19 @@ public class Simulator {
         setOccupancyMatrix(om);
     }
 
+    /**
     public int[][] getDijkstras() {
-        Dijkstras.answer(occupancyMatrix);
+        ShortestPathGenerator.answer(occupancyMatrix);
+        ShortestPathGenerator.Node targetNode = ShortestPathGenerator.targetNode;
 
-//        for (int j = 0; j < path.length; j++) {
-//            for (int i = 0; i < path[j].length; i++) {
-//                System.out.print(path[i][j] + " ");
-//            }
-//            System.out.println();
-//        }
-
-        Dijkstras.Node targetNode = Dijkstras.targetNode;
-
-        LinkedList<Dijkstras.Node> path = Dijkstras.getPath(targetNode);
+        LinkedList<ShortestPathGenerator.Node> path = ShortestPathGenerator.getPath(targetNode);
         int[][] pathMatrix = new int[occupancyMatrix.length+1][occupancyMatrix[0].length+1];
-
 
         for(int i = 0; i < path.size(); i++) {
             //System.out.println("X:" + path.get(i).getX() + " Y:" + path.get(i).getY());
             pathMatrix[path.get(i).getX()][path.get(i).getY()] = 1;
         }
 
-//        for (int j = 1; j < pathMatrix.length; j++) {
-//            for (int i = 1; i < pathMatrix[j].length; i++) {
-//                System.out.print(pathMatrix[i][j] + " ");
-//            }
-//            System.out.println();
-//        }
         return pathMatrix;
     }
 

@@ -67,9 +67,4 @@ public class SimulatorVisionSystem extends VisionSystem {
         }
         visionObjectSet = newSet;
     }
-
-
-
-
-
 }

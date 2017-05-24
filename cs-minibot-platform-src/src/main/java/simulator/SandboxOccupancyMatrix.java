@@ -5,11 +5,10 @@ import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.*;
-import simulator.simbot.Dijkstras;
-import simulator.simbot.Dijkstras.Node;
+import simulator.simbot.ShortestPathGenerator;
+import simulator.simbot.ShortestPathGenerator.Node;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -137,7 +136,7 @@ public class SandboxOccupancyMatrix extends Thread{
 //        }
 
 
-        System.out.println(Dijkstras.answer(occupancyMatrix));
+        System.out.println(ShortestPathGenerator.answer(occupancyMatrix));
 
 //        for (int j = 0; j < path.length; j++) {
 //            for (int i = 0; i < path[j].length; i++) {
@@ -146,9 +145,9 @@ public class SandboxOccupancyMatrix extends Thread{
 //            System.out.println();
 //        }
 
-        Node targetNode = Dijkstras.targetNode;
+        Node targetNode = ShortestPathGenerator.targetNode;
 
-        LinkedList<Node> path = Dijkstras.getPath(targetNode);
+        LinkedList<Node> path = ShortestPathGenerator.getPath(targetNode);
         int[][] pathMatrix = new int[occupancyMatrix.length+1][occupancyMatrix[0].length+1];
 
 
