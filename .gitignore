@@ -13,3 +13,4 @@ script.py
 .DS_Store
 config.json
 UserScript.py
+*.log
