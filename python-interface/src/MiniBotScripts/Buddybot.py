@@ -1,23 +1,27 @@
-import Note_Library as nl
-import live_audio_sample as las
+import MiniBotFramework.Sound.note_library as nl
+import MiniBotFramework.Sound.live_audio_sample as las
 import random
 
 #Used for individual emotion testing 
-TEST_EMOTION = 0; #TODO remove once emotions finalized
+TEST_EMOTION = 0 #TODO remove once emotions finalized
 
 #Noise frequency thresholds #TODO check if correct
 SHOUT_THRESHOLD = 850
 SPEAK_THRESHOLD = 450
 
-# Should change at most by factor of 1 every second
+#Threshold for emotion values being triggered by their respetive counters
 HAPPY_FACTOR = 10
 SAD_FACTOR = 200
 SURPRISE_FACTOR = 1
 ANGER_FACTOR = 50 #Currently not implemented
 
+#Name for file used in live audio sampling
 SAMPLE_FILE = "sample.wav"
 
 #Global emotion counters
+#Incremented if a particular event causes Buddybot to feel a particular emotion
+#Once a counter reaches its respective threshold, its corresponding emotion is triggered
+#Should change at most by factor of 1 every second
 bot_happy = 0
 bot_sad = 0
 bot_surprised = 0
