@@ -68,7 +68,7 @@ public class AIUtil {
     /**
      *
      * @param cors arraylist of VisionCoordinates of the track
-     * @return arraylist of all equations found between each pair of
+     * @return list of all equations found between each pair of
      * consecutive boundary coordinates
      */
     public List<Equation> findEquations(ArrayList<VisionCoordinate> cors){

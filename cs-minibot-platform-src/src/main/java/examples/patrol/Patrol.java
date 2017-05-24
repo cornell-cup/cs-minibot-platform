@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Created by Trevor Edwards on 3/18/2017.
- *
+ * NOTE: This code needs to be fixed because coordinate systems changed
  * TO RUN:
  * Run this code
  * Start vision system
