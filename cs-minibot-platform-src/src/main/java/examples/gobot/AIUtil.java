@@ -7,6 +7,9 @@ import basestation.vision.VisionObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 public class AIUtil {
 
     private final int numLines;
@@ -188,8 +191,9 @@ public class AIUtil {
      * @param vc VisionCoordinate representing current position
      * @param x x coordinate of the intersection point
      * @param y y coordinate of the intersection point
-     * @return true if the intersection point is between the bounds on the line, i.e.
-     * return true if the intersection point is actually on the boundary
+     * @return true if the intersection point is "in front" of the bot.
+     * This uses a different way to calculate whether a point is considered in front
+     * by looking at the coordinate in terms of the direction the bot is facing.
      */
     public boolean isValid2(Equation eq, VisionCoordinate vc, double x,
                             double y){
@@ -334,6 +338,7 @@ public class AIUtil {
      * @return the angle the bot should move in next
      */
     public double calculateDriveAngle(){
+        // TODO: Configure coordinate based on desired bot
         List<VisionObject> v1 = BaseStation.getInstance().getVisionManager()
                 .getAllLocationData();
         if (v1.size() != 0){
