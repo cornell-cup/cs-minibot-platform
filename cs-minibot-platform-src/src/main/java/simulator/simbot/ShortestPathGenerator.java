@@ -2,9 +2,6 @@ package simulator.simbot;
 
 import java.util.*;
 
-/**
- * Created by jimmychen on 4/29/17.
- */
 public class Dijkstras {
 
     //public static int[][] path;
