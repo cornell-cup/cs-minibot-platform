@@ -1,7 +1,6 @@
 package minibot.example.avoidance;
 
 import basestation.BaseStation;
-import basestation.vision.VisionCoordinate;
 import basestation.vision.VisionObject;
 import matlabcontrol.MatlabConnectionException;
 import matlabcontrol.MatlabInvocationException;
@@ -10,7 +9,6 @@ import matlabcontrol.MatlabProxyFactory;
 import matlabcontrol.trunk.matlabcontrol.src.matlabcontrol.extensions.MatlabNumericArray;
 import matlabcontrol.trunk.matlabcontrol.src.matlabcontrol.extensions.MatlabTypeConverter;
 
-import java.util.Arrays;
 import java.util.List;
 
 

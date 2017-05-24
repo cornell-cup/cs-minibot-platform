@@ -335,7 +335,7 @@ public class BaseHTTPInterface {
             return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
         });
 
-        post("/getOccupancyMatrix", (req, res) -> {
+        post("/postOccupancyMatrix", (req, res) -> {
             //Thread.sleep(5000);
             String body = req.body();
             JsonObject settings = jsonParser.parse(body).getAsJsonObject();
@@ -347,7 +347,7 @@ public class BaseHTTPInterface {
             return gson.toJson(simulator.getOccupancyMatrix());
         });
 
-        post( "/getDijkstras", (req, res) -> {
+        post( "/postDijkstras", (req, res) -> {
             String body = req.body();
             JsonObject matrix = jsonParser.parse(body).getAsJsonObject();
             JsonArray parentJsonArray = matrix.get("matrix").getAsJsonArray();

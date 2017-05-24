@@ -275,6 +275,8 @@ function setupGridLines(scale, xOffset, yOffset) {
         gridContainer.addChild(lines_x[i]);
     }
 }
+
+// Populates the PIXI view with the squares corresponding to the occupancy matrix and path
 function fillOccupancyMatrix(scale, xOffset, yOffset) {
     for(var i = 0; i < occupancyMatrix.length; i++) {
         for(var j = 0; j < occupancyMatrix[0].length; j++) {
@@ -425,7 +427,7 @@ function displayOccupancyMatrix(height, width, size) {
 
     $.ajax({
         method: "POST",
-        url: '/getOccupancyMatrix',
+        url: '/postOccupancyMatrix',
         dataType: 'json',
         data: JSON.stringify({
             height:height,
@@ -439,10 +441,10 @@ function displayOccupancyMatrix(height, width, size) {
 
             $.ajax({
                 method: "POST",
-                url: '/getDijkstras',
+                url: '/postDijkstras',
                 dataType: 'json',
                 data: JSON.stringify({
-                matrix: occupancyMatrix}),
+                    matrix: occupancyMatrix}),
                 contentType: 'application/json',
                 success: function(data) {
                     path = data;
@@ -455,7 +457,9 @@ function displayOccupancyMatrix(height, width, size) {
     });
 }
 
-
+/* Iterates through the occupancy matrix. When a 1 is encountered in a cell, all of the
+   adjacent cells will be marked by a 1. This is 
+*/
 function padOccupancyMatrix() {
 
     var temp = [];
