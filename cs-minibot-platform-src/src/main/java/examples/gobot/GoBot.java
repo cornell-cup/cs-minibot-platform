@@ -57,21 +57,9 @@ public class GoBot extends Thread {
 
     //ai type = 0 (simple), 1 (advanced)
     public GoBot(int numLaps, int aiType) {
+        this();
         this.numLaps = numLaps;
-        this.lapsDone = 0;
-        this.crossedLapLine = false;
-        this.reachedMiddle = false;
-        this.startTime = 0L;
-        this.inTrack = true;
-        this.lapTimes = new ArrayList<>();
-        this.course = new Course();
-        this.botState = WAITING; //waiting state
-        this.lastBotState = -1;
-        this.ai = new AIUtil(5, 0, Math.PI);
-        this.fwm = fwm;
-        this.navigator = new Navigator();
         this.aiType = aiType;
-        navigator.start();
     }
 
     public void setCourse(Course c) {

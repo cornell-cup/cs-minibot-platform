@@ -106,11 +106,6 @@ public class BaseHTTPInterface {
             String name = addInfo.get("name").getAsString();
             String type = addInfo.get("type").getAsString(); //differentiate between modbot and minibot
 
-            System.out.println(ip);
-            System.out.println(port);
-            System.out.println(name);
-            System.out.println(type);
-
             /* new modbot is created to add */
             Bot newBot;
             String mangledName;
@@ -415,21 +410,30 @@ public class BaseHTTPInterface {
 
         // Examplescript routes
         get("/example/patrol/run", (req, res) -> {
-            Patrol mbsd = new Patrol( (FourWheelMovement)
+            Patrol patrolBot = new Patrol( (FourWheelMovement)
                     BaseStation
                             .getInstance().getBotManager().getAllTrackedBots()
                             .iterator().next().getCommandCenter());
-            mbsd.start();
+            patrolBot.start();
             return true;
         });
 
         get("/example/patrol/addPointToQueue", (req, res) -> {
+            /**
+             * Patrolbot works by moving through a list of points.
+             * These points can be picked by the user. To add a point, go
+             * to the desired point and this path. This will cause the bot
+             * to move between points added to the queue in the order they were added
+             */
             patrolPoints.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
             return true;
         });
 
         get("/example/GoBot/addPointToInnerTrack", (req, res) -> {
+            /**
+             * Add points that make up the inner track in order
+             */
             innerTrackCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
             System.out.println("InnerTrack: " + BaseStation.getInstance()
@@ -440,6 +444,9 @@ public class BaseHTTPInterface {
         });
 
         get("/example/GoBot/addPointToOuterTrack", (req, res) -> {
+            /**
+             * Add points that make up the outer track in order
+             */
             outerTrackCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
             System.out.println("OuterTrack: " + BaseStation.getInstance()
@@ -450,6 +457,9 @@ public class BaseHTTPInterface {
         });
 
         get("/example/GoBot/addPointToStartArea", (req, res) -> {
+            /*
+             * Add points that create a bounding rectange around where the bot is supposed to start
+             */
             startAreaCoords.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
             System.out.println("StartArea: " + BaseStation.getInstance()
@@ -499,13 +509,13 @@ public class BaseHTTPInterface {
 
         get("/example/GoBot/startAI", (req, res) -> {
             gb.setBotState(gb.BOT_PLAYING);
-            return "GOGOGO";
+            return "AI playing";
         });
 
 
         get("/example/GoBot/startHuman", (req, res) -> {
             gb.setBotState(gb.HUMAN_PLAYING);
-            return "GOGOGO";
+            return "human playing";
         });
     }
 

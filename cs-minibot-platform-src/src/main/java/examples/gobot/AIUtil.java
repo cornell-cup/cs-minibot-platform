@@ -71,9 +71,9 @@ public class AIUtil {
      * @return arraylist of all equations found between each pair of
      * consecutive boundary coordinates
      */
-    public ArrayList<Equation> findEquations(ArrayList<VisionCoordinate> cors){
+    public List<Equation> findEquations(ArrayList<VisionCoordinate> cors){
         int size = cors.size();
-        ArrayList<Equation> eqs = new ArrayList<Equation>();
+        List<Equation> eqs = new ArrayList<Equation>();
         for (int i = 0; i < size; i++){
             eqs.add(new Equation(cors.get(i), cors.get((i+1)%size)));
         }
@@ -83,17 +83,17 @@ public class AIUtil {
 
     /**
      *
-     * @param AllEqs Arraylist of equations
+     * @param allEqs Arraylist of equations
      * @param target Equation to find intersections with
      * @return arraylist of all intersection points between target and the equations
      * in e
      */
-    public ArrayList<Point> findIntersection(ArrayList<Equation> AllEqs, Equation target){
-        int size = AllEqs.size();
+    public ArrayList<Point> findIntersection(ArrayList<Equation> allEqs, Equation target){
+        int size = allEqs.size();
         ArrayList<Point> pts = new ArrayList<Point>();
         for (int i = 0; i < size; i++) {
-            Point interPoint = intersection(AllEqs.get(i), target);
-            if (AllEqs.get(i) != null && AllEqs.get(i).inDomain(interPoint)){
+            Point interPoint = intersection(allEqs.get(i), target);
+            if (allEqs.get(i) != null && allEqs.get(i).inDomain(interPoint)){
                 pts.add(interPoint);
             }
         }
@@ -252,8 +252,8 @@ public class AIUtil {
     public ArrayList<Double> calculateRayDistances(ArrayList<Equation> allLines,
                                                    ArrayList<Equation> sweepLines,
                                                    VisionCoordinate botCoordinate,
-                                                   ArrayList<Equation> inner,
-                                                   ArrayList<Equation> outer){
+                                                   List<Equation> inner,
+                                                   List<Equation> outer){
         ArrayList<Double> distances = new ArrayList<>();
 
         /*if the angle is 180 degrees, the first and last sweep lines have the same equation, so
@@ -347,8 +347,8 @@ public class AIUtil {
             ArrayList<VisionCoordinate> inner = course.getInner().returnCoords();
             ArrayList<VisionCoordinate> outer = course.getOuter()
                     .returnCoords();
-            ArrayList<Equation> innerEqs = findEquations(inner);
-            ArrayList<Equation> outerEqs = findEquations(outer);
+            List<Equation> innerEqs = findEquations(inner);
+            List<Equation> outerEqs = findEquations(outer);
             ArrayList<Equation> totalEqs = new ArrayList<>();
             totalEqs.addAll(innerEqs);
             totalEqs.addAll(outerEqs);
