@@ -49,6 +49,7 @@ public class Equation{
         else{
             slope = (end.y - start.y)/(end.x - start.x);
             yIntercept = start.y - slope*start.x;
+
             if (start.x < end.x) {
                 startx = start.x;
                 endx = end.x;
@@ -76,7 +77,8 @@ public class Equation{
      * @param angle
      */
     public Equation(VisionCoordinate start, double angle){
-        if ( Math.abs(angle % Math.PI/2) < 0.001) {
+
+        if ( Math.abs(angle % (Math.PI/2)) < 0.001) {
             vertical = true;
             xval = start.x;
 

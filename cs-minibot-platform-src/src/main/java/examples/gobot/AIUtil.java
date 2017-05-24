@@ -35,11 +35,13 @@ public class AIUtil {
             Two vertical lines should not intersection each other
             unless they are the same line
              */
+
             if (e1.vertical && e2.vertical){
                 return null;
             }
             //If either are vertical, just plug in
             else if (e1.vertical || e2.vertical) {
+
                 if (e1.vertical){
                     return new Point(e1.xval, e1.xval * e2.slope +
                             e2.yIntercept);
