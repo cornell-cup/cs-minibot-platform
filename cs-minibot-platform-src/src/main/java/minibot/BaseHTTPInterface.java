@@ -106,11 +106,6 @@ public class BaseHTTPInterface {
             String name = addInfo.get("name").getAsString();
             String type = addInfo.get("type").getAsString(); //differentiate between modbot and minibot
 
-            System.out.println(ip);
-            System.out.println(port);
-            System.out.println(name);
-            System.out.println(type);
-
             /* new modbot is created to add */
             Bot newBot;
             String mangledName;
@@ -415,14 +410,15 @@ public class BaseHTTPInterface {
 
         // Examplescript routes
         get("/example/patrol/run", (req, res) -> {
-            Patrol mbsd = new Patrol( (FourWheelMovement)
+            Patrol p = new Patrol( (FourWheelMovement)
                     BaseStation
                             .getInstance().getBotManager().getAllTrackedBots()
                             .iterator().next().getCommandCenter());
-            mbsd.start();
+            p.start();
             return true;
         });
 
+        //Adds VisionCoordinate of current bot's location to the queue of points that Patrolbot will patrol
         get("/example/patrol/addPointToQueue", (req, res) -> {
             patrolPoints.add(BaseStation.getInstance().getVisionManager()
                     .getAllLocationData().get(0).coord);
@@ -476,14 +472,6 @@ public class BaseHTTPInterface {
                 .getAllLocationData().get(0).coord.x + ", " + BaseStation
                 .getInstance().getVisionManager()
                 .getAllLocationData().get(0).coord.y);
-        /*get("/example/GoBot/didBotFinishALap", (req, res) -> {
-            if (gb.finishedLap()) {
-                gb.addLapTime(System.nanoTime());
-                return "Lap Time: " + gb.getLastLapTime();
-            } else {
-                return "Current Time: " + System.nanoTime();
-            }
-        });*/
 
         get("/example/GoBot/numLapsCompleted", (req, res) -> gb.getLapsDone());
 
@@ -499,13 +487,13 @@ public class BaseHTTPInterface {
 
         get("/example/GoBot/startAI", (req, res) -> {
             gb.setBotState(gb.BOT_PLAYING);
-            return "GOGOGO";
+            return "GO AI";
         });
 
 
         get("/example/GoBot/startHuman", (req, res) -> {
             gb.setBotState(gb.HUMAN_PLAYING);
-            return "GOGOGO";
+            return "GO HUMAN";
         });
     }
 
