@@ -280,6 +280,9 @@ public class Simulator {
      */
     public void generateOccupancyMatrix(int occupancyMatrixHeight, int occupancyMatrixWidth, float occupancyMatrixBoxSize) {
         int[][] om = new int[occupancyMatrixHeight][occupancyMatrixWidth];
+        boolean[] finishQuery = new boolean[1];
+        final int height = occupancyMatrixHeight;
+        final int width = occupancyMatrixWidth;
         //System.out.println("The occupancy matrix box size is " + occupancyMatrixBoxSize);
         for(int i = 0; i < occupancyMatrixHeight; i++){
             for(int j = 0; j < occupancyMatrixWidth; j++) {
@@ -303,16 +306,26 @@ public class Simulator {
                         if(fixture.testPoint(testpoint1) || fixture.testPoint(testpoint2) || fixture.testPoint(testpoint3) || fixture.testPoint(testpoint4) || fixture.testPoint(testpoint5)) {
                             om[icopy][jcopy] = 1;
                         }
+                        //Last query that needs to be completed
+                        if(icopy == height-1 && jcopy == width - 1) {
+                            finishQuery[0] = true;
+                        }
+
                         return true;
                     }
                 };
                 world.queryAABB(callback, currentSquare);
             }
         }
+        //TODO, ensure that setOccupancyMatrix(om) is not called before the callback has completed
+       // while(!finishQuery[]) {}
         setOccupancyMatrix(om);
     }
 
     /**
+     *
+     * @return a matrix representation of the shortest path, where the 1's are nodes on the path
+     */
     public int[][] getDijkstras() {
         ShortestPathGenerator.answer(occupancyMatrix);
         ShortestPathGenerator.Node targetNode = ShortestPathGenerator.targetNode;
@@ -326,6 +339,27 @@ public class Simulator {
         }
 
         return pathMatrix;
+    }
+
+    public class AABBCBLock {
+        private Object lock;
+        private int count;
+        private int max;
+        private AABBCBLock(int max) {
+            this.max = max;
+        }
+
+        public void increment() {
+            synchronized(lock) {
+                count++;
+            }
+        }
+
+        public boolean isDone() {
+            synchronized(lock) {
+                return count == max;
+            }
+        }
     }
 
 }

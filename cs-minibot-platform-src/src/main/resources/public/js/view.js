@@ -293,7 +293,7 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     var cx = i*x_int;
                     var cy = j*y_int;
                     scenarioObject.x = cx+xOffset;
-                    scenarioObject.y = cy+yOffset;
+                    scenarioObject.y = (cy+yOffset)*-1;
                     botContainer.addChild(scenarioObject);
                 }
 
@@ -308,7 +308,7 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     var cx = i*x_int;
                     var cy = j*y_int;
                     scenarioObject.x = cx+xOffset;
-                    scenarioObject.y = cy+yOffset;
+                    scenarioObject.y = (cy+yOffset)*-1;
                     botContainer.addChild(scenarioObject);
                 }
 
@@ -436,6 +436,7 @@ function displayOccupancyMatrix(height, width, size) {
             size: size}),
         contentType: 'application/json',
         success: function(data) {
+            console.log("Occupancy matrix post successful");
             omPresent = true;
             occupancyMatrix = data;
             occupancyMatrix = padOccupancyMatrix();
@@ -507,10 +508,14 @@ function padOccupancyMatrix() {
 $("#showOccupancyMatrix").click( function() {
         displayOccupancyMatrix(40, 40, 1.0);
         //Wait until the occupancy matrix has been returned from POST
-        while(!omPresent){}
-        fillOccupancyMatrix(scale, xOffset, yOffset);
-        displayBots(bots,scale, xOffset, yOffset);
-        grid.render(stage);
+        //while(!omPresent){}
+        setTimeout( function() {
+
+                fillOccupancyMatrix(scale, xOffset, yOffset);
+                displayBots(bots,scale, xOffset, yOffset);
+                grid.render(stage);
+                }, 3000);
+
 
 });
 
