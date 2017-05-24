@@ -35,6 +35,7 @@ var listBots = [];
 var occupancyMatrix = null;
 var path = null;
 var foundPath = false;
+var omPresent = false;
 
 var backgroundSprite;
 
@@ -435,7 +436,7 @@ function displayOccupancyMatrix(height, width, size) {
             size: size}),
         contentType: 'application/json',
         success: function(data) {
-
+            omPresent = true;
             occupancyMatrix = data;
             occupancyMatrix = padOccupancyMatrix();
 
@@ -458,7 +459,8 @@ function displayOccupancyMatrix(height, width, size) {
 }
 
 /* Iterates through the occupancy matrix. When a 1 is encountered in a cell, all of the
-   adjacent cells will be marked by a 1. This is 
+   adjacent cells will be marked by a 1. This is to increase the margin so that any path
+   planning algorithm will not choose a path too close to an obstacle.
 */
 function padOccupancyMatrix() {
 
@@ -504,11 +506,11 @@ function padOccupancyMatrix() {
 
 $("#showOccupancyMatrix").click( function() {
         displayOccupancyMatrix(40, 40, 1.0);
-        setTimeout(function(){
-            fillOccupancyMatrix(scale, xOffset, yOffset);
-            displayBots(bots,scale, xOffset, yOffset);
-            grid.render(stage);
-        }, 3000);
+        //Wait until the occupancy matrix has been returned from POST
+        while(!omPresent){}
+        fillOccupancyMatrix(scale, xOffset, yOffset);
+        displayBots(bots,scale, xOffset, yOffset);
+        grid.render(stage);
 
 });
 
