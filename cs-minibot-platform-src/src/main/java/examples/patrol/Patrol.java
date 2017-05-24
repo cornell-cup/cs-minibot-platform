@@ -10,7 +10,7 @@ import minibot.BaseHTTPInterface;
 import java.util.List;
 
 /**
- * Created by CornellCup on 3/18/2017.
+ * Created by Trevor Edwards on 3/18/2017.
  *
  * TO RUN:
  * Run this code

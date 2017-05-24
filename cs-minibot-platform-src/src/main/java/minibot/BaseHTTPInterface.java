@@ -410,14 +410,15 @@ public class BaseHTTPInterface {
 
         // Examplescript routes
         get("/example/patrol/run", (req, res) -> {
-            Patrol patrolBot = new Patrol( (FourWheelMovement)
+            Patrol p = new Patrol( (FourWheelMovement)
                     BaseStation
                             .getInstance().getBotManager().getAllTrackedBots()
                             .iterator().next().getCommandCenter());
-            patrolBot.start();
+            p.start();
             return true;
         });
 
+        //Adds VisionCoordinate of current bot's location to the queue of points that Patrolbot will patrol
         get("/example/patrol/addPointToQueue", (req, res) -> {
             /**
              * Patrolbot works by moving through a list of points.
@@ -486,14 +487,6 @@ public class BaseHTTPInterface {
                 .getAllLocationData().get(0).coord.x + ", " + BaseStation
                 .getInstance().getVisionManager()
                 .getAllLocationData().get(0).coord.y);
-        /*get("/example/GoBot/didBotFinishALap", (req, res) -> {
-            if (gb.finishedLap()) {
-                gb.addLapTime(System.nanoTime());
-                return "Lap Time: " + gb.getLastLapTime();
-            } else {
-                return "Current Time: " + System.nanoTime();
-            }
-        });*/
 
         get("/example/GoBot/numLapsCompleted", (req, res) -> gb.getLapsDone());
 
@@ -509,13 +502,13 @@ public class BaseHTTPInterface {
 
         get("/example/GoBot/startAI", (req, res) -> {
             gb.setBotState(gb.BOT_PLAYING);
-            return "AI playing";
+            return "GO AI";
         });
 
 
         get("/example/GoBot/startHuman", (req, res) -> {
             gb.setBotState(gb.HUMAN_PLAYING);
-            return "human playing";
+            return "GO HUMAN";
         });
     }
 

@@ -9,6 +9,10 @@ import minibot.BaseHTTPInterface;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GoBot is an extension to the base minibot. It can either be controlled by a human user
+ * or by the AI algorithm to race around a course.
+ */
 public class GoBot extends Thread {
 
     private int numLaps;
@@ -28,6 +32,8 @@ public class GoBot extends Thread {
     public static final int WAITING = 0;
     public static final int HUMAN_PLAYING = 1;
     public static final int BOT_PLAYING = 2;
+    public static final int AITYPE_BASIC = 0;
+    public static final int AITYPE_ADVANCED = 1;
     public double driveAngle_prev = 0;
     public double driveAngle_prevp = 0;
 
@@ -37,6 +43,9 @@ public class GoBot extends Thread {
     FourWheelMovement fwm;
     int index;
 
+    /**
+     * This constructor initializes the default fields of a gobot.
+     */
     public GoBot(){
         this.numLaps = 1;
         this.lapsDone = 0;
@@ -51,34 +60,59 @@ public class GoBot extends Thread {
         this.ai = new AIUtil(5, 0, Math.PI);
         this.fwm = fwm;
         this.navigator = new Navigator();
-        this.aiType = 0;
+        this.aiType = AITYPE_BASIC;
         navigator.start();
     }
 
-    //ai type = 0 (simple), 1 (advanced)
+    /**
+     * This constructor initializes a gobot with arguments passed in for numLaps and aiType
+     * @param numLaps represents the number of laps that must be completed to finish the race
+     * @param aiType 0 means that the gobot AI will run off the simple algorithm, 1 will be advanced algorithm
+     */
     public GoBot(int numLaps, int aiType) {
         this();
         this.numLaps = numLaps;
         this.aiType = aiType;
     }
 
+    /**
+     * Sets the course field for the minibot
+     * @param c
+     */
     public void setCourse(Course c) {
         this.course = c;
         this.ai.course = c;
     }
 
+    /**
+     * Sets the start time for the race
+     * @param time
+     */
     public void setStartTime(long time) {
         this.startTime = time;
     }
 
+    /**
+     *
+     * @return the start time for the race
+     */
     public long getStartTime() {
         return this.startTime;
     }
 
+    /**
+     *
+     * @return returns the number of laps completed for the race
+     */
     public int getLapsDone() {
         return this.lapsDone;
     }
 
+    /**
+     * lapTimes stores the NanoTime that the bot crossed the finish line at, and convertNanoTimeLapsToSeconds
+     * converts all the nanoTimes in the list to seconds
+     * @return ArrayList of how long each lap took to complete in seconds
+     */
     public ArrayList<Double> convertNanoTimeLapsToSeconds() {
         ArrayList<Double>lapTimeInSec = new ArrayList<>();
         for(int i = 0; i < lapTimes.size();i++) {
@@ -91,6 +125,10 @@ public class GoBot extends Thread {
         return lapTimeInSec;
     }
 
+    /**
+     *
+     * @return string representation of printing out lap times in seconds
+     */
     public String lapTimes() {
         ArrayList<Double> lapTimeInSec = convertNanoTimeLapsToSeconds();
         String output = "";
@@ -100,6 +138,10 @@ public class GoBot extends Thread {
         return output;
     }
 
+    /**
+     *
+     * @return the total time the race took in seconds
+     */
     public float totalTime() {
         float sum = 0;
         for(int i = 0; i < lapTimes.size(); i++) {
@@ -111,17 +153,26 @@ public class GoBot extends Thread {
         return sum/1000000000;
     }
 
+    /**
+     * Sets the bot state (human or AI)
+     * @param state
+     */
     public void setBotState(int state) {
         this.botState = state;
     }
 
+    /**
+     * Prints the bot state
+     */
     private void printState() {
         System.out.printf("HUMAN: %s, AI: %s", humanTime, botTime);
     }
 
+    /**
+     * Runs the goBot (human or AI) on the course
+     */
     @Override
     public void run() {
-        //this.setTimer(System.nanoTime());
         this.fwm = (FourWheelMovement)
                 BaseStation
                         .getInstance().getBotManager().getAllTrackedBots()
@@ -176,7 +227,7 @@ public class GoBot extends Thread {
                     lapsDone = 0;
                     printState();
                 }
-                else if (aiType == 0){
+                else if (aiType == AITYPE_BASIC){
                     List<VisionObject> vl =  BaseStation.getInstance().getVisionManager()
                             .getAllLocationData();
                     if (vl.size() != 0) {
@@ -221,7 +272,7 @@ public class GoBot extends Thread {
                 return;
             }
             try {
-                Thread.sleep(1);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -277,15 +328,13 @@ public class GoBot extends Thread {
                 vc = locs.get(0).coord;
             }
 
-            if (aiType == 0){
+            if (aiType == AITYPE_BASIC){
                 if (destinationReached()) return;
                 if(destination == null) {return;}
                 double spectheta = vc.getThetaOrZero();
                 double toAngle = vc.getAngleTo(destination);
                 double angle = mod((toAngle - spectheta + Math.PI), 2*Math.PI);
                 double dist = vc.getDistanceTo(destination);
-                System.out.println("ang: " + angle + ", toAngle:" + toAngle);
-                if (false) {return;}
                 if (!inTrack) return;
                 else {
                     if (dist > DISTANCE_THRESHOLD) {
