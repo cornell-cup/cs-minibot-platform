@@ -7,7 +7,7 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="matlabcontrol" default="default" basedir="."
+<project name="matlabcontrol" default="default" basedir=""
          xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1"
         xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3">
     <description>Builds, tests, and runs the project matlabcontrol.</description>

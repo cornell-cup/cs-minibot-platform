@@ -24,38 +24,34 @@ public class SandboxOccupancyMatrix extends Thread{
         float xSpeed = 0.0f, ySpeed = 0.0f;
         float xPos = 1.0f, yPos = 3.0f;
         float width = 10.0f, height = 2.0f;
+
+
+        BodyDef polygon=new BodyDef();
+        polygon.type=BodyType.STATIC;
+        polygon.position.set(xPos,yPos);
+
+        PolygonShape poly =new PolygonShape();
+        poly.setAsBox(width/2.0f,height/2.0f);
+
+        FixtureDef polyfixture = new FixtureDef();
+        polyfixture.shape=poly;
+
+        //Initializing world
         World w = new World(new Vec2(0.0f, 0.0f));
         Vec2 gravity = new Vec2(0.0f, 0.0f);
         w.setGravity(gravity);
 
-
-        //dfdfdf
-        BodyDef polygon=new BodyDef();
-        polygon.type=BodyType.STATIC;
-        polygon.position.set(xPos,yPos); //
-
-        PolygonShape poly =new PolygonShape();
-        poly.setAsBox(width/2.0f,height/2.0f); //
-        //fixture def
-        FixtureDef polyfixture = new FixtureDef();
-        polyfixture.shape=poly;
-
-        //creating actual body
-//        Body polybody;
-//        polybody=w.createBody(polygon);
-//        polybody.createFixture(polyfixture);
-
-
-        //CREATING CIRCLE
+        //Creating a circle
         BodyDef circlebd = new BodyDef();
         circlebd.position.set(4.0f, 8.0f);
         circlebd.type = BodyType.STATIC;
 
         CircleShape cs = new CircleShape();
         cs.setRadius(6.2f);
-
         FixtureDef circlefd = new FixtureDef();
         circlefd.shape = cs;
+
+        //Adding circle to world
         Body circlebody = w.createBody(circlebd);
         circlebody.createFixture(circlefd);
 
@@ -164,3 +160,22 @@ public class SandboxOccupancyMatrix extends Thread{
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

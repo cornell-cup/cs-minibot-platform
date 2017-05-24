@@ -53,7 +53,7 @@ $('#scale').on('change',function(){
     setupGridLines(scale, xOffset, yOffset);
 
     stage.addChild(gridContainer);
-    if(occupancyMatrix != null) {
+    if(occupancyMatrix !== null) {
         displayOccupancyMatrix(40, 40, 1.0);
         fillOccupancyMatrix(scale, xOffset, yOffset);
     }
@@ -293,7 +293,7 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     var cx = i*x_int;
                     var cy = j*y_int;
                     scenarioObject.x = cx+xOffset;
-                    scenarioObject.y = (cy+yOffset)*-1;
+                    scenarioObject.y = (cy*-1 + yOffset);
                     botContainer.addChild(scenarioObject);
                 }
 
@@ -308,7 +308,7 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     var cx = i*x_int;
                     var cy = j*y_int;
                     scenarioObject.x = cx+xOffset;
-                    scenarioObject.y = (cy+yOffset)*-1;
+                    scenarioObject.y = (cy*-1 +yOffset);
                     botContainer.addChild(scenarioObject);
                 }
 
@@ -364,10 +364,7 @@ function getNewVisionData() {
                     setupGridLines(scale, xOffset, yOffset);
 
                     stage.addChild(gridContainer);
-                    if(occupancyMatrix != null) {
-                        displayOccupancyMatrix(40, 40, 1.0);
-                        fillOccupancyMatrix(scale, xOffset, yOffset);
-                    }
+
                     displayBots(bots,scale, xOffset, yOffset);
 
                     displayBots(bots, scale, xOffset, yOffset);
@@ -514,7 +511,7 @@ $("#showOccupancyMatrix").click( function() {
                 fillOccupancyMatrix(scale, xOffset, yOffset);
                 displayBots(bots,scale, xOffset, yOffset);
                 grid.render(stage);
-                }, 3000);
+                }, 4000);
 
 
 });
