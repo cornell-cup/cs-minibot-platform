@@ -514,6 +514,7 @@ $("#showOccupancyMatrix").click( function() {
 
                 grid.render(stage);
                 }, 4000);
+        //TODO. The path does not show up correctly. It is wrong because the post request to get the occupancy matrix seems to return an empty matrix
 
 
 });
