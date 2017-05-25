@@ -24,6 +24,7 @@ public class VisionManager { //TODO incomplete
     /**
      * Adds vs to be tracked by the VisionManager. Assumes vs is already calibrated to the
      * canonicalVisionSystem
+     *
      * @param vs The visionSystem to begin tracking
      * @return the counter id of vs
      */
@@ -34,7 +35,6 @@ public class VisionManager { //TODO incomplete
     }
 
     /**
-     *
      * @return All entries of VisionSystems with their associated ids
      */
     public Set<Map.Entry<Integer, VisionSystem>> getAllVisionMappings() {
@@ -43,6 +43,7 @@ public class VisionManager { //TODO incomplete
 
     /**
      * Returns a list of vision objects with vision ids. Coordinates are made canonical.
+     *
      * @return A list of all VisionObjects tracked across all VisionSystems, relative to the Canonical system
      */
     public List<VisionObject> getAllLocationData() {

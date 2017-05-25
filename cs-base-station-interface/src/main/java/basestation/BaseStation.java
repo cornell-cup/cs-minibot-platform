@@ -1,10 +1,7 @@
 package basestation;
 
 import basestation.bot.BotManager;
-import basestation.bot.robot.Bot;
 import basestation.vision.VisionManager;
-
-import java.util.HashMap;
 
 /**
  * Contains logic to manage and unify input and output between bots and vision sources.
@@ -16,8 +13,14 @@ public class BaseStation {
     private BotManager bManager;
     private VisionManager vManager;
 
+    private BaseStation() {
+        bManager = new BotManager();
+        vManager = new VisionManager();
+    }
+
     /**
      * Part of the singleton pattern, returns the singleton BaseStation
+     *
      * @return the singleton BaseStation instance
      */
     public static BaseStation getInstance() {
@@ -26,11 +29,6 @@ public class BaseStation {
         }
 
         return instance;
-    }
-
-    private BaseStation() {
-        bManager = new BotManager();
-        vManager = new VisionManager();
     }
 
     /**

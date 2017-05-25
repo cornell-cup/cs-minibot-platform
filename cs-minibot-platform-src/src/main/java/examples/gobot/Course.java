@@ -22,14 +22,6 @@ public class Course {
     private Path2D.Double middleArea;
 
     /**
-     * @param outer Creates the outer border of the track with the ArrayList of VisionCoordinates passed in
-     */
-    public void setOuter(ArrayList<VisionCoordinate> outer) {
-        this.outer = new Border(outer);
-    }
-
-    /**
-     *
      * @return returns the Border of the outer track of the Course
      */
     public Border getOuter() {
@@ -37,15 +29,13 @@ public class Course {
     }
 
     /**
-     *
-     * @param inner Creates the inner border of the track with the ArrayList of VisionCoordinates passed in
+     * @param outer Creates the outer border of the track with the ArrayList of VisionCoordinates passed in
      */
-    public void setInner(ArrayList<VisionCoordinate> inner) {
-        this.inner = new Border(inner);
+    public void setOuter(ArrayList<VisionCoordinate> outer) {
+        this.outer = new Border(outer);
     }
 
     /**
-     *
      * @return returns the Border of the outer track of the Course
      */
     public Border getInner() {
@@ -53,23 +43,13 @@ public class Course {
     }
 
     /**
-     *
-     * @param startCoords Creates the Path2D.Double instance for the starting area of the Course
+     * @param inner Creates the inner border of the track with the ArrayList of VisionCoordinates passed in
      */
-    public void setStartArea(ArrayList<VisionCoordinate> startCoords) {
-        this.startArea = createPath(startCoords);
+    public void setInner(ArrayList<VisionCoordinate> inner) {
+        this.inner = new Border(inner);
     }
 
     /**
-     *
-     * @param middleCoords Creates the Path2D.Double instance for the middle area of the Course
-     */
-    public void setMiddleArea(ArrayList<VisionCoordinate> middleCoords) {
-        this.middleArea = createPath(middleCoords);
-    }
-
-    /**
-     *
      * @return returns the start area of the Course
      */
     public Path2D.Double getStartArea() {
@@ -77,7 +57,13 @@ public class Course {
     }
 
     /**
-     *
+     * @param startCoords Creates the Path2D.Double instance for the starting area of the Course
+     */
+    public void setStartArea(ArrayList<VisionCoordinate> startCoords) {
+        this.startArea = createPath(startCoords);
+    }
+
+    /**
      * @return returns the middle area of the Course
      */
     public Path2D.Double getMiddleArea() {
@@ -85,15 +71,21 @@ public class Course {
     }
 
     /**
-     *
+     * @param middleCoords Creates the Path2D.Double instance for the middle area of the Course
+     */
+    public void setMiddleArea(ArrayList<VisionCoordinate> middleCoords) {
+        this.middleArea = createPath(middleCoords);
+    }
+
+    /**
      * @param coords list of VisionCoordinates to create a Path2D.Double instance
      * @return returns a Path2D.Double shape created by connecting the ArrayList of VisionCoordinates
      * (1st to 2nd, 2nd to 3rd, ..., last to 1st)
      */
-    private Path2D.Double createPath(ArrayList<VisionCoordinate>coords){
+    private Path2D.Double createPath(ArrayList<VisionCoordinate> coords) {
         Path2D.Double path = new Path2D.Double();
         path.moveTo(coords.get(0).x, coords.get(0).y);
-        for(int i = 1; i <coords.size(); i++){
+        for (int i = 1; i < coords.size(); i++) {
             path.lineTo(coords.get(i).x, coords.get(i).y);
         }
         path.closePath();
@@ -101,7 +93,6 @@ public class Course {
     }
 
     /**
-     *
      * @param vc is the VisionCoordinate to be tested
      * @return returns a boolean whether the coordinate is between the inner and outer tracks
      */
@@ -110,7 +101,6 @@ public class Course {
     }
 
     /**
-     *
      * @param vc is the VisionCoordinate to be tested
      * @return returns a boolean whether the coordinate is inside the inner track
      */
@@ -119,7 +109,6 @@ public class Course {
     }
 
     /**
-     *
      * @param vc is the VisionCoordinate to be tested
      * @return returns a boolean whether the coordinate is inside the outer track
      */

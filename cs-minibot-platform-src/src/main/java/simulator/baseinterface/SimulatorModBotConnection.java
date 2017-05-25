@@ -20,18 +20,19 @@ public class SimulatorModBotConnection extends MotorConnection {
     }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 
     @Override
     public void setMotorPower(double fl, double fr, double bl, double br) {
-        if(fl > 0 && fr > 0 && bl >0 && br>0) {
+        if (fl > 0 && fr > 0 && bl > 0 && br > 0) {
             myBot.forward(fl);
 
-        } else if(fl < 0 && fr < 0 && bl < 0 && br < 0) {
+        } else if (fl < 0 && fr < 0 && bl < 0 && br < 0) {
             myBot.backward(-fl);
-        } else if(fl < 0 && fr > 0 && bl < 0 && br > 0) {
+        } else if (fl < 0 && fr > 0 && bl < 0 && br > 0) {
             myBot.counterClockwise(fl);
-        } else if(fl > 0 && fr < 0 && bl > 0 && br < 0) {
+        } else if (fl > 0 && fr < 0 && bl > 0 && br < 0) {
             myBot.clockwise(fr);
         } else {
             System.err.println("INVALID SIM COMMAND");

@@ -2,7 +2,6 @@ package examples.patrol;
 
 import basestation.BaseStation;
 import basestation.bot.commands.FourWheelMovement;
-import basestation.bot.robot.minibot.MiniBot;
 import basestation.vision.VisionCoordinate;
 import basestation.vision.VisionObject;
 import minibot.BaseHTTPInterface;
@@ -18,7 +17,6 @@ import java.util.List;
  * add bot to GUI
  * runSquareDance
  * NOTE: This code needs to be fixed because coordinate systems changed
- *
  */
 public class Patrol extends Thread {
 
@@ -54,13 +52,12 @@ public class Patrol extends Thread {
     }
 
     private class Navigator extends Thread {
-        private boolean destinationReached;
-        private VisionCoordinate destination;
-
         private static final double DISTANCE_THRESHOLD = 0.04;
-        private static final double ANGLE_THRESHOLD = Math.PI/(9*2);
+        private static final double ANGLE_THRESHOLD = Math.PI / (9 * 2);
         private static final int MAX_SPEED = 80;
         private static final int MIN_SPEED = 15;
+        private boolean destinationReached;
+        private VisionCoordinate destination;
 
         @Override
         public void run() {
@@ -83,35 +80,34 @@ public class Patrol extends Thread {
             destinationReached = false;
         }
 
-        private double mod(double a, double n){
-            return a - Math.floor(a/n)*n;
+        private double mod(double a, double n) {
+            return a - Math.floor(a / n) * n;
         }
 
-        public void calcRoute(){
+        public void calcRoute() {
             if (destinationReached()) return;
-            if(destination == null){
+            if (destination == null) {
                 return;
             }
 
             VisionCoordinate vc;
             List<VisionObject> locs = BaseStation.getInstance()
                     .getVisionManager
-                    ().getAllLocationData();
+                            ().getAllLocationData();
 
-            if (locs.size() == 0 || locs.get(0) == null){
+            if (locs.size() == 0 || locs.get(0) == null) {
                 vc = null;
-                    fwm.setWheelPower(0,0,0,0);
-                    return;
+                fwm.setWheelPower(0, 0, 0, 0);
+                return;
 
-            }
-            else {
+            } else {
                 vc = locs.get(0).coord;
                 System.out.println(vc);
             }
 
             double spectheta = vc.getThetaOrZero();
             double toAngle = vc.getAngleTo(destination);
-            double angle = mod((toAngle - spectheta + Math.PI), 2*Math.PI) -
+            double angle = mod((toAngle - spectheta + Math.PI), 2 * Math.PI) -
                     Math.PI;
             double dist = vc.getDistanceTo(destination);
 
@@ -132,12 +128,12 @@ public class Patrol extends Thread {
                     // Rotate in proper direction
                     if (angle < 0) {
                         fwm.setWheelPower(-angSpeed,
-                                angSpeed,-angSpeed,angSpeed);
+                                angSpeed, -angSpeed, angSpeed);
                         System.out.println("turn CCW");
 
                     } else {
                         fwm.setWheelPower(angSpeed,
-                                -angSpeed,angSpeed,-angSpeed);
+                                -angSpeed, angSpeed, -angSpeed);
                         System.out.println("turn CW");
                     }
                 } else {
@@ -156,12 +152,12 @@ public class Patrol extends Thread {
                         fwm.setWheelPower(speed, speed,
                                 speed, speed);
                     } else {
-                        fwm.setWheelPower(0,0,0,0);
+                        fwm.setWheelPower(0, 0, 0, 0);
                         destinationReached = true;
                     }
                 }
             } else {
-                fwm.setWheelPower(0,0,0,0);
+                fwm.setWheelPower(0, 0, 0, 0);
                 destinationReached = true;
             }
         }

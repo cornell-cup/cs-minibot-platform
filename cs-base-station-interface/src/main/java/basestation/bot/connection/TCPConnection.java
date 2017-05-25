@@ -1,7 +1,10 @@
 package basestation.bot.connection;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 
 public class TCPConnection extends Connection {
 
@@ -13,8 +16,8 @@ public class TCPConnection extends Connection {
     private boolean connectionNotRefused;
 
     public TCPConnection(String ip, int port) {
-        this.ip=ip;
-        this.port=port;
+        this.ip = ip;
+        this.port = port;
         try {
             this.clientSocket = new Socket(ip, port);
             this.outToServer = new DataOutputStream(clientSocket.getOutputStream());
@@ -40,7 +43,7 @@ public class TCPConnection extends Connection {
         }
     }
 
-    public synchronized boolean sendKV(String messageType, String message)  {
+    public synchronized boolean sendKV(String messageType, String message) {
         String payload;
         payload = "<<<<" + messageType + "," + message + ">>>>";
         try {
@@ -54,7 +57,7 @@ public class TCPConnection extends Connection {
         }
     }
 
-    public String getIP () {
+    public String getIP() {
         return this.ip;
     }
 

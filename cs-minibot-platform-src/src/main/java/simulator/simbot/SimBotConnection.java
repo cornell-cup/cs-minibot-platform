@@ -1,13 +1,11 @@
 package simulator.simbot;
 
-import basestation.bot.connection.Connection;
 import basestation.bot.connection.MotorConnection;
-import simulator.SimModBot;
 
 public class SimBotConnection extends MotorConnection {
 
 
-    public SimBotConnection( ) {
+    public SimBotConnection() {
     }
 
     @Override

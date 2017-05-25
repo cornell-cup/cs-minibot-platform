@@ -27,12 +27,12 @@ public abstract class Bot {
 
     /**
      * TODO: Use reflections on this if necessary.
+     *
      * @return A command center for controlling the bot.
      */
     public abstract CommandCenter getCommandCenter();
 
     /**
-     *
      * @return The bot's sensor center.
      */
     public abstract SensorCenter getSensorCenter();
@@ -40,6 +40,7 @@ public abstract class Bot {
     /**
      * Returns the connection associated with this bot. Should be used sparingly, as the CommandCenter
      * and SensorCentor abstractions are built for convenience over the connection.
+     *
      * @return the bot's connection
      */
     public Connection getConnection() {
@@ -48,6 +49,7 @@ public abstract class Bot {
 
     /**
      * Returns the name associated with the bot, if one was provided.
+     *
      * @return The name associated with the bot
      */
     public String getName() {
@@ -65,6 +67,7 @@ public abstract class Bot {
      * Safely escapes the name of the bot to ensure it is unique and returns that string.
      * This has a simple implementation for now, but could be extended to guarantee uniqueness.
      * For anyone using a bot, this means names should only use [a-zA-Z] characters.
+     *
      * @param name the name to be escaped
      * @return The safely escaped name
      */

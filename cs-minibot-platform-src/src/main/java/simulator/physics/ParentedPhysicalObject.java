@@ -2,6 +2,7 @@ package simulator.physics; /**
  * Physical Object can be any object in the simulator including modbots, walls, and obstacles.
  */
 //import graphics.*;
+
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
@@ -17,15 +18,15 @@ public class ParentedPhysicalObject {
 
     public ParentedPhysicalObject() {
         this.name = "";
-        this.id=0;
-        this.shape = new Rectangle2D.Double(0.0,0.0,0.0,0.0);
-        this.physics = new Physics(0,0,0,0,0,0,0,0,0);
+        this.id = 0;
+        this.shape = new Rectangle2D.Double(0.0, 0.0, 0.0, 0.0);
+        this.physics = new Physics(0, 0, 0, 0, 0, 0, 0, 0, 0);
         this.isDynamic = true;
         this.x = 0;
         this.y = 0;
     }
 
-    public ParentedPhysicalObject(String name, Shape shape, Physics physics, boolean isDynamic, double x, double y){
+    public ParentedPhysicalObject(String name, Shape shape, Physics physics, boolean isDynamic, double x, double y) {
         this.name = name;
         this.id = name.hashCode();
         this.shape = shape;
@@ -36,11 +37,18 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @return the object's name
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @param name becomes the object's new name, assigns a new id corresponding to new name
+     */
+    public void setName(String name) {
+        this.name = name;
+        this.id = name.hashCode();
     }
 
     @Override
@@ -54,16 +62,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
-     * @param name becomes the object's new name, assigns a new id corresponding to new name
-     */
-    public void setName(String name) {
-        this.name = name;
-        this.id = name.hashCode();
-    }
-
-    /**
-     *
      * @return the object's id
      */
     public int getID() {
@@ -71,7 +69,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @return the Shape of the object
      */
     public Shape getShape() {
@@ -79,7 +76,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @param shape becomes the new shape
      */
     public void setShape(Shape shape) {
@@ -87,7 +83,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @return the Physics of the object
      */
     public Physics getPhysics() {
@@ -95,7 +90,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @param physics becomes the new simulator.physics of the object
      */
     public void setPhysics(Physics physics) {
@@ -103,7 +97,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @return if the object can move
      */
     public boolean isDynamic() {
@@ -111,7 +104,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @param dynamic sets whether the object can move
      */
     public void setDynamic(boolean dynamic) {
@@ -119,7 +111,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @return the object's x-coordinate
      */
     public double getX() {
@@ -127,7 +118,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @param x becomes the object's new x-coordinate
      */
     public void setX(double x) {
@@ -135,7 +125,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @return the object's x-coordinate
      */
     public double getY() {
@@ -143,7 +132,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @param y becomes the object's new x-coordinate
      */
     public void setY(double y) {
@@ -151,12 +139,11 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @param object1 is the first object
      * @param object2 is the second object
      * @return a boolean if the two objects are touching (have collided)
      */
-    public boolean areTouching (ParentedPhysicalObject object1, ParentedPhysicalObject object2) {
+    public boolean areTouching(ParentedPhysicalObject object1, ParentedPhysicalObject object2) {
         if (object1.shape instanceof Rectangle2D.Double) {
             if (object2.shape instanceof Rectangle2D.Double) {
                 if ((object1.shape).intersects((Rectangle2D.Double) object2.shape)) {
@@ -171,33 +158,32 @@ public class ParentedPhysicalObject {
     /**
      * Updates the object's velocity and position based off it's acceleration and velocity
      */
-    public void move () {
+    public void move() {
 
         //Find x and y components of acceleration and add to velocity
-        double vel_x = ( this.getPhysics().getAcceleration()*Math.cos(this.getPhysics().getDirection()) )+this.getPhysics().getXVelocity();
-        double vel_y = ( this.getPhysics().getAcceleration()*Math.sin(this.getPhysics().getDirection()) )+this.getPhysics().getYVelocity();
-        double new_vel = Math.sqrt(Math.pow(vel_x,2)+Math.pow(vel_y,2));
+        double vel_x = (this.getPhysics().getAcceleration() * Math.cos(this.getPhysics().getDirection())) + this.getPhysics().getXVelocity();
+        double vel_y = (this.getPhysics().getAcceleration() * Math.sin(this.getPhysics().getDirection())) + this.getPhysics().getYVelocity();
+        double new_vel = Math.sqrt(Math.pow(vel_x, 2) + Math.pow(vel_y, 2));
 
         //Change the rectangle coordinates to move it
         //Rectangle2D.Double r = (Rectangle2D.Double)this.getShape();
-        ((Rectangle2D.Double)this.getShape()).setRect( ((Rectangle2D.Double)this.getShape()).getX() + vel_x, ((Rectangle2D.Double)this.getShape()).getY() + vel_y,
-                ((Rectangle2D.Double)this.getShape()).getHeight(),((Rectangle2D.Double)this.getShape()).getWidth() );
+        ((Rectangle2D.Double) this.getShape()).setRect(((Rectangle2D.Double) this.getShape()).getX() + vel_x, ((Rectangle2D.Double) this.getShape()).getY() + vel_y,
+                ((Rectangle2D.Double) this.getShape()).getHeight(), ((Rectangle2D.Double) this.getShape()).getWidth());
 
         //Change velocity and momentum in simulator.physics.Physics of this object
         this.setPhysics(new Physics(this.getPhysics().getMass(), new_vel, this.getPhysics().getDirection(),
                 this.getPhysics().getAcceleration(), this.getPhysics().getStaticFriction(),
                 this.getPhysics().getDynamicFriction(), this.getPhysics().getForce(),
-                this.getPhysics().getMass()*new_vel,this.getPhysics().getAngularVel()));
+                this.getPhysics().getMass() * new_vel, this.getPhysics().getAngularVel()));
     }
 
     /**
-     *
      * @param object1 is the first PhysicalObject
      * @param object2 is the second PhysicalObject
      * @return a boolean if two objects are both moving in the same direction at the same velocity
      * (have already collided/will never collide)
      */
-    public boolean sameVelocity (ParentedPhysicalObject object1, ParentedPhysicalObject object2) {
+    public boolean sameVelocity(ParentedPhysicalObject object1, ParentedPhysicalObject object2) {
         if (object1.getPhysics().getDirection() == object2.getPhysics().getDirection() &&
                 object1.getPhysics().getSpeed() == object2.getPhysics().getSpeed()) return true;
         else return false;
@@ -206,9 +192,10 @@ public class ParentedPhysicalObject {
     /**
      * Checks to see if there is a collision between two objects,
      * and if so, updates the velocities and directions accordingly
+     *
      * @param object2 is the PhysicalObject the current PhysicalObject is testing for collisions with
      */
-    public void collisions (ParentedPhysicalObject object2) {
+    public void collisions(ParentedPhysicalObject object2) {
         return;
         /*
         if (areTouching(this, object2) && !sameVelocity(this,object2)) {
@@ -265,7 +252,6 @@ public class ParentedPhysicalObject {
     }
 
     /**
-     *
      * @return a string of the PhysicalObject
      */
     public String toString() {

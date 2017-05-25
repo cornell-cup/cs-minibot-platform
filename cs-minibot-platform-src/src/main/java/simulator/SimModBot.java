@@ -21,26 +21,25 @@ public class SimModBot extends PhysicalObject {
     }
 
     /**
-     *
      * @param percent Percentage from 0 to 100
      */
     public void forward(double percent) {
-        assert(percent <= 100 && percent >= 0);
-        float new_speed = (float)(MAX_SPEED * 0.01 * percent);
+        assert (percent <= 100 && percent >= 0);
+        float new_speed = (float) (MAX_SPEED * 0.01 * percent);
         float angle = this.getBody().getAngle();
-        float newX = (float) (new_speed*Math.cos(angle));
-        float newY = (float) (new_speed*Math.sin(angle));
+        float newX = (float) (new_speed * Math.cos(angle));
+        float newY = (float) (new_speed * Math.sin(angle));
         this.getBody().setLinearVelocity(new Vec2(newX, newY));
         this.getBody().setAngularVelocity(0.0f);
     }
 
     public void backward(double percent) {
-        assert(percent <= 100 && percent >= 0);
-        float new_speed = (float)(-MAX_SPEED * 0.01 * percent);
+        assert (percent <= 100 && percent >= 0);
+        float new_speed = (float) (-MAX_SPEED * 0.01 * percent);
         float angle = this.getBody().getAngle();
-        float newX = (float) (new_speed*Math.cos(angle));
-        float newY = (float) (new_speed*Math.sin(angle));
-        this.getBody().setLinearVelocity(new Vec2(newX,newY));
+        float newX = (float) (new_speed * Math.cos(angle));
+        float newY = (float) (new_speed * Math.sin(angle));
+        this.getBody().setLinearVelocity(new Vec2(newX, newY));
         this.getBody().setAngularVelocity(0.0f);
     }
 
@@ -53,14 +52,14 @@ public class SimModBot extends PhysicalObject {
     }
 
     public void clockwise(double percent) {
-        this.getBody().setLinearVelocity(new Vec2(0.0f,0.0f));
-        this.getBody().setAngularVelocity((float)(-MAX_ANGULAR_SPEED));
+        this.getBody().setLinearVelocity(new Vec2(0.0f, 0.0f));
+        this.getBody().setAngularVelocity((float) (-MAX_ANGULAR_SPEED));
 
     }
 
     public void counterClockwise(double percent) {
-        this.getBody().setLinearVelocity(new Vec2(0.0f,0.0f));
-        this.getBody().setAngularVelocity((float)(MAX_ANGULAR_SPEED));
+        this.getBody().setLinearVelocity(new Vec2(0.0f, 0.0f));
+        this.getBody().setAngularVelocity((float) (MAX_ANGULAR_SPEED));
     }
 
 

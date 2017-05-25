@@ -3,24 +3,17 @@ package simulator.physics; /**
  */
 //import graphics.*;
 
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.World;
-import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.dynamics.FixtureDef;
-
-import java.awt.geom.Rectangle2D;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.*;
 
 public class PhysicalObject {
+    public static final float BOT_SIZE = 0.15f;
     private final String name;
     private Body body;
     private int id;
     private World world;
     private float size;
-    public static final float BOT_SIZE = 0.15f;
 
 
     //this constructor is for bots, no size is passed in, the default bot size is 0.15m, or 6 inches

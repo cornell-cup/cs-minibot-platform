@@ -6,27 +6,27 @@ package xboxhandler.inputeventhandler;
  * Cornell Cup Robotics Team 2016-2017
  * =============================================================================
  * Important Instructions:
- *      - motorPower order: --- (fl, fr, bl, br) ---
- *      - Move Direction: Using Enum Direction
+ * - motorPower order: --- (fl, fr, bl, br) ---
+ * - Move Direction: Using Enum Direction
  * =============================================================================
  * <<<<< UPDATE THE TABLE AS YOU CHANGE IMPLEMENTATIONS IN THIS CLASS >>>>>
  * -----------------------------------------------------------------------------
  * Movements supported:                 | Movements not supported:
- *      - dpad                          |   - NONE
- *      - leftThumb                     |
+ * - dpad                          |   - NONE
+ * - leftThumb                     |
  * -----------------------------------------------------------------------------
  * Actions supported:                   | Actions not supported:
- *      - NONE                          |   - rightThumb
- *                                      |   - leftTrigger
- *                                      |   - rightTrigger
- *                                      |   - leftShoulder
- *                                      |   - rightShoulder
- *                                      |   - buttonA
- *                                      |   - buttonB
- *                                      |   - buttonX
- *                                      |   - buttonY
- *                                      |   - buttonBack
- *                                      |   - buttonStart
+ * - NONE                          |   - rightThumb
+ * |   - leftTrigger
+ * |   - rightTrigger
+ * |   - leftShoulder
+ * |   - rightShoulder
+ * |   - buttonA
+ * |   - buttonB
+ * |   - buttonX
+ * |   - buttonY
+ * |   - buttonBack
+ * |   - buttonStart
  * =============================================================================
  */
 
@@ -49,9 +49,9 @@ public class MiniBotXboxInputEventHandler extends
     // =========================================================================
 
     private static final double MAX_MOTOR_POW = 100.0;
-    private String botName;
     double curLeft;
     double curRight;
+    private String botName;
 
     // =========================================================================
     // Constructors
@@ -61,7 +61,7 @@ public class MiniBotXboxInputEventHandler extends
      * Constructor: initializes the instance and the bot
      * @param _botName Name of the Bot
      */
-    MiniBotXboxInputEventHandler (String _botName) {
+    MiniBotXboxInputEventHandler(String _botName) {
         botName = _botName;
     }
 
@@ -89,7 +89,7 @@ public class MiniBotXboxInputEventHandler extends
      * @param _br back right wheel power
      */
     private void localSetWheelPower(double _fl, double _fr, double _bl,
-                                     double _br) {
+                                    double _br) {
         Optional<Bot> possibleBot = BaseStation.getInstance().getBotManager()
                 .getBotByName(botName);
         if (possibleBot.isPresent()) {
@@ -115,7 +115,7 @@ public class MiniBotXboxInputEventHandler extends
      * @return Thumb directions converted to moveDirection values
      */
     private Direction moveDirDpad(int _dpadVal) {
-        switch(_dpadVal) {
+        switch (_dpadVal) {
             case 0:
             case 1:
             case 7:
@@ -201,10 +201,10 @@ public class MiniBotXboxInputEventHandler extends
      */
     public void leftThumbMove(double magnitude, double direction) {
 //        double power = magnitude * MAX_MOTOR_POW;
-        curLeft = MAX_MOTOR_POW * magnitude * Math.sin(Math.PI/2 + Math
+        curLeft = MAX_MOTOR_POW * magnitude * Math.sin(Math.PI / 2 + Math
                 .toRadians
-                (direction));
-        localSetWheelPower(curLeft,curRight,0,0);
+                        (direction));
+        localSetWheelPower(curLeft, curRight, 0, 0);
 
 //        switch (moveDirLeftThumb(direction)) {
 //            case FORWARD:
@@ -229,10 +229,10 @@ public class MiniBotXboxInputEventHandler extends
     }
 
     public void rightThumbMove(double magnitude, double direction) {
-        curRight = MAX_MOTOR_POW * magnitude * Math.sin(Math.PI/2 + Math
+        curRight = MAX_MOTOR_POW * magnitude * Math.sin(Math.PI / 2 + Math
                 .toRadians
-                (direction));
-        localSetWheelPower(curLeft,curRight,0,0);
+                        (direction));
+        localSetWheelPower(curLeft, curRight, 0, 0);
     }
 
     public void leftTriggerAction(double value) {

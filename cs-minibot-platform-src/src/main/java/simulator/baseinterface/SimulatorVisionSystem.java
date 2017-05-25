@@ -6,7 +6,6 @@ import basestation.vision.VisionObject;
 import basestation.vision.VisionSystem;
 import simulator.physics.PhysicalObject;
 
-
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -58,10 +57,10 @@ public class SimulatorVisionSystem extends VisionSystem {
      */
     public void updateVisionCoordinates(Set<PhysicalObject> poSet) {
         Set<VisionObject> newSet = ConcurrentHashMap.newKeySet();
-        for(PhysicalObject obj: poSet) {
-            VisionCoordinate vc = new VisionCoordinate(obj.getX(),obj.getY(),
+        for (PhysicalObject obj : poSet) {
+            VisionCoordinate vc = new VisionCoordinate(obj.getX(), obj.getY(),
                     obj.getAngle());
-            VisionObject vo = new VisionObject(this,obj.getID(),vc, obj
+            VisionObject vo = new VisionObject(this, obj.getID(), vc, obj
                     .getSize());
             newSet.add(vo);
         }

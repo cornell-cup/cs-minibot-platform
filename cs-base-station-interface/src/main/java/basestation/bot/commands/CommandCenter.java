@@ -1,6 +1,5 @@
 package basestation.bot.commands;
 
-import basestation.bot.connection.TCPConnection;
 import basestation.bot.connection.Connection;
 import com.google.gson.JsonObject;
 
@@ -21,6 +20,7 @@ public interface CommandCenter {
 
     /**
      * Returns whether or not data is currently being logged.
+     *
      * @return True if the command center is currently logging data
      */
     boolean isLogging();
@@ -28,7 +28,8 @@ public interface CommandCenter {
     /**
      * Sends an arbitrary key and value over the associated bot's connection. Should only be used for quick prototyping,
      * with the goal of creating a method wrapper around sending the KV.
-     * @param key A key to identify the type of command
+     *
+     * @param key   A key to identify the type of command
      * @param value The value of the command
      * @return True if the command seems to have sent correctly
      */
@@ -36,6 +37,7 @@ public interface CommandCenter {
 
     /**
      * Returns Connection object
+     *
      * @return Connection
      */
     Connection getConnection();
