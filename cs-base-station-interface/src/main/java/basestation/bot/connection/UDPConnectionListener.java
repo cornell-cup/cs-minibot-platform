@@ -36,6 +36,7 @@ public class UDPConnectionListener extends Thread{
             while (true) {
                 //Start accepting packets
                 socket.receive(packet);
+                System.out.println("OMGOMG" + packet);
 
                 //Get packet header (IP address) as a string for storage
                 String address = packet.getAddress().toString();

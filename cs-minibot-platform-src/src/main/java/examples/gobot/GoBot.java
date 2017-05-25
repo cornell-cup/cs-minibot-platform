@@ -314,6 +314,7 @@ public class GoBot extends Thread {
         }
 
         public void calcRoute(){
+            if (fwm == null) return;
             VisionCoordinate vc;
             List<VisionObject> locs = BaseStation.getInstance()
                     .getVisionManager
