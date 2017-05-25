@@ -339,6 +339,10 @@ public class Simulator {
         return pathMatrix;
     }
 
+    /**
+     * A lock object implementation used to ensure that the callbacks used when doing
+     * AABB-querying have all completed before we return the occupancy matrix.
+     */
     public class AABBCBLock {
         private Object lock;
         private int count;
