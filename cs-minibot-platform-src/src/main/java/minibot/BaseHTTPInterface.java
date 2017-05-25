@@ -344,6 +344,14 @@ public class BaseHTTPInterface {
             String size = settings.get("size").getAsString();
             simulator.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
             int[][] path = simulator.getDijkstras();
+            int[][] foo = simulator.getOccupancyMatrix();
+            for(int i = 0; i < foo.length; i++) {
+                for(int j = 0; j > foo[0].length; j++) {
+                    System.out.print(foo[i][j]);
+
+                }
+                System.out.println("hi");
+            }
             return gson.toJson(simulator.getOccupancyMatrix());
         });
 

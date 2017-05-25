@@ -53,12 +53,13 @@ $('#scale').on('change',function(){
     setupGridLines(scale, xOffset, yOffset);
 
     stage.addChild(gridContainer);
-    if(occupancyMatrix !== null) {
-        displayOccupancyMatrix(40, 40, 1.0);
-        fillOccupancyMatrix(scale, xOffset, yOffset);
-    }
+//    if(occupancyMatrix !== null) {
+//        displayOccupancyMatrix(40, 40, 1.0);
+//
+//    }
+displayBots(bots,scale, xOffset, yOffset);
+    fillOccupancyMatrix(scale, xOffset, yOffset);
 
-    displayBots(bots,scale, xOffset, yOffset);
     grid.render(stage);
 });
 
@@ -87,9 +88,10 @@ document.onkeydown = function (e) {
     gridContainer.removeChildren();
     botContainer.removeChildren();
     setupGridLines(scale, xOffset, yOffset);
-    displayOccupancyMatrix(40, 40, 1.0);
-    fillOccupancyMatrix(scale, xOffset, yOffset);
+//    displayOccupancyMatrix(40, 40, 1.0);
+
     displayBots(bots, scale, xOffset, yOffset);
+    fillOccupancyMatrix(scale, xOffset, yOffset);
 
     grid.render(stage);
 };
@@ -176,7 +178,7 @@ function drawBot(b, scale, xOffset, yOffset) {
     	bot.endFill();
 
     var cx = (b.x)*x_int+xOffset;
-    var cy = (START_SCALE-b.y)*y_int+yOffset;
+    var cy = (b.y)*y_int+yOffset;
 	bot.x = cx;
 	bot.y = cy;
 
@@ -219,7 +221,7 @@ function drawScenarioObject(b, scale, xOffset, yOffset) {
 	scenarioObject.endFill();
 
     var cx = (b.x)*x_int;
-    var cy = (START_SCALE-b.y)*y_int;
+    var cy = (b.y)*y_int;
     scenarioObject.x = cx+xOffset;
     scenarioObject.y = cy+yOffset;
 
@@ -290,10 +292,10 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     scenarioObject.drawRect(0, 0, x_int, y_int);
                     scenarioObject.endFill();
 
-                    var cx = i*x_int;
-                    var cy = j*y_int;
-                    scenarioObject.x = cx+xOffset;
-                    scenarioObject.y = (cy*-1 + yOffset);
+                    var cx = (i)*x_int+xOffset;
+                    var cy = (j)*y_int+yOffset;
+                    scenarioObject.x = cx;
+                    scenarioObject.y = cy;
                     botContainer.addChild(scenarioObject);
                 }
 
@@ -305,10 +307,10 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     scenarioObject.drawRect(0, 0, x_int, y_int);
                     scenarioObject.endFill();
 
-                    var cx = i*x_int;
-                    var cy = j*y_int;
-                    scenarioObject.x = cx+xOffset;
-                    scenarioObject.y = (cy*-1 +yOffset);
+                    var cx = (i)*x_int+xOffset;
+                    var cy = (j)*y_int+yOffset;
+                    scenarioObject.x = cx;
+                    scenarioObject.y = cy;
                     botContainer.addChild(scenarioObject);
                 }
 
@@ -507,9 +509,9 @@ $("#showOccupancyMatrix").click( function() {
         //Wait until the occupancy matrix has been returned from POST
         //while(!omPresent){}
         setTimeout( function() {
-
+            displayBots(bots,scale, xOffset, yOffset);
                 fillOccupancyMatrix(scale, xOffset, yOffset);
-                displayBots(bots,scale, xOffset, yOffset);
+
                 grid.render(stage);
                 }, 4000);
 
