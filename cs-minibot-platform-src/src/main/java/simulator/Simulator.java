@@ -283,6 +283,7 @@ public class Simulator {
         boolean[] finishQuery = new boolean[1];
         final int height = occupancyMatrixHeight;
         final int width = occupancyMatrixWidth;
+        AABBCBLock lock = new AABBCBLock((height*width));
         //System.out.println("The occupancy matrix box size is " + occupancyMatrixBoxSize);
         for(int i = 0; i < occupancyMatrixHeight; i++){
             for(int j = 0; j < occupancyMatrixWidth; j++) {
@@ -306,10 +307,7 @@ public class Simulator {
                         if(fixture.testPoint(testpoint1) || fixture.testPoint(testpoint2) || fixture.testPoint(testpoint3) || fixture.testPoint(testpoint4) || fixture.testPoint(testpoint5)) {
                             om[icopy][jcopy] = 1;
                         }
-                        //Last query that needs to be completed
-                        if(icopy == height-1 && jcopy == width - 1) {
-                            finishQuery[0] = true;
-                        }
+                        lock.increment();
 
                         return true;
                     }
@@ -318,7 +316,7 @@ public class Simulator {
             }
         }
         //TODO, ensure that setOccupancyMatrix(om) is not called before the callback has completed
-       // while(!finishQuery[]) {}
+        while(lock.isDone()) {}
         setOccupancyMatrix(om);
     }
 

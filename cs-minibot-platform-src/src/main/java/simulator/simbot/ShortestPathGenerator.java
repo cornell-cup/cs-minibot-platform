@@ -40,7 +40,7 @@ public class ShortestPathGenerator {
     //Also sets cost to max int
     //The end node is the bottom-right corner of the maze. Offset by 1 because
     //The entire maze is padded with 1's on the border.
-    public  Node[][] initializeNodeMatrix(int[][] maze) {
+    public static Node[][] initializeNodeMatrix(int[][] maze) {
         int height = maze.length;
         int width = maze[0].length;
         Node[][] res = new Node[height][width];
@@ -64,7 +64,7 @@ public class ShortestPathGenerator {
 
     //Returns a HashSet of neighbors given a position and maze
     //Neighbors are considered to be cells in the up/left/down/right direction
-    public  HashSet<Node> generateNeighbors(int i, int j, Node[][] maze) {
+    public static HashSet<Node> generateNeighbors(int i, int j, Node[][] maze) {
         HashSet<Node> res = new HashSet<Node>();
         if (maze[i + 1][j].value == 0) {
             res.add(maze[i + 1][j]);
@@ -82,7 +82,7 @@ public class ShortestPathGenerator {
     }
 
     //Returns an array of Nodes with the neighbors field filled out
-    public  Node[][] populateNeighbors(Node[][] maze) {
+    public static Node[][] populateNeighbors(Node[][] maze) {
         int height = maze.length;
         int width = maze[0].length;
         for (int i = 1; i < height - 1; i++) {
@@ -96,7 +96,7 @@ public class ShortestPathGenerator {
     }
 
     //Given a set of nodes, return the node with the lowest cost
-    public  Node getNodeWithLowestCost(HashSet<Node> unsettledNodes) {
+    public static Node getNodeWithLowestCost(HashSet<Node> unsettledNodes) {
         int lowestCost = Integer.MAX_VALUE;
         Node res = null;
         for (Node n : unsettledNodes) {
@@ -111,7 +111,7 @@ public class ShortestPathGenerator {
 
     //Updates the cost of the neighbors that are not settled and updates the path.
     //Assumes that all the edges in the graph have cost 1.
-    public  void processNeighbors(Node currentNode) {
+    public static void processNeighbors(Node currentNode) {
         for (Node n : currentNode.neighbors) {
             if (!settledNodes.contains(n)) {
                 int newCost = currentNode.cost + 1;
@@ -125,7 +125,7 @@ public class ShortestPathGenerator {
         }
     }
 
-    public  LinkedList<Node> getPath(Node target) {
+    public static LinkedList<Node> getPath(Node target) {
         LinkedList<Node> path = new LinkedList<Node>();
         Node step = target;
         // check if a path exists
@@ -144,7 +144,7 @@ public class ShortestPathGenerator {
         return path;
     }
 
-    public  int execute(Node[][] maze) {
+    public static int execute(Node[][] maze) {
         Node sourceNode = maze[1][1];
         unsettledNodes.add(sourceNode);
         Node curr = sourceNode;
@@ -172,7 +172,7 @@ public class ShortestPathGenerator {
         return maze[width - 2][height - 2].cost;
     }
 
-    public  int answer(int[][] maze) {
+    public static int answer(int[][] maze) {
         int min = Integer.MAX_VALUE;
 
         int[][] x = generateWrappedMaze(maze);
@@ -185,7 +185,7 @@ public class ShortestPathGenerator {
         return min;
     }
 
-    private class Node {
+    public static class Node {
         private int value;
         private boolean isEnd;
         private int cost;
