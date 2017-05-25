@@ -36,7 +36,7 @@ public class VisionCoordinate {
     }
 
     /**
-     * Returns the angle from this coordinate to other in degrees.
+     * Returns the angle from this coordinate to other in rad.
      *
      * @param other The target coordinate
      * @return the desired angle in normalized radians

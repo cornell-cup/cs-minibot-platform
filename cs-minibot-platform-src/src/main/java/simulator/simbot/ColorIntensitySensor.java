@@ -24,7 +24,9 @@ public class ColorIntensitySensor extends Sensor {
         super(myCenter, name);
         parent = sim;
         try {
-            img = ImageIO.read(new File("cs-minibot-platform-src/src/main/resources/public/img/line.png"));
+            img = ImageIO.read(new File
+                    ("cs-minibot-platform-src/src/main/resources/public/img" +
+                            "/line.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
