@@ -283,7 +283,7 @@ function setupGridLines(scale, xOffset, yOffset) {
 function fillOccupancyMatrix(scale, xOffset, yOffset) {
     for(var i = 0; i < occupancyMatrix.length; i++) {
         for(var j = 0; j < occupancyMatrix[0].length; j++) {
-
+                //If this cell corresponds to a cell on path to the occupancy matrix, color it purple
                 if(path[i][j] == 1) {
 
                     var scenarioObject = new PIXI.Graphics();
@@ -298,7 +298,7 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     scenarioObject.y = cy;
                     botContainer.addChild(scenarioObject);
                 }
-
+                //If this cell corresponds to a cell that is filled in in the occupancy matrix, color it blackish
                 else if(occupancyMatrix[i][j] == 1) {
                     var size = 65;
                     var scenarioObject = new PIXI.Graphics();

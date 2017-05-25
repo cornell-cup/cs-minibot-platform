@@ -12,7 +12,7 @@ import java.util.*;
 
 
 /**
- * Created by CornellCup on 4/25/2017.
+ * THIS FILE IS PURELY FOR TESTING PURPOSES
  */
 public class SandboxOccupancyMatrix extends Thread{
 

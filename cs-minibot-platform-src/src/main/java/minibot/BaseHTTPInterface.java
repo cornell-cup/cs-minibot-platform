@@ -369,7 +369,6 @@ public class BaseHTTPInterface {
             }
             int[][] om = new int[total.size()][total.get(0).size()];
             simulator.setOccupancyMatrix(om);
-            Thread.sleep(700);
             return gson.toJson(simulator.getDijkstras());
         });
 
