@@ -332,6 +332,10 @@ function updateDiscoveredBots(){
     });
 }
 
+
+
+
+
 /*
     Recreates the display of discovered minibots
 */
@@ -400,6 +404,11 @@ function redoDiscoverList(data){
         active_bots.push(bot_ip);
         redoDiscoverList(discovered_bots);
     });
+}
+
+
+function listBots(){
+	// lists all the bots
 }
 
 updateDiscoveredBots();

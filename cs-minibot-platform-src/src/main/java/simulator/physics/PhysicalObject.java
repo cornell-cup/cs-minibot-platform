@@ -37,11 +37,11 @@ public class PhysicalObject {
         testbody.type = BodyType.DYNAMIC;
         Vec2 testvec = new Vec2(xSpeed, ySpeed);
         testbody.linearVelocity = testvec;
-        testbody.angle=(float)(angle/180.0*Math.PI);
+        testbody.angle = (float) (angle / 180.0 * Math.PI);
         //testbody.linearDamping = 0.5f;
 
         PolygonShape ps = new PolygonShape();
-        ps.setAsBox(BOT_SIZE/2.0f, BOT_SIZE/2.0f, new Vec2(0.0f,0.0f), 0.0f);
+        ps.setAsBox(BOT_SIZE / 2.0f, BOT_SIZE / 2.0f, new Vec2(0.0f, 0.0f), 0.0f);
 
         FixtureDef testFixture = new FixtureDef();
         testFixture.shape = ps;
@@ -53,7 +53,8 @@ public class PhysicalObject {
         world.setGravity(gravity);
         this.body = b;
     }
-//this one is for scenario objects
+
+    //this one is for scenario objects
     public PhysicalObject(String name, int id, World world, float xPos, float
             yPos, float size, int angle) {
         this.name = name;
@@ -62,13 +63,14 @@ public class PhysicalObject {
 
         BodyDef testbody = new BodyDef();
         testbody.position.set(new Vec2(xPos, yPos));
-        testbody.angle = (float)(angle/180.0*Math.PI);
+        testbody.angle = (float) (angle / 180.0 * Math.PI);
         testbody.type = BodyType.STATIC;
-        testbody.linearVelocity = new Vec2(0.0f, 0.0f);;
+        testbody.linearVelocity = new Vec2(0.0f, 0.0f);
+        ;
 
 
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(size/2.0f, size/2.0f, new Vec2(0.0f,0.0f), 0.0f);
+        polygonShape.setAsBox(size / 2.0f, size / 2.0f, new Vec2(0.0f, 0.0f), 0.0f);
 
         FixtureDef testFixture = new FixtureDef();
         testFixture.shape = polygonShape;
@@ -80,7 +82,6 @@ public class PhysicalObject {
     }
 
     /**
-     *
      * @return the object's name
      */
     public String getName() {
@@ -98,7 +99,6 @@ public class PhysicalObject {
     }
 
     /**
-     *
      * @return the object's id
      */
     public int getID() {
@@ -111,10 +111,10 @@ public class PhysicalObject {
         return speed.x;
     }
 
-    public float getSize()
-    {
+    public float getSize() {
         return size;
     }
+
     public float getYVelocity() {
         Vec2 speed = this.body.getLinearVelocity();
         return speed.y;
@@ -122,12 +122,11 @@ public class PhysicalObject {
 
 
     public void setSpeed(float x, float y) {
-        this.body.setLinearVelocity(new Vec2(x,y));
+        this.body.setLinearVelocity(new Vec2(x, y));
     }
 
 
     /**
-     *
      * @return the object's x-coordinate
      */
     public double getX() {
@@ -145,10 +144,11 @@ public class PhysicalObject {
     /**
      * @return the object's JBox2D body
      */
-    public Body getBody() { return body;}
+    public Body getBody() {
+        return body;
+    }
 
     /**
-     *
      * @return a string of the PhysicalObject
      */
     public String toString() {

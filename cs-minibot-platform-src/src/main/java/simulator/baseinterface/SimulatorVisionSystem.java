@@ -4,15 +4,12 @@ package simulator.baseinterface;
 import basestation.vision.VisionCoordinate;
 import basestation.vision.VisionObject;
 import basestation.vision.VisionSystem;
-import org.jbox2d.common.Vec2;
 import simulator.physics.PhysicalObject;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.jbox2d.dynamics.World;
 
 public class SimulatorVisionSystem extends VisionSystem {
     /**
@@ -22,6 +19,7 @@ public class SimulatorVisionSystem extends VisionSystem {
      */
     private static SimulatorVisionSystem instance;
     private volatile Set<VisionObject> visionObjectSet;
+
 
     private SimulatorVisionSystem() {
         super(new VisionCoordinate(0, 0, 0));
@@ -69,5 +67,4 @@ public class SimulatorVisionSystem extends VisionSystem {
         }
         visionObjectSet = newSet;
     }
-
 }

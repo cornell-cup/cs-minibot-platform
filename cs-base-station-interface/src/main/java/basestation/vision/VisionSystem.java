@@ -19,6 +19,7 @@ public abstract class VisionSystem {
     private final double scalingFactor;
     private final VisionCoordinate origin;
     private Map<Bot, Integer> botMap;
+    private int[][] occupancyMatrix;
 
     /**
      * Sets up a VisionSystem with o as its origin
@@ -94,6 +95,8 @@ public abstract class VisionSystem {
     public String toString() {
         return "[Vision System|" + this.getClass().getSimpleName() + "]";
     }
+
+
 
     @Override
     public boolean equals(Object other) {

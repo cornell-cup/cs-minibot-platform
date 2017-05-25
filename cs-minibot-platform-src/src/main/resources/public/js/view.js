@@ -32,6 +32,10 @@ var grid;
 var imageLoader;
 
 var listBots = [];
+var occupancyMatrix = null;
+var path = null;
+var foundPath = false;
+var omPresent = false;
 
 var backgroundSprite;
 
@@ -42,12 +46,20 @@ $('#scale').on('change',function(){
     y_int = VIEW_WIDTH/START_SCALE*val/100;
     updateInfo(x_int, y_int);
 
+
     stage.removeChild(gridContainer);
     gridContainer = new PIXI.Container();
     botContainer.removeChildren();
     setupGridLines(scale, xOffset, yOffset);
+
     stage.addChild(gridContainer);
-    displayBots(bots,scale, xOffset, yOffset);
+//    if(occupancyMatrix !== null) {
+//        displayOccupancyMatrix(40, 40, 1.0);
+//
+//    }
+displayBots(bots,scale, xOffset, yOffset);
+    fillOccupancyMatrix(scale, xOffset, yOffset);
+
     grid.render(stage);
 });
 
@@ -72,10 +84,15 @@ document.onkeydown = function (e) {
     } else {
         return;
     }
+
     gridContainer.removeChildren();
     botContainer.removeChildren();
     setupGridLines(scale, xOffset, yOffset);
+//    displayOccupancyMatrix(40, 40, 1.0);
+
     displayBots(bots, scale, xOffset, yOffset);
+    fillOccupancyMatrix(scale, xOffset, yOffset);
+
     grid.render(stage);
 };
 
@@ -161,7 +178,7 @@ function drawBot(b, scale, xOffset, yOffset) {
     	bot.endFill();
 
     var cx = (b.x)*x_int+xOffset;
-    var cy = (START_SCALE-b.y)*y_int+yOffset;
+    var cy = (b.y)*y_int+yOffset;
 	bot.x = cx;
 	bot.y = cy;
 
@@ -204,7 +221,7 @@ function drawScenarioObject(b, scale, xOffset, yOffset) {
 	scenarioObject.endFill();
 
     var cx = (b.x)*x_int;
-    var cy = (START_SCALE-b.y)*y_int;
+    var cy = (b.y)*y_int;
     scenarioObject.x = cx+xOffset;
     scenarioObject.y = cy+yOffset;
 
@@ -214,11 +231,11 @@ function drawScenarioObject(b, scale, xOffset, yOffset) {
 /* Displays all bots given an array of bots */
 function displayBots(botArray, scale, xOffset, yOffset) {
 	for(var b=0; b<botArray.length;b++) {
-	if (botArray[b].type=='bot'){
-	    drawBot(botArray[b], scale, xOffset, yOffset);
-	} else {
-	    drawScenarioObject(botArray[b], scale, xOffset, yOffset);
-	}
+        if (botArray[b].type=='bot'){
+            drawBot(botArray[b], scale, xOffset, yOffset);
+        } else {
+            drawScenarioObject(botArray[b], scale, xOffset, yOffset);
+        }
 	}
 }
 
@@ -240,7 +257,8 @@ function setupGridLines(scale, xOffset, yOffset) {
 
     for(var i=0; i<40; i=i+1){
         lines_y[i] = new PIXI.Graphics();
-        lines_y[i].lineStyle(1, 0x0000FF, 1);
+        //lines_y[i].lineStyle(1, 0x0000FF, 1);
+        lines_y[i].lineStyle(1, 0x000000, 1);
 
         lines_y[i].moveTo(0,i*65*scale/100);
         lines_y[i].lineTo(VIEW_WIDTH,i*65*scale/100);
@@ -258,6 +276,45 @@ function setupGridLines(scale, xOffset, yOffset) {
         lines_x[i].y = 0;
 
         gridContainer.addChild(lines_x[i]);
+    }
+}
+
+// Populates the PIXI view with the squares corresponding to the occupancy matrix and path
+function fillOccupancyMatrix(scale, xOffset, yOffset) {
+    for(var i = 0; i < occupancyMatrix.length; i++) {
+        for(var j = 0; j < occupancyMatrix[0].length; j++) {
+                //If this cell corresponds to a cell on path to the occupancy matrix, color it purple
+                if(path[i][j] == 1) {
+
+                    var scenarioObject = new PIXI.Graphics();
+
+                    scenarioObject.beginFill(0x8822A4);
+                    scenarioObject.drawRect(0, 0, x_int, y_int);
+                    scenarioObject.endFill();
+
+                    var cx = (i)*x_int+xOffset;
+                    var cy = (j)*y_int+yOffset;
+                    scenarioObject.x = cx;
+                    scenarioObject.y = cy;
+                    botContainer.addChild(scenarioObject);
+                }
+                //If this cell corresponds to a cell that is filled in in the occupancy matrix, color it blackish
+                else if(occupancyMatrix[i][j] == 1) {
+                    var size = 65;
+                    var scenarioObject = new PIXI.Graphics();
+
+                    scenarioObject.beginFill(0x123212);
+                    scenarioObject.drawRect(0, 0, x_int, y_int);
+                    scenarioObject.endFill();
+
+                    var cx = (i)*x_int+xOffset;
+                    var cy = (j)*y_int+yOffset;
+                    scenarioObject.x = cx;
+                    scenarioObject.y = cy;
+                    botContainer.addChild(scenarioObject);
+                }
+
+        }
     }
 }
 
@@ -300,6 +357,17 @@ function getNewVisionData() {
                         bots.push(newBot(bot.x, bot.y, bot.angle, bot.id, bot
                         .size));
                     }
+
+
+                    stage.removeChild(gridContainer);
+                    gridContainer = new PIXI.Container();
+                    botContainer.removeChildren();
+
+                    setupGridLines(scale, xOffset, yOffset);
+
+                    stage.addChild(gridContainer);
+
+                    displayBots(bots,scale, xOffset, yOffset);
 
                     displayBots(bots, scale, xOffset, yOffset);
                     grid.render(stage);
@@ -354,5 +422,101 @@ window.addEventListener("keydown", function(e) {
         e.preventDefault();
     }
 }, false);
+
+function displayOccupancyMatrix(height, width, size) {
+
+    $.ajax({
+        method: "POST",
+        url: '/postOccupancyMatrix',
+        dataType: 'json',
+        data: JSON.stringify({
+            height:height,
+            width: width,
+            size: size}),
+        contentType: 'application/json',
+        success: function(data) {
+            console.log("Occupancy matrix post successful");
+            omPresent = true;
+            occupancyMatrix = data;
+            occupancyMatrix = padOccupancyMatrix();
+
+            $.ajax({
+                method: "POST",
+                url: '/postDijkstras',
+                dataType: 'json',
+                data: JSON.stringify({
+                    matrix: occupancyMatrix}),
+                contentType: 'application/json',
+                success: function(data) {
+                    path = data;
+                    fillOccupancyMatrix(scale, xOffset, yOffset);
+                }
+            });
+
+        }
+
+    });
+}
+
+/* Iterates through the occupancy matrix. When a 1 is encountered in a cell, all of the
+   adjacent cells will be marked by a 1. This is to increase the margin so that any path
+   planning algorithm will not choose a path too close to an obstacle.
+*/
+function padOccupancyMatrix() {
+
+    var temp = [];
+    for(var i = 0; i < occupancyMatrix.length; i++) {
+        temp.push([]);
+        for(var j = 0; j < occupancyMatrix[0].length; j++) {
+            temp[i].push(occupancyMatrix[i][j]);
+        }
+    }
+    for(var i = 0; i < occupancyMatrix.length; i++) {
+        for(var j = 0; j < occupancyMatrix.length; j++) {
+            if(occupancyMatrix[i][j] === 1) {
+                if(i-1 >= 0) {
+                    temp[i-1][j] = 1;
+                }
+                if(i+1 < occupancyMatrix.length) {
+                    temp[i+1][j] = 1;
+                }
+                if(j-1 >= 0) {
+                    temp[i][j-1] = 1;
+                }
+                if(j+1 < occupancyMatrix[0].length) {
+                    temp[i][j+1] = 1;
+                }
+                if(j-1 >= 0 && i-1 >= 0) {
+                    temp[i-1][j-1] = 1;
+                }
+                if(j+1 < occupancyMatrix[0].length && i+1 < occupancyMatrix.length) {
+                    temp[i+1][j+1] = 1;
+                }
+                if(j+1 < occupancyMatrix[0].length && i-1 > 0) {
+                    temp[i-1][j+1] = 1;
+                }
+                if(j-1 > 0 && i+1 < occupancyMatrix.length) {
+                    temp[i+1][j-1] = 1;
+                }
+            }
+        }
+    }
+    return temp;
+}
+
+$("#showOccupancyMatrix").click( function() {
+        displayOccupancyMatrix(40, 40, 1.0);
+        //Wait until the occupancy matrix has been returned from POST
+        //while(!omPresent){}
+        setTimeout( function() {
+            displayBots(bots,scale, xOffset, yOffset);
+                fillOccupancyMatrix(scale, xOffset, yOffset);
+
+                grid.render(stage);
+                }, 4000);
+        //TODO. The path does not show up correctly. It is wrong because the post request to get the occupancy matrix seems to return an empty matrix
+
+
+});
 
 main();

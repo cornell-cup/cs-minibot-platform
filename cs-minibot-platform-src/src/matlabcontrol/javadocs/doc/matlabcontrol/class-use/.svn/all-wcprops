@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/503/javadocs/doc/matlabcontrol/class-use
+END
+MatlabOperations.html
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/503/javadocs/doc/matlabcontrol/class-use/MatlabOperations.html
+END
+MatlabProxy.DisconnectionListener.html
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxy.DisconnectionListener.html
+END
+MatlabProxyFactoryOptions.html
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxyFactoryOptions.html
+END
+MatlabInvocationException.html
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabInvocationException.html
+END
+LoggingMatlabProxy.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/503/javadocs/doc/matlabcontrol/class-use/LoggingMatlabProxy.html
+END
+PermissiveSecurityManager.html
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/PermissiveSecurityManager.html
+END
+MatlabProxy.MatlabThreadCallable.html
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxy.MatlabThreadCallable.html
+END
+MatlabProxyFactory.Request.html
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxyFactory.Request.html
+END
+MatlabProxy.Identifier.html
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxy.Identifier.html
+END
+MatlabProxyFactory.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxyFactory.html
+END
+MatlabProxy.MatlabThreadProxy.html
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxy.MatlabThreadProxy.html
+END
+MatlabProxyFactoryOptions.Builder.html
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxyFactoryOptions.Builder.html
+END
+MatlabProxyFactory.RequestCallback.html
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxyFactory.RequestCallback.html
+END
+MatlabConnectionException.html
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabConnectionException.html
+END
+MatlabProxy.html
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/502/javadocs/doc/matlabcontrol/class-use/MatlabProxy.html
+END

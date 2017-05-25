@@ -21,6 +21,7 @@ import examples.gobot.Course;
 import examples.gobot.GoBot;
 import examples.patrol.Patrol;
 
+//import minibot.example.avoidance.Avoidance;
 import org.jbox2d.dynamics.World;
 import simulator.Simulator;
 import simulator.physics.PhysicalObject;
@@ -28,10 +29,12 @@ import simulator.simbot.*;
 import spark.route.RouteOverview;
 
 import java.util.*;
+
 import java.util.List;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Collection;
+
 import java.io.*;
 import java.util.stream.Collectors;
 
@@ -145,7 +148,9 @@ public class BaseHTTPInterface {
                 BaseStation.getInstance().getBotManager().removeBotByName(name);
             }
 
+
             return simulator.importScenario(gson, jsonParser, jsonParser.parse(body).getAsJsonObject());
+
         });
 
         /**
@@ -209,7 +214,6 @@ public class BaseHTTPInterface {
 
         /*send commands to the selected bot*/
         post("/commandBot", (req,res) -> {
-            //System.out.println("post to command bot called");
             String body = req.body();
             JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
@@ -354,6 +358,43 @@ public class BaseHTTPInterface {
             return gson.toJson(BaseStation.getInstance().getBotManager().getAllDiscoveredBots());
         });
 
+        post("/postOccupancyMatrix", (req, res) -> {
+            //Thread.sleep(5000);
+            String body = req.body();
+            JsonObject settings = jsonParser.parse(body).getAsJsonObject();
+            String height = settings.get("height").getAsString();
+            String width = settings.get("width").getAsString();
+            String size = settings.get("size").getAsString();
+            simulator.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
+            int[][] path = simulator.getDijkstras();
+            int[][] foo = simulator.getOccupancyMatrix();
+            for(int i = 0; i < foo.length; i++) {
+                for(int j = 0; j > foo[0].length; j++) {
+                    System.out.print(foo[i][j]);
+
+                }
+                System.out.println("hi");
+            }
+            return gson.toJson(simulator.getOccupancyMatrix());
+        });
+
+        post( "/postDijkstras", (req, res) -> {
+            String body = req.body();
+            JsonObject matrix = jsonParser.parse(body).getAsJsonObject();
+            JsonArray parentJsonArray = matrix.get("matrix").getAsJsonArray();
+            ArrayList<ArrayList<Integer>> total = new ArrayList<ArrayList<Integer>>();
+            for (int i=0; i<parentJsonArray.size(); i++){
+                ArrayList<Integer> child = new ArrayList<Integer>();
+                for (int j =0; j<parentJsonArray.get(0).getAsJsonArray().size(); j++){
+                    child.add(parentJsonArray.get(i).getAsJsonArray().get(j).getAsInt());
+                }
+                total.add(child);
+            }
+            int[][] om = new int[total.size()][total.get(0).size()];
+            simulator.setOccupancyMatrix(om);
+            return gson.toJson(simulator.getDijkstras());
+        });
+
         post("/runXbox", (req, res) -> {
             String body = req.body();
             JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
@@ -406,6 +447,13 @@ public class BaseHTTPInterface {
                 // error encountered
                 return false;
             }
+        });
+
+
+        get("/algo", (req,res) -> {
+            //Avoidance a = new Avoidance();
+            //a.start();
+            return true;
         });
 
         // Examplescript routes

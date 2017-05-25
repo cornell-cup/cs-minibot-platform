@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/489/trunk/matlabcontrol/src/matlabcontrol/extensions
+END
+MatlabTypeConverter.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/489/trunk/matlabcontrol/src/matlabcontrol/extensions/MatlabTypeConverter.java
+END
+CallbackMatlabProxy.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/extensions/CallbackMatlabProxy.java
+END
+MatlabProxyLogger.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/471/trunk/matlabcontrol/src/matlabcontrol/extensions/MatlabProxyLogger.java
+END
+MatlabNumericArray.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/489/trunk/matlabcontrol/src/matlabcontrol/extensions/MatlabNumericArray.java
+END
+package-info.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/489/trunk/matlabcontrol/src/matlabcontrol/extensions/package-info.java
+END
