@@ -22,16 +22,14 @@ public class VisionObject {
     public final VisionCoordinate coord;
 
     public float size;
-
+    Shape shape;
     private float width, height;
 
-    public enum Shape { CIRCLE, RECTANGLE, POLYGON, DEFAULT}
-
-    Shape shape;
     /**
      * Creates a visionobject
-     * @param vs The VisionSystem this object belongs to
-     * @param vid The id assigned to this object by its VisionSystem
+     *
+     * @param vs      The VisionSystem this object belongs to
+     * @param vid     The id assigned to this object by its VisionSystem
      * @param myCoord The coordinate of this object in relation to its VisionSystem
      */
     public VisionObject(VisionSystem vs, int vid, VisionCoordinate myCoord) {
@@ -68,7 +66,7 @@ public class VisionObject {
     @Override
     public String toString() {
         return "[Vision Object|" + vs + "|" + coord + "|" + vid + "|" + size +
-        "]";
+                "]";
     }
 
     @Override
@@ -80,4 +78,6 @@ public class VisionObject {
     public int hashCode() {
         return toString().hashCode();
     }
+
+    public enum Shape {CIRCLE, RECTANGLE, POLYGON, DEFAULT}
 }

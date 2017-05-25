@@ -11,21 +11,20 @@ import basestation.vision.VisionCoordinate;
  */
 public class ModbotNavigator {
 
-    private BaseStation myStation;
-    private VisionCoordinate destination;
-    private final ModBot myBot;
-    private boolean destinationReached;
-
     private static final double DISTANCE_THRESHOLD = 0.04;
     private static final double ANGLE_THRESHOLD = 10;
     private static final int MAX_SPEED = 20;
     private static final int MIN_SPEED = 10;
+    private final ModBot myBot;
+    private BaseStation myStation;
+    private VisionCoordinate destination;
+    private boolean destinationReached;
 
 
     /**
      * Initialize the controller without any active commands
      *
-     * @param myBot       the modbot this navigator is meant to control
+     * @param myBot the modbot this navigator is meant to control
      */
     public ModbotNavigator(ModBot myBot) {
         this.myStation = BaseStation.getInstance();

@@ -106,17 +106,18 @@ public class BotManager {
      *
      * @return String
      */
-    public String getBotExchange (String id) {
+    public String getBotExchange(String id) {
         return botExchangeMap.get(id);
     }
 
     /**
      * Add mapping from this bot's id to its ip
+     *
      * @param id name specified on request from bot
      * @param IP IP given by the bot
      * @return true if operation was successful
      */
-    public boolean setBotExchangeMap (String id, String IP) {
+    public boolean setBotExchangeMap(String id, String IP) {
 
         return botExchangeMap.put(id, IP) != null;
     }

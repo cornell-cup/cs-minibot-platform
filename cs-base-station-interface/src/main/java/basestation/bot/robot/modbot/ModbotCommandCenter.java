@@ -68,8 +68,8 @@ public class ModbotCommandCenter extends ExtendedFourWheelMovement {
 
     @Override
     public boolean setWheelPower(double fl, double fr, double bl, double br) {
-            ((MotorConnection) connection).setMotorPower(fl, fr, bl, br);
-            return true;
+        ((MotorConnection) connection).setMotorPower(fl, fr, bl, br);
+        return true;
     }
 
     public boolean sendKV(String key, String value) {
@@ -79,8 +79,9 @@ public class ModbotCommandCenter extends ExtendedFourWheelMovement {
     public Connection getConnection() {
         return this.connection;
     }
+
     @Override
-    public JsonObject getAllData(){
+    public JsonObject getAllData() {
         //TODO: implement
         return null;
     }

@@ -11,54 +11,43 @@ import basestation.bot.robot.modbot.ModBot;
 import basestation.vision.OverheadVisionSystem;
 import basestation.vision.VisionCoordinate;
 import basestation.vision.VisionObject;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import examples.gobot.Course;
 import examples.gobot.GoBot;
 import examples.patrol.Patrol;
-
-//import minibot.example.avoidance.Avoidance;
-import org.jbox2d.dynamics.World;
 import simulator.Simulator;
-import simulator.physics.PhysicalObject;
-import simulator.simbot.*;
-import spark.route.RouteOverview;
-
-import java.util.*;
-
-import java.util.List;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
-import java.util.Collection;
-
-import java.io.*;
-import java.util.stream.Collectors;
-
-
 import simulator.baseinterface.SimulatorVisionSystem;
-
-
+import simulator.simbot.SimBot;
+import spark.route.RouteOverview;
 import xboxhandler.XboxControllerDriver;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
 import static spark.Spark.*;
+
+//import minibot.example.avoidance.Avoidance;
 
 /**
  * HTTP connections for modbot GUI
  * <p>
  * Used for modbot to control and use the GUI while connecting to basestation.
- * */
+ */
 public class BaseHTTPInterface {
 
     // Temp config settings
     public static final boolean OVERHEAD_VISION = true;
-    private static XboxControllerDriver xboxControllerDriver;
     public static ArrayList<VisionCoordinate> patrolPoints;
     public static ArrayList<VisionCoordinate> innerTrackCoords;
     public static ArrayList<VisionCoordinate> advancedAI;
+    private static XboxControllerDriver xboxControllerDriver;
 
     public static void main(String[] args) {
         // Spark configuration
@@ -70,7 +59,7 @@ public class BaseHTTPInterface {
         SimulatorVisionSystem simvs;
         Simulator simulator = new Simulator();
         // Show exceptions
-        exception(Exception.class, (exception,request,response) -> {
+        exception(Exception.class, (exception, request, response) -> {
             exception.printStackTrace();
             response.status(500);
             response.body("oops");
@@ -99,7 +88,7 @@ public class BaseHTTPInterface {
 
         // Routes
         /* add a new bot from the gui*/
-        post("/addBot", (req,res) -> {
+        post("/addBot", (req, res) -> {
             String body = req.body();
             JsonObject addInfo = jsonParser.parse(body).getAsJsonObject(); // gets (ip, port) from js
 
@@ -141,10 +130,10 @@ public class BaseHTTPInterface {
          * objects, which consist of obstacles and bot(s)
          * @return the scenario json if it was successfully added
          */
-        post("/addScenario", (req,res) -> {
+        post("/addScenario", (req, res) -> {
 
             String body = req.body();
-            for (String name : BaseStation.getInstance().getBotManager().getAllTrackedBots().stream().map(Bot::getName).collect(Collectors.toList())){
+            for (String name : BaseStation.getInstance().getBotManager().getAllTrackedBots().stream().map(Bot::getName).collect(Collectors.toList())) {
                 BaseStation.getInstance().getBotManager().removeBotByName(name);
             }
 
@@ -162,7 +151,7 @@ public class BaseHTTPInterface {
          * @apiParam name the name the new scenario txt file
          * @return the name of the file if it was successfully saved
          */
-        post("/saveScenario", (req,res) -> {
+        post("/saveScenario", (req, res) -> {
 
             String body = req.body();
             JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
@@ -172,7 +161,7 @@ public class BaseHTTPInterface {
             //writing new scenario file
             File file = new File
                     ("cs-minibot-platform-src/src/main/resources" +
-                            "/public/scenario/"+fileName+".txt");
+                            "/public/scenario/" + fileName + ".txt");
             OutputStream out = new FileOutputStream(file);
 
             FileWriter writer = new FileWriter(file, false);
@@ -191,7 +180,7 @@ public class BaseHTTPInterface {
          * @apiParam name the name the scenario txt file to load
          * @return the JSON of the scenario if it was loaded successfully
          */
-        post("/loadScenario", (req,res) -> {
+        post("/loadScenario", (req, res) -> {
             String body = req.body();
             JsonObject scenario = jsonParser.parse(body).getAsJsonObject();
             String fileName = scenario.get("name").getAsString();
@@ -200,12 +189,12 @@ public class BaseHTTPInterface {
             //loading scenario file
             File file = new File
                     ("cs-minibot-platform-src/src/main/resources" +
-                            "/public/scenario/"+fileName+".txt");
-            FileReader fr=	new	FileReader(file);
-            BufferedReader br=	new	BufferedReader(fr);
+                            "/public/scenario/" + fileName + ".txt");
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
             String line = br.readLine();
-            while (line!=null){
-                scenarioData+=line;
+            while (line != null) {
+                scenarioData += line;
                 line = br.readLine();
             }
             br.close();
@@ -213,7 +202,7 @@ public class BaseHTTPInterface {
         });
 
         /*send commands to the selected bot*/
-        post("/commandBot", (req,res) -> {
+        post("/commandBot", (req, res) -> {
             String body = req.body();
             JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
@@ -227,19 +216,19 @@ public class BaseHTTPInterface {
             // Forward the command to the bot
             Bot myBot = BaseStation.getInstance().getBotManager()
                     .getBotByName(botName).get();
-            CommandCenter cc =  myBot.getCommandCenter();
+            CommandCenter cc = myBot.getCommandCenter();
             return cc.sendKV("WHEELS", fl + "," + fr + "," + bl + "," + br);
         });
 
         /*remove the selected bot -  not sure if still functional*/
-        post("/removeBot", (req,res) -> {
+        post("/removeBot", (req, res) -> {
             String body = req.body();
             JsonObject removeInfo = jsonParser.parse(body).getAsJsonObject();
             String name = removeInfo.get("name").getAsString();
             return BaseStation.getInstance().getBotManager().removeBotByName(name);
         });
 
-        post( "/logdata", (req,res) -> {
+        post("/logdata", (req, res) -> {
             String body = req.body();
             JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
             String name = commandInfo.get("name").getAsString();
@@ -261,7 +250,7 @@ public class BaseHTTPInterface {
          * @apiParam script the full string containing the script
          * @return true if the script sending should be successful
          */
-        post("/sendScript", (req,res) -> {
+        post("/sendScript", (req, res) -> {
             String body = req.body();
             JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
@@ -275,7 +264,7 @@ public class BaseHTTPInterface {
                     .orElseThrow(NoSuchElementException::new);
 
             if (receiver instanceof SimBot)
-                ((SimBot)BaseStation.getInstance()
+                ((SimBot) BaseStation.getInstance()
                         .getBotManager()
                         .getBotByName(name)
                         .orElseThrow(NoSuchElementException::new)).resetServer();
@@ -284,7 +273,7 @@ public class BaseHTTPInterface {
                     .getBotManager()
                     .getBotByName(name)
                     .orElseThrow(NoSuchElementException::new)
-                    .getCommandCenter().sendKV("SCRIPT",script);
+                    .getCommandCenter().sendKV("SCRIPT", script);
         });
 
         get("/trackedBots", (req, res) -> {
@@ -293,12 +282,12 @@ public class BaseHTTPInterface {
         });
 
         /**
-            Collects updated JSON objects in the form:
-            {   "x": vo.coord.x,
-                "y": vo.coord.y,
-                "angle": vo.coord.getThetaOrZero(),
-                "id": vo.id
-            }
+         Collects updated JSON objects in the form:
+         {   "x": vo.coord.x,
+         "y": vo.coord.y,
+         "angle": vo.coord.getThetaOrZero(),
+         "id": vo.id
+         }
          */
         get("/updateloc", (req, res) -> {
             // Locations of all active bots
@@ -313,7 +302,7 @@ public class BaseHTTPInterface {
                 jo.addProperty("y", vo.coord.y);
                 jo.addProperty("angle", vo.coord.getThetaOrZero());
                 jo.addProperty("id", vo.vid);
-                jo.addProperty("size",vo.size);
+                jo.addProperty("size", vo.size);
                 respData.add(jo);
             }
             return respData;
@@ -327,7 +316,7 @@ public class BaseHTTPInterface {
          * @apiParam script the full string containing the script
          * @return true if the script sending should be successful
          */
-        post("/sendKV", (req,res) -> {
+        post("/sendKV", (req, res) -> {
             String body = req.body();
             JsonObject commandInfo = jsonParser.parse(body).getAsJsonObject();
 
@@ -342,7 +331,7 @@ public class BaseHTTPInterface {
                     .orElseThrow(NoSuchElementException::new);
 
             if (receiver instanceof SimBot)
-                ((SimBot)BaseStation.getInstance()
+                ((SimBot) BaseStation.getInstance()
                         .getBotManager()
                         .getBotByName(name)
                         .orElseThrow(NoSuchElementException::new)).resetServer();
@@ -351,7 +340,7 @@ public class BaseHTTPInterface {
                     .getBotManager()
                     .getBotByName(name)
                     .orElseThrow(NoSuchElementException::new)
-                    .getCommandCenter().sendKV(kv_key,kv_value);
+                    .getCommandCenter().sendKV(kv_key, kv_value);
         });
 
         post("/discoverBots", (req, res) -> {
@@ -368,8 +357,8 @@ public class BaseHTTPInterface {
             simulator.generateOccupancyMatrix(Integer.parseInt(height), Integer.parseInt(width), Float.parseFloat(size));
             int[][] path = simulator.getDijkstras();
             int[][] foo = simulator.getOccupancyMatrix();
-            for(int i = 0; i < foo.length; i++) {
-                for(int j = 0; j > foo[0].length; j++) {
+            for (int i = 0; i < foo.length; i++) {
+                for (int j = 0; j > foo[0].length; j++) {
                     System.out.print(foo[i][j]);
 
                 }
@@ -378,14 +367,14 @@ public class BaseHTTPInterface {
             return gson.toJson(simulator.getOccupancyMatrix());
         });
 
-        post( "/postDijkstras", (req, res) -> {
+        post("/postDijkstras", (req, res) -> {
             String body = req.body();
             JsonObject matrix = jsonParser.parse(body).getAsJsonObject();
             JsonArray parentJsonArray = matrix.get("matrix").getAsJsonArray();
             ArrayList<ArrayList<Integer>> total = new ArrayList<ArrayList<Integer>>();
-            for (int i=0; i<parentJsonArray.size(); i++){
+            for (int i = 0; i < parentJsonArray.size(); i++) {
                 ArrayList<Integer> child = new ArrayList<Integer>();
-                for (int j =0; j<parentJsonArray.get(0).getAsJsonArray().size(); j++){
+                for (int j = 0; j < parentJsonArray.get(0).getAsJsonArray().size(); j++) {
                     child.add(parentJsonArray.get(i).getAsJsonArray().get(j).getAsInt());
                 }
                 total.add(child);
@@ -439,7 +428,7 @@ public class BaseHTTPInterface {
 
         post("/stopXbox", (req, res) -> {
             // received stop command, stop the driver
-            try{
+            try {
                 stopXboxDriver();
                 // no error
                 return true;
@@ -450,7 +439,7 @@ public class BaseHTTPInterface {
         });
 
 
-        get("/algo", (req,res) -> {
+        get("/algo", (req, res) -> {
             //Avoidance a = new Avoidance();
             //a.start();
             return true;
@@ -458,7 +447,7 @@ public class BaseHTTPInterface {
 
         // Examplescript routes
         get("/example/patrol/run", (req, res) -> {
-            Patrol p = new Patrol( (FourWheelMovement)
+            Patrol p = new Patrol((FourWheelMovement)
                     BaseStation
                             .getInstance().getBotManager().getAllTrackedBots()
                             .iterator().next().getCommandCenter());

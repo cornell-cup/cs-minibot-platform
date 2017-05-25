@@ -1,6 +1,7 @@
 package basestation.vision;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.HashSet;
@@ -16,11 +17,12 @@ public class TangoVisionSystem extends VisionSystem {
     private TangoReader myReader;
 
     public TangoVisionSystem() {
-        super(new VisionCoordinate(0,0)); // TODO: Calibration
+        super(new VisionCoordinate(0, 0)); // TODO: Calibration
         myReader = new TangoReader();
         myReader.start();
 
     }
+
     @Override
     public Set<VisionObject> getAllObjects() {
         HashSet<VisionObject> hset = new HashSet<>();

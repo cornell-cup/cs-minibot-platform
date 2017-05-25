@@ -1,7 +1,7 @@
 package basestation.bot.robot.modbot;
 
-import basestation.bot.robot.Bot;
 import basestation.bot.connection.MotorConnection;
+import basestation.bot.robot.Bot;
 import basestation.bot.sensors.SensorCenter;
 
 /**

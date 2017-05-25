@@ -1,9 +1,8 @@
 package basestation.bot.robot.minibot;
 
-import basestation.bot.commands.CommandCenter;
 import basestation.bot.commands.FourWheelMovement;
-
-import basestation.bot.connection.*;
+import basestation.bot.connection.Connection;
+import basestation.bot.connection.TCPConnection;
 import com.google.gson.JsonObject;
 
 
@@ -42,7 +41,7 @@ public class MiniBotCommandCenter implements FourWheelMovement {
 
     @Override
     public boolean setWheelPower(double fl, double fr, double bl, double br) {
-        return sendKV("WHEELS",fl+","+fr+","+bl+","+br);
+        return sendKV("WHEELS", fl + "," + fr + "," + bl + "," + br);
     }
 
     public Connection getConnection() {

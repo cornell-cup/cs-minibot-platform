@@ -1,7 +1,5 @@
 package basestation.bot.commands;
 
-import basestation.bot.connection.Connection;
-
 /**
  * Extends four wheel movement with some useful commands.
  * <p>
