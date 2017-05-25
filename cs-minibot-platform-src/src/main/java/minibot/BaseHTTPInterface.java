@@ -9,6 +9,7 @@ import basestation.bot.robot.Bot;
 import basestation.bot.robot.minibot.MiniBot;
 import basestation.bot.robot.modbot.ModBot;
 import basestation.vision.OverheadVisionSystem;
+import basestation.vision.VisionCoordinate;
 import basestation.vision.VisionObject;
 
 import com.google.gson.Gson;
@@ -16,6 +17,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import examples.gobot.Course;
+import examples.gobot.GoBot;
+import examples.patrol.Patrol;
 
 //import minibot.example.avoidance.Avoidance;
 import org.jbox2d.dynamics.World;
@@ -25,6 +29,12 @@ import simulator.simbot.*;
 import spark.route.RouteOverview;
 
 import java.util.*;
+
+import java.util.List;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.Collection;
+
 import java.io.*;
 import java.util.stream.Collectors;
 
@@ -46,6 +56,9 @@ public class BaseHTTPInterface {
     // Temp config settings
     public static final boolean OVERHEAD_VISION = true;
     private static XboxControllerDriver xboxControllerDriver;
+    public static ArrayList<VisionCoordinate> patrolPoints;
+    public static ArrayList<VisionCoordinate> innerTrackCoords;
+    public static ArrayList<VisionCoordinate> advancedAI;
 
     public static void main(String[] args) {
         // Spark configuration
@@ -66,6 +79,16 @@ public class BaseHTTPInterface {
         // Global objects
         JsonParser jsonParser = new JsonParser();
         Gson gson = new Gson();
+        patrolPoints = new ArrayList<>();
+        Course course = new Course();
+        ArrayList<VisionCoordinate> outerTrackCoords = new ArrayList<>();
+        innerTrackCoords = new ArrayList<>();
+        ArrayList<VisionCoordinate> startAreaCoords = new ArrayList<>();
+        ArrayList<VisionCoordinate> middleAreaCoords = new ArrayList<>();
+        advancedAI = new ArrayList<>();
+
+        GoBot gb = new GoBot();
+        Long timer = 0L;
 
         if (OVERHEAD_VISION) {
             OverheadVisionSystem ovs = new OverheadVisionSystem();
@@ -426,10 +449,114 @@ public class BaseHTTPInterface {
             }
         });
 
+
         get("/algo", (req,res) -> {
             //Avoidance a = new Avoidance();
             //a.start();
             return true;
+        });
+
+        // Examplescript routes
+        get("/example/patrol/run", (req, res) -> {
+            Patrol p = new Patrol( (FourWheelMovement)
+                    BaseStation
+                            .getInstance().getBotManager().getAllTrackedBots()
+                            .iterator().next().getCommandCenter());
+            p.start();
+            return true;
+        });
+
+        //Adds VisionCoordinate of current bot's location to the queue of points that Patrolbot will patrol
+        get("/example/patrol/addPointToQueue", (req, res) -> {
+            /**
+             * Patrolbot works by moving through a list of points.
+             * These points can be picked by the user. To add a point, go
+             * to the desired point and this path. This will cause the bot
+             * to move between points added to the queue in the order they were added
+             */
+            patrolPoints.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            return true;
+        });
+
+        get("/example/GoBot/addPointToInnerTrack", (req, res) -> {
+            /**
+             * Add points that make up the inner track in order
+             */
+            innerTrackCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            System.out.println("InnerTrack: " + BaseStation.getInstance()
+                    .getVisionManager()
+                    .getAllLocationData().get(0).coord.x + ", " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.y);
+            return true;
+        });
+
+        get("/example/GoBot/addPointToOuterTrack", (req, res) -> {
+            /**
+             * Add points that make up the outer track in order
+             */
+            outerTrackCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            System.out.println("OuterTrack: " + BaseStation.getInstance()
+                    .getVisionManager()
+                    .getAllLocationData().get(0).coord.x + ", " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.y);
+            return true;
+        });
+
+        get("/example/GoBot/addPointToStartArea", (req, res) -> {
+            /*
+             * Add points that create a bounding rectange around where the bot is supposed to start
+             */
+            startAreaCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            System.out.println("StartArea: " + BaseStation.getInstance()
+                    .getVisionManager()
+                    .getAllLocationData().get(0).coord.x + ", " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.y);
+            return true;
+        });
+
+        get("/example/GoBot/addPointToMiddleArea", (req, res) -> {
+            middleAreaCoords.add(BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord);
+            System.out.println("MiddleArea: " + BaseStation.getInstance()
+                    .getVisionManager()
+                    .getAllLocationData().get(0).coord.x + ", " + BaseStation.getInstance().getVisionManager()
+                    .getAllLocationData().get(0).coord.y);
+            return true;
+        });
+
+        get("/example/GoBot/isBotInside", (req, res) -> course.isInsideTrack(BaseStation.getInstance().getVisionManager()
+                .getAllLocationData().get(0).coord));
+
+        get("/example/GoBot/getLoc", (req, res) -> "" + BaseStation.getInstance().getVisionManager()
+                .getAllLocationData().get(0).coord.x + ", " + BaseStation
+                .getInstance().getVisionManager()
+                .getAllLocationData().get(0).coord.y);
+
+        get("/example/GoBot/numLapsCompleted", (req, res) -> gb.getLapsDone());
+
+        get("/example/GoBot/setupTrack", (req, res) -> {
+            course.setOuter(outerTrackCoords);
+            course.setInner(innerTrackCoords);
+            course.setStartArea(startAreaCoords);
+            course.setMiddleArea(middleAreaCoords);
+            gb.setCourse(course);
+            gb.start();
+            return System.nanoTime();
+        });
+
+        get("/example/GoBot/startAI", (req, res) -> {
+            gb.setBotState(gb.BOT_PLAYING);
+            return "GO AI";
+        });
+
+
+        get("/example/GoBot/startHuman", (req, res) -> {
+            gb.setBotState(gb.HUMAN_PLAYING);
+            return "GO HUMAN";
         });
     }
 

@@ -1,6 +1,10 @@
 
+<<<<<<< HEAD
+from Lib.legopi.lib import xbox_read
+=======
 #Reads xbox inputs and returns desired l/r wheel powers
 from MiniBotFramework.Controls.Lib.legopi.lib import xbox_read
+>>>>>>> may6
 from threading import Thread
 
 class Xbox(object):
@@ -31,6 +35,6 @@ def read_xbox():
                 right = ((int(value)) / 32766)
             if button == "Y1":
                 left = ((int(value)) / 32766)
-            Xbox.left = left
-            Xbox.right = right
+            Xbox.left = left*100
+            Xbox.right = right*100
             Xbox.updated = True
