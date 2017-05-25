@@ -8,9 +8,8 @@ import CommModule.BaseInterfacePrx;
  */
 public class ControlManager extends Thread {
 
-    private BaseInterfacePrx iface;
-
     private static final int COMMANDS_PER_SECOND = 2; // Since the connection is already reliable, we do not need a high frequency
+    private BaseInterfacePrx iface;
     private int fl;
     private int fr;
     private int bl;
@@ -35,6 +34,7 @@ public class ControlManager extends Thread {
     /**
      * Sets the new constant for motors. Forwards the command immediately so that
      * the bot will be responsive to controls.
+     *
      * @param fl
      * @param fr
      * @param bl

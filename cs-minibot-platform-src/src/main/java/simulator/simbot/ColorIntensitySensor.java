@@ -40,32 +40,32 @@ public class ColorIntensitySensor extends Sensor {
         JsonObject jo = new JsonObject();
 
         if (allLocs.size() == 0) {
-            jo.addProperty("data",-1);
+            jo.addProperty("data", -1);
             return jo;
         }
 
         VisionCoordinate parentCoordinate = allLocs.get(0).coord;
 
         if (parentCoordinate == null) {
-            jo.addProperty("data",-1);
+            jo.addProperty("data", -1);
             return jo;
         }
 
         int[] transformed = transformToPixels(parentCoordinate, this.lateralOffset);
 
         // Get pixel values
-        if(img==null) {
+        if (img == null) {
             System.err.println("null image");
             jo.addProperty("data", -1);
             return jo;
         }
         int rgb = img.getRGB(transformed[0], transformed[1]);
         if (rgb <= -16777216) {
-            rgb=1;
+            rgb = 1;
         } else {
-            rgb=0;
+            rgb = 0;
         }
-        jo.addProperty("data",rgb);
+        jo.addProperty("data", rgb);
 
         return jo;
     }
@@ -78,11 +78,11 @@ public class ColorIntensitySensor extends Sensor {
         int[] ret = new int[2];
 
         double angle = vc.getThetaOrZero();
-        double angle_offset = Math.atan(lateral_offset/medial_offset)+angle; //intermediate step for calculating coordinates
-        double total_offset = Math.sqrt(medial_offset*medial_offset+lateral_offset*lateral_offset); //intermediate step for calculating coordinates
+        double angle_offset = Math.atan(lateral_offset / medial_offset) + angle; //intermediate step for calculating coordinates
+        double total_offset = Math.sqrt(medial_offset * medial_offset + lateral_offset * lateral_offset); //intermediate step for calculating coordinates
 
-        ret[0] = (int) Math.floor(vc.x * X_SCALE + total_offset*Math.cos(angle_offset));
-        ret[1] = (int) Math.floor(vc.y * Y_SCALE + total_offset*Math.sin(angle_offset));
+        ret[0] = (int) Math.floor(vc.x * X_SCALE + total_offset * Math.cos(angle_offset));
+        ret[1] = (int) Math.floor(vc.y * Y_SCALE + total_offset * Math.sin(angle_offset));
         return ret;
     }
 }

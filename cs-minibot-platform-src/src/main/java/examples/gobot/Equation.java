@@ -9,7 +9,7 @@ import basestation.vision.VisionCoordinate;
  * x-coordinate of any point on the line (value stored in xval). The boundary edges are line segments and not lines,
  * so their bounds are stored using minimum x and y coordinate variables (startx, endx, starty, endy).
  */
-public class Equation{
+public class Equation {
 
     //in terms of y
     protected double slope;
@@ -31,11 +31,12 @@ public class Equation{
      * and should be treated as such. Here the slope and y intercepts do not matter.
      * else, the line is of the form y = mx+b, in which case, the slope and y-intercept
      * are determined from the two points and stored. In both cases, the bounding x and y values are stored.
+     *
      * @param start
      * @param end
      */
-    public Equation(VisionCoordinate start, VisionCoordinate end){
-        if (start.x == end.x){
+    public Equation(VisionCoordinate start, VisionCoordinate end) {
+        if (start.x == end.x) {
             vertical = true;
             xval = start.x;
             if (start.y < end.y) {
@@ -45,10 +46,9 @@ public class Equation{
                 starty = end.y;
                 endy = start.y;
             }
-        }
-        else{
-            slope = (end.y - start.y)/(end.x - start.x);
-            yIntercept = start.y - slope*start.x;
+        } else {
+            slope = (end.y - start.y) / (end.x - start.x);
+            yIntercept = start.y - slope * start.x;
 
             if (start.x < end.x) {
                 startx = start.x;
@@ -57,11 +57,10 @@ public class Equation{
                 startx = end.x;
                 endx = start.x;
             }
-            if (start.y < end.y){
+            if (start.y < end.y) {
                 starty = start.y;
                 endy = end.y;
-            }
-            else{
+            } else {
                 starty = end.y;
                 endy = start.y;
             }
@@ -73,19 +72,19 @@ public class Equation{
      * it is considered a vertical line and is treated as such. else, it is of the form y = mx+b. The slope
      * can be directly determined by the angle, and the y-intercept then determined.
      * This constructor is mainly used to build equations for the sweep lines, which have no bounds.
+     *
      * @param start
      * @param angle
      */
-    public Equation(VisionCoordinate start, double angle){
+    public Equation(VisionCoordinate start, double angle) {
 
-        if ( Math.abs(angle % (Math.PI/2)) < 0.001) {
+        if (Math.abs(angle % (Math.PI / 2)) < 0.001) {
             vertical = true;
             xval = start.x;
 
-        }
-        else{
+        } else {
             slope = Math.tan(angle);
-            yIntercept = start.y - slope*start.x;
+            yIntercept = start.y - slope * start.x;
         }
 
         startx = Double.MIN_VALUE;
@@ -99,7 +98,7 @@ public class Equation{
     public boolean inDomain(Point test) {
         //if vertical line check that the intersection is between the
         // starting and ending y coordinates
-        if (test!= null) {
+        if (test != null) {
             if (vertical || startx == endx) {
                 return test.ycor >= starty && test.ycor <= endy;
             }
@@ -112,22 +111,19 @@ public class Equation{
                 return test.xcor >= startx && test.xcor <= endx
                         && test.ycor >= starty && test.ycor <= endy;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     /**
-     *
      * @return String representation of an Equation
      */
     @Override
-    public String toString(){
+    public String toString() {
         if (!vertical) {
-            return ("Y ="+ slope + "x + " + yIntercept);
-        }
-        else{
+            return ("Y =" + slope + "x + " + yIntercept);
+        } else {
             return ("X = " + xval);
         }
     }

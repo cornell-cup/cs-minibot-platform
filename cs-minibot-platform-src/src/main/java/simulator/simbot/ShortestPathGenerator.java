@@ -6,10 +6,10 @@ public class ShortestPathGenerator {
 
     //public static int[][] path;
     public static Node targetNode;
+    public static Map<Node, Node> predecessors = new HashMap<Node, Node>();
     private static HashSet<Node> settledNodes = new HashSet<Node>();
     private static HashSet<Node> unsettledNodes = new HashSet<Node>();
     private static HashMap<Node, Integer> distances;
-    public static Map<Node, Node> predecessors = new HashMap<Node, Node>();
 
     //Fills maze with 1's
     public static int[][] initializeMaze(int n, int m) {

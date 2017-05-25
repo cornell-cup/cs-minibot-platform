@@ -32,7 +32,7 @@ public class OverheadVisionSystem extends VisionSystem {
         HashSet<VisionObject> newSet = new HashSet<>();
         for (Blob b : data) {
             VisionCoordinate vc = new VisionCoordinate(-b.x, b.y, (b
-                    .orientation + Math.PI) % (Math.PI*2));
+                    .orientation + Math.PI) % (Math.PI * 2));
             VisionObject vo = new VisionObject(this, b.botID, vc);
             newSet.add(vo);
         }
@@ -62,7 +62,8 @@ public class OverheadVisionSystem extends VisionSystem {
 
         /**
          * Called every time the actual vision system pushes an update to this server
-         * @param data All objects currently seen by the system, in Blob form
+         *
+         * @param data      All objects currently seen by the system, in Blob form
          * @param __current
          * @return
          */

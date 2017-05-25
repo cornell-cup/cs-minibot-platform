@@ -30,7 +30,7 @@ public class Physics {
         this.angularVelocity = 0;
     }
 
-    public Physics(double mass,double speed, double direction,
+    public Physics(double mass, double speed, double direction,
                    double acceleration, double staticFriction,
                    double dynamicFriction, double force,
                    double momentum, double angularVelocity) {
@@ -48,7 +48,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the mass
      */
     public double getMass() {
@@ -56,7 +55,6 @@ public class Physics {
     }
 
     /**
-     *
      * @param mass becomes the new mass
      */
     public void setMass(double mass) {
@@ -64,7 +62,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the speed
      */
     public double getSpeed() {
@@ -72,7 +69,6 @@ public class Physics {
     }
 
     /**
-     *
      * @param speed becomes the new speed
      */
     public void setSpeed(double speed) {
@@ -98,7 +94,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the direction in radians
      */
     public double getDirection() {
@@ -106,11 +101,10 @@ public class Physics {
     }
 
     /**
-     *
      * @param direction becomes the new direction
      */
     public void setDirection(double direction) {
-        this.direction = direction%(2*Math.PI);
+        this.direction = direction % (2 * Math.PI);
         this.velocityX = this.speed * Math.cos(this.direction);
         this.velocityY = this.speed * Math.sin(this.direction);
     }
@@ -120,7 +114,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the x-velocity
      */
     public double getXVelocity() {
@@ -128,7 +121,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the y-velocity
      */
     public double getYVelocity() {
@@ -136,7 +128,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the acceleration
      */
     public double getAcceleration() {
@@ -144,7 +135,6 @@ public class Physics {
     }
 
     /**
-     *
      * @param acceleration becomes the new acceleration
      */
     public void setAcceleration(double acceleration) {
@@ -152,7 +142,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the static friction coefficient
      */
     public double getStaticFriction() {
@@ -160,7 +149,6 @@ public class Physics {
     }
 
     /**
-     *
      * @param staticFriction becomes the new static friction coefficient
      */
     public void setStaticFriction(double staticFriction) {
@@ -168,7 +156,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the dynamic friction coefficient
      */
     public double getDynamicFriction() {
@@ -176,7 +163,6 @@ public class Physics {
     }
 
     /**
-     *
      * @param dynamicFriction becomes the new dynamic friction coefficient
      */
     public void setDynamicFriction(double dynamicFriction) {
@@ -184,7 +170,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the force
      */
     public double getForce() {
@@ -192,7 +177,6 @@ public class Physics {
     }
 
     /**
-     *
      * @param force becomes the new force
      */
     public void setForce(double force) {
@@ -200,7 +184,6 @@ public class Physics {
     }
 
     /**
-     *
      * @return the momentum
      */
     public double getMomentum() {
@@ -208,7 +191,6 @@ public class Physics {
     }
 
     /**
-     *
      * @param momentum becomes the new momentum
      */
     public void setMomentum(double momentum) {
@@ -216,12 +198,11 @@ public class Physics {
     }
 
     /**
-     *
      * @return a string to print for Physics
      */
     public String toString() {
         return "Mass: " + this.mass + "\nSpeed: " + this.speed +
                 "\nDirection: " + this.direction + "\nXVelocity: " +
-                this.velocityX + "\nYVelocity: " + this.velocityY + "\nAngular Velocity: "+this.angularVelocity;
+                this.velocityX + "\nYVelocity: " + this.velocityY + "\nAngular Velocity: " + this.angularVelocity;
     }
 }

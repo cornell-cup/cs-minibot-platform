@@ -9,21 +9,22 @@ import simulator.Simulator;
 import simulator.physics.PhysicalObject;
 
 import java.io.*;
-import java.net.*;
-import java.util.Map;
-
-import java.util.Date;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 public class SimBot extends Bot {
 
+    public static transient TCPServer runningThread;
+    public static int IPADDRESS = 11111;
     private final transient SimBotCommandCenter commandCenter;
     private final transient SimBotSensorCenter sensorCenter;
-    public static transient TCPServer runningThread;
     public transient DataLog loggingThread;
     public transient PhysicalObject myPhysicalObject;
-    public static int IPADDRESS = 11111;
 
     /**
      * Currently minibots are implemented using a TCP connection
@@ -64,7 +65,7 @@ public class SimBot extends Bot {
             loggingThread = (DataLog) log;
             loggingThread.start();
 
-        }catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -100,16 +101,16 @@ public class SimBot extends Bot {
      * Datalog thread logs data for (Sim)bot <-- once command center is updated, change to bot in general
      */
     public class DataLog extends Thread {
+        private static final char DEFAULT_SEPARATOR = ',';
+        private static final int INTERVAL = 100;    //for now it is set to 100 ms
         private final transient SimBotCommandCenter commandCenter;
         private final transient SimBotSensorCenter sensorCenter;
-        private static final char DEFAULT_SEPARATOR = ',';
         private final String path;
         private FileWriter writer;
         private boolean fileCreated = false;
         private volatile boolean exit = false;
-        private static final int INTERVAL = 100;    //for now it is set to 100 ms
 
-        public DataLog(String path, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException{
+        public DataLog(String path, SimBotCommandCenter commandCenter, SimBotSensorCenter sensorCenter) throws IOException {
             this.commandCenter = commandCenter;
             this.sensorCenter = sensorCenter;
             this.path = path;
@@ -135,7 +136,7 @@ public class SimBot extends Bot {
             this.exit = true;
         }
 
-        public void run(){
+        public void run() {
             try {
                 boolean firstHeader = true;
                 while (!exit) {
@@ -215,7 +216,7 @@ public class SimBot extends Bot {
                     }
                 }
                 writer.close();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -225,10 +226,10 @@ public class SimBot extends Bot {
      * TCP server thread, server side
      */
     public class TCPServer extends Thread {
-        private ServerSocket serverSocket;
         private final transient SimBot sim;
         private final transient SimBotCommandCenter commandCenter;
         private final transient SimBotSensorCenter sensorCenter;
+        private ServerSocket serverSocket;
         private volatile boolean exit = false;
         private volatile boolean runRead = true;
 //        private final static int TIMEOUT = 100000;

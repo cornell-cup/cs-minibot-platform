@@ -13,10 +13,9 @@ public class Border {
     private ArrayList<VisionCoordinate> borderCoords;
 
     /**
-     *
      * @param coords represents the list of VisionCoordinates that will be used to create a Border
      */
-    public Border(ArrayList<VisionCoordinate> coords){
+    public Border(ArrayList<VisionCoordinate> coords) {
         this.boundary = createPath(coords);
         borderCoords = coords;
     }
@@ -26,10 +25,10 @@ public class Border {
      * @return returns a Path2D.Double that consists of a shape created by connecting the points in order
      * from the first element to the second, second to the third, ... and the last back to the first.
      */
-    private Path2D.Double createPath(ArrayList<VisionCoordinate>coords){
+    private Path2D.Double createPath(ArrayList<VisionCoordinate> coords) {
         Path2D.Double path = new Path2D.Double();
         path.moveTo(coords.get(0).x, coords.get(0).y);
-        for(int i = 1; i <coords.size(); i++){
+        for (int i = 1; i < coords.size(); i++) {
             path.lineTo(coords.get(i).x, coords.get(i).y);
         }
         path.closePath();
@@ -45,10 +44,9 @@ public class Border {
     }
 
     /**
-     *
      * @return the list of VisionCoordinates that creates this Border instance
      */
-    public ArrayList<VisionCoordinate> returnCoords(){
+    public ArrayList<VisionCoordinate> returnCoords() {
         return this.borderCoords;
     }
 }

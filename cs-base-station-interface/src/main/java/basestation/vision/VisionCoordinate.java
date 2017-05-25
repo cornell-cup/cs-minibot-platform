@@ -24,9 +24,8 @@ public class VisionCoordinate {
     }
 
     /**
-     *
-     * @param x X portion of the coordinate with respect to the coordinate system origin
-     * @param y Y portion of the coordinate with respect to the coordinate system origin
+     * @param x     X portion of the coordinate with respect to the coordinate system origin
+     * @param y     Y portion of the coordinate with respect to the coordinate system origin
      * @param theta an angle in radians as defined above
      */
     public VisionCoordinate(double x, double y, double theta) {
@@ -51,6 +50,7 @@ public class VisionCoordinate {
     /**
      * Returns the 2d euclidean distances to the other coordinate, assuming they
      * are based on the same coordinate system
+     *
      * @param other The target coordinate
      * @return Euclidean distance in meters
      */
@@ -61,12 +61,12 @@ public class VisionCoordinate {
     public Optional<Double> getTheta() {
         return theta;
     }
+
     /**
-     *
      * @return The angle of the coordinate or 0 if it is not set. Note, this is not
      * a recommended method since an optional method is presented.
      */
-    public double getThetaOrZero(){
+    public double getThetaOrZero() {
         return theta.orElse(0.0);
     }
 
@@ -82,6 +82,7 @@ public class VisionCoordinate {
 
     /**
      * Puts a normally created angle into the 0-2PI range
+     *
      * @param angle
      * @return
      */

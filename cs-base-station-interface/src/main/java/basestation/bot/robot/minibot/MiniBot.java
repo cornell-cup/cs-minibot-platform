@@ -8,7 +8,7 @@ import basestation.bot.sensors.SensorCenter;
 /**
  * Maintains our interface with a MiniBot
  */
-public class MiniBot extends Bot{
+public class MiniBot extends Bot {
     private final transient MiniBotCommandCenter commandCenter;
     private final transient MiniBotSensorCenter sensorCenter;
 
@@ -74,6 +74,7 @@ public class MiniBot extends Bot{
         /**
          * Breaks the data into key and value
          * Precondition: data != null
+         *
          * @param data must start with "<<<<" and end with ">>>>". key-value
          *             should be separated by ":"
          */
@@ -93,7 +94,8 @@ public class MiniBot extends Bot{
         /**
          * Acts based on key and value, bot sending information should send
          * key and value, bot requesting information should only send key
-         * @param key Must be Instruction
+         *
+         * @param key   Must be Instruction
          * @param value Should qualify the instruction
          */
         private void actOnIncoming(String key, String value) {

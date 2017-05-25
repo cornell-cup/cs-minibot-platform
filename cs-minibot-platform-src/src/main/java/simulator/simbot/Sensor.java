@@ -9,6 +9,7 @@ public class Sensor {
 
     /**
      * Creates the sensor and registers it with myCenter under name.
+     *
      * @param myCenter
      * @param name
      */
@@ -23,7 +24,7 @@ public class Sensor {
 
     public JsonObject read() {
         JsonObject dataBlob = new JsonObject();
-        dataBlob.addProperty("data",-1);
+        dataBlob.addProperty("data", -1);
         return dataBlob;
     }
 }
