@@ -1,5 +1,10 @@
 [
 {
+"type":"simulator.simbot",
+"position":"[3,3]",
+"angle":0,
+},
+{
 "type":	"scenario_object",
 "position":"[5,5]",
 "angle":45,
