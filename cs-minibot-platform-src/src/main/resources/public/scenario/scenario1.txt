@@ -1,1 +1,14 @@
-[{"type":	"scenario_object", "position":"[5,5]", "angle":45, "size":1},{"type": "scenario_object", "position":"[3,3]", "angle":45, "size": 1}]
+[
+{
+"type":	"scenario_object",
+"position":"[5,5]",
+"angle":45,
+"size":1,
+},
+{
+"type": "scenario_object",
+"position":"[3,3]",
+"angle":45,
+"size": 1,
+}
+]

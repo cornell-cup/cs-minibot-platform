@@ -171,7 +171,7 @@ function drawBot(b, scale, xOffset, yOffset) {
     if (b.size == 0) b.size = 10;
     var size = b.size*x_int;
     var bot = new PIXI.Graphics();
-    	bot.beginFill(0x0EB530);
+    	bot.beginFill(0x0EB530); //green
     	bot.drawRect(0, 0, size, size);
     	bot.pivot = new PIXI.Point(size/2, size/2);
     	bot.rotation = -b.angle;
@@ -180,21 +180,20 @@ function drawBot(b, scale, xOffset, yOffset) {
     var cx = (b.x)*x_int+xOffset;
     var cy = VIEW_WIDTH - ((b.y)*y_int)+yOffset;
         bot.x = cx;
-
         bot.y = cy;
 
     // draw bot coordinate text
     let botCoordText = new PIXI.Text('(' + b.x.toFixed(2) + ',' + b.y.toFixed(2) + ',' + toDegrees(b.angle).toFixed(2) + ')',{fontFamily : 'Arial', fontSize: 11, fill : 0xff1010, align : 'center'});
     botCoordText.x = cx;
-    botCoordText.y = cy + 14;
+    botCoordText.y = cy + 14; //arbitrary constant for offset
 
     var sensor1 = new PIXI.Graphics();
-        sensor1.beginFill(0xFF0000);
+        sensor1.beginFill(0xFF0000); //red
         sensor1.drawCircle(0, 0, size/10);
         sensor1.endFill();
 
     var sensor2 = new PIXI.Graphics();
-        sensor2.beginFill(0xFF0000);
+        sensor2.beginFill(0xFF0000); //red
         sensor2.drawCircle(0, 0, size/10);
         sensor2.endFill();
 

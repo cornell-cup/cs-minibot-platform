@@ -136,8 +136,6 @@ public class BaseHTTPInterface {
             for (String name : BaseStation.getInstance().getBotManager().getAllTrackedBots().stream().map(Bot::getName).collect(Collectors.toList())) {
                 BaseStation.getInstance().getBotManager().removeBotByName(name);
             }
-
-
             return simulator.importScenario(gson, jsonParser, jsonParser.parse(body).getAsJsonObject());
 
         });
