@@ -178,35 +178,35 @@ function drawBot(b, scale, xOffset, yOffset) {
     	bot.endFill();
 
     var cx = (b.x)*x_int+xOffset;
-    var cy = (b.y)*y_int+yOffset;
-	bot.x = cx;
-	bot.y = cy;
+    var cy = VIEW_WIDTH - ((b.y)*y_int)+yOffset;
+        bot.x = cx;
 
-    	// draw bot coordinate text
-    	let botCoordText = new PIXI.Text('(' + b.x.toFixed(2) + ',' + b.y.toFixed(2) + ',' + toDegrees(b.angle).toFixed(2) + ')',{fontFamily : 'Arial', fontSize: 11, fill : 0xff1010, align : 'center'});
-    	botCoordText.x = cx;
-    	botCoordText.y = cy + 14;
+        bot.y = cy;
 
-    var circle2 = new PIXI.Graphics();
-    circle2.beginFill(0xFF0000);
-    circle2.drawCircle(0, 0, size/10);
-    circle2.endFill();
+    // draw bot coordinate text
+    let botCoordText = new PIXI.Text('(' + b.x.toFixed(2) + ',' + b.y.toFixed(2) + ',' + toDegrees(b.angle).toFixed(2) + ')',{fontFamily : 'Arial', fontSize: 11, fill : 0xff1010, align : 'center'});
+    botCoordText.x = cx;
+    botCoordText.y = cy + 14;
 
-    var circle3 = new PIXI.Graphics();
-        circle3.beginFill(0xFF0000);
-        circle3.drawCircle(0, 0, size/10);
-        circle3.endFill();
+    var sensor1 = new PIXI.Graphics();
+        sensor1.beginFill(0xFF0000);
+        sensor1.drawCircle(0, 0, size/10);
+        sensor1.endFill();
 
-    circle2.x = cx+size/2*Math.cos(b.angle+Math.PI/6);
-    circle2.y = cy-size/2*Math.sin(b.angle+Math.PI/6);
+    var sensor2 = new PIXI.Graphics();
+        sensor2.beginFill(0xFF0000);
+        sensor2.drawCircle(0, 0, size/10);
+        sensor2.endFill();
 
-    circle3.x = cx+size/2*Math.cos(b.angle-Math.PI/6);
-    circle3.y = cy-size/2*Math.sin(b.angle-Math.PI/6);
+    sensor1.x = cx+size/Math.sqrt(3)*Math.cos(b.angle+Math.PI/6);
+    sensor1.y = cy-size/Math.sqrt(3)*Math.sin(b.angle+Math.PI/6);
 
+    sensor2.x = cx+size/Math.sqrt(3)*Math.cos(b.angle-Math.PI/6);
+    sensor2.y = cy-size/Math.sqrt(3)*Math.sin(b.angle-Math.PI/6);
 
 	botContainer.addChild(bot);
-	botContainer.addChild(circle2);
-	botContainer.addChild(circle3);
+	botContainer.addChild(sensor1);
+	botContainer.addChild(sensor2);
 	botContainer.addChild(botCoordText);
 }
 
@@ -221,7 +221,7 @@ function drawScenarioObject(b, scale, xOffset, yOffset) {
 	scenarioObject.endFill();
 
     var cx = (b.x)*x_int;
-    var cy = (b.y)*y_int;
+    var cy = VIEW_WIDTH - ((b.y)*y_int);
     scenarioObject.x = cx+xOffset;
     scenarioObject.y = cy+yOffset;
 
@@ -313,7 +313,6 @@ function fillOccupancyMatrix(scale, xOffset, yOffset) {
                     scenarioObject.y = cy;
                     botContainer.addChild(scenarioObject);
                 }
-
         }
     }
 }
@@ -357,7 +356,6 @@ function getNewVisionData() {
                         bots.push(newBot(bot.x, bot.y, bot.angle, bot.id, bot
                         .size));
                     }
-
 
                     stage.removeChild(gridContainer);
                     gridContainer = new PIXI.Container();
@@ -407,7 +405,6 @@ function pollBotNames() {
                 }
             }
 
-
             setTimeout(pollBotNames,2000); // Try again in 2 sec
         },
         error: function() {
@@ -452,9 +449,7 @@ function displayOccupancyMatrix(height, width, size) {
                     fillOccupancyMatrix(scale, xOffset, yOffset);
                 }
             });
-
         }
-
     });
 }
 
@@ -515,8 +510,6 @@ $("#showOccupancyMatrix").click( function() {
                 grid.render(stage);
                 }, 4000);
         //TODO. The path does not show up correctly. It is wrong because the post request to get the occupancy matrix seems to return an empty matrix
-
-
 });
 
 main();
