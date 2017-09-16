@@ -6,6 +6,7 @@ from MiniBotFramework.Sensing.ColorSensor import ColorSensor
 import time
 
 threads = []
+count = {"F":0,"B":0,"L":0,"R":0}
 
 def run(bot):
     # Sets up TCP connection between master and minions. Starts publisher-side 
@@ -30,8 +31,7 @@ def colorbot(bot,z):
     cs.calibrate()
     pinkFirstTime = True
     orangeFirstTime = True
-    count = {"F":0,"B":0,"L":0,"R":0}
-
+    
     try:
         while(True):
             c = cs.read_color()
