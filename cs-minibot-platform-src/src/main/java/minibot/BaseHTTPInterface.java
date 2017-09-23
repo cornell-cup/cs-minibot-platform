@@ -25,7 +25,10 @@ import spark.route.RouteOverview;
 import xboxhandler.XboxControllerDriver;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static spark.Spark.*;
@@ -566,6 +569,11 @@ public class BaseHTTPInterface {
         // might get this request from stopXbox HTTP post
     }
 
+    /**
+     * Checks that scenario txt file contains the right information and format
+     * @param finalString the entire script of a scenario txt file
+     * @return true if scenario is valid
+     */
     private static boolean isValidScenario(String finalString) {
         JsonParser jsonParser = new JsonParser();
         JsonArray scenarioArray = (JsonArray)jsonParser.parse(finalString);
@@ -573,25 +581,32 @@ public class BaseHTTPInterface {
 
         for (Object o : scenarioArray) {
             JsonObject object = (JsonObject) o;
+            //counts number of bots in file
             if (object.get("type").getAsString().equals("simulator.simbot")) {
                 numBot++;
-            } else if (object.get("type").getAsString().equals("scenario_object")) {
+            }
+            else if (object.get("type").getAsString().equals("scenario_object")) {
+                //scenario objects must include position, size, angle
                 if (object.get("position") == null || object.get("size") == null
                         || object.get("angle") == null) {
                     return false;
                 }
-            } else {    //type equals anything other than simbot or object
+            }
+            //type equals anything other than simbot or object
+            else {
                 return false;
             }
 
+            //position must be in format [int,int]
             if (!object.get("position").getAsString().matches("\\[\\d,\\d]")) {
                 return false;
             }
         }
+        //file must contain one and only one bot
         if (numBot != 1) {
             return false;
         }
-
+        //no errors in file
         return true;
     }
 }
