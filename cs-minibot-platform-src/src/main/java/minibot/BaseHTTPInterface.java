@@ -25,10 +25,7 @@ import spark.route.RouteOverview;
 import xboxhandler.XboxControllerDriver;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static spark.Spark.*;
@@ -188,6 +185,7 @@ public class BaseHTTPInterface {
             File file = new File
                     ("cs-minibot-platform-src/src/main/resources" +
                             "/public/scenario/" + fileName + ".txt");
+
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String line = br.readLine();
@@ -196,7 +194,14 @@ public class BaseHTTPInterface {
                 line = br.readLine();
             }
             br.close();
-            return scenarioData;
+
+            if (isValidScenario(scenarioData)) {
+                System.out.println("Successfully loaded!");
+                return scenarioData;
+            } else {
+                System.out.println("Not a valid scenario!");
+                return "";
+            }
         });
 
         /*send commands to the selected bot*/
@@ -559,5 +564,34 @@ public class BaseHTTPInterface {
         }
         // xboxControllerDriver == null
         // might get this request from stopXbox HTTP post
+    }
+
+    private static boolean isValidScenario(String finalString) {
+        JsonParser jsonParser = new JsonParser();
+        JsonArray scenarioArray = (JsonArray)jsonParser.parse(finalString);
+        int numBot = 0;
+
+        for (Object o : scenarioArray) {
+            JsonObject object = (JsonObject) o;
+            if (object.get("type").getAsString().equals("simulator.simbot")) {
+                numBot++;
+            } else if (object.get("type").getAsString().equals("scenario_object")) {
+                if (object.get("position") == null || object.get("size") == null
+                        || object.get("angle") == null) {
+                    return false;
+                }
+            } else {    //type equals anything other than simbot or object
+                return false;
+            }
+
+            if (!object.get("position").getAsString().matches("\\[\\d,\\d]")) {
+                return false;
+            }
+        }
+        if (numBot != 1) {
+            return false;
+        }
+
+        return true;
     }
 }
