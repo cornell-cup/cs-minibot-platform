@@ -188,6 +188,7 @@ public class BaseHTTPInterface {
             File file = new File
                     ("cs-minibot-platform-src/src/main/resources" +
                             "/public/scenario/" + fileName + ".txt");
+
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String line = br.readLine();
@@ -196,7 +197,14 @@ public class BaseHTTPInterface {
                 line = br.readLine();
             }
             br.close();
-            return scenarioData;
+
+            if (isValidScenario(scenarioData)) {
+                System.out.println("Successfully loaded!");
+                return scenarioData;
+            } else {
+                System.out.println("Not a valid scenario!");
+                return "";
+            }
         });
 
         /*send commands to the selected bot*/
@@ -559,5 +567,46 @@ public class BaseHTTPInterface {
         }
         // xboxControllerDriver == null
         // might get this request from stopXbox HTTP post
+    }
+
+    /**
+     * Checks that scenario txt file contains the right information and format
+     * @param finalString the entire script of a scenario txt file
+     * @return true if scenario is valid
+     */
+    private static boolean isValidScenario(String finalString) {
+        JsonParser jsonParser = new JsonParser();
+        JsonArray scenarioArray = (JsonArray)jsonParser.parse(finalString);
+        int numBot = 0;
+
+        for (Object o : scenarioArray) {
+            JsonObject object = (JsonObject) o;
+            //counts number of bots in file
+            if (object.get("type").getAsString().equals("simulator.simbot")) {
+                numBot++;
+            }
+            else if (object.get("type").getAsString().equals("scenario_object")) {
+                //scenario objects must include position, size, angle
+                if (object.get("position") == null || object.get("size") == null
+                        || object.get("angle") == null) {
+                    return false;
+                }
+            }
+            //type equals anything other than simbot or object
+            else {
+                return false;
+            }
+
+            //position must be in format [int,int]
+            if (!object.get("position").getAsString().matches("\\[\\d,\\d]")) {
+                return false;
+            }
+        }
+        //file must contain one and only one bot
+        if (numBot != 1) {
+            return false;
+        }
+        //no errors in file
+        return true;
     }
 }
