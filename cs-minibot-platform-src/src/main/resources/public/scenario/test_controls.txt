@@ -1,0 +1,2 @@
+[{"type":	"simulator.simbot",
+		"position":"[2,2]", "angle":0}]

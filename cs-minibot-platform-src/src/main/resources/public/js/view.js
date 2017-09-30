@@ -187,6 +187,26 @@ function drawBot(b, scale, xOffset, yOffset) {
     botCoordText.x = cx;
     botCoordText.y = cy + 14; //arbitrary constant for offset
 
+    if (document.querySelector("#debug") == null) {
+        let debug = document.createElement("div");
+        debug.id = "debug";
+        let style = {
+            "position": "absolute",
+            "top": "10px",
+            "left": "10px",
+            "width": "400px",
+            "height": "200px",
+            "border": "1px solid red",
+        };
+        for (k in styles) {
+            debug.style[k] = styles[k];
+        }
+    }
+    else {
+        let debug = document.querySelector("#debug");
+        debug.innerHTML = b.x + " " + b.y + " " + cx + " " + cy;
+    }
+
     var sensor1 = new PIXI.Graphics();
         sensor1.beginFill(0xFF0000); //red
         sensor1.drawCircle(0, 0, size/10);

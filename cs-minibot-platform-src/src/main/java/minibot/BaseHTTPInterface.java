@@ -52,7 +52,8 @@ public class BaseHTTPInterface {
     public static void main(String[] args) {
         // Spark configuration
         port(8080);
-        staticFiles.location("/public");
+        //staticFiles.location("/public");
+        staticFiles.externalLocation("D:\\Code\\public");
         RouteOverview.enableRouteOverview("/");
 
         //create new visionsystem and simulator instances
