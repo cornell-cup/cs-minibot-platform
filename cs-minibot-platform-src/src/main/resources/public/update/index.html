@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>ModBot GUI</title>
+	<title>MiniBot GUI</title>
 	<!-- IMPORTS -->
-	<link rel="stylesheet" href="../../css/gui_update.css"/>
+	<script src="../js/update/main.js"></script>
+	<link rel="stylesheet" href="../css/gui_update.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 	<!-- END IMPORTS -->
 </head>
 
 <body>
-	<header>
-		<h1>Minibot GUI</h1><br>
-		A GUI to control Cornell Cup's Minibot.
-	</header>
+	<div class="navbar"><img class="logo" src = "../img/logo.png"/><h1>MiniBot
+		GUI</h1></div>
 
 	<!-- INSERT HTML HERE -->
-	<h1 id="root">TESTING TESTING TESTING TESTING</h1>
+	<div id="root"></div>
 	<!-- END HTML -->
 
 	<!-- basic imports -->
@@ -37,9 +37,7 @@
 
 	<!-- manual scripts -->
 	<script src="../js/blockly.js"></script>
-	<script src="..js/interface.js"></script>
+	<script src="../js/interface.js"></script>
 	<script src="../js/view.js"></script>
-	<script src="../js/vue.js"></script>
-	<script src="../js/update/main.js"></script>
 </body>
 </html>
