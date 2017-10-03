@@ -52,8 +52,7 @@ public class BaseHTTPInterface {
     public static void main(String[] args) {
         // Spark configuration
         port(8080);
-        //staticFiles.location("/public");
-        staticFiles.externalLocation("D:\\Code\\public");
+        staticFiles.location("/public");
         RouteOverview.enableRouteOverview("/");
 
         //create new visionsystem and simulator instances
@@ -243,7 +242,7 @@ public class BaseHTTPInterface {
         });
 
         /**
-         * GET /sendScript sends script to the bot identified by botName
+         * POST /sendScript sends script to the bot identified by botName
          *
          * @apiParam name the name of the bot
          * @apiParam script the full string containing the script
