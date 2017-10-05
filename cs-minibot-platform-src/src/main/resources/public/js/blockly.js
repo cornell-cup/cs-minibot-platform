@@ -10,52 +10,32 @@
 */
 
 /* ======================= BASIC SETUP ======================== */
-/* Blockly Configurations */
-var workspace = Blockly.inject('blocklyDiv',
-{
-  toolbox: document.getElementById('toolbox'),
-  grid: {
-    spacing:20,
-    length:3,
-    colour: '#ccc',
-    snap: true
-  },
-  trashcan: true,
-  scroll: true
-});
+var workspace;
+var pythonConverter;
+function setUpBlockly(){
+    console.log("setup blockly called");
+    workspace = Blockly.inject('blocklyDiv',
+        {
+            toolbox: document.getElementById('toolbox'),
+            grid: {
+                spacing:20,
+                length:3,
+                colour: '#ccc',
+                snap: true
+            },
+            trashcan: true,
+            scroll: true
+        });
 
-/* Realtime code generation
-
-  (Every drag/drop or change in visual code will be
-  reflected in actual code view) */
-workspace.addChangeListener(function(event){
-  setCode(getBlocklyScript());
-});
-
-
-/* ======================= USER FUNCTIONALITY ======================== */
-
-/* DOWNLOAD FUNCTION 
-
-  Allows users to download raw code as a file. Users must
-  manually input file name and file type. */
-
-// Prevents page from refreshing when download button is clicked.
-$("#dwn").submit(function(event){ event.preventDefault(); });
-
-// Download file as file-name manually inputted into textbox.
-function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
+    /* Realtime code generation
+      (Every drag/drop or change in visual code will be
+      reflected in actual code view) */
+    workspace.addChangeListener(function(event){
+        setCode(getBlocklyScript());
+    });
+    pythonConverter = new Blockly.Generator("Python");
 }
+
 
 /* UPLOAD FUNCTION 
 
@@ -67,19 +47,7 @@ function download(filename, text) {
     represented as blocks in the blockly view???
 
     */
-$("#upload").change(function(event) {
-  //console.log("upload change listener");
-  var files = event.target.files;
-  //console.log("files:" + files[0]);
-  var reader = new FileReader();
-  var f = files[0];
-  reader.onload = (function(file) {
-    return function(e) {
-      setCode(e.target.result);
-    }
-  })(f);
-  reader.readAsText(f);
-});
+
 
 /*
   RUN/SEND FUNCTION
@@ -87,28 +55,13 @@ $("#upload").change(function(event) {
   Clicking "run" will send Blockly scripts to the base station for
   the actual MiniBot.
 */
-var pythonConverter = new Blockly.Generator("Python");
-
-$("#send").click(sendBlockly);
-function sendBlockly(event){
-  $.ajax({
-    method: "POST",
-    url: '/uploadScript',
-    dataType: 'json',
-    data: JSON.stringify({
-      name: $("#id").val(),
-      script: getBlocklyScript()
-    }),
-    contentType: 'application/json'
-  });
-}
 
 /* ======================= HELPER FUNCTIONS ======================== */
 /* Returns a string of the entire blockly script. */
 function getBlocklyScript() { return Blockly.Python.workspaceToCode(workspace); }
-function setCode(code) { $("#data").val(code); }
-function appendCode(code) {
-  var content = $("#data").val();
-  $("data").val(content + code);
-}
+// function setCode(code) { $("#data").val(code); }
+// function appendCode(code) {
+//   var content = $("#data").val();
+//   $("data").val(content + code);
+// }
 

@@ -1310,6 +1310,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _reactTabs = __webpack_require__(24);
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -1319,6 +1321,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = __webpack_require__(1);
 var ReactDOM = __webpack_require__(34);
 
+//	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
 var Navbar = function (_React$Component) {
     _inherits(Navbar, _React$Component);
 
@@ -1414,7 +1417,7 @@ var SetupTab = function (_React$Component3) {
         value: function render() {
             return React.createElement(
                 'div',
-                { id: 'setuptab' },
+                { id: 'tab_setup' },
                 React.createElement(
                     'div',
                     { className: 'row' },
@@ -1453,7 +1456,7 @@ var Scenarios = function (_React$Component4) {
         value: function render() {
             return React.createElement(
                 'div',
-                { id: 'scenarios', className: 'box' },
+                { id: 'component_scenarios', className: 'box' },
                 'Scenarios'
             );
         }
@@ -1465,21 +1468,156 @@ var Scenarios = function (_React$Component4) {
 var AddBot = function (_React$Component5) {
     _inherits(AddBot, _React$Component5);
 
-    function AddBot() {
+    //TODO
+    function AddBot(props) {
         _classCallCheck(this, AddBot);
 
-        return _possibleConstructorReturn(this, (AddBot.__proto__ || Object.getPrototypeOf(AddBot)).apply(this, arguments));
+        var _this5 = _possibleConstructorReturn(this, (AddBot.__proto__ || Object.getPrototypeOf(AddBot)).call(this, props));
+
+        _this5.state = {
+            ip: "",
+            port: "10000",
+            name: "Bot0",
+            type: "minibot"
+        };
+
+        _this5.handleInputChange = _this5.handleInputChange.bind(_this5);
+        _this5.addbot = _this5.addbot.bind(_this5);
+        return _this5;
     }
 
     _createClass(AddBot, [{
-        key: 'render',
+        key: 'handleInputChange',
+        value: function handleInputChange(event) {
+            var target = event.target;
+            var value = target.value;
+            var name = target.name;
 
-        //TODO
+            this.setState(_defineProperty({}, name, value));
+        }
+    }, {
+        key: 'addbot',
+        value: function addbot(e) {
+            //TODO
+            console.log('addbot button clicked');
+            // $.ajax({
+            //     method: "POST",
+            //     url: '/addBot',
+            //     dataType: 'json',
+            //     data: JSON.stringify({
+            //         ip: getIP(),
+            //         port: (getPort() || 10000),
+            //         name: $("#name").val(),
+            //         type: $('#bot-type').val()
+            //     }),
+            //     contentType: 'application/json',
+            //     success: function addSuccess(data) {
+            //         updateDropdown(true, data, data);
+            //     }
+            // });
+        }
+    }, {
+        key: 'render',
         value: function render() {
             return React.createElement(
                 'div',
-                { id: 'addbot', className: 'box' },
-                'AddBot'
+                { id: 'component_addbot', className: 'box' },
+                React.createElement(
+                    'div',
+                    { className: 'row' },
+                    React.createElement(
+                        'div',
+                        { className: 'col-md-6' },
+                        'Add a Bot',
+                        React.createElement(
+                            'table',
+                            null,
+                            React.createElement(
+                                'tbody',
+                                null,
+                                React.createElement(
+                                    'tr',
+                                    null,
+                                    React.createElement(
+                                        'th',
+                                        null,
+                                        'IP: '
+                                    ),
+                                    React.createElement(
+                                        'th',
+                                        null,
+                                        React.createElement('input', { type: 'text', name: 'ip', id: 'ip', value: this.state.ip, onChange: this.handleInputChange })
+                                    )
+                                ),
+                                React.createElement(
+                                    'tr',
+                                    null,
+                                    React.createElement(
+                                        'th',
+                                        null,
+                                        'Port: '
+                                    ),
+                                    React.createElement(
+                                        'th',
+                                        null,
+                                        React.createElement('input', { type: 'text', name: 'port', id: 'port', value: this.state.port, onChange: this.handleInputChange })
+                                    )
+                                ),
+                                React.createElement(
+                                    'tr',
+                                    null,
+                                    React.createElement(
+                                        'th',
+                                        null,
+                                        'Name: '
+                                    ),
+                                    React.createElement(
+                                        'th',
+                                        null,
+                                        React.createElement('input', { type: 'text', name: 'name', id: 'name', value: this.state.name, onChange: this.handleInputChange })
+                                    )
+                                ),
+                                React.createElement(
+                                    'tr',
+                                    null,
+                                    React.createElement(
+                                        'th',
+                                        null,
+                                        'Type: '
+                                    ),
+                                    React.createElement(
+                                        'th',
+                                        null,
+                                        React.createElement(
+                                            'select',
+                                            { id: 'bot-type', name: 'type', value: this.state.type, onChange: this.handleInputChange },
+                                            React.createElement(
+                                                'option',
+                                                { value: 'minibot' },
+                                                'Minibot'
+                                            ),
+                                            React.createElement(
+                                                'option',
+                                                { value: 'simulator.simbot' },
+                                                'Simulated Minibot'
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'button',
+                            { id: 'addBot', onClick: this.addbot },
+                            'Add Bot'
+                        )
+                    ),
+                    React.createElement(
+                        'div',
+                        { className: 'col-md-6' },
+                        'Select Active Bot'
+                    )
+                )
             );
         }
     }]);
@@ -1508,7 +1646,7 @@ var GridView = function (_React$Component6) {
         value: function render() {
             return React.createElement(
                 'div',
-                { id: 'view', className: 'box' },
+                { id: 'component_view', className: 'box' },
                 'GridView'
             );
         }
@@ -1533,7 +1671,7 @@ var ControlTab = function (_React$Component7) {
         value: function render() {
             return React.createElement(
                 'div',
-                { id: 'controltab' },
+                { id: 'tab_control' },
                 React.createElement(
                     'div',
                     { className: 'row' },
@@ -1557,38 +1695,8 @@ var ControlTab = function (_React$Component7) {
     return ControlTab;
 }(React.Component);
 
-var GridView2 = function (_React$Component8) {
-    _inherits(GridView2, _React$Component8);
-
-    function GridView2() {
-        _classCallCheck(this, GridView2);
-
-        return _possibleConstructorReturn(this, (GridView2.__proto__ || Object.getPrototypeOf(GridView2)).apply(this, arguments));
-    }
-
-    _createClass(GridView2, [{
-        key: 'componentDidMount',
-
-        //TODO
-        value: function componentDidMount() {
-            //main();
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                { id: 'view2', className: 'box' },
-                'GridView'
-            );
-        }
-    }]);
-
-    return GridView2;
-}(React.Component);
-
-var ControlPanel = function (_React$Component9) {
-    _inherits(ControlPanel, _React$Component9);
+var ControlPanel = function (_React$Component8) {
+    _inherits(ControlPanel, _React$Component8);
 
     function ControlPanel() {
         _classCallCheck(this, ControlPanel);
@@ -1603,7 +1711,7 @@ var ControlPanel = function (_React$Component9) {
         value: function render() {
             return React.createElement(
                 'div',
-                { id: 'controlpanel', className: 'box' },
+                { id: 'component_controlpanel', className: 'box' },
                 'Control Panel'
             );
         }
@@ -1612,19 +1720,86 @@ var ControlPanel = function (_React$Component9) {
     return ControlPanel;
 }(React.Component);
 
-var Python = function (_React$Component10) {
-    _inherits(Python, _React$Component10);
+var Python = function (_React$Component9) {
+    _inherits(Python, _React$Component9);
 
-    function Python() {
+    //TODO DOWNLOAD, STYLING
+    function Python(props) {
         _classCallCheck(this, Python);
 
-        return _possibleConstructorReturn(this, (Python.__proto__ || Object.getPrototypeOf(Python)).apply(this, arguments));
+        var _this9 = _possibleConstructorReturn(this, (Python.__proto__ || Object.getPrototypeOf(Python)).call(this, props));
+
+        _this9.state = {
+            filename: "myBlocklyCode.py",
+            data: ""
+        };
+
+        _this9.handleInputChange = _this9.handleInputChange.bind(_this9);
+        _this9.download = _this9.download.bind(_this9);
+        _this9.upload = _this9.upload.bind(_this9);
+        _this9.send = _this9.send.bind(_this9);
+        return _this9;
     }
 
     _createClass(Python, [{
-        key: 'render',
+        key: 'handleInputChange',
+        value: function handleInputChange(event) {
+            var target = event.target;
+            var value = target.value;
+            var name = target.name;
 
-        //TODO DOWNLOAD, STYLING
+            this.setState(_defineProperty({}, name, value));
+            if (name == "data") {
+                document.getElementById("data").value = this.state.data;
+            }
+        }
+    }, {
+        key: 'download',
+        value: function download(event) {
+            /* DOWNLOAD FUNCTION
+              Allows users to download raw code as a file. Users must
+              manually input file name and file ext. */
+            console.log("download listener");
+            event.preventDefault();
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.state.data));
+            element.setAttribute('download', this.state.filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+    }, {
+        key: 'upload',
+        value: function upload(event) {
+            console.log("upload change listener");
+            var files = event.target.files;
+            var reader = new FileReader();
+            var f = files[0];
+            // reader.onload = (function(this.state.file) {
+            //     return function(e) {
+            //         this.state.code = e.target.result;
+            //     }
+            // })(f);
+            // reader.readAsText(f);
+        }
+    }, {
+        key: 'send',
+        value: function send() {
+            console.log("send listener");
+            $.ajax({
+                method: "POST",
+                url: '/uploadScript',
+                dataType: 'json',
+                data: JSON.stringify({
+                    name: $("#id").val(),
+                    script: getBlocklyScript()
+                }),
+                contentType: 'application/json'
+            });
+        }
+    }, {
+        key: 'render',
         value: function render() {
             return React.createElement(
                 'div',
@@ -1632,16 +1807,17 @@ var Python = function (_React$Component10) {
                 'Python',
                 React.createElement(
                     'form',
-                    { id: 'dwn', onsubmit: 'download(this[\'name\'].value, this[\'data\'].value)' },
-                    React.createElement('input', { type: 'text', name: 'name', value: 'myBlocklyCode.py' }),
-                    React.createElement('textarea', { name: 'data', size: '100', cols: '100', rows: '10', id: 'data' }),
+                    { id: 'dwn', onSubmit: this.download },
+                    'File Name: ',
+                    React.createElement('input', { type: 'text', name: 'filename', value: this.state.filename, onChange: this.handleInputChange }),
+                    React.createElement('textarea', { name: 'data', cols: '75', rows: '20', id: 'data', value: this.state.data, onChange: this.handleInputChange }),
                     React.createElement('br', null),
                     React.createElement('input', { type: 'submit', value: 'Download' })
                 ),
                 React.createElement(
                     'button',
-                    { id: 'send' },
-                    'Run'
+                    { id: 'send', onClick: this.send },
+                    'Run Code'
                 ),
                 React.createElement(
                     'form',
@@ -1660,8 +1836,8 @@ var Python = function (_React$Component10) {
     return Python;
 }(React.Component);
 
-var Blockly = function (_React$Component11) {
-    _inherits(Blockly, _React$Component11);
+var Blockly = function (_React$Component10) {
+    _inherits(Blockly, _React$Component10);
 
     function Blockly() {
         _classCallCheck(this, Blockly);
@@ -1670,9 +1846,15 @@ var Blockly = function (_React$Component11) {
     }
 
     _createClass(Blockly, [{
-        key: 'render',
+        key: 'componentDidMount',
 
-        //TODO LATER
+        //TODO THIS DOES NOT WORK ???
+        value: function componentDidMount() {
+            /* Blockly Configurations */
+            setUpBlockly();
+        }
+    }, {
+        key: 'render',
         value: function render() {
             return React.createElement(
                 'div',

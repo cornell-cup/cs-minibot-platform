@@ -4,6 +4,10 @@
     background:lightgrey;
     padding: 2vh;
 }
+
+.slightly_larger_text{
+    size: 5em;
+}
 /* NAVBAR */
 .navbar {
 width: 100vw;
