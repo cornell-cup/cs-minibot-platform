@@ -3,20 +3,33 @@
 <head>
 	<title>MiniBot GUI</title>
 	<!-- IMPORTS -->
-	<script src="../js/update/main.js"></script>
 	<link rel="stylesheet" href="../css/gui_update.css"/>
+	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 	<!-- END IMPORTS -->
 </head>
 
 <body>
-	<div class="navbar"><img class="logo" src = "../img/logo.png"/><h1>MiniBot
-		GUI</h1></div>
-
-	<!-- INSERT HTML HERE -->
+	<!-- HTML HERE -->
 	<div id="root"></div>
+	<xml id="toolbox" style="display:none;">
+		<block type="controls_if"></block>
+		<block type="variables_set"></block>
+		<block type="variables_get"></block>
+		<block type="logic_compare"></block>
+		<block type="controls_repeat_ext"></block>
+		<block type="math_number"></block>
+		<block type="math_arithmetic"></block>
+		<block type="text"></block>
+		<block type="text_print"></block>
+		<block type="move"></block>
+		<block type="turn"></block>
+		<block type="setwheelpower"></block>
+		<block type="wait"></block>
+	</xml>
 	<!-- END HTML -->
-
+	<script src="../js/interface_new.js"></script>
+	<script src="../js/view_new.js"></script>
 	<!-- basic imports -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="http://pixijs.download/release/pixi.min.js"></script>
@@ -36,8 +49,9 @@
 			src="../js/blocks/custom_json.js"></script>
 
 	<!-- manual scripts -->
+	<script src="../build/app.bundle.js"></script>
 	<script src="../js/blockly.js"></script>
-	<script src="../js/interface.js"></script>
-	<script src="../js/view.js"></script>
+
+
 </body>
 </html>
