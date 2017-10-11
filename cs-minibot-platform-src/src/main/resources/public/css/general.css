@@ -47,12 +47,7 @@ button:hover { background:#DBDBDB; }
 .box button {
 	background:#ffffff;
 }
-.dir#cw, .dir#ccw {
-	background:#D0DBD2;
-}
-.dir#log {
-    background:#98AFC7;
-}
+
 #view:after {
 	content:"";
 }
@@ -61,15 +56,16 @@ button:hover { background:#DBDBDB; }
       background:#000000;
       color:white;
       border:1px solid gray;
-      margin:50px 0 0 10vw;
       overflow:scroll;
-      border-radius:10px;
       font-family:Consolas, monospace;
       padding:10px;
       font-size:12px;
     }
-    #run {
-      background:white;
-      padding:10px;
-      font-family:Consolas, monospace;
-    }
+#run {
+  background:white;
+  padding:10px;
+  font-family:Consolas, monospace;
+}
+.controlgrid{
+	padding:10px;
+}
