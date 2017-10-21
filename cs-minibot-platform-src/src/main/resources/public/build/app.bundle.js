@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 23);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -264,9 +264,9 @@ process.umask = function () {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(28);
-} else {
   module.exports = __webpack_require__(29);
+} else {
+  module.exports = __webpack_require__(30);
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
@@ -398,11 +398,11 @@ if (process.env.NODE_ENV !== 'production') {
   // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
   var throwOnDirectAccess = true;
-  module.exports = __webpack_require__(26)(isValidElement, throwOnDirectAccess);
+  module.exports = __webpack_require__(27)(isValidElement, throwOnDirectAccess);
 } else {
   // By explicitly using `prop-types` you are opting into new production behavior.
   // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(27)();
+  module.exports = __webpack_require__(28)();
 }
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
@@ -666,7 +666,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = classNames;
-	} else if ("function" === 'function' && _typeof(__webpack_require__(15)) === 'object' && __webpack_require__(15)) {
+	} else if ("function" === 'function' && _typeof(__webpack_require__(16)) === 'object' && __webpack_require__(16)) {
 		// register as 'classnames', consistent with npm package name
 		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
 			return classNames;
@@ -842,6 +842,48 @@ function deepForEach(children, callback) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+function checkDCE() {
+  /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
+  if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined' || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== 'function') {
+    return;
+  }
+  if (process.env.NODE_ENV !== 'production') {
+    // This branch is unreachable because this function is only called
+    // in production, but the condition is true only in development.
+    // Therefore if the branch is still here, dead code elimination wasn't
+    // properly applied.
+    // Don't change the message. React DevTools relies on it. Also make sure
+    // this message doesn't occur elsewhere in this function, or it will cause
+    // a false positive.
+    throw new Error('^_^');
+  }
+  try {
+    // Verify that the code above has been dead code eliminated (DCE'd).
+    __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(checkDCE);
+  } catch (err) {
+    // DevTools shouldn't crash React, no matter what.
+    // We should still report in case we break this code.
+    console.error(err);
+  }
+}
+
+if (process.env.NODE_ENV === 'production') {
+  // DCE check should happen before ReactDOM bundle executes so that
+  // DevTools can report bad minification during injection.
+  checkDCE();
+  module.exports = __webpack_require__(36);
+} else {
+  module.exports = __webpack_require__(39);
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -877,7 +919,7 @@ var ExecutionEnvironment = {
 module.exports = ExecutionEnvironment;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -968,7 +1010,7 @@ function selectedIndexPropType(props, propName, componentName, location, propFul
 }
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -977,7 +1019,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -997,7 +1039,7 @@ function reset() {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1030,7 +1072,7 @@ function getPanelsCount(children) {
 }
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1111,7 +1153,7 @@ module.exports = EventListener;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1184,7 +1226,7 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1199,7 +1241,7 @@ module.exports = shallowEqual;
  * 
  */
 
-var isTextNode = __webpack_require__(36);
+var isTextNode = __webpack_require__(37);
 
 /*eslint-disable no-bitwise */
 
@@ -1227,7 +1269,7 @@ function containsNode(outerNode, innerNode) {
 module.exports = containsNode;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1257,7 +1299,7 @@ function focusNode(node) {
 module.exports = focusNode;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1300,7 +1342,7 @@ function getActiveElement(doc) /*?DOMElement*/{
 module.exports = getActiveElement;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1308,9 +1350,33 @@ module.exports = getActiveElement;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _reactTabs = __webpack_require__(24);
+var _reactTabs = __webpack_require__(25);
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var _python = __webpack_require__(35);
+
+var _python2 = _interopRequireDefault(_python);
+
+var _blockly = __webpack_require__(46);
+
+var _blockly2 = _interopRequireDefault(_blockly);
+
+var _controlpanel = __webpack_require__(47);
+
+var _controlpanel2 = _interopRequireDefault(_controlpanel);
+
+var _scenarios = __webpack_require__(48);
+
+var _scenarios2 = _interopRequireDefault(_scenarios);
+
+var _addbot = __webpack_require__(49);
+
+var _addbot2 = _interopRequireDefault(_addbot);
+
+var _gridview = __webpack_require__(50);
+
+var _gridview2 = _interopRequireDefault(_gridview);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -1319,9 +1385,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = __webpack_require__(1);
-var ReactDOM = __webpack_require__(34);
+var ReactDOM = __webpack_require__(13);
 
-//	<link rel="stylesheet" href="../css/vendor/prettify/prettify.css">
+/**
+ * Component for the Navbar on top
+ * Currently this does nothing except display some text and an image
+ */
 var Navbar = function (_React$Component) {
     _inherits(Navbar, _React$Component);
 
@@ -1349,6 +1418,11 @@ var Navbar = function (_React$Component) {
 
     return Navbar;
 }(React.Component);
+
+/**
+ * Top Level component for the GUI, includes two tabs
+ */
+
 
 var Platform = function (_React$Component2) {
     _inherits(Platform, _React$Component2);
@@ -1400,7 +1474,12 @@ var Platform = function (_React$Component2) {
 
     return Platform;
 }(React.Component);
-//Setup Tab
+
+/**
+ * Component for the setup tab
+ * Contains:
+ * addBot, gridView, and Scenarios
+ */
 
 
 var SetupTab = function (_React$Component3) {
@@ -1424,13 +1503,13 @@ var SetupTab = function (_React$Component3) {
                     React.createElement(
                         'div',
                         { className: 'col-md-6' },
-                        React.createElement(AddBot, null),
-                        React.createElement(GridView, null)
+                        React.createElement(_addbot2.default, null),
+                        React.createElement(_gridview2.default, null)
                     ),
                     React.createElement(
                         'div',
                         { className: 'col-md-6' },
-                        React.createElement(Scenarios, null)
+                        React.createElement(_scenarios2.default, null)
                     )
                 )
             );
@@ -1440,225 +1519,15 @@ var SetupTab = function (_React$Component3) {
     return SetupTab;
 }(React.Component);
 
-var Scenarios = function (_React$Component4) {
-    _inherits(Scenarios, _React$Component4);
-
-    function Scenarios() {
-        _classCallCheck(this, Scenarios);
-
-        return _possibleConstructorReturn(this, (Scenarios.__proto__ || Object.getPrototypeOf(Scenarios)).apply(this, arguments));
-    }
-
-    _createClass(Scenarios, [{
-        key: 'render',
-
-        //TODO
-        value: function render() {
-            return React.createElement(
-                'div',
-                { id: 'component_scenarios', className: 'box' },
-                'Scenarios'
-            );
-        }
-    }]);
-
-    return Scenarios;
-}(React.Component);
-
-var AddBot = function (_React$Component5) {
-    _inherits(AddBot, _React$Component5);
-
-    //TODO
-    function AddBot(props) {
-        _classCallCheck(this, AddBot);
-
-        var _this5 = _possibleConstructorReturn(this, (AddBot.__proto__ || Object.getPrototypeOf(AddBot)).call(this, props));
-
-        _this5.state = {
-            ip: "",
-            port: "10000",
-            name: "Bot0",
-            type: "minibot"
-        };
-
-        _this5.handleInputChange = _this5.handleInputChange.bind(_this5);
-        _this5.addbot = _this5.addbot.bind(_this5);
-        return _this5;
-    }
-
-    _createClass(AddBot, [{
-        key: 'handleInputChange',
-        value: function handleInputChange(event) {
-            var target = event.target;
-            var value = target.value;
-            var name = target.name;
-
-            this.setState(_defineProperty({}, name, value));
-        }
-    }, {
-        key: 'addbot',
-        value: function addbot(e) {
-            //TODO
-            console.log('addbot button clicked');
-            // $.ajax({
-            //     method: "POST",
-            //     url: '/addBot',
-            //     dataType: 'json',
-            //     data: JSON.stringify({
-            //         ip: getIP(),
-            //         port: (getPort() || 10000),
-            //         name: $("#name").val(),
-            //         type: $('#bot-type').val()
-            //     }),
-            //     contentType: 'application/json',
-            //     success: function addSuccess(data) {
-            //         updateDropdown(true, data, data);
-            //     }
-            // });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                { id: 'component_addbot', className: 'box' },
-                React.createElement(
-                    'div',
-                    { className: 'row' },
-                    React.createElement(
-                        'div',
-                        { className: 'col-md-6' },
-                        'Add a Bot',
-                        React.createElement(
-                            'table',
-                            null,
-                            React.createElement(
-                                'tbody',
-                                null,
-                                React.createElement(
-                                    'tr',
-                                    null,
-                                    React.createElement(
-                                        'th',
-                                        null,
-                                        'IP: '
-                                    ),
-                                    React.createElement(
-                                        'th',
-                                        null,
-                                        React.createElement('input', { type: 'text', name: 'ip', id: 'ip', value: this.state.ip, onChange: this.handleInputChange })
-                                    )
-                                ),
-                                React.createElement(
-                                    'tr',
-                                    null,
-                                    React.createElement(
-                                        'th',
-                                        null,
-                                        'Port: '
-                                    ),
-                                    React.createElement(
-                                        'th',
-                                        null,
-                                        React.createElement('input', { type: 'text', name: 'port', id: 'port', value: this.state.port, onChange: this.handleInputChange })
-                                    )
-                                ),
-                                React.createElement(
-                                    'tr',
-                                    null,
-                                    React.createElement(
-                                        'th',
-                                        null,
-                                        'Name: '
-                                    ),
-                                    React.createElement(
-                                        'th',
-                                        null,
-                                        React.createElement('input', { type: 'text', name: 'name', id: 'name', value: this.state.name, onChange: this.handleInputChange })
-                                    )
-                                ),
-                                React.createElement(
-                                    'tr',
-                                    null,
-                                    React.createElement(
-                                        'th',
-                                        null,
-                                        'Type: '
-                                    ),
-                                    React.createElement(
-                                        'th',
-                                        null,
-                                        React.createElement(
-                                            'select',
-                                            { id: 'bot-type', name: 'type', value: this.state.type, onChange: this.handleInputChange },
-                                            React.createElement(
-                                                'option',
-                                                { value: 'minibot' },
-                                                'Minibot'
-                                            ),
-                                            React.createElement(
-                                                'option',
-                                                { value: 'simulator.simbot' },
-                                                'Simulated Minibot'
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        ),
-                        React.createElement(
-                            'button',
-                            { id: 'addBot', onClick: this.addbot },
-                            'Add Bot'
-                        )
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: 'col-md-6' },
-                        'Select Active Bot'
-                    )
-                )
-            );
-        }
-    }]);
-
-    return AddBot;
-}(React.Component);
-
-var GridView = function (_React$Component6) {
-    _inherits(GridView, _React$Component6);
-
-    function GridView() {
-        _classCallCheck(this, GridView);
-
-        return _possibleConstructorReturn(this, (GridView.__proto__ || Object.getPrototypeOf(GridView)).apply(this, arguments));
-    }
-
-    _createClass(GridView, [{
-        key: 'componentDidMount',
-
-        //TODO
-        value: function componentDidMount() {
-            //main();
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                { id: 'component_view', className: 'box' },
-                'GridView'
-            );
-        }
-    }]);
-
-    return GridView;
-}(React.Component);
-//Control Tab
+/**
+ * Component for the coding/control tab
+ * Contains:
+ * python, blockly, gridView, controlpanel
+ */
 
 
-var ControlTab = function (_React$Component7) {
-    _inherits(ControlTab, _React$Component7);
+var ControlTab = function (_React$Component4) {
+    _inherits(ControlTab, _React$Component4);
 
     function ControlTab() {
         _classCallCheck(this, ControlTab);
@@ -1677,15 +1546,15 @@ var ControlTab = function (_React$Component7) {
                     { className: 'row' },
                     React.createElement(
                         'div',
-                        { className: 'col-md-6' },
-                        React.createElement(Blockly, null),
-                        React.createElement(GridView, null)
+                        { className: 'col-md-7' },
+                        React.createElement(_blockly2.default, null),
+                        React.createElement(_gridview2.default, null)
                     ),
                     React.createElement(
                         'div',
-                        { className: 'col-md-6' },
-                        React.createElement(Python, null),
-                        React.createElement(ControlPanel, null)
+                        { className: 'col-md-5' },
+                        React.createElement(_python2.default, null),
+                        React.createElement(_controlpanel2.default, null)
                     )
                 )
             );
@@ -1695,182 +1564,10 @@ var ControlTab = function (_React$Component7) {
     return ControlTab;
 }(React.Component);
 
-var ControlPanel = function (_React$Component8) {
-    _inherits(ControlPanel, _React$Component8);
-
-    function ControlPanel() {
-        _classCallCheck(this, ControlPanel);
-
-        return _possibleConstructorReturn(this, (ControlPanel.__proto__ || Object.getPrototypeOf(ControlPanel)).apply(this, arguments));
-    }
-
-    _createClass(ControlPanel, [{
-        key: 'render',
-
-        //TODO
-        value: function render() {
-            return React.createElement(
-                'div',
-                { id: 'component_controlpanel', className: 'box' },
-                'Control Panel'
-            );
-        }
-    }]);
-
-    return ControlPanel;
-}(React.Component);
-
-var Python = function (_React$Component9) {
-    _inherits(Python, _React$Component9);
-
-    //TODO DOWNLOAD, STYLING
-    function Python(props) {
-        _classCallCheck(this, Python);
-
-        var _this9 = _possibleConstructorReturn(this, (Python.__proto__ || Object.getPrototypeOf(Python)).call(this, props));
-
-        _this9.state = {
-            filename: "myBlocklyCode.py",
-            data: ""
-        };
-
-        _this9.handleInputChange = _this9.handleInputChange.bind(_this9);
-        _this9.download = _this9.download.bind(_this9);
-        _this9.upload = _this9.upload.bind(_this9);
-        _this9.send = _this9.send.bind(_this9);
-        return _this9;
-    }
-
-    _createClass(Python, [{
-        key: 'handleInputChange',
-        value: function handleInputChange(event) {
-            var target = event.target;
-            var value = target.value;
-            var name = target.name;
-
-            this.setState(_defineProperty({}, name, value));
-            if (name == "data") {
-                document.getElementById("data").value = this.state.data;
-            }
-        }
-    }, {
-        key: 'download',
-        value: function download(event) {
-            /* DOWNLOAD FUNCTION
-              Allows users to download raw code as a file. Users must
-              manually input file name and file ext. */
-            console.log("download listener");
-            event.preventDefault();
-            var element = document.createElement('a');
-            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.state.data));
-            element.setAttribute('download', this.state.filename);
-            element.style.display = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        }
-    }, {
-        key: 'upload',
-        value: function upload(event) {
-            console.log("upload change listener");
-            var files = event.target.files;
-            var reader = new FileReader();
-            var f = files[0];
-            // reader.onload = (function(this.state.file) {
-            //     return function(e) {
-            //         this.state.code = e.target.result;
-            //     }
-            // })(f);
-            // reader.readAsText(f);
-        }
-    }, {
-        key: 'send',
-        value: function send() {
-            console.log("send listener");
-            $.ajax({
-                method: "POST",
-                url: '/uploadScript',
-                dataType: 'json',
-                data: JSON.stringify({
-                    name: $("#id").val(),
-                    script: getBlocklyScript()
-                }),
-                contentType: 'application/json'
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                { id: 'python', className: 'box' },
-                'Python',
-                React.createElement(
-                    'form',
-                    { id: 'dwn', onSubmit: this.download },
-                    'File Name: ',
-                    React.createElement('input', { type: 'text', name: 'filename', value: this.state.filename, onChange: this.handleInputChange }),
-                    React.createElement('textarea', { name: 'data', cols: '75', rows: '20', id: 'data', value: this.state.data, onChange: this.handleInputChange }),
-                    React.createElement('br', null),
-                    React.createElement('input', { type: 'submit', value: 'Download' })
-                ),
-                React.createElement(
-                    'button',
-                    { id: 'send', onClick: this.send },
-                    'Run Code'
-                ),
-                React.createElement(
-                    'form',
-                    null,
-                    React.createElement('input', {
-                        type: 'file',
-                        id: 'upload',
-                        multipleSize: '1',
-                        accept: '.py'
-                    })
-                )
-            );
-        }
-    }]);
-
-    return Python;
-}(React.Component);
-
-var Blockly = function (_React$Component10) {
-    _inherits(Blockly, _React$Component10);
-
-    function Blockly() {
-        _classCallCheck(this, Blockly);
-
-        return _possibleConstructorReturn(this, (Blockly.__proto__ || Object.getPrototypeOf(Blockly)).apply(this, arguments));
-    }
-
-    _createClass(Blockly, [{
-        key: 'componentDidMount',
-
-        //TODO THIS DOES NOT WORK ???
-        value: function componentDidMount() {
-            /* Blockly Configurations */
-            setUpBlockly();
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            return React.createElement(
-                'div',
-                { id: 'blocklyDiv', className: 'box' },
-                'Blockly'
-            );
-        }
-    }]);
-
-    return Blockly;
-}(React.Component);
-
 ReactDOM.render(React.createElement(Platform, null), document.getElementById('root'));
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1879,23 +1576,23 @@ ReactDOM.render(React.createElement(Platform, null), document.getElementById('ro
 exports.__esModule = true;
 exports.resetIdCounter = exports.Tabs = exports.TabPanel = exports.TabList = exports.Tab = undefined;
 
-var _Tabs = __webpack_require__(25);
+var _Tabs = __webpack_require__(26);
 
 var _Tabs2 = _interopRequireDefault(_Tabs);
 
-var _TabList = __webpack_require__(31);
+var _TabList = __webpack_require__(32);
 
 var _TabList2 = _interopRequireDefault(_TabList);
 
-var _Tab = __webpack_require__(32);
+var _Tab = __webpack_require__(33);
 
 var _Tab2 = _interopRequireDefault(_Tab);
 
-var _TabPanel = __webpack_require__(33);
+var _TabPanel = __webpack_require__(34);
 
 var _TabPanel2 = _interopRequireDefault(_TabPanel);
 
-var _uuid = __webpack_require__(16);
+var _uuid = __webpack_require__(17);
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
@@ -1908,7 +1605,7 @@ exports.Tabs = _Tabs2.default;
 exports.resetIdCounter = _uuid.reset;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1926,13 +1623,13 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes3 = __webpack_require__(14);
+var _propTypes3 = __webpack_require__(15);
 
-var _UncontrolledTabs = __webpack_require__(30);
+var _UncontrolledTabs = __webpack_require__(31);
 
 var _UncontrolledTabs2 = _interopRequireDefault(_UncontrolledTabs);
 
-var _count = __webpack_require__(17);
+var _count = __webpack_require__(18);
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
@@ -2078,7 +1775,7 @@ Tabs.tabsRole = 'Tabs';
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2603,7 +2300,7 @@ module.exports = function (isValidElement, throwOnDirectAccess) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2662,7 +2359,7 @@ module.exports = function () {
 };
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2792,7 +2489,7 @@ module.exports = { Children: { map: S.map, forEach: S.forEach, count: S.count, t
     } }, Component: B.Component, PureComponent: B.PureComponent, unstable_AsyncComponent: B.AsyncComponent, createElement: G.createElement, cloneElement: G.cloneElement, isValidElement: G.isValidElement, createFactory: G.createFactory, version: "16.0.0", __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: { ReactCurrentOwner: C, assign: f } };
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4495,7 +4192,7 @@ if (process.env.NODE_ENV !== "production") {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4527,13 +4224,13 @@ var _classnames = __webpack_require__(9);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
-var _uuid = __webpack_require__(16);
+var _uuid = __webpack_require__(17);
 
 var _uuid2 = _interopRequireDefault(_uuid);
 
-var _propTypes3 = __webpack_require__(14);
+var _propTypes3 = __webpack_require__(15);
 
-var _count = __webpack_require__(17);
+var _count = __webpack_require__(18);
 
 var _childrenDeepMap = __webpack_require__(12);
 
@@ -4858,7 +4555,7 @@ UncontrolledTabs.propTypes = process.env.NODE_ENV !== "production" ? {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4952,7 +4649,7 @@ TabList.tabsRole = 'TabList';
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5099,7 +4796,7 @@ Tab.tabsRole = 'Tab';
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5215,49 +4912,273 @@ TabPanel.tabsRole = 'TabPanel';
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
 
-function checkDCE() {
-  /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
-  if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === 'undefined' || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== 'function') {
-    return;
-  }
-  if (process.env.NODE_ENV !== 'production') {
-    // This branch is unreachable because this function is only called
-    // in production, but the condition is true only in development.
-    // Therefore if the branch is still here, dead code elimination wasn't
-    // properly applied.
-    // Don't change the message. React DevTools relies on it. Also make sure
-    // this message doesn't occur elsewhere in this function, or it will cause
-    // a false positive.
-    throw new Error('^_^');
-  }
-  try {
-    // Verify that the code above has been dead code eliminated (DCE'd).
-    __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE(checkDCE);
-  } catch (err) {
-    // DevTools shouldn't crash React, no matter what.
-    // We should still report in case we break this code.
-    console.error(err);
-  }
-}
 
-if (process.env.NODE_ENV === 'production') {
-  // DCE check should happen before ReactDOM bundle executes so that
-  // DevTools can report bad minification during injection.
-  checkDCE();
-  module.exports = __webpack_require__(35);
-} else {
-  module.exports = __webpack_require__(38);
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var ReactDOM = __webpack_require__(13);
+
+/**
+ * Component for the Python text box
+ * Contains:
+ * upload, download, send script
+ */
+
+var Python = function (_React$Component) {
+    _inherits(Python, _React$Component);
+
+    //TODO UPLOAD, CAPTURE TAB KEY AND PREVENT DEFAULT ACTION, SEND SCRIPT
+    function Python(props) {
+        _classCallCheck(this, Python);
+
+        var _this = _possibleConstructorReturn(this, (Python.__proto__ || Object.getPrototypeOf(Python)).call(this, props));
+
+        _this.state = {
+            filename: "myBlocklyCode.py",
+            data: ""
+        };
+
+        _this.handleInputChange = _this.handleInputChange.bind(_this);
+        _this.download = _this.download.bind(_this);
+        _this.upload = _this.upload.bind(_this);
+        _this.send = _this.send.bind(_this);
+        _this.handleKeyInput = _this.handleKeyInput.bind(_this);
+        return _this;
+    }
+
+    /* handles input change for file name and coding textboxes */
+
+
+    _createClass(Python, [{
+        key: 'handleInputChange',
+        value: function handleInputChange(event) {
+            var target = event.target;
+            var value = target.value;
+            var name = target.name;
+
+            this.setState(_defineProperty({}, name, value));
+            if (name == "data") {
+                document.getElementById("data").value = this.state.data;
+            }
+        }
+
+        /* DOWNLOAD FUNCTION
+           Allows users to download raw code as a file. Users must
+           manually input file name and file ext.
+        */
+
+    }, {
+        key: 'download',
+        value: function download(event) {
+
+            console.log("download listener");
+            event.preventDefault();
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.state.data));
+            element.setAttribute('download', this.state.filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+        /* UPLOAD FUNCTION
+            Allows users to upload previously written code as a file
+            so that they may run Python scripts that have been written
+            externally without Blockly.
+              TODO: possibly make it so that uploaded scripts can be also
+            represented as blocks in the blockly view???
+          */
+
+    }, {
+        key: 'upload',
+        value: function upload(event) {
+            console.log("upload listener");
+            var files = event.target.files;
+            var reader = new FileReader();
+            var f = files[0];
+            // reader.onload = (function(this.state.file) {
+            //     return function(e) {
+            //         this.state.code = e.target.result;
+            //     }
+            // })(f);
+            // reader.readAsText(f);
+        }
+
+        /* Handler for key input; allows for tabs (4 spaces!!) in text box */
+
+    }, {
+        key: 'handleKeyInput',
+        value: function handleKeyInput(event) {
+            if (event.keyCode === 9) {
+                event.preventDefault();
+                var data = document.getElementById("data");
+                var v = data.value;
+                var s = data.selectionStart;
+                var e = data.selectionEnd;
+                data.value = v.substring(0, s) + '    ' + v.substring(e);
+                data.selectionStart = this.selectionEnd = s + 1;
+            }
+        }
+
+        /*
+          RUN/SEND FUNCTION
+          Clicking "run" will send Blockly scripts to the base station for
+          the actual MiniBot.
+        */
+
+    }, {
+        key: 'send',
+        value: function send() {
+            console.log("send listener");
+            // $.ajax({
+            //     method: "POST",
+            //     url: '/uploadScript',
+            //     dataType: 'json',
+            //     data: JSON.stringify({
+            //         name: $("#id").val(),
+            //         script: getBlocklyScript()
+            //     }),
+            //     contentType: 'application/json'
+            // });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                { id: 'python', className: 'box' },
+                'Python File Name: ',
+                React.createElement('input', { type: 'text', name: 'filename', value: this.state.filename, onChange: this.handleInputChange }),
+                React.createElement('br', null),
+                React.createElement('textarea', { name: 'data', id: 'data', value: this.state.data, onChange: this.handleInputChange, onKeyDown: this.handleKeyInput }),
+                React.createElement('br', null),
+                React.createElement(
+                    'button',
+                    { id: 'submit', onClick: this.download },
+                    'Download'
+                ),
+                React.createElement(
+                    'button',
+                    { id: 'send', onClick: this.send },
+                    'Run Code'
+                ),
+                React.createElement(
+                    'form',
+                    null,
+                    React.createElement('input', {
+                        type: 'file',
+                        id: 'upload',
+                        multiplesize: '1',
+                        accept: '.py'
+                    })
+                )
+            );
+        }
+    }]);
+
+    return Python;
+}(React.Component);
+
+// /* ======================= USER FUNCTIONALITY ======================== */
+//
+// /* DOWNLOAD FUNCTION
+//
+//   Allows users to download raw code as a file. Users must
+//   manually input file name and file type. */
+//
+// // Prevents page from refreshing when download button is clicked.
+// $("#dwn").submit(function(event){ event.preventDefault(); });
+//
+// // Download file as file-name manually inputted into textbox.
+// function download(filename, text) {
+//     var element = document.createElement('a');
+//     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+//     element.setAttribute('download', filename);
+//
+//     element.style.display = 'none';
+//     document.body.appendChild(element);
+//
+//     element.click();
+//
+//     document.body.removeChild(element);
+// }
+//
+// /* UPLOAD FUNCTION
+//
+//     Allows users to upload previously written code as a file
+//     so that they may run Python scripts that have been written
+//     externally without Blockly.
+//
+//     TODO: possibly make it so that uploaded scripts can be also
+//     represented as blocks in the blockly view???
+//
+//     */
+// $("#upload").change(function(event) {
+//     //console.log("upload change listener");
+//     var files = event.target.files;
+//     //console.log("files:" + files[0]);
+//     var reader = new FileReader();
+//     var f = files[0];
+//     reader.onload = (function(file) {
+//         return function(e) {
+//             setCode(e.target.result);
+//         }
+//     })(f);
+//     reader.readAsText(f);
+// });
+//
+// /*
+//   RUN/SEND FUNCTION
+//
+//   Clicking "run" will send Blockly scripts to the base station for
+//   the actual MiniBot.
+// */
+// var pythonConverter = new Blockly.Generator("Python");
+//
+// $("#send").click(sendBlockly);
+// function sendBlockly(event){
+//     $.ajax({
+//         method: "POST",
+//         url: '/uploadScript',
+//         dataType: 'json',
+//         data: JSON.stringify({
+//             name: $("#id").val(),
+//             script: getBlocklyScript()
+//         }),
+//         contentType: 'application/json'
+//     });
+// }
+//
+// /* ======================= HELPER FUNCTIONS ======================== */
+// /* Returns a string of the entire blockly script. */
+
+// function appendCode(code) {
+//     var content = $("#data").val();
+//     $("data").val(content + code);
+// }
+
+
+exports.default = Python;
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5275,15 +5196,15 @@ if (process.env.NODE_ENV === 'production') {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var aa = __webpack_require__(1);__webpack_require__(3);var l = __webpack_require__(13),
+var aa = __webpack_require__(1);__webpack_require__(3);var l = __webpack_require__(14),
     n = __webpack_require__(5),
-    ba = __webpack_require__(18),
+    ba = __webpack_require__(19),
     ca = __webpack_require__(2),
     da = __webpack_require__(7),
-    ea = __webpack_require__(19),
-    fa = __webpack_require__(20),
-    ha = __webpack_require__(21),
-    ia = __webpack_require__(22);
+    ea = __webpack_require__(20),
+    fa = __webpack_require__(21),
+    ha = __webpack_require__(22),
+    ia = __webpack_require__(23);
 function w(a) {
   for (var b = arguments.length - 1, c = "Minified React error #" + a + "; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d" + a, d = 0; d < b; d++) {
     c += "\x26args[]\x3d" + encodeURIComponent(arguments[d + 1]);
@@ -7657,7 +7578,7 @@ var ek = { createPortal: dk, hydrate: function hydrate(a, b, c) {
   unstable_deferredUpdates: Xj.deferredUpdates, flushSync: Xj.flushSync, __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: { EventPluginHub: Jb, EventPluginRegistry: sa, EventPropagators: Th, ReactControlledComponent: nb, ReactDOMComponentTree: G, ReactDOMEventListener: L } };Cj({ findFiberByHostInstance: G.getClosestInstanceFromNode, findHostInstanceByFiber: Xj.findHostInstance, bundleType: 0, version: "16.0.0", rendererPackageName: "react-dom" });module.exports = ek;
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7672,7 +7593,7 @@ var ek = { createPortal: dk, hydrate: function hydrate(a, b, c) {
  * @typechecks
  */
 
-var isNode = __webpack_require__(37);
+var isNode = __webpack_require__(38);
 
 /**
  * @param {*} object The object to check.
@@ -7685,7 +7606,7 @@ function isTextNode(object) {
 module.exports = isTextNode;
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7716,7 +7637,7 @@ function isNode(object) {
 module.exports = isNode;
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7727,7 +7648,7 @@ module.exports = isNode;
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- */var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};if(process.env.NODE_ENV!=="production"){(function(){'use strict';var react=__webpack_require__(1);var invariant=__webpack_require__(3);var ExecutionEnvironment=__webpack_require__(13);var _assign=__webpack_require__(5);var EventListener=__webpack_require__(18);var require$$0=__webpack_require__(6);var hyphenateStyleName=__webpack_require__(39);var emptyFunction=__webpack_require__(2);var camelizeStyleName=__webpack_require__(41);var performanceNow=__webpack_require__(43);var propTypes=__webpack_require__(4);var emptyObject=__webpack_require__(7);var checkPropTypes=__webpack_require__(11);var shallowEqual=__webpack_require__(19);var containsNode=__webpack_require__(20);var focusNode=__webpack_require__(21);var getActiveElement=__webpack_require__(22);/**
+ */var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};if(process.env.NODE_ENV!=="production"){(function(){'use strict';var react=__webpack_require__(1);var invariant=__webpack_require__(3);var ExecutionEnvironment=__webpack_require__(14);var _assign=__webpack_require__(5);var EventListener=__webpack_require__(19);var require$$0=__webpack_require__(6);var hyphenateStyleName=__webpack_require__(40);var emptyFunction=__webpack_require__(2);var camelizeStyleName=__webpack_require__(42);var performanceNow=__webpack_require__(44);var propTypes=__webpack_require__(4);var emptyObject=__webpack_require__(7);var checkPropTypes=__webpack_require__(11);var shallowEqual=__webpack_require__(20);var containsNode=__webpack_require__(21);var focusNode=__webpack_require__(22);var getActiveElement=__webpack_require__(23);/**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
  * This source code is licensed under the MIT license found in the
@@ -11121,7 +11042,7 @@ if(/^(https?|file):$/.test(protocol)){console.info('%cDownload the React DevTool
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11136,7 +11057,7 @@ if(/^(https?|file):$/.test(protocol)){console.info('%cDownload the React DevTool
 
 
 
-var hyphenate = __webpack_require__(40);
+var hyphenate = __webpack_require__(41);
 
 var msPattern = /^ms-/;
 
@@ -11163,7 +11084,7 @@ function hyphenateStyleName(string) {
 module.exports = hyphenateStyleName;
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11199,7 +11120,7 @@ function hyphenate(string) {
 module.exports = hyphenate;
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11214,7 +11135,7 @@ module.exports = hyphenate;
 
 
 
-var camelize = __webpack_require__(42);
+var camelize = __webpack_require__(43);
 
 var msPattern = /^-ms-/;
 
@@ -11242,7 +11163,7 @@ function camelizeStyleName(string) {
 module.exports = camelizeStyleName;
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11277,7 +11198,7 @@ function camelize(string) {
 module.exports = camelize;
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11292,7 +11213,7 @@ module.exports = camelize;
  * @typechecks
  */
 
-var performance = __webpack_require__(44);
+var performance = __webpack_require__(45);
 
 var performanceNow;
 
@@ -11314,7 +11235,7 @@ if (performance.now) {
 module.exports = performanceNow;
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11329,7 +11250,7 @@ module.exports = performanceNow;
 
 
 
-var ExecutionEnvironment = __webpack_require__(13);
+var ExecutionEnvironment = __webpack_require__(14);
 
 var performance;
 
@@ -11338,6 +11259,1010 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = performance || {};
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var ReactDOM = __webpack_require__(13);
+
+/**
+ * Component for the Blockly sandbox
+ *
+ */
+
+var Blockly = function (_React$Component) {
+    _inherits(Blockly, _React$Component);
+
+    //TODO getBlocklyScript does not workw
+    function Blockly(props) {
+        _classCallCheck(this, Blockly);
+
+        var _this = _possibleConstructorReturn(this, (Blockly.__proto__ || Object.getPrototypeOf(Blockly)).call(this, props));
+
+        _this.getBlocklyScript = _this.getBlocklyScript.bind(_this);
+        return _this;
+    }
+
+    /* Runs after component loads - this generates the blockly stuff */
+
+
+    _createClass(Blockly, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var workspace = window.Blockly.inject('blocklyDiv', {
+                toolbox: document.getElementById('toolbox'),
+                grid: {
+                    spacing: 20,
+                    length: 3,
+                    colour: '#ccc',
+                    snap: true
+                },
+                trashcan: true,
+                scroll: true
+            });
+
+            /* Realtime code generation
+              (Every drag/drop or change in visual code will be
+              reflected in actual code view) */
+            workspace.addChangeListener(function (event) {
+                document.getElementById('data').value = this.getBlocklyScript();
+            });
+        }
+
+        /* Translates Blockly code to Python,
+         * CURRENTLY BROKEN */
+
+    }, {
+        key: 'getBlocklyScript',
+        value: function getBlocklyScript() {
+            return window.Blockly.Python.workspaceToCode(workspace);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var blocklyStyle = { margin: '0', height: '70vh', width: '55vw' };
+            return React.createElement(
+                'div',
+                { id: 'blockly', className: 'box' },
+                React.createElement(
+                    'div',
+                    { id: 'blocklyDiv', style: blocklyStyle },
+                    'Blockly'
+                )
+            );
+        }
+    }]);
+
+    return Blockly;
+}(React.Component);
+
+exports.default = Blockly;
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+
+var ControlPanel = function (_React$Component) {
+    _inherits(ControlPanel, _React$Component);
+
+    //TODO: add listeners for Keyboard/Xbox controls, removing bot
+    function ControlPanel(props) {
+        _classCallCheck(this, ControlPanel);
+
+        var _this = _possibleConstructorReturn(this, (ControlPanel.__proto__ || Object.getPrototypeOf(ControlPanel)).call(this, props));
+
+        _this.state = {
+            power: 50,
+            discoveredBots: []
+        };
+
+        _this.handleInputChange = _this.handleInputChange.bind(_this);
+        _this.updateDiscoveredBots = _this.updateDiscoveredBots.bind(_this);
+        _this.sendKV = _this.sendKV.bind(_this);
+        _this.startLogging = _this.startLogging.bind(_this);
+        _this.sendMotors = _this.sendMotors.bind(_this);
+        _this.removeBot = _this.removeBot.bind(_this);
+        _this.xboxToggle = _this.xboxToggle.bind(_this);
+        return _this;
+    }
+
+    _createClass(ControlPanel, [{
+        key: 'handleInputChange',
+        value: function handleInputChange(event) {
+            var target = event.target;
+            var value = target.value;
+            var name = target.name;
+
+            this.setState(_defineProperty({}, name, value));
+        }
+    }, {
+        key: 'sendKV',
+        value: function sendKV(event) {
+            //TODO
+            var pow = this.state.power;
+            var target = event.target;
+            console.log('sendKV listener');
+            if (target.id == "fwd") {
+                this.sendMotors(pow, pow, pow, pow);
+            } else if (target.id == "bck") {
+                this.sendMotors(-pow, -pow, -pow, -pow);
+            } else if (target.id == "lft") {
+                this.sendMotors(-pow, pow, -pow, pow);
+            } else if (target.id == "rt") {
+                this.sendMotors(pow, -pow, pow, -pow);
+            } else if (target.id == "cw") {
+                this.sendMotors(pow, -pow, pow, -pow);
+            } else if (target.id == "ccw") {
+                this.sendMotors(-pow, pow, -pow, pow);
+            } else if (target.id == "stop") {
+                this.sendMotors(0, 0, 0, 0);
+            } else if (target.id == "log") {
+                this.startLogging();
+            } else {
+                console.log("Clicked on a direction button but nothing has been executed.");
+            }
+        }
+    }, {
+        key: 'sendMotors',
+        value: function sendMotors(a, b, c, d) {
+            //TODO
+            console.log(a.toString() + b.toString() + c.toString() + d.toString());
+        }
+    }, {
+        key: 'startLogging',
+        value: function startLogging() {
+            //TODO
+            console.log("logging data listener");
+        }
+    }, {
+        key: 'removeBot',
+        value: function removeBot() {
+            //     // ajax post to backend to remove a bot from list.
+            //     $.ajax({
+            //         method: "POST",
+            //         url: '/removeBot',
+            //         dataType: 'json',
+            //         data: JSON.stringify({
+            //             name: getBotID()
+            //         }),
+            //         contentType: 'application/json',
+            //         success: function properlyRemoved(data) {
+            //             console.log("removed bot");
+            //         }
+            //     });
+        }
+    }, {
+        key: 'xboxToggle',
+        value: function xboxToggle() {
+            // $('#xbox-on').click(function() {
+            //     // ajax post to backend to remove a bot from list.
+            //     $.ajax({
+            //         method: "POST",
+            //         url: '/runXbox',
+            //         dataType: 'json',
+            //         data: JSON.stringify({
+            //             name: getBotID()
+            //         }),
+            //         contentType: 'application/json',
+            //         success: function properlyRemoved(data) {
+            //             console.log("TODO");
+            //         }
+            //     });
+            // });
+            //
+            // $('#xbox-off').click(function() {
+            //     // ajax post to backend to remove a bot from list.
+            //     $.ajax({
+            //         method: "POST",
+            //         url: '/stopXbox',
+            //         dataType: 'json',
+            //         contentType: 'application/json',
+            //         success: function properlyRemoved(data) {
+            //             console.log("TODO");
+            //         }
+            //     });
+            // });
+        }
+    }, {
+        key: 'updateDiscoveredBots',
+        value: function updateDiscoveredBots() {
+            //TODO
+            //        $.ajax({
+            //            method: "POST",
+            //            url: '/discoverBots',
+            //            dataType: 'json',
+            //            data: '',
+            //            contentType: 'application/json',
+            //            success: function (data) {
+            //                 //Check if discovered_bots and data are the same (check length and then contents)
+            //                if(data.length != discovered_bots.length){
+            //                    //If not then clear list and re-make displayed elements
+            //                    redoDiscoverList(data);
+            //                }
+            //                else{
+            //                    //Check value to ensure both structures contain the same data
+            //                    for(let x=0;x<data.length;x++){
+            //                        if(data[x]!=discovered_bots[x]){
+            //                            redoDiscoverList(data);
+            //                            //Prevent the list from being remade constantly
+            //                            break;
+            //                        }
+            //                    }
+            //                }
+            //                setTimeout(updateDiscoveredBots,3000); // Try again in 3 sec
+            //            }
+            //        });
+        }
+    }, {
+        key: 'redoDiscoverList',
+        value: function redoDiscoverList(data) {
+            var new_bots = [];
+
+            for (var i = 0; i < data.length; i++) {
+                //Trim the forward-slash
+                var ip_address = data[i].substring(1);
+                new_bots.push(ip_address);
+            }
+            this.setState({ discoveredBots: new_bots });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'div',
+                { id: 'component_controlpanel', className: 'box' },
+                'Control Panel',
+                React.createElement('br', null),
+                React.createElement(
+                    'h4',
+                    null,
+                    'Movement controls:'
+                ),
+                'Power (',
+                this.state.power,
+                '): ',
+                React.createElement('input', { id: 'power', type: 'range', name: 'power', min: '0', max: '100', value: this.state.power, defaultValue: '50', onChange: this.handleInputChange }),
+                React.createElement('br', null),
+                React.createElement(
+                    'b',
+                    null,
+                    'Directions:'
+                ),
+                React.createElement('br', null),
+                React.createElement(
+                    'table',
+                    null,
+                    React.createElement(
+                        'tbody',
+                        null,
+                        React.createElement(
+                            'tr',
+                            null,
+                            React.createElement(
+                                'td',
+                                { className: 'controlgrid' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn', id: 'ccw', onClick: this.sendKV },
+                                    'turn CCW'
+                                )
+                            ),
+                            React.createElement(
+                                'td',
+                                { className: 'controlgrid' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn', id: 'fwd', onClick: this.sendKV },
+                                    'forward'
+                                )
+                            ),
+                            React.createElement(
+                                'td',
+                                { className: 'controlgrid' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn', id: 'cw', onClick: this.sendKV },
+                                    'turn CW'
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'tr',
+                            null,
+                            React.createElement(
+                                'td',
+                                { className: 'controlgrid' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn', id: 'lft', onClick: this.sendKV },
+                                    'left'
+                                )
+                            ),
+                            React.createElement(
+                                'td',
+                                { className: 'controlgrid' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn btn-danger', id: 'stop', onClick: this.sendKV },
+                                    'STOP'
+                                )
+                            ),
+                            React.createElement(
+                                'td',
+                                { className: 'controlgrid' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn', id: 'rt', onClick: this.sendKV },
+                                    'right'
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'tr',
+                            null,
+                            React.createElement(
+                                'td',
+                                { className: 'controlgrid' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn btn-success', id: 'log', onClick: this.sendKV },
+                                    'log data'
+                                )
+                            ),
+                            React.createElement(
+                                'td',
+                                { className: 'controlgrid' },
+                                React.createElement(
+                                    'button',
+                                    { className: 'btn', id: 'bck', onClick: this.sendKV },
+                                    'backward'
+                                )
+                            ),
+                            React.createElement('td', { className: 'controlgrid' })
+                        ),
+                        React.createElement(
+                            'tr',
+                            null,
+                            React.createElement(
+                                'td',
+                                null,
+                                'Keyboard Controls ',
+                                React.createElement('br', null),
+                                React.createElement(
+                                    'label',
+                                    { className: 'switch' },
+                                    React.createElement('input', { type: 'checkbox', id: 'keyboard-controls' }),
+                                    React.createElement('span', { className: 'slider' })
+                                )
+                            ),
+                            React.createElement('td', null),
+                            React.createElement(
+                                'td',
+                                null,
+                                'Xbox Controls ',
+                                React.createElement('br', null),
+                                React.createElement(
+                                    'label',
+                                    { className: 'switch' },
+                                    React.createElement('input', { type: 'checkbox', id: 'xbox-controls' }),
+                                    React.createElement('span', { className: 'slider' })
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return ControlPanel;
+}(React.Component);
+
+// $(document).ready(function() {
+//     /*
+//      * Event listener for key inputs. Sends to selected bot.
+//      */
+//     var lastKeyPressed;
+//     window.onkeydown = function (e) {
+//         let keyboardEnable = document.getElementById('keyboard-controls').checked;
+//         if (!keyboardEnable) return;
+//
+//         let pow = getPower();
+//         let code = e.keyCode ? e.keyCode : e.which;
+//
+//         if (code === lastKeyPressed) return;
+//
+//         if (code === 87) {
+//             // w=forward
+//             sendMotors(pow, pow, pow, pow);
+//
+//         } else if (code === 83) {
+//             // s=backward
+//             sendMotors(-pow, -pow, -pow, -pow);
+//
+//         } else if (code == 65) {
+//             // a=ccw
+//             sendMotors(-pow, pow, -pow, pow);
+//
+//         } else if (code == 68) {
+//             // d=cw
+//             sendMotors(pow, -pow, pow, -pow);
+//
+//         } else if (code == 81) {
+//             // q=left
+//             sendMotors(-pow, pow, pow, -pow);
+//
+//         } else if (code == 69) {
+//             // e=right
+//             sendMotors(pow, -pow, -pow, pow);
+//         } else {
+//             return;
+//         }
+//         lastKeyPressed = code;
+//     };
+//
+//     window.onkeyup = function (e) {
+//         let keyboardEnable = document.getElementById('keyboard-controls').checked;
+//         if (!keyboardEnable) return;
+//
+//         let code = e.keyCode ? e.keyCode : e.which;
+//
+//         if (code === lastKeyPressed) {
+//             // Stop
+//             sendMotors(0,0,0,0);
+//             lastKeyPressed = -1;
+//         }
+//     };
+// });
+//
+// /*
+// *   Send KV -- allows users to manually send key and value to bot (for debugging/testing
+//     purposes)
+// */
+// function sendKV(){
+//     $.ajax({
+//         method:'POST',
+//         url:'/sendKV',
+//         dataType: 'json',
+//         data: JSON.stringify({
+//             key:$("#kv_key").val(),
+//             value:$("#kv_value").val(),
+//             name:getBotID()
+//         }),
+//         contentType: 'application/json'
+//     });
+// }
+
+
+exports.default = ControlPanel;
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+
+/**
+ * Component for the new scenarios system
+ * Will contain:
+ * Loading, saving, editing, adding scenarios to simulator
+ *
+ */
+
+var Scenarios = function (_React$Component) {
+    _inherits(Scenarios, _React$Component);
+
+    function Scenarios() {
+        _classCallCheck(this, Scenarios);
+
+        return _possibleConstructorReturn(this, (Scenarios.__proto__ || Object.getPrototypeOf(Scenarios)).apply(this, arguments));
+    }
+
+    _createClass(Scenarios, [{
+        key: "render",
+
+        //TODO
+        value: function render() {
+            return React.createElement(
+                "div",
+                { id: "component_scenarios", className: "box" },
+                "Scenarios"
+            );
+        }
+    }]);
+
+    return Scenarios;
+}(React.Component);
+//
+// //adding a scenario from the value in the scenario viewer
+// $('#addScenario').click(function() {
+//     console.log("add scenario from interface.js")
+//     var scenario = $("#scenario").val();
+//
+//     $.ajax({
+//         method: "POST",
+//         url: '/addScenario',
+//         dataType: 'text',
+//         data: JSON.stringify({
+//             scenario: scenario.toString()
+//         }),
+//         contentType: 'application/json; charset=utf-8',
+//         success: function (data){
+//             console.log("successfully added scenario: "+data);
+//         }
+//     });
+// });
+//
+// //saving a scenario to a txt file with the specified filename
+// $('#saveScenario').click(function() {
+//     console.log("saving a scenario")
+//     var scenario = $("#scenario").val();
+//     var filename = $("#scenarioname").val();
+//
+//     $.ajax({
+//         method: "POST",
+//         url: '/saveScenario',
+//         dataType: 'text',
+//         data: JSON.stringify({scenario: scenario.toString(),
+//             name: filename.toString()}),
+//         contentType: 'application/json; charset=utf-8',
+//         success: function (data){
+//             console.log("successfully saved scenario: "+data);
+//         }
+//     });
+// });
+//
+// /**loading a scenario - just type in a name, no need for directory or file
+//  extension*/
+// $('#loadScenario').click(function() {
+//     active_bots = [];
+//     discovered_bots = [];
+//
+//     var filename = $("#scenarioname").val();
+//     console.log("loading scenario: "+filename.toString());
+//     $.ajax({
+//         method: "POST",
+//         url: '/loadScenario',
+//         dataType: 'text',
+//         data: JSON.stringify({'name':filename.toString()}),
+//         contentType: 'application/json; charset=utf-8',
+//         success: function (data){
+//             $("#scenario").val(data);
+//             console.log("successfully loaded scenario: "+data);
+//         },
+//         error: function(data){
+//             console.log("error: please enter the name of an existing scenario")
+//         }
+//     });
+// });
+
+
+exports.default = Scenarios;
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+
+/**
+ * Component for displaying each discovered bot
+ *
+ */
+
+var DiscoveredBot = function (_React$Component) {
+    _inherits(DiscoveredBot, _React$Component);
+
+    function DiscoveredBot() {
+        _classCallCheck(this, DiscoveredBot);
+
+        return _possibleConstructorReturn(this, (DiscoveredBot.__proto__ || Object.getPrototypeOf(DiscoveredBot)).apply(this, arguments));
+    }
+
+    _createClass(DiscoveredBot, [{
+        key: "render",
+        value: function render() {
+            var styles = {
+                ipAddress: {
+                    float: "left"
+                }
+            };
+            return React.createElement(
+                "div",
+                { className: "discoveredbot" },
+                React.createElement(
+                    "p",
+                    { style: styles.ipAddress },
+                    this.props.ip_address
+                ),
+                React.createElement(
+                    "button",
+                    { id: 'discoverBot' + this.props.idx, value: this.props.ip_address, className: "addBot" },
+                    "add bot"
+                )
+            );
+        }
+    }]);
+
+    return DiscoveredBot;
+}(React.Component);
+
+/**
+ * Component for the add bot interface
+ *
+ */
+
+
+var AddBot = function (_React$Component2) {
+    _inherits(AddBot, _React$Component2);
+
+    function AddBot(props) {
+        _classCallCheck(this, AddBot);
+
+        var _this2 = _possibleConstructorReturn(this, (AddBot.__proto__ || Object.getPrototypeOf(AddBot)).call(this, props));
+
+        _this2.state = {
+            ip: "",
+            port: "10000",
+            name: "Bot0",
+            type: "minibot",
+            discoveredBots: []
+        };
+
+        _this2.handleInputChange = _this2.handleInputChange.bind(_this2);
+        _this2.addbot = _this2.addbot.bind(_this2);
+        _this2.updateDiscoveredBots = _this2.updateDiscoveredBots.bind(_this2);
+        return _this2;
+    }
+
+    /* handles input change for input fields */
+
+
+    _createClass(AddBot, [{
+        key: "handleInputChange",
+        value: function handleInputChange(event) {
+            var target = event.target;
+            var value = target.value;
+            var name = target.name;
+
+            this.setState(_defineProperty({}, name, value));
+        }
+
+        /* Attempts to add a bot with the specified params
+        * */
+
+    }, {
+        key: "addbot",
+        value: function addbot(e) {
+            //TODO
+            console.log('addbot button clicked');
+            // $.ajax({
+            //     method: "POST",
+            //     url: '/addBot',
+            //     dataType: 'json',
+            //     data: JSON.stringify({
+            //         ip: getIP(),
+            //         port: (getPort() || 10000),
+            //         name: $("#name").val(),
+            //         type: $('#bot-type').val()
+            //     }),
+            //     contentType: 'application/json',
+            //     success: function addSuccess(data) {
+            //         updateDropdown(true, data, data);
+            //     }
+            // });
+        }
+
+        /*
+            Get set of discoverable minibots
+        */
+
+    }, {
+        key: "updateDiscoveredBots",
+        value: function updateDiscoveredBots() {
+            //        $.ajax({
+            //            method: "POST",
+            //            url: '/discoverBots',
+            //            dataType: 'json',
+            //            data: '',
+            //            contentType: 'application/json',
+            //            success: function (data) {
+            //                 //Check if discovered_bots and data are the same (check length and then contents)
+            //                if(data.length != discovered_bots.length){
+            //                    //If not then clear list and re-make displayed elements
+            //                    redoDiscoverList(data);
+            //                }
+            //                else{
+            //                    //Check value to ensure both structures contain the same data
+            //                    for(let x=0;x<data.length;x++){
+            //                        if(data[x]!=discovered_bots[x]){
+            //                            redoDiscoverList(data);
+            //                            //Prevent the list from being remade constantly
+            //                            break;
+            //                        }
+            //                    }
+            //                }
+            //                setTimeout(updateDiscoveredBots,3000); // Try again in 3 sec
+            //            }
+            //        });
+        }
+    }, {
+        key: "redoDiscoverList",
+        value: function redoDiscoverList(data) {
+            var new_bots = [];
+
+            for (var i = 0; i < data.length; i++) {
+                //Trim the forward-slash
+                var ip_address = data[i].substring(1);
+                new_bots.push(ip_address);
+            }
+
+            this.setState({ discoveredBots: new_bots });
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            var styles = {
+                ActiveBotHeader: {
+                    height: '25%'
+                },
+                ActiveBotTitle: {
+                    float: "left"
+                }
+            };
+            return React.createElement(
+                "div",
+                { id: "component_addbot", className: "box" },
+                React.createElement(
+                    "div",
+                    { className: "row" },
+                    React.createElement(
+                        "div",
+                        { className: "col-md-6" },
+                        "Add a Bot",
+                        React.createElement(
+                            "table",
+                            null,
+                            React.createElement(
+                                "tbody",
+                                null,
+                                React.createElement(
+                                    "tr",
+                                    null,
+                                    React.createElement(
+                                        "th",
+                                        null,
+                                        "IP: "
+                                    ),
+                                    React.createElement(
+                                        "th",
+                                        null,
+                                        React.createElement("input", { type: "text", name: "ip", id: "ip", value: this.state.ip, onChange: this.handleInputChange })
+                                    )
+                                ),
+                                React.createElement(
+                                    "tr",
+                                    null,
+                                    React.createElement(
+                                        "th",
+                                        null,
+                                        "Port: "
+                                    ),
+                                    React.createElement(
+                                        "th",
+                                        null,
+                                        React.createElement("input", { type: "text", name: "port", id: "port", value: this.state.port, onChange: this.handleInputChange })
+                                    )
+                                ),
+                                React.createElement(
+                                    "tr",
+                                    null,
+                                    React.createElement(
+                                        "th",
+                                        null,
+                                        "Name: "
+                                    ),
+                                    React.createElement(
+                                        "th",
+                                        null,
+                                        React.createElement("input", { type: "text", name: "name", id: "name", value: this.state.name, onChange: this.handleInputChange })
+                                    )
+                                ),
+                                React.createElement(
+                                    "tr",
+                                    null,
+                                    React.createElement(
+                                        "th",
+                                        null,
+                                        "Type: "
+                                    ),
+                                    React.createElement(
+                                        "th",
+                                        null,
+                                        React.createElement(
+                                            "select",
+                                            { id: "bot-type", name: "type", value: this.state.type, onChange: this.handleInputChange },
+                                            React.createElement(
+                                                "option",
+                                                { value: "minibot" },
+                                                "Minibot"
+                                            ),
+                                            React.createElement(
+                                                "option",
+                                                { value: "simulator.simbot" },
+                                                "Simulated Minibot"
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            "button",
+                            { id: "addBot", onClick: this.addbot },
+                            "Add Bot"
+                        )
+                    ),
+                    React.createElement(
+                        "div",
+                        { className: "col-md-6" },
+                        React.createElement(
+                            "div",
+                            { className: "activeBotHeader", style: styles.ActiveBotHeader },
+                            React.createElement(
+                                "p",
+                                { style: styles.ActiveBotTitle },
+                                "Select an Active Bot"
+                            ),
+                            React.createElement(
+                                "button",
+                                { className: "refresh-discovery", onClick: this.updateDiscoveredBots },
+                                "Refresh"
+                            )
+                        ),
+                        React.createElement(
+                            "div",
+                            { className: "discovered-bot", id: "discovered" },
+                            this.state.discoveredBots.map(function (ip, idx) {
+                                return React.createElement(DiscoveredBot, { key: idx, idx: idx, ip_address: ip });
+                            })
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return AddBot;
+}(React.Component);
+
+exports.default = AddBot;
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+
+/**
+ * Component for the grid view of the simulated bots
+ *
+ */
+
+var GridView = function (_React$Component) {
+    _inherits(GridView, _React$Component);
+
+    function GridView() {
+        _classCallCheck(this, GridView);
+
+        return _possibleConstructorReturn(this, (GridView.__proto__ || Object.getPrototypeOf(GridView)).apply(this, arguments));
+    }
+
+    _createClass(GridView, [{
+        key: "componentDidMount",
+
+        //TODO
+        value: function componentDidMount() {
+            //main();
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            return React.createElement(
+                "div",
+                { id: "component_view", className: "box" },
+                "GridView"
+            );
+        }
+    }]);
+
+    return GridView;
+}(React.Component);
+
+exports.default = GridView;
 
 /***/ })
 /******/ ]);
